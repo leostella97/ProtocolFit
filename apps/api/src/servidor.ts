@@ -22,6 +22,7 @@ import { configurarAutenticacao } from './plugins/autenticacaoJwt.js';
 
 // Rotas da API.
 import { rotasAutenticacao } from './rotas/autenticacao.js';
+import { rotasCheckin } from './rotas/checkin.js';
 import { rotasConta } from './rotas/conta.js';
 import { rotasEvolucao } from './rotas/evolucao.js';
 import { rotasOpcoes } from './rotas/opcoes.js';
@@ -69,6 +70,7 @@ await app.register(rotasConta, { prefix: '/api' }); // GET  /api/eu
 await app.register(rotasPerfil, { prefix: '/api/perfil' }); // POST /api/perfil | GET /api/perfil | POST /api/perfil/recalcular
 await app.register(rotasPlanos, { prefix: '/api/plano' }); // GET /api/plano/atual | PATCH /api/plano/treino/:id | PATCH /api/plano/dieta/:id/substituir
 await app.register(rotasEvolucao, { prefix: '/api/evolucao' }); // POST /api/evolucao | GET /api/evolucao
+await app.register(rotasCheckin, { prefix: '/api/checkin' }); // GET /api/checkin | POST /api/checkin (check-in diário)
 
 /** Rota de saúde — usada para monitorar se o servidor está no ar. */
 app.get('/api/saude', async () => ({

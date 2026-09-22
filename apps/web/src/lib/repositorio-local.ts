@@ -17,6 +17,7 @@
  * ---------------------------------------------------------------------------
  */
 import type {
+  CheckinDiario,
   DiaDeTreino,
   ItemDaDieta,
   OpcoesDoSistema,
@@ -26,6 +27,7 @@ import type {
   PlanoTreino,
   RegistroEvolucao,
   RespostaDeAutenticacao,
+  ResumoDeCheckins,
   Sexo,
   Modalidade,
   Nivel,
@@ -99,13 +101,35 @@ interface BancoLocal {
   }[];
   /** Pesagens registradas. */
   evolucao: { id: number; usuario_id: number; data: string; peso_kg: number }[];
+  /** Check-ins diários (um por dia, por usuário) — opcional em bancos antigos. */
+  checkins?: CheckinDiarioInterno[];
   /** Contador de identificadores. */
   proximoId: number;
 }
 
+/** Check-in diário gravado no navegador. */
+interface CheckinDiarioInterno {
+  /** Identificador do registro. */
+  id: number;
+  /** Dono do check-in. */
+  usuario_id: number;
+  /** Dia do check-in (AAAA-MM-DD). */
+  data: string;
+  /** Treino concluído. */
+  treino_feito: boolean;
+  /** Dieta seguida. */
+  dieta_seguida: boolean;
+  /** Água bebida (ml). */
+  agua_ml: number;
+  /** Peso do dia (opcional). */
+  peso_kg: number | null;
+  /** Anotação livre. */
+  observacao: string | null;
+}
+
 /** Banco vazio (primeira visita). */
 function bancoVazio(): BancoLocal {
-  return { versao: 1, contas: [], perfis: [], planos: [], evolucao: [], proximoId: 1 };
+  return { versao: 1, contas: [], perfis: [], planos: [], evolucao: [], checkins: [], proximoId: 1 };
 }
 
 /** Lê o banco do armazenamento local (ou cria um vazio). */
@@ -575,3 +599,195 @@ export async function listarEvolucaoLocal(): Promise<RegistroEvolucao[]> {
 
 /** Tipos auxiliares reexportados para uso interno das telas (opcional). */
 export type { DiaDeTreino, ItemDaDieta };
+
+/* ===========================================================================
+ * CORPO (peso e altura) — espelha PATCH /api/perfil/corpo
+ * ======================================================================== */
+
+/** Altera peso e/ou altura sem regenerar os planos. */
+export async function atualizarCorpoLocal(corpo: { peso_kg?: number; altura_cm?: number }): Promise<{ perfil: Perfil; mensagem: string }> {
+  const banco = lerBanco();
+  const conta = exigirSessao(banco);
+  const perfil = banco.perfis.find((candidato) => candidato.usuario_id === conta.id);
+  if (!perfil) {
+    throw new ErroDaApi(404, 'Perfil não encontrado. Complete o onboarding primeiro.');
+  }
+  // Pelo menos um campo precisa ser informado.
+  if (corpo.peso_kg === undefined && corpo.altura_cm === undefined) {
+    throw new ErroDaApi(400, 'Informe o novo peso e/ou a nova altura.');
+  }
+  // Valida o peso dentro dos limites aceitos.
+  if (corpo.peso_kg !== undefined) {
+    if (typeof corpo.peso_kg !== 'number' || corpo.peso_kg < LIMITES_CORPO.peso_minimo_kg || corpo.peso_kg > LIMITES_CORPO.peso_maximo_kg) {
+      throw new ErroDaApi(400, `Informe um peso entre ${LIMITES_CORPO.peso_minimo_kg} e ${LIMITES_CORPO.peso_maximo_kg} kg.`);
+    }
+    perfil.peso_kg = corpo.peso_kg;
+    // Registra a pesagem do dia (mantém um ponto por dia no gráfico).
+    salvarPesagemDoDiaNoBanco(banco, conta.id, dataDeHoje(), corpo.peso_kg);
+  }
+  // Valida a altura dentro dos limites aceitos.
+  if (corpo.altura_cm !== undefined) {
+    if (typeof corpo.altura_cm !== 'number' || corpo.altura_cm < LIMITES_CORPO.altura_minima_cm || corpo.altura_cm > LIMITES_CORPO.altura_maxima_cm) {
+      throw new ErroDaApi(400, `Informe uma altura entre ${LIMITES_CORPO.altura_minima_cm} e ${LIMITES_CORPO.altura_maxima_cm} cm.`);
+    }
+    perfil.altura_cm = corpo.altura_cm;
+  }
+  salvarBanco(banco);
+  return { perfil, mensagem: 'Dados atualizados. Use "Recalcular" para renovar o plano.' };
+}
+
+/** Grava a pesagem de um dia mantendo apenas um registro por data. */
+function salvarPesagemDoDiaNoBanco(banco: BancoLocal, usuarioId: number, data: string, pesoKg: number): void {
+  const existente = banco.evolucao.find((registro) => registro.usuario_id === usuarioId && registro.data === data);
+  if (existente) {
+    // Atualiza o valor do dia (evita pontos duplicados no gráfico).
+    existente.peso_kg = pesoKg;
+    return;
+  }
+  banco.evolucao.push({ id: proximoId(banco), usuario_id: usuarioId, data, peso_kg: pesoKg });
+}
+
+/* ===========================================================================
+ * CHECK-IN DIÁRIO — espelha GET/POST /api/checkin
+ * ======================================================================== */
+
+/** Verifica se o check-in conta como "dia cumprido". */
+function diaCumprido(checkin: CheckinDiarioInterno): boolean {
+  return checkin.treino_feito || checkin.dieta_seguida;
+}
+
+/** Converte o número de dias (desde 1970) em AAAA-MM-DD. */
+function deNumeroParaData(numeroDeDias: number): string {
+  return new Date(numeroDeDias * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+}
+
+/** Converte AAAA-MM-DD no número de dias desde 1970. */
+function deDataParaNumero(data: string): number {
+  return Math.floor(new Date(`${data}T00:00:00Z`).getTime() / (24 * 60 * 60 * 1000));
+}
+
+/** Calcula o resumo dos check-ins (sequências e histórico) — igual ao servidor. */
+function montarResumo(registrosDoUsuario: CheckinDiarioInterno[]): ResumoDeCheckins {
+  // Ordena do mais recente para o mais antigo.
+  const ordenados = [...registrosDoUsuario].sort((a, b) => b.data.localeCompare(a.data));
+  // Datas cumpridas em ordem crescente.
+  const diasCumpridos = ordenados.filter(diaCumprido).map((registro) => registro.data).sort();
+  const conjunto = new Set(diasCumpridos);
+
+  // Sequência máxima: maior bloco de dias consecutivos.
+  let sequenciaMaxima = 0;
+  let corrente = 0;
+  let anterior: number | null = null;
+  for (const data of diasCumpridos) {
+    const numero = deDataParaNumero(data);
+    corrente = anterior !== null && numero === anterior + 1 ? corrente + 1 : 1;
+    sequenciaMaxima = Math.max(sequenciaMaxima, corrente);
+    anterior = numero;
+  }
+
+  // Sequência atual: conta de trás para frente a partir de hoje (ou ontem).
+  const hoje = deDataParaNumero(dataDeHoje());
+  let cursor = conjunto.has(deNumeroParaData(hoje)) ? hoje : hoje - 1;
+  let sequenciaAtual = 0;
+  while (conjunto.has(deNumeroParaData(cursor))) {
+    sequenciaAtual += 1;
+    cursor -= 1;
+  }
+
+  return {
+    hoje: ordenados.find((registro) => registro.data === dataDeHoje()) ?? null,
+    registros: ordenados.slice(0, 60).map((registro) => ({
+      id: registro.id,
+      data: registro.data,
+      treino_feito: registro.treino_feito,
+      dieta_seguida: registro.dieta_seguida,
+      agua_ml: registro.agua_ml,
+      peso_kg: registro.peso_kg,
+      observacao: registro.observacao,
+    })),
+    sequencia_atual: sequenciaAtual,
+    sequencia_maxima: sequenciaMaxima,
+    total: ordenados.length,
+    dias_cumpridos: diasCumpridos.slice(-30),
+  };
+}
+
+/** Busca o resumo do check-in diário do usuário logado. */
+export async function buscarCheckinsLocal(): Promise<ResumoDeCheckins> {
+  const banco = lerBanco();
+  const conta = exigirSessao(banco);
+  // Bancos criados antes do recurso não têm a lista: trata como vazia.
+  const registros = (banco.checkins ?? []).filter((registro) => registro.usuario_id === conta.id);
+  return montarResumo(registros);
+}
+
+/** Salva (ou atualiza) o check-in do dia e devolve o resumo atualizado. */
+export async function salvarCheckinLocal(corpo: {
+  data?: string;
+  treino_feito?: boolean;
+  dieta_seguida?: boolean;
+  agua_ml?: number;
+  peso_kg?: number | null;
+  observacao?: string | null;
+}): Promise<ResumoDeCheckins & { checkin: CheckinDiario }> {
+  const banco = lerBanco();
+  const conta = exigirSessao(banco);
+  // Garante a existência da lista em bancos antigos.
+  if (!banco.checkins) {
+    banco.checkins = [];
+  }
+  const data = corpo.data && /^\d{4}-\d{2}-\d{2}$/.test(corpo.data) ? corpo.data : dataDeHoje();
+
+  // Valida a água informada.
+  const aguaMl = typeof corpo.agua_ml === 'number' ? Math.round(corpo.agua_ml) : 0;
+  if (aguaMl < 0 || aguaMl > 10000) {
+    throw new ErroDaApi(400, 'Informe a água entre 0 e 10000 ml.');
+  }
+  // Valida o peso quando informado.
+  if (corpo.peso_kg !== undefined && corpo.peso_kg !== null) {
+    if (typeof corpo.peso_kg !== 'number' || corpo.peso_kg < LIMITES_CORPO.peso_minimo_kg || corpo.peso_kg > LIMITES_CORPO.peso_maximo_kg) {
+      throw new ErroDaApi(400, `Informe um peso entre ${LIMITES_CORPO.peso_minimo_kg} e ${LIMITES_CORPO.peso_maximo_kg} kg.`);
+    }
+  }
+
+  // Mantém o que já foi registrado no dia quando o campo não é enviado.
+  const existente = banco.checkins.find((registro) => registro.usuario_id === conta.id && registro.data === data);
+  const checkin: CheckinDiarioInterno = existente ?? {
+    id: proximoId(banco),
+    usuario_id: conta.id,
+    data,
+    treino_feito: false,
+    dieta_seguida: false,
+    agua_ml: 0,
+    peso_kg: null,
+    observacao: null,
+  };
+  checkin.treino_feito = corpo.treino_feito ?? checkin.treino_feito;
+  checkin.dieta_seguida = corpo.dieta_seguida ?? checkin.dieta_seguida;
+  checkin.agua_ml = corpo.agua_ml !== undefined ? aguaMl : checkin.agua_ml;
+  checkin.peso_kg = corpo.peso_kg !== undefined ? corpo.peso_kg : checkin.peso_kg;
+  checkin.observacao = corpo.observacao !== undefined ? corpo.observacao : checkin.observacao;
+  if (!existente) {
+    banco.checkins.push(checkin);
+  }
+
+  // Peso informado no check-in entra na evolução corporal do dia.
+  if (checkin.peso_kg !== null) {
+    salvarPesagemDoDiaNoBanco(banco, conta.id, data, checkin.peso_kg);
+  }
+  salvarBanco(banco);
+
+  const registros = banco.checkins.filter((registro) => registro.usuario_id === conta.id);
+  return {
+    checkin: {
+      id: checkin.id,
+      data: checkin.data,
+      treino_feito: checkin.treino_feito,
+      dieta_seguida: checkin.dieta_seguida,
+      agua_ml: checkin.agua_ml,
+      peso_kg: checkin.peso_kg,
+      observacao: checkin.observacao,
+    },
+    ...montarResumo(registros),
+  };
+}

@@ -27,10 +27,12 @@ import {
 } from '@/components/ui/card';
 import { BarraDeProgresso } from '@/components/ui/progress';
 import { Esqueleto } from '@/components/ui/skeleton';
-import { buscarPlanoAtual, listarEvolucao, ErroDaApi } from '@/lib/api';
+import { buscarCheckins, buscarPlanoAtual, listarEvolucao, ErroDaApi } from '@/lib/api';
 import { encerrarSessao, obterUsuario } from '@/lib/armazenamento';
 import { formatarDecimal } from '@/lib/util';
-import type { PlanoCompleto, RegistroEvolucao } from '@/lib/tipos';
+import type { PlanoCompleto, RegistroEvolucao, ResumoDeCheckins } from '@/lib/tipos';
+import { CartaoCheckin } from '@/components/painel/cartao-checkin';
+import { CartaoCorpo } from '@/components/painel/cartao-corpo';
 
 /** Frases motivacionais exibidas conforme o objetivo do plano. */
 const FRASES_POR_OBJETIVO: Record<string, string> = {
@@ -62,16 +64,19 @@ export default function PaginaDoPainel() {
   const [plano, definirPlano] = useState<PlanoCompleto | null>(null);
   // Histórico de pesagens para o gráfico de evolução.
   const [evolucao, definirEvolucao] = useState<RegistroEvolucao[]>([]);
+  // Resumo do check-in diário (sequência, recorde e histórico dos dias).
+  const [checkins, definirCheckins] = useState<ResumoDeCheckins | null>(null);
 
-  /** Carrega o plano atual e a evolução em paralelo (com tratamento de erros). */
+  /** Carrega o plano, a evolução e o check-in em paralelo (com tratamento de erros). */
   const carregarDados = useCallback(async () => {
     definirCarregando(true);
     definirErro(null);
     try {
-      // Busca os dois recursos ao mesmo tempo (Promise.all).
-      const [planoAtual, registros] = await Promise.all([buscarPlanoAtual(), listarEvolucao()]);
+      // Busca os três recursos ao mesmo tempo (Promise.all).
+      const [planoAtual, registros, resumoDeCheckins] = await Promise.all([buscarPlanoAtual(), listarEvolucao(), buscarCheckins()]);
       definirPlano(planoAtual);
       definirEvolucao(registros);
+      definirCheckins(resumoDeCheckins);
     } catch (erroCapturado: unknown) {
       // Erro da API com status conhecido.
       if (erroCapturado instanceof ErroDaApi) {
@@ -225,6 +230,35 @@ export default function PaginaDoPainel() {
           icone={<Droplets />}
           corDoIcone="text-sky-600"
           rodape="Hidratação diária recomendada"
+        />
+      </section>
+
+      {/* Ações do dia: CHECK-IN DIÁRIO + edição de peso e altura. */}
+      <section className="grid gap-6 lg:grid-cols-3">
+        {/* Check-in diário (ocupa 2 colunas em telas grandes). */}
+        {checkins ? (
+          <div className="lg:col-span-2">
+            <CartaoCheckin
+              resumo={checkins}
+              perfil={perfil}
+              aoSalvar={(resumoAtualizado) => {
+                // Atualiza a sequência exibida imediatamente.
+                definirCheckins(resumoAtualizado);
+                // Se o check-in trouxe um peso novo, recarrega o gráfico de evolução.
+                void listarEvolucao().then(definirEvolucao);
+              }}
+            />
+          </div>
+        ) : null}
+        {/* Edição de peso e altura (altura acima do peso). */}
+        <CartaoCorpo
+          perfil={perfil}
+          aoAtualizarPerfil={(perfilAtualizado) => {
+            // Reflete o novo peso/altura em todo o painel.
+            definirPlano({ ...plano, perfil: perfilAtualizado });
+            // O peso alterado também entra no gráfico de evolução do dia.
+            void listarEvolucao().then(definirEvolucao);
+          }}
         />
       </section>
 

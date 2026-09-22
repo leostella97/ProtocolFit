@@ -13,6 +13,7 @@
  * ---------------------------------------------------------------------------
  */
 import type {
+  CheckinDiario,
   OpcoesDoSistema,
   Perfil,
   PlanoCompleto,
@@ -20,6 +21,7 @@ import type {
   PlanoTreino,
   RegistroEvolucao,
   RespostaDeAutenticacao,
+  ResumoDeCheckins,
   Usuario,
 } from './tipos';
 import { obterToken } from './armazenamento';
@@ -192,4 +194,52 @@ export async function listarEvolucao(): Promise<RegistroEvolucao[]> {
     return local.listarEvolucaoLocal();
   }
   return chamarApi('/evolucao');
+}
+
+/** Corpo da atualização de peso/altura feita direto no painel. */
+export interface CorpoAtualizacaoDoCorpo {
+  /** Novo peso em kg (opcional). */
+  peso_kg?: number;
+  /** Nova altura em cm (opcional). */
+  altura_cm?: number;
+}
+
+/** Altera peso e/ou altura do perfil SEM regenerar os planos. */
+export async function atualizarCorpo(corpo: CorpoAtualizacaoDoCorpo): Promise<{ perfil: Perfil; mensagem: string }> {
+  if (MODO_LOCAL) {
+    return local.atualizarCorpoLocal(corpo);
+  }
+  return chamarApi('/perfil/corpo', { method: 'PATCH', body: JSON.stringify(corpo) });
+}
+
+/** Corpo do check-in diário. */
+export interface CorpoCheckin {
+  /** Dia do check-in (padrão: hoje). */
+  data?: string;
+  /** Treino concluído no dia. */
+  treino_feito?: boolean;
+  /** Dieta seguida no dia. */
+  dieta_seguida?: boolean;
+  /** Água bebida no dia (ml). */
+  agua_ml?: number;
+  /** Peso do dia (opcional). */
+  peso_kg?: number | null;
+  /** Anotação livre (opcional). */
+  observacao?: string | null;
+}
+
+/** Busca o resumo dos check-ins (sequência atual, recorde e histórico). */
+export async function buscarCheckins(): Promise<ResumoDeCheckins> {
+  if (MODO_LOCAL) {
+    return local.buscarCheckinsLocal();
+  }
+  return chamarApi('/checkin');
+}
+
+/** Salva (ou atualiza) o check-in do dia e devolve o resumo atualizado. */
+export async function salvarCheckin(corpo: CorpoCheckin): Promise<ResumoDeCheckins & { checkin: CheckinDiario }> {
+  if (MODO_LOCAL) {
+    return local.salvarCheckinLocal(corpo);
+  }
+  return chamarApi('/checkin', { method: 'POST', body: JSON.stringify(corpo) });
 }

@@ -157,6 +157,40 @@ export interface RegistroEvolucao {
   peso_kg: number;
 }
 
+/** Check-in diário do usuário (um registro por dia). */
+export interface CheckinDiario {
+  /** Identificador do registro. */
+  id: number;
+  /** Dia do check-in (AAAA-MM-DD). */
+  data: string;
+  /** Treino do dia concluído. */
+  treino_feito: boolean;
+  /** Dieta do dia seguida. */
+  dieta_seguida: boolean;
+  /** Água bebida no dia (ml). */
+  agua_ml: number;
+  /** Peso informado no dia (null quando não informado). */
+  peso_kg: number | null;
+  /** Anotação livre do usuário. */
+  observacao: string | null;
+}
+
+/** Resumo dos check-ins (sequência atual, recorde e histórico). */
+export interface ResumoDeCheckins {
+  /** Check-in de hoje (null se ainda não feito). */
+  hoje: CheckinDiario | null;
+  /** Últimos check-ins (mais recentes primeiro). */
+  registros: CheckinDiario[];
+  /** Dias consecutivos cumpridos até hoje (ou até ontem, se hoje pendente). */
+  sequencia_atual: number;
+  /** Maior sequência já alcançada. */
+  sequencia_maxima: number;
+  /** Total de check-ins registrados. */
+  total: number;
+  /** Datas dos dias cumpridos (mini histórico do painel). */
+  dias_cumpridos: string[];
+}
+
 /** Resposta de GET /plano/atual — plano completo do painel. */
 export interface PlanoCompleto {
   perfil: Perfil;

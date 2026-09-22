@@ -78,7 +78,17 @@ ProtocolFit/
 
 1. **Onboarding** — o usuário cadastra-se e informa sexo, faixa etária (17 opções, de "15-19" a "79-83"), altura, peso (decimal), objetivo (emagrecimento | hipertrofia | corrida), frequência semanal, dias disponíveis e modalidade (academia | peso do corpo).
 2. **Geração** — o backend cruza os filtros, localiza o modelo JSON mestre e injeta os valores calculados.
-3. **Painel** — o usuário visualiza treino e dieta, **edita cargas e substitui alimentos na própria cópia** e solicita **recálculos** baseados na sua evolução física.
+3. **Painel** — o usuário visualiza treino e dieta, **edita cargas e substitui alimentos na própria cópia**, **altera peso e altura direto no painel** (a altura aparece acima do peso), faz o **check-in diário** (treino, dieta, água, peso e observação, com sequência/recorde de dias) e solicita **recálculos** baseados na sua evolução física.
+
+### ✅ Check-in diário
+
+O painel tem o cartão **"Check-in de hoje"**: o usuário marca *treino feito*, *dieta seguida*, a água do dia (com atalhos de +250/+500 ml), o peso do dia (opcional, entra no gráfico) e uma observação. O sistema calcula automaticamente:
+
+- **Sequência atual** (dias consecutivos cumpridos — treino **ou** dieta no dia);
+- **Recorde** de sequência e **total** de check-ins;
+- **Mini histórico** dos últimos 7 dias.
+
+Regras: um check-in por dia por usuário (atualizar o mesmo dia não duplica) e a sequência só quebra quando um dia inteiro passa sem nenhuma marcação. No modo navegador (GitHub Pages) o check-in fica no `localStorage`; no modo servidor vai para a tabela `checkins` do SQLite.
 
 ## 🧮 A lógica de processamento no backend
 
@@ -123,6 +133,7 @@ npm run dev:web
 powershell -File scripts/teste-da-api.ps1           # fluxo completo (10 cenários)
 powershell -File scripts/teste-da-matriz.ps1        # 36 combinações de treino vinculadas ao usuário
 powershell -File scripts/teste-dos-dados-possiveis.ps1  # 212 perfis possíveis gerados (treino + dieta)
+powershell -File scripts/teste-do-checkin.ps1       # check-in diário + alteração de peso e altura
 ```
 
 Configurações opcionais em `apps/api/.env` (copie de `.env.example`): `PORTA`, `PROTOCOLFIT_JWT_SECRET`, `PROTOCOLFIT_ORIGEM_WEB`.

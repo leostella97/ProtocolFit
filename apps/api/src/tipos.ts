@@ -320,6 +320,40 @@ export interface RegistroEvolucao {
   peso_kg: number;
 }
 
+/** Check-in diário do usuário (um registro por dia). */
+export interface CheckinDiario {
+  /** Identificador do registro. */
+  id: number;
+  /** Dia do check-in (AAAA-MM-DD). */
+  data: string;
+  /** Indica se o treino do dia foi concluído. */
+  treino_feito: boolean;
+  /** Indica se a dieta do dia foi seguida. */
+  dieta_seguida: boolean;
+  /** Água bebida no dia, em mililitros. */
+  agua_ml: number;
+  /** Peso informado no dia (null quando não informado). */
+  peso_kg: number | null;
+  /** Anotação livre do usuário. */
+  observacao: string | null;
+}
+
+/** Resumo dos check-ins: usado pelo painel para mostrar a sequência. */
+export interface ResumoDeCheckins {
+  /** Check-in de hoje (null se ainda não feito). */
+  hoje: CheckinDiario | null;
+  /** Últimos check-ins (mais recentes primeiro). */
+  registros: CheckinDiario[];
+  /** Dias consecutivos cumpridos até hoje (ou até ontem, se hoje pendente). */
+  sequencia_atual: number;
+  /** Maior sequência já alcançada pelo usuário. */
+  sequencia_maxima: number;
+  /** Total de check-ins registrados. */
+  total: number;
+  /** Datas dos dias cumpridos (para o mini histórico do painel). */
+  dias_cumpridos: string[];
+}
+
 /** Conjunto de opções estáticas oferecidas pelo servidor para o onboarding. */
 export interface OpcoesDoSistema {
   /** Faixas etárias selecionáveis. */

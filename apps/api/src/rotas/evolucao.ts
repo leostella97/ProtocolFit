@@ -10,7 +10,7 @@
  * ---------------------------------------------------------------------------
  */
 import type { FastifyInstance } from 'fastify';
-import { listarEvolucao, registrarEvolucao } from '../bd/banco.js';
+import { listarEvolucao, salvarPesagemDoDia } from '../bd/banco.js';
 import { LIMITES_CORPO } from '../util/constantes.js';
 import { enviarErro, exigirAutenticacao, usuarioIdDaRequisicao } from '../util/respostas.js';
 
@@ -44,11 +44,15 @@ export async function rotasEvolucao(app: FastifyInstance): Promise<void> {
       return enviarErro(resposta, 400, 'Informe uma data válida no formato AAAA-MM-DD.');
     }
 
-    // Grava a pesagem no SQLite.
-    const id = registrarEvolucao(usuarioId, data, corpo.peso_kg);
+    // Grava a pesagem do dia (atualiza o registro do dia, se já existir).
+    salvarPesagemDoDia(usuarioId, data, corpo.peso_kg);
 
-    // Responde com o registro criado.
-    return resposta.code(201).send({ id, data, peso_kg: corpo.peso_kg });
+    // Busca o registro gravado para responder com o id correto.
+    const registros = listarEvolucao(usuarioId);
+    const registro = registros.find((item) => item.data === data) ?? registros[registros.length - 1];
+
+    // Responde com o registro criado/atualizado.
+    return resposta.code(201).send(registro);
   });
 
   /** GET /api/evolucao — histórico de pesagens em ordem cronológica. */

@@ -12,9 +12,11 @@
  */
 import type { FastifyInstance } from 'fastify';
 import {
+  atualizarCorpoDoPerfil,
   buscarPerfilPorUsuario,
   buscarUltimaEvolucao,
   salvarPerfil,
+  salvarPesagemDoDia,
 } from '../bd/banco.js';
 import { gerarPlanosParaPerfil } from '../servicos/geradorDePlanos.js';
 import type { Modalidade, Nivel, Objetivo, Perfil, Sexo } from '../tipos.js';
@@ -135,6 +137,64 @@ export async function rotasPerfil(app: FastifyInstance): Promise<void> {
       return enviarErro(resposta, 404, 'Perfil não encontrado. Complete o onboarding primeiro.');
     }
     return resposta.send(perfil);
+  });
+
+  /**
+   * PATCH /api/perfil/corpo — altera APENAS peso e/ou altura do usuário.
+   * Não regenera os planos (isso é feito por /recalcular, de propósito):
+   * o usuário pode corrigir os dados do corpo sem perder as edições do plano.
+   */
+  app.patch('/corpo', { onRequest: [exigirAutenticacao] }, async (requisicao, resposta) => {
+    // Recupera o id do usuário autenticado.
+    const usuarioId = usuarioIdDaRequisicao(requisicao);
+    const corpo = (requisicao.body ?? {}) as { peso_kg?: number; altura_cm?: number };
+
+    // Garante que o perfil existe antes de alterar.
+    const perfilAtual = buscarPerfilPorUsuario(usuarioId);
+    if (!perfilAtual) {
+      return enviarErro(resposta, 404, 'Perfil não encontrado. Complete o onboarding primeiro.');
+    }
+
+    // Pelo menos um dos campos precisa ser informado.
+    if (corpo.peso_kg === undefined && corpo.altura_cm === undefined) {
+      return enviarErro(resposta, 400, 'Informe o novo peso e/ou a nova altura.');
+    }
+
+    // Valida o peso dentro dos limites aceitos.
+    if (corpo.peso_kg !== undefined) {
+      if (
+        typeof corpo.peso_kg !== 'number' ||
+        corpo.peso_kg < LIMITES_CORPO.peso_minimo_kg ||
+        corpo.peso_kg > LIMITES_CORPO.peso_maximo_kg
+      ) {
+        return enviarErro(resposta, 400, `Informe um peso entre ${LIMITES_CORPO.peso_minimo_kg} e ${LIMITES_CORPO.peso_maximo_kg} kg.`);
+      }
+    }
+
+    // Valida a altura dentro dos limites aceitos.
+    if (corpo.altura_cm !== undefined) {
+      if (
+        typeof corpo.altura_cm !== 'number' ||
+        corpo.altura_cm < LIMITES_CORPO.altura_minima_cm ||
+        corpo.altura_cm > LIMITES_CORPO.altura_maxima_cm
+      ) {
+        return enviarErro(resposta, 400, `Informe uma altura entre ${LIMITES_CORPO.altura_minima_cm} e ${LIMITES_CORPO.altura_maxima_cm} cm.`);
+      }
+    }
+
+    // Atualiza somente os campos enviados no perfil.
+    const perfilAtualizado = atualizarCorpoDoPerfil(usuarioId, {
+      ...(corpo.peso_kg !== undefined ? { peso_kg: corpo.peso_kg } : {}),
+      ...(corpo.altura_cm !== undefined ? { altura_cm: corpo.altura_cm } : {}),
+    });
+
+    // Quando o peso muda, registra a pesagem do dia (alimenta o gráfico).
+    if (corpo.peso_kg !== undefined) {
+      salvarPesagemDoDia(usuarioId, new Date().toISOString().slice(0, 10), corpo.peso_kg);
+    }
+
+    // Responde com o perfil já atualizado.
+    return resposta.send({ perfil: perfilAtualizado, mensagem: 'Dados atualizados. Use "Recalcular" para renovar o plano.' });
   });
 
   /** POST /api/perfil/recalcular — renova os planos pela evolução física. */

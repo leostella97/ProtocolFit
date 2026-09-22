@@ -1,0 +1,165 @@
+/**
+ * globals.css
+ * ---------------------------------------------------------------------------
+ * Design system do ProtocolFit — Tailwind CSS v4 + tokens shadcn/ui.
+ *
+ * PSICOLOGIA DE CORES DA SAÚDE:
+ *  - Verde esmeralda (primária) → saúde, vitalidade, crescimento e equilíbrio
+ *  - Teal/ciano (acento)        → água, frescor, energia limpa
+ *  - Fundo branco-esverdeado    → leveza, higiene, respiro visual
+ *  - Verde-petróleo (texto)     → confiança e leitura confortável
+ *  - Limão suave (destaques)    → energia e positividade (gráficos)
+ * ---------------------------------------------------------------------------
+ */
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+/* ---------------------------------------------------------------------------
+ * Variáveis de design (modo claro — padrão do ProtocolFit)
+ * ------------------------------------------------------------------------- */
+:root {
+  /* Raio base dos cantos arredondados (aparência amigável e orgânica). */
+  --raio: 0.75rem;
+
+  /* Fundo da página: branco com leve sopro de verde (leveza e higiene). */
+  --fundo: oklch(0.983 0.007 165);
+
+  /* Texto principal: verde-petróleo profundo (confiança, leitura suave). */
+  --frente: oklch(0.27 0.04 165);
+
+  /* Superfícies elevadas (cartões): branco puro. */
+  --cartao: oklch(1 0 0);
+  --cartao-frente: oklch(0.27 0.04 165);
+
+  /* Popovers e menus. */
+  --popover: oklch(1 0 0);
+  --popover-frente: oklch(0.27 0.04 165);
+
+  /* Cor primária: verde esmeralda — o coração da identidade de saúde. */
+  --primaria: oklch(0.6 0.15 160);
+  --primaria-frente: oklch(0.985 0.005 160);
+
+  /* Cor secundária: verde muito claro (áreas de apoio). */
+  --secundaria: oklch(0.94 0.03 160);
+  --secundaria-frente: oklch(0.45 0.09 160);
+
+  /* Superfícies discretas (fundos de seções alternadas). */
+  --apagado: oklch(0.958 0.013 160);
+  --apagado-frente: oklch(0.55 0.03 165);
+
+  /* Cor de acento: teal/ciano — água e energia limpa. */
+  --acento: oklch(0.68 0.12 180);
+  --acento-frente: oklch(0.985 0.005 180);
+
+  /* Cor destrutiva (erros e bloqueios de conta). */
+  --destrutivo: oklch(0.577 0.215 27);
+  --destrutivo-frente: oklch(0.985 0 0);
+
+  /* Bordas e campos de entrada. */
+  --borda: oklch(0.905 0.018 160);
+  --entrada: oklch(0.905 0.018 160);
+
+  /* Anel de foco (acessibilidade). */
+  --anel: oklch(0.6 0.15 160);
+
+  /* Cores dos gráficos (recharts) — paleta de energia e saúde. */
+  --grafico-1: oklch(0.6 0.15 160); /* verde esmeralda */
+  --grafico-2: oklch(0.68 0.12 180); /* teal */
+  --grafico-3: oklch(0.8 0.16 95); /* limão energético */
+  --grafico-4: oklch(0.62 0.14 240); /* azul-serena */
+  --grafico-5: oklch(0.7 0.15 45); /* âmbar quente */
+}
+
+/* ---------------------------------------------------------------------------
+ * Mapeamento dos tokens para as utilities do Tailwind v4 (@theme inline)
+ * ------------------------------------------------------------------------- */
+@theme inline {
+  --color-background: var(--fundo);
+  --color-foreground: var(--frente);
+  --color-card: var(--cartao);
+  --color-card-foreground: var(--cartao-frente);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-frente);
+  --color-primary: var(--primaria);
+  --color-primary-foreground: var(--primaria-frente);
+  --color-secondary: var(--secundaria);
+  --color-secondary-foreground: var(--secundaria-frente);
+  --color-muted: var(--apagado);
+  --color-muted-foreground: var(--apagado-frente);
+  --color-accent: var(--acento);
+  --color-accent-foreground: var(--acento-frente);
+  --color-destructive: var(--destrutivo);
+  --color-destructive-foreground: var(--destrutivo-frente);
+  --color-border: var(--borda);
+  --color-input: var(--entrada);
+  --color-ring: var(--anel);
+  --color-chart-1: var(--grafico-1);
+  --color-chart-2: var(--grafico-2);
+  --color-chart-3: var(--grafico-3);
+  --color-chart-4: var(--grafico-4);
+  --color-chart-5: var(--grafico-5);
+
+  /* Escala de raios (shadcn). */
+  --radius-sm: calc(var(--raio) - 4px);
+  --radius-md: calc(var(--raio) - 2px);
+  --radius-lg: var(--raio);
+  --radius-xl: calc(var(--raio) + 4px);
+
+  /* Fontes: Inter (texto) e Plus Jakarta Sans (títulos). */
+  --font-sans: var(--fonte-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--fonte-jakarta), var(--fonte-inter), ui-sans-serif, sans-serif;
+}
+
+/* ---------------------------------------------------------------------------
+ * Camada base: bordas, foco e fundo padrão
+ * ------------------------------------------------------------------------- */
+@layer base {
+  /* Todos os elementos herdam a borda do tema e o anel de foco. */
+  * {
+    @apply border-border outline-ring/50;
+  }
+  /* Corpo da aplicação com fundo e texto do tema. */
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Utilitários personalizados do ProtocolFit
+ * ------------------------------------------------------------------------- */
+
+/* Gradiente da marca: esmeralda → teal (vitalidade + água). */
+.gradiente-marca {
+  background-image: linear-gradient(135deg, oklch(0.62 0.16 160), oklch(0.68 0.12 180));
+}
+
+/* Texto com gradiente da marca (títulos da landing page). */
+.texto-gradiente {
+  background-image: linear-gradient(120deg, oklch(0.5 0.15 160), oklch(0.6 0.13 185));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Sombra suave esverdeada — profundidade amigável nos cartões. */
+.sombra-suave {
+  box-shadow: 0 10px 40px -12px oklch(0.6 0.15 160 / 0.25);
+}
+
+/* Barra de rolagem discreta em tom verde. */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: oklch(0.85 0.02 160);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.75 0.05 160);
+}

@@ -1,0 +1,75 @@
+{
+  "nome": "Hipertrofia Push/Pull/Legs — 6 dias (PPL×2)",
+  "modalidade": "academia",
+  "objetivo": "hipertrofia",
+  "dias": 6,
+  "duracao_estimada_min": 55,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Push A (Peito, Ombro e Tríceps)",
+      "exercicios": [
+        { "nome": "Supino reto com barra", "grupo": "peito", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.5, "dicas": "Controle a descida até tocar o peito e suba com explosão." },
+        { "nome": "Supino inclinado com halteres", "grupo": "peito", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.3, "dicas": "Desça até a linha do peito com os cotovelos a 45° do tronco." },
+        { "nome": "Desenvolvimento com halteres", "grupo": "ombro", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.2, "dicas": "Empurre os halteres para cima sem travar completamente os cotovelos." },
+        { "nome": "Elevação lateral", "grupo": "ombro", "tipo": "isolador", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": 0.05, "dicas": "Suba até a altura dos ombros com os cotovelos levemente flexionados." },
+        { "nome": "Tríceps na polia com corda", "grupo": "triceps", "tipo": "isolador", "series": 4, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.15, "dicas": "Cotovelos fixos; apenas os antebraços se movem." },
+        { "nome": "Abdominal infra no banco", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Eleve as pernas dobrando o quadril, sem embalar o corpo." }
+      ]
+    },
+    {
+      "titulo": "Dia B — Pull A (Costas e Bíceps)",
+      "exercicios": [
+        { "nome": "Barra fixa (pegada aberta)", "grupo": "costas", "tipo": "corporal", "series": 4, "repeticoes_min": 6, "repeticoes_max": 10, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Suba até o queixo passar da barra; use elástico se necessário." },
+        { "nome": "Remada curvada com barra", "grupo": "costas", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.45, "dicas": "Puxe a barra em direção ao umbigo mantendo o tronco firme." },
+        { "nome": "Puxada frente na polia", "grupo": "costas", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.55, "dicas": "Estufe o peito e leve a barra até a clavícula." },
+        { "nome": "Remada baixa sentado", "grupo": "costas", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.4, "dicas": "Junte as escápulas no fim do movimento e segure 1 segundo." },
+        { "nome": "Rosca direta com barra", "grupo": "biceps", "tipo": "isolador", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.15, "dicas": "Evite balançar o tronco nas últimas repetições." },
+        { "nome": "Rosca martelo", "grupo": "biceps", "tipo": "isolador", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.1, "dicas": "Palmas voltadas para dentro durante todo o movimento." }
+      ]
+    },
+    {
+      "titulo": "Dia C — Legs A (foco em quadríceps)",
+      "exercicios": [
+        { "nome": "Agachamento livre", "grupo": "pernas", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.7, "dicas": "Desça até a coxa ficar paralela ao chão, com o peito erguido." },
+        { "nome": "Leg press 45°", "grupo": "pernas", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.9, "dicas": "Pés na largura dos ombros, sem travar os joelhos no topo." },
+        { "nome": "Cadeira extensora", "grupo": "pernas", "tipo": "isolador", "series": 4, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.15, "dicas": "Segure 1 segundo na contração máxima do quadríceps." },
+        { "nome": "Mesa flexora", "grupo": "pernas", "tipo": "isolador", "series": 4, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.15, "dicas": "Controle a descida para não roubar com o quadril." },
+        { "nome": "Panturrilha em pé", "grupo": "panturrilha", "tipo": "isolador", "series": 4, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": 0.5, "dicas": "Amplitude completa: suba na ponta dos pés e desça devagar." },
+        { "nome": "Prancha isométrica", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Mantenha o corpo em linha reta por 30 a 45 segundos." }
+      ]
+    },
+    {
+      "titulo": "Dia D — Push B (variações)",
+      "exercicios": [
+        { "nome": "Supino inclinado com barra", "grupo": "peito", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.4, "dicas": "Banco a 30° — inclinações maiores deslocam o esforço para o ombro." },
+        { "nome": "Supino reto com halteres", "grupo": "peito", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.3, "dicas": "Amplitude maior que a barra — desça até sentir o alongamento." },
+        { "nome": "Desenvolvimento militar com barra", "grupo": "ombro", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.3, "dicas": "Empurre a barra do peito até a extensão completa dos braços." },
+        { "nome": "Crucifixo na máquina", "grupo": "peito", "tipo": "isolador", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.2, "dicas": "Aperte o peito no fechamento e volte devagar." },
+        { "nome": "Tríceps francês com halter", "grupo": "triceps", "tipo": "isolador", "series": 4, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.1, "dicas": "Desça o halter atrás da cabeça flexionando apenas os cotovelos." },
+        { "nome": "Elevação frontal", "grupo": "ombro", "tipo": "isolador", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": 0.05, "dicas": "Alterne os braços e suba até a altura dos olhos." }
+      ]
+    },
+    {
+      "titulo": "Dia E — Pull B (variações)",
+      "exercicios": [
+        { "nome": "Levantamento terra", "grupo": "costas", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.75, "dicas": "Coluna neutra do início ao fim; empurre o chão com os pés." },
+        { "nome": "Remada unilateral com halter", "grupo": "costas", "tipo": "composto", "series": 4, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.25, "dicas": "Apoie joelho e mão no banco e puxe o halter em direção ao quadril." },
+        { "nome": "Puxada alta com pegada fechada", "grupo": "costas", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.5, "dicas": "Use o triângulo e puxe até a parte baixa do peito." },
+        { "nome": "Face pull na polia", "grupo": "ombro", "tipo": "isolador", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.2, "dicas": "Puxe a corda em direção ao rosto com os cotovelos altos." },
+        { "nome": "Rosca scott", "grupo": "biceps", "tipo": "isolador", "series": 4, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.12, "dicas": "Desça quase até estender o braço, sem encostar o peso no apoio." },
+        { "nome": "Rosca concentrada", "grupo": "biceps", "tipo": "isolador", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.08, "dicas": "Cotovelo apoiado na parte interna da coxa; suba girando o punho." }
+      ]
+    },
+    {
+      "titulo": "Dia F — Legs B (posterior e glúteos)",
+      "exercicios": [
+        { "nome": "Stiff com barra", "grupo": "posterior", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.5, "dicas": "Empine o quadril para trás sentindo o alongamento dos posteriores." },
+        { "nome": "Agachamento frontal com barra", "grupo": "pernas", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.5, "dicas": "Cotovelos altos e tronco ereto durante toda a descida." },
+        { "nome": "Afundo com halteres", "grupo": "pernas", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.3, "dicas": "Passo largo, joelho da frente alinhado ao tornozelo." },
+        { "nome": "Cadeira flexora", "grupo": "posterior", "tipo": "isolador", "series": 4, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.12, "dicas": "Mantenha o quadril apoiado no banco durante toda a série." },
+        { "nome": "Panturrilha sentado", "grupo": "panturrilha", "tipo": "isolador", "series": 4, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": 0.3, "dicas": "Foco no sóleo — pause 1 segundo em cima e embaixo." },
+        { "nome": "Abdominal supra", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Enrole o tronco devagar, subindo e descendo sem embalo." }
+      ]
+    }
+  ]
+}

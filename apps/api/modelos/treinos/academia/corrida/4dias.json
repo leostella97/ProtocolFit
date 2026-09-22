@@ -1,0 +1,47 @@
+{
+  "nome": "Corrida — Fortalecimento Completo (4 dias)",
+  "modalidade": "academia",
+  "objetivo": "corrida",
+  "dias": 4,
+  "duracao_estimada_min": 40,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Força de Pernas",
+      "exercicios": [
+        { "nome": "Agachamento livre", "grupo": "pernas", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.6, "dicas": "Base de força para a passada." },
+        { "nome": "Stiff com barra", "grupo": "posterior", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.5, "dicas": "Protege os isquiotibiais nas tiradas de velocidade." },
+        { "nome": "Afundo com halteres", "grupo": "pernas", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.25, "dicas": "Simula a mecânica da passada." },
+        { "nome": "Panturrilha em pé", "grupo": "panturrilha", "tipo": "isolador", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": 0.4, "dicas": "Motor da propulsão — não negligencie." }
+      ]
+    },
+    {
+      "titulo": "Dia B — Core e Mobilidade",
+      "exercicios": [
+        { "nome": "Prancha isométrica", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "30 a 45 segundos com o corpo em linha reta." },
+        { "nome": "Prancha lateral", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "30 segundos de cada lado." },
+        { "nome": "Abdominal infra no banco", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Lombar colada no banco." },
+        { "nome": "Alongamento dinâmico de quadril", "grupo": "mobilidade", "tipo": "corporal", "series": 2, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Círculos amplos de quadril nos dois sentidos." },
+        { "nome": "Balanço de pernas", "grupo": "mobilidade", "tipo": "corporal", "series": 2, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Para frente, para trás e lateralmente." }
+      ]
+    },
+    {
+      "titulo": "Dia C — Força Total",
+      "exercicios": [
+        { "nome": "Levantamento terra", "grupo": "posterior", "tipo": "composto", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.7, "dicas": "Potência para as subidas." },
+        { "nome": "Supino reto com halteres", "grupo": "peito", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.25, "dicas": "Força de empurrar para a braçada." },
+        { "nome": "Remada curvada com barra", "grupo": "costas", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.35, "dicas": "Postura de corrida: ombros longe das orelhas." },
+        { "nome": "Elevação pélvica com barra", "grupo": "gluteos", "tipo": "composto", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.3, "dicas": "Glúteo forte = quadril estável." }
+      ]
+    },
+    {
+      "titulo": "Dia D — Potência e Educativos",
+      "exercicios": [
+        { "nome": "Agachamento com salto", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Salto alto e aterrissagem macia." },
+        { "nome": "Kettlebell swing ou stiff leve", "grupo": "posterior", "tipo": "composto", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.3, "dicas": "Explosão do quadril — mecânica da passada." },
+        { "nome": "Panturrilha unipodal", "grupo": "panturrilha", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Amplitude total, uma perna por vez." },
+        { "nome": "Skipping alto (educativo)", "grupo": "tecnica", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Joelhos altos, aterrissando na parte da frente do pé." },
+        { "nome": "Corrida leve", "grupo": "cardio", "tipo": "cardio", "series": 1, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 0, "percentual_carga_peso_corporal": null, "dicas": "20 a 30 minutos em ritmo confortável." }
+      ]
+    }
+  ]
+}

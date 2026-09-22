@@ -1,0 +1,42 @@
+{
+  "nome": "Calistenia Hipertrofia — 3 dias (Empurrar/Puxar/Pernas)",
+  "modalidade": "pesocorporal",
+  "objetivo": "hipertrofia",
+  "dias": 3,
+  "duracao_estimada_min": 50,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Empurrar (Peito, Ombro e Tríceps)",
+      "exercicios": [
+        { "nome": "Flexão de braço padrão", "grupo": "peito", "tipo": "corporal", "series": 4, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Corpo em linha reta; desça até o peito quase tocar o chão." },
+        { "nome": "Flexão declinada (pés elevados)", "grupo": "peito", "tipo": "corporal", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Pés sobre uma cadeira para focar a parte superior do peito." },
+        { "nome": "Flexão diamante", "grupo": "triceps", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Mãos unidas formando um losango sob o peito." },
+        { "nome": "Mergulho no banco", "grupo": "triceps", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Cotovelos para trás, costas próximas do banco." },
+        { "nome": "Flexão pike (desenvolvimento invertido)", "grupo": "ombro", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Quadril alto, desça a cabeça em direção ao chão." },
+        { "nome": "Prancha isométrica", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "30 a 45 segundos mantendo o corpo firme." }
+      ]
+    },
+    {
+      "titulo": "Dia B — Puxar (Costas e Bíceps)",
+      "exercicios": [
+        { "nome": "Barra fixa supinada", "grupo": "costas", "tipo": "corporal", "series": 4, "repeticoes_min": 6, "repeticoes_max": 10, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Palmas voltadas para você — foco em costas e bíceps." },
+        { "nome": "Barra fixa pronada", "grupo": "costas", "tipo": "corporal", "series": 3, "repeticoes_min": 5, "repeticoes_max": 8, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Se precisar, use elástico de assistência." },
+        { "nome": "Remada australiana", "grupo": "costas", "tipo": "corporal", "series": 4, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Use uma mesa resistente; puxe o peito em direção à borda." },
+        { "nome": "Isometria na barra (topo)", "grupo": "costas", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Segure 15 a 30 segundos com o queixo acima da barra." },
+        { "nome": "Flexão com pegada fechada invertida", "grupo": "biceps", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Mãos apontadas para os pés — recruta bastante o bíceps." },
+        { "nome": "Abdominal infra", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Pernas estendidas, lombar sempre no chão." }
+      ]
+    },
+    {
+      "titulo": "Dia C — Pernas e Core",
+      "exercicios": [
+        { "nome": "Agachamento búlgaro", "grupo": "pernas", "tipo": "corporal", "series": 4, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Pé de trás apoiado em uma cadeira; desça com controle." },
+        { "nome": "Agachamento com salto", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Explosão no salto e aterrissagem macia." },
+        { "nome": "Afundo alternado", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Passo largo e joelho alinhado ao tornozelo." },
+        { "nome": "Ponte de glúteo unilateral", "grupo": "gluteos", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Aperte o glúteo no topo e segure 1 segundo." },
+        { "nome": "Panturrilha unipodal", "grupo": "panturrilha", "tipo": "corporal", "series": 4, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Amplitude total na ponta do pé." },
+        { "nome": "Prancha lateral", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "30 segundos de cada lado, quadril elevado." }
+      ]
+    }
+  ]
+}

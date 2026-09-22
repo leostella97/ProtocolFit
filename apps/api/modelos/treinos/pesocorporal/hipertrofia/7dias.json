@@ -1,0 +1,82 @@
+{
+  "nome": "Calistenia Hipertrofia — 7 dias (Empurrar/Puxar/Pernas ×2 + Mobilidade)",
+  "modalidade": "pesocorporal",
+  "objetivo": "hipertrofia",
+  "dias": 7,
+  "duracao_estimada_min": 45,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Empurrar A",
+      "exercicios": [
+        { "nome": "Flexão com pegada larga", "grupo": "peito", "tipo": "corporal", "series": 4, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Mãos bem afastadas; desça até quase tocar o chão." },
+        { "nome": "Flexão com déficit (mãos sobre livros)", "grupo": "peito", "tipo": "corporal", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Apoie as mãos em livros para alongar mais o peito." },
+        { "nome": "Flexão diamante", "grupo": "triceps", "tipo": "corporal", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Mãos em losango sob o peito; cotovelos rentes ao corpo." },
+        { "nome": "Flexão pike (desenvolvimento invertido)", "grupo": "ombro", "tipo": "corporal", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Quadril alto; desça a cabeça em direção ao chão." },
+        { "nome": "Extensão de tríceps no banco", "grupo": "triceps", "tipo": "corporal", "series": 4, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Corpo inclinado à frente; cotovelos dobrando para trás." }
+      ]
+    },
+    {
+      "titulo": "Dia B — Puxar A",
+      "exercicios": [
+        { "nome": "Barra fixa supinada com pausa no topo", "grupo": "costas", "tipo": "corporal", "series": 4, "repeticoes_min": 6, "repeticoes_max": 10, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Segure 1 segundo com o queixo acima da barra." },
+        { "nome": "Barra fixa pronada", "grupo": "costas", "tipo": "corporal", "series": 4, "repeticoes_min": 5, "repeticoes_max": 8, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Comece puxando as escápulas para baixo e para trás." },
+        { "nome": "Remada australiana", "grupo": "costas", "tipo": "corporal", "series": 4, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Use uma mesa resistente; puxe o peito em direção à borda." },
+        { "nome": "Isometria na barra (topo)", "grupo": "costas", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Segure 15 a 30 segundos com o queixo acima da barra." },
+        { "nome": "Flexão com pegada invertida", "grupo": "biceps", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Mãos apontadas para os pés; desça devagar." }
+      ]
+    },
+    {
+      "titulo": "Dia C — Pernas A",
+      "exercicios": [
+        { "nome": "Agachamento búlgaro", "grupo": "pernas", "tipo": "corporal", "series": 4, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Pé de trás na cadeira; segure uma mochila para progredir." },
+        { "nome": "Agachamento pistola assistido", "grupo": "pernas", "tipo": "corporal", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Segure num apoio e desça o máximo que conseguir numa perna." },
+        { "nome": "Afundo alternado", "grupo": "pernas", "tipo": "corporal", "series": 4, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Passo largo e joelho alinhado ao tornozelo." },
+        { "nome": "Ponte de glúteo com pés elevados", "grupo": "gluteos", "tipo": "corporal", "series": 4, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Pés na cadeira; aperte o glúteo no topo por 2 segundos." },
+        { "nome": "Panturrilha unipodal", "grupo": "panturrilha", "tipo": "corporal", "series": 4, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Amplitude total na ponta do pé." },
+        { "nome": "Prancha isométrica", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "30 a 45 segundos com o corpo firme." }
+      ]
+    },
+    {
+      "titulo": "Dia D — Empurrar B",
+      "exercicios": [
+        { "nome": "Flexão declinada (pés elevados)", "grupo": "peito", "tipo": "corporal", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Pés na cadeira; foco no peito superior." },
+        { "nome": "Flexão explosiva (com palmas)", "grupo": "peito", "tipo": "corporal", "series": 4, "repeticoes_min": 6, "repeticoes_max": 10, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Empurre o chão com força; sem palmas se precisar." },
+        { "nome": "Flexão arqueiro", "grupo": "peito", "tipo": "corporal", "series": 4, "repeticoes_min": 6, "repeticoes_max": 10, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Desloque o peso para um braço de cada vez." },
+        { "nome": "Desenvolvimento pike com pés na parede", "grupo": "ombro", "tipo": "corporal", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Quanto mais perto da parede, maior a carga nos ombros." },
+        { "nome": "Mergulho no banco com pés elevados", "grupo": "triceps", "tipo": "corporal", "series": 4, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Pés apoiados em outra cadeira para intensificar." }
+      ]
+    },
+    {
+      "titulo": "Dia E — Puxar B",
+      "exercicios": [
+        { "nome": "Barra fixa negativa (excêntrica)", "grupo": "costas", "tipo": "corporal", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Suba com impulso e desça o mais devagar que conseguir." },
+        { "nome": "Remada australiana com pegada supinada", "grupo": "costas", "tipo": "corporal", "series": 4, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Palmas voltadas para você; ênfase extra no bíceps." },
+        { "nome": "Remada australiana com pausa no topo", "grupo": "costas", "tipo": "corporal", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Segure 1 segundo com o peito encostado na barra." },
+        { "nome": "Isometria suspensa a 90 graus", "grupo": "costas", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Segure 10 a 20 segundos com os cotovelos a 90 graus." },
+        { "nome": "Flexão com pegada invertida e pausa", "grupo": "biceps", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Pare 1 segundo no topo de cada repetição." }
+      ]
+    },
+    {
+      "titulo": "Dia F — Pernas B",
+      "exercicios": [
+        { "nome": "Agachamento cossaco", "grupo": "pernas", "tipo": "corporal", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Desça de lado com uma perna estendida; segure num apoio se precisar." },
+        { "nome": "Afundo reverso", "grupo": "pernas", "tipo": "corporal", "series": 4, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Passo para trás; joelho da frente alinhado ao tornozelo." },
+        { "nome": "Agachamento com salto", "grupo": "pernas", "tipo": "corporal", "series": 4, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Explosão no salto e aterrissagem macia." },
+        { "nome": "Ponte de glúteo com pés elevados", "grupo": "gluteos", "tipo": "corporal", "series": 4, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Pés na cadeira; contraia o glúteo no topo." },
+        { "nome": "Panturrilha unipodal com pausa", "grupo": "panturrilha", "tipo": "corporal", "series": 4, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Pare 2 segundos no topo em cada repetição." },
+        { "nome": "Montanhista (mountain climber)", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Ritmo rápido, quadril baixo e estável." }
+      ]
+    },
+    {
+      "titulo": "Dia G — Mobilidade, Alongamento e Técnica",
+      "exercicios": [
+        { "nome": "Pendurar na barra (dead hang)", "grupo": "costas", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Segure pendurado 30 a 60 segundos para soltar as costas." },
+        { "nome": "Círculos de quadril", "grupo": "mobilidade", "tipo": "corporal", "series": 2, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Círculos amplos nos dois sentidos." },
+        { "nome": "Balanço de pernas", "grupo": "mobilidade", "tipo": "corporal", "series": 2, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Frente, trás e lados — solte o quadril." },
+        { "nome": "Alongamento de posterior sentado", "grupo": "mobilidade", "tipo": "corporal", "series": 2, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Alcance o pé à frente mantendo as costas alongadas." },
+        { "nome": "Alongamento de flexores de quadril", "grupo": "mobilidade", "tipo": "corporal", "series": 2, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Avanço profundo e suave, quadril encaixado." },
+        { "nome": "Caminhada leve", "grupo": "cardio", "tipo": "cardio", "series": 1, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 0, "percentual_carga_peso_corporal": null, "dicas": "10 a 15 minutos de caminhada leve para acelerar a recuperação." }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "nome": "Corrida — Força e Técnica Diária (6 dias)",
+  "modalidade": "academia",
+  "objetivo": "corrida",
+  "dias": 6,
+  "duracao_estimada_min": 40,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Força de Pernas A",
+      "exercicios": [
+        { "nome": "Agachamento frontal", "grupo": "pernas", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.5, "dicas": "Tronco ereto; fortalece o quadríceps sem pesar a lombar." },
+        { "nome": "Terra romeno", "grupo": "posterior", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.5, "dicas": "Empurre o quadril para trás e mantenha a barra rente à perna." },
+        { "nome": "Afundo reverso com halteres", "grupo": "pernas", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.2, "dicas": "Passo para trás é mais seguro para os joelhos." },
+        { "nome": "Panturrilha em pé", "grupo": "panturrilha", "tipo": "isolador", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": 0.4, "dicas": "Propulsão da passada: amplitude total e cadência lenta." },
+        { "nome": "Cadeira flexora", "grupo": "posterior", "tipo": "isolador", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.3, "dicas": "Complete os posteriores com controle, sem roubar." }
+      ]
+    },
+    {
+      "titulo": "Dia B — Core e Mobilidade A",
+      "exercicios": [
+        { "nome": "Prancha isométrica", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Corpo em linha reta por 30 a 45 segundos." },
+        { "nome": "Prancha lateral", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "30 segundos de cada lado, quadril alto." },
+        { "nome": "Abdominal infra", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Lombar colada no chão durante toda a série." },
+        { "nome": "Balanço de pernas", "grupo": "mobilidade", "tipo": "corporal", "series": 2, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Solte o quadril nos três planos de movimento." },
+        { "nome": "Alongamento dinâmico de flexores de quadril", "grupo": "mobilidade", "tipo": "corporal", "series": 2, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Avanço amplo e suave, sem trancos." }
+      ]
+    },
+    {
+      "titulo": "Dia C — Força Total A",
+      "exercicios": [
+        { "nome": "Levantamento terra", "grupo": "posterior", "tipo": "composto", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.7, "dicas": "Força de base: costas retas e barra próxima do corpo." },
+        { "nome": "Supino reto com halteres", "grupo": "peito", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.25, "dicas": "Equilíbrio muscular para uma braçada eficiente." },
+        { "nome": "Remada curvada com barra", "grupo": "costas", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.35, "dicas": "Puxe com as costas, não com os braços." },
+        { "nome": "Elevação pélvica com barra", "grupo": "gluteos", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.3, "dicas": "Aperte o glúteo no topo por 1 segundo." },
+        { "nome": "Desenvolvimento com halteres", "grupo": "ombro", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.1, "dicas": "Estabilize o tronco ao empurrar para cima." }
+      ]
+    },
+    {
+      "titulo": "Dia D — Técnica e Potência A",
+      "exercicios": [
+        { "nome": "Agachamento com salto", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Aterrissagem silenciosa: controle a descida." },
+        { "nome": "Kettlebell swing", "grupo": "posterior", "tipo": "composto", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.3, "dicas": "Explosão do quadril, braços apenas conduzindo." },
+        { "nome": "Panturrilha unipodal", "grupo": "panturrilha", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Apoie-se numa parede e faça amplitude máxima." },
+        { "nome": "Skipping alto (educativo)", "grupo": "tecnica", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Joelhos altos, pouso na parte da frente do pé." },
+        { "nome": "Corrida leve", "grupo": "cardio", "tipo": "cardio", "series": 1, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 0, "percentual_carga_peso_corporal": null, "dicas": "20 a 30 minutos em ritmo confortável." }
+      ]
+    },
+    {
+      "titulo": "Dia E — Força de Pernas B",
+      "exercicios": [
+        { "nome": "Agachamento búlgaro", "grupo": "pernas", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.2, "dicas": "Desça devagar e empurre pelo calcanhar da frente." },
+        { "nome": "Stiff com barra", "grupo": "posterior", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.5, "dicas": "Joelhos levemente flexionados; sinta o alongamento." },
+        { "nome": "Cadeira extensora", "grupo": "pernas", "tipo": "isolador", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.3, "dicas": "Segure 1 segundo no topo em cada repetição." },
+        { "nome": "Panturrilha sentado", "grupo": "panturrilha", "tipo": "isolador", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": 0.35, "dicas": "Trabalha o sóleo, essencial para a resistência." },
+        { "nome": "Prancha com toque no ombro", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Toque o ombro oposto sem balançar o quadril." }
+      ]
+    },
+    {
+      "titulo": "Dia F — Core, Mobilidade e Técnica B",
+      "exercicios": [
+        { "nome": "Abdominal supra", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Subida lenta, descida controlada." },
+        { "nome": "Prancha lateral com elevação de quadril", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Desça e suba o quadril com controle, dos dois lados." },
+        { "nome": "Alongamento dinâmico de pernas", "grupo": "mobilidade", "tipo": "corporal", "series": 2, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Balanços amplos para frente e para trás, sem forçar." },
+        { "nome": "Anfersen (calcanhar no glúteo)", "grupo": "tecnica", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Passadas curtas e rápidas, quadril alto." },
+        { "nome": "Corrida leve", "grupo": "cardio", "tipo": "cardio", "series": 1, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 0, "percentual_carga_peso_corporal": null, "dicas": "20 a 30 minutos em ritmo confortável." }
+      ]
+    }
+  ]
+}

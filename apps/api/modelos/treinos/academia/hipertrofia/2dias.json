@@ -1,0 +1,31 @@
+{
+  "nome": "Hipertrofia Full Body — 2 dias (AB)",
+  "modalidade": "academia",
+  "objetivo": "hipertrofia",
+  "dias": 2,
+  "duracao_estimada_min": 65,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Corpo Inteiro A (empurrar e puxar)",
+      "exercicios": [
+        { "nome": "Agachamento livre", "grupo": "pernas", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.6, "dicas": "Comece pelo exercício mais pesado, com o corpo ainda descansado." },
+        { "nome": "Supino reto com barra", "grupo": "peito", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.5, "dicas": "Escápulas firmes no banco e pés plantados no chão." },
+        { "nome": "Remada curvada com barra", "grupo": "costas", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.45, "dicas": "Tronco a 45° e coluna neutra — puxe com os cotovelos." },
+        { "nome": "Desenvolvimento com halteres", "grupo": "ombro", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.2, "dicas": "Suba os halteres sem arquear a lombar." },
+        { "nome": "Rosca direta com barra", "grupo": "biceps", "tipo": "isolador", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.15, "dicas": "Cotovelos fixos ao lado do tronco, sem balanço." },
+        { "nome": "Abdominal supra", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Contraia o abdômen para enrolar o tronco, sem puxar o pescoço." }
+      ]
+    },
+    {
+      "titulo": "Dia B — Corpo Inteiro B (força e volume)",
+      "exercicios": [
+        { "nome": "Levantamento terra", "grupo": "costas", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.75, "dicas": "Barra próxima ao corpo e quadril para trás no início do movimento." },
+        { "nome": "Supino inclinado com halteres", "grupo": "peito", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.3, "dicas": "Banco a 30° para dar ênfase à porção superior do peito." },
+        { "nome": "Leg press 45°", "grupo": "pernas", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.9, "dicas": "Desça até 90° de flexão de joelhos sem tirar o quadril do apoio." },
+        { "nome": "Puxada frente na polia", "grupo": "costas", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.55, "dicas": "Leve a barra até a clavícula abrindo bem o peito." },
+        { "nome": "Tríceps na polia com corda", "grupo": "triceps", "tipo": "isolador", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.15, "dicas": "Estenda os cotovelos por completo e abra a corda no final." },
+        { "nome": "Prancha isométrica", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Mantenha abdômen e glúteos contraídos por 30 a 45 segundos." }
+      ]
+    }
+  ]
+}

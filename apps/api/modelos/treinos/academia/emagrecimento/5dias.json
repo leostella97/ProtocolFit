@@ -1,0 +1,60 @@
+{
+  "nome": "Emagrecimento — 5 dias de alta densidade",
+  "modalidade": "academia",
+  "objetivo": "emagrecimento",
+  "dias": 5,
+  "duracao_estimada_min": 45,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Pernas e Glúteos + Cardio",
+      "exercicios": [
+        { "nome": "Agachamento livre", "grupo": "pernas", "tipo": "composto", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.5, "dicas": "Desça fundo mantendo os calcanhares no chão." },
+        { "nome": "Afundo caminhando", "grupo": "pernas", "tipo": "composto", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.2, "dicas": "Dê passos largos contínuos pelo salão." },
+        { "nome": "Mesa flexora", "grupo": "posterior", "tipo": "isolador", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": 0.12, "dicas": "Controle a descida por 2 segundos." },
+        { "nome": "Elevação pélvica com barra", "grupo": "gluteos", "tipo": "composto", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.3, "dicas": "Aperte o glúteo no topo e segure 1 segundo." },
+        { "nome": "Esteira ou bicicleta", "grupo": "cardio", "tipo": "cardio", "series": 1, "repeticoes_min": 20, "repeticoes_max": 25, "descanso_segundos": 0, "percentual_carga_peso_corporal": null, "dicas": "20 a 25 minutos em ritmo moderado." }
+      ]
+    },
+    {
+      "titulo": "Dia B — Peito e Tríceps + HIIT",
+      "exercicios": [
+        { "nome": "Supino reto com barra", "grupo": "peito", "tipo": "composto", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.4, "dicas": "Descida controlada em 2 segundos." },
+        { "nome": "Supino inclinado com halteres", "grupo": "peito", "tipo": "composto", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.2, "dicas": "Junta os halteres no topo para contrair o peito." },
+        { "nome": "Crossover na polia", "grupo": "peito", "tipo": "isolador", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": 0.12, "dicas": "Repetições altas com carga leve." },
+        { "nome": "Tríceps na polia com corda", "grupo": "triceps", "tipo": "isolador", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": 0.12, "dicas": "Abra a corda ao final de cada extensão." },
+        { "nome": "HIIT na bicicleta", "grupo": "cardio", "tipo": "cardio", "series": 1, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 0, "percentual_carga_peso_corporal": null, "dicas": "15 a 20 minutos: 30s forte + 60s leve." }
+      ]
+    },
+    {
+      "titulo": "Dia C — Costas e Bíceps + Cardio",
+      "exercicios": [
+        { "nome": "Puxada frente na polia", "grupo": "costas", "tipo": "composto", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.45, "dicas": "Barra até a clavícula, peito estufado." },
+        { "nome": "Remada baixa sentado", "grupo": "costas", "tipo": "composto", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.35, "dicas": "Escápulas se encontram no final do movimento." },
+        { "nome": "Barra fixa (elástico se preciso)", "grupo": "costas", "tipo": "corporal", "series": 3, "repeticoes_min": 6, "repeticoes_max": 10, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Use elástico para completar as repetições." },
+        { "nome": "Rosca direta com halteres", "grupo": "biceps", "tipo": "isolador", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": 0.1, "dicas": "Alterne os braços mantendo o ritmo." },
+        { "nome": "Caminhada inclinada", "grupo": "cardio", "tipo": "cardio", "series": 1, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 0, "percentual_carga_peso_corporal": null, "dicas": "20 a 30 minutos com 8 a 10% de inclinação." }
+      ]
+    },
+    {
+      "titulo": "Dia D — Ombros e Core + HIIT",
+      "exercicios": [
+        { "nome": "Desenvolvimento com halteres", "grupo": "ombro", "tipo": "composto", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.15, "dicas": "Sobe e desce sem travar os cotovelos." },
+        { "nome": "Elevação lateral", "grupo": "ombro", "tipo": "isolador", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": 0.04, "dicas": "Carga bem leve; queime com repetições altas." },
+        { "nome": "Face pull na polia", "grupo": "ombro", "tipo": "isolador", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": 0.15, "dicas": "Cotovelos altos, puxando em direção ao rosto." },
+        { "nome": "Abdominal infra no banco", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Pernas estendidas na subida quando possível." },
+        { "nome": "HIIT na esteira", "grupo": "cardio", "tipo": "cardio", "series": 1, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 0, "percentual_carga_peso_corporal": null, "dicas": "15 a 20 minutos: 30s de trote forte + 90s de caminhada." }
+      ]
+    },
+    {
+      "titulo": "Dia E — Corpo Inteiro em Circuito",
+      "exercicios": [
+        { "nome": "Agachamento com barra", "grupo": "pernas", "tipo": "composto", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.35, "dicas": "Ritmo contínuo — é um circuito, mantenha o coração acelerado." },
+        { "nome": "Supino reto com halteres", "grupo": "peito", "tipo": "composto", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.15, "dicas": "Repetições altas e contínuas." },
+        { "nome": "Remada curvada com barra", "grupo": "costas", "tipo": "composto", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.25, "dicas": "Costas neutras mesmo com o cansaço." },
+        { "nome": "Afundo alternado", "grupo": "pernas", "tipo": "composto", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.15, "dicas": "Passos firmes, joelho de trás quase no chão." },
+        { "nome": "Prancha com toque de ombro", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Toque o ombro oposto sem deixar o quadril girar." },
+        { "nome": "Bicicleta ergométrica", "grupo": "cardio", "tipo": "cardio", "series": 1, "repeticoes_min": 20, "repeticoes_max": 25, "descanso_segundos": 0, "percentual_carga_peso_corporal": null, "dicas": "20 a 25 minutos leves para finalizar a semana." }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "nome": "Calistenia Hipertrofia — 2 dias (Full Body)",
+  "modalidade": "pesocorporal",
+  "objetivo": "hipertrofia",
+  "dias": 2,
+  "duracao_estimada_min": 55,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Full Body A",
+      "exercicios": [
+        { "nome": "Flexão de braço padrão", "grupo": "peito", "tipo": "corporal", "series": 4, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Se ficar fácil, eleve os pés ou adicione pausa de 2 segundos embaixo." },
+        { "nome": "Remada australiana", "grupo": "costas", "tipo": "corporal", "series": 4, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Corpo reto; quanto mais baixa a barra, maior a dificuldade." },
+        { "nome": "Agachamento búlgaro", "grupo": "pernas", "tipo": "corporal", "series": 4, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Progrida segurando uma mochila pesada junto ao peito." },
+        { "nome": "Flexão pike (desenvolvimento invertido)", "grupo": "ombro", "tipo": "corporal", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Quadril alto; eleve os pés numa cadeira para dificultar." },
+        { "nome": "Ponte de glúteo unilateral", "grupo": "gluteos", "tipo": "corporal", "series": 4, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Aperte o glúteo no topo e segure 1 segundo em cada repetição." },
+        { "nome": "Prancha isométrica", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "30 a 45 segundos firmes; para progredir, estenda um braço." }
+      ]
+    },
+    {
+      "titulo": "Dia B — Full Body B",
+      "exercicios": [
+        { "nome": "Flexão declinada (pés elevados)", "grupo": "peito", "tipo": "corporal", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Pés na cadeira; quanto mais altos, maior o foco no peito superior." },
+        { "nome": "Barra fixa supinada", "grupo": "costas", "tipo": "corporal", "series": 4, "repeticoes_min": 6, "repeticoes_max": 10, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Se não completar as séries, use elástico de assistência." },
+        { "nome": "Afundo alternado", "grupo": "pernas", "tipo": "corporal", "series": 4, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Passo largo e joelho alinhado; progrida para saltos na troca." },
+        { "nome": "Mergulho no banco", "grupo": "triceps", "tipo": "corporal", "series": 4, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Cotovelos para trás; estique as pernas para dificultar." },
+        { "nome": "Panturrilha unipodal", "grupo": "panturrilha", "tipo": "corporal", "series": 4, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Amplitude total; faça na ponta de um degrau para progredir." },
+        { "nome": "Abdominal infra", "grupo": "core", "tipo": "corporal", "series": 4, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Lombar no chão; desça as pernas estendidas sem tocar o solo." }
+      ]
+    }
+  ]
+}

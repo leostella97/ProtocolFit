@@ -1,0 +1,25 @@
+{
+  "name": "protocolfit",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ProtocolFit — SaaS web de geração e gestão automatizada de treinos e dietas personalizadas. Alta velocidade, custo de infraestrutura mínimo e zero dependência de APIs de IA.",
+  "workspaces": [
+    "apps/api",
+    "apps/web"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev:api": "npm run dev --workspace @protocolfit/api",
+    "dev:web": "npm run dev --workspace @protocolfit/web",
+    "build:api": "npm run build --workspace @protocolfit/api",
+    "build:web": "npm run build --workspace @protocolfit/web",
+    "build": "npm run build:api && npm run build:web",
+    "typecheck": "npm run typecheck --workspaces --if-present"
+  },
+  "allowScripts": {
+    "better-sqlite3@12.11.1": true,
+    "esbuild@0.28.2": true
+  }
+}

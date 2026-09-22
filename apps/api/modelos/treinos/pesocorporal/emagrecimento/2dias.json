@@ -1,0 +1,31 @@
+{
+  "nome": "HIIT Corporal para Emagrecimento — 2 dias",
+  "modalidade": "pesocorporal",
+  "objetivo": "emagrecimento",
+  "dias": 2,
+  "duracao_estimada_min": 40,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Circuito Metabólico de Corpo Inteiro",
+      "exercicios": [
+        { "nome": "Agachamento com salto", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Salto explosivo com aterrissagem macia; se cansar, faça sem o salto." },
+        { "nome": "Flexão de braço", "grupo": "peito", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Corpo em linha reta; apoie os joelhos para manter o ritmo." },
+        { "nome": "Montanhista (mountain climber)", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Joelhos em direção ao peito em ritmo acelerado." },
+        { "nome": "Afundo alternado", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Passo largo e joelho alinhado ao tornozelo." },
+        { "nome": "Mergulho no banco", "grupo": "triceps", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Cotovelos para trás, costas próximas do apoio." },
+        { "nome": "Polichinelo", "grupo": "cardio", "tipo": "cardio", "series": 3, "repeticoes_min": 30, "repeticoes_max": 45, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Mantenha o ritmo constante por 30 a 45 segundos." }
+      ]
+    },
+    {
+      "titulo": "Dia B — Circuito Inferior e Core",
+      "exercicios": [
+        { "nome": "Agachamento sumô com elevação de calcanhar", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Pés afastados e pontas para fora; suba na ponta dos pés no topo." },
+        { "nome": "Ponte de glúteo com pausa no topo", "grupo": "gluteos", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Aperte o glúteo e segure 1 segundo no topo." },
+        { "nome": "Afundo caminhando", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Dê passos contínuos mantendo o tronco firme." },
+        { "nome": "Prancha com toque de ombro", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Quadril estável — só o braço se move." },
+        { "nome": "Panturrilha unipodal", "grupo": "panturrilha", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Ritmo rápido e amplitude total." },
+        { "nome": "Corrida estacionária", "grupo": "cardio", "tipo": "cardio", "series": 3, "repeticoes_min": 30, "repeticoes_max": 45, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Joelhos altos e braços ativos por 30 a 45 segundos." }
+      ]
+    }
+  ]
+}

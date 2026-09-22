@@ -1,0 +1,139 @@
+{
+  "nome": "Dieta para Emagrecimento — déficit de 20%",
+  "objetivo": "emagrecimento",
+  "refeicoes": [
+    {
+      "tipo": "Café da manhã",
+      "horario_sugerido": "07:00",
+      "percentual_calorias": 0.25,
+      "itens": [
+        {
+          "nome": "Ovos inteiros", "categoria": "proteina", "percentual_da_refeicao": 0.5, "calorias_por_100g": 155, "proteinas_por_100g": 13, "carboidratos_por_100g": 1.1, "gorduras_por_100g": 11, "unidade": "g",
+          "alternativas": [
+            { "nome": "Claras de ovo", "calorias_por_100g": 52, "proteinas_por_100g": 11, "carboidratos_por_100g": 0.7, "gorduras_por_100g": 0.2 },
+            { "nome": "Iogurte natural desnatado", "calorias_por_100g": 59, "proteinas_por_100g": 10, "carboidratos_por_100g": 3.6, "gorduras_por_100g": 0.4 }
+          ]
+        },
+        {
+          "nome": "Aveia em flocos", "categoria": "carboidrato", "percentual_da_refeicao": 0.3, "calorias_por_100g": 389, "proteinas_por_100g": 16.9, "carboidratos_por_100g": 66.3, "gorduras_por_100g": 6.9, "unidade": "g",
+          "alternativas": [
+            { "nome": "Pão integral", "calorias_por_100g": 247, "proteinas_por_100g": 13, "carboidratos_por_100g": 41.3, "gorduras_por_100g": 3.4 },
+            { "nome": "Tapioca", "calorias_por_100g": 240, "proteinas_por_100g": 0.3, "carboidratos_por_100g": 57.5, "gorduras_por_100g": 0.1 }
+          ]
+        },
+        {
+          "nome": "Banana", "categoria": "fruta", "percentual_da_refeicao": 0.2, "calorias_por_100g": 89, "proteinas_por_100g": 1.1, "carboidratos_por_100g": 22.8, "gorduras_por_100g": 0.3, "unidade": "g",
+          "alternativas": [
+            { "nome": "Maçã", "calorias_por_100g": 52, "proteinas_por_100g": 0.3, "carboidratos_por_100g": 13.8, "gorduras_por_100g": 0.2 },
+            { "nome": "Mamão", "calorias_por_100g": 43, "proteinas_por_100g": 0.5, "carboidratos_por_100g": 10.8, "gorduras_por_100g": 0.3 }
+          ]
+        }
+      ]
+    },
+    {
+      "tipo": "Lanche da manhã",
+      "horario_sugerido": "10:00",
+      "percentual_calorias": 0.1,
+      "itens": [
+        {
+          "nome": "Iogurte natural desnatado", "categoria": "proteina", "percentual_da_refeicao": 0.6, "calorias_por_100g": 59, "proteinas_por_100g": 10, "carboidratos_por_100g": 3.6, "gorduras_por_100g": 0.4, "unidade": "g",
+          "alternativas": [
+            { "nome": "Queijo cottage", "calorias_por_100g": 98, "proteinas_por_100g": 11.1, "carboidratos_por_100g": 3.4, "gorduras_por_100g": 4.3 }
+          ]
+        },
+        {
+          "nome": "Amendoim torrado", "categoria": "gordura", "percentual_da_refeicao": 0.4, "calorias_por_100g": 567, "proteinas_por_100g": 25.8, "carboidratos_por_100g": 16.1, "gorduras_por_100g": 49.2, "unidade": "g",
+          "alternativas": [
+            { "nome": "Abacate", "calorias_por_100g": 160, "proteinas_por_100g": 2, "carboidratos_por_100g": 8.5, "gorduras_por_100g": 14.7 }
+          ]
+        }
+      ]
+    },
+    {
+      "tipo": "Almoço",
+      "horario_sugerido": "12:30",
+      "percentual_calorias": 0.35,
+      "itens": [
+        {
+          "nome": "Frango grelhado", "categoria": "proteina", "percentual_da_refeicao": 0.4, "calorias_por_100g": 165, "proteinas_por_100g": 31, "carboidratos_por_100g": 0, "gorduras_por_100g": 3.6, "unidade": "g",
+          "alternativas": [
+            { "nome": "Tilápia grelhada", "calorias_por_100g": 128, "proteinas_por_100g": 26.2, "carboidratos_por_100g": 0, "gorduras_por_100g": 2.7 },
+            { "nome": "Patinho magro grelhado", "calorias_por_100g": 219, "proteinas_por_100g": 26.4, "carboidratos_por_100g": 0, "gorduras_por_100g": 12 }
+          ]
+        },
+        {
+          "nome": "Arroz integral cozido", "categoria": "carboidrato", "percentual_da_refeicao": 0.3, "calorias_por_100g": 112, "proteinas_por_100g": 2.6, "carboidratos_por_100g": 23.5, "gorduras_por_100g": 0.9, "unidade": "g",
+          "alternativas": [
+            { "nome": "Arroz branco cozido", "calorias_por_100g": 130, "proteinas_por_100g": 2.7, "carboidratos_por_100g": 28.2, "gorduras_por_100g": 0.3 },
+            { "nome": "Batata doce cozida", "calorias_por_100g": 86, "proteinas_por_100g": 1.6, "carboidratos_por_100g": 20.1, "gorduras_por_100g": 0.1 }
+          ]
+        },
+        {
+          "nome": "Feijão carioca cozido", "categoria": "leguminosa", "percentual_da_refeicao": 0.15, "calorias_por_100g": 76, "proteinas_por_100g": 4.8, "carboidratos_por_100g": 13.6, "gorduras_por_100g": 0.5, "unidade": "g",
+          "alternativas": [
+            { "nome": "Lentilha cozida", "calorias_por_100g": 116, "proteinas_por_100g": 9, "carboidratos_por_100g": 20.1, "gorduras_por_100g": 0.4 },
+            { "nome": "Grão de bico cozido", "calorias_por_100g": 164, "proteinas_por_100g": 8.9, "carboidratos_por_100g": 27.4, "gorduras_por_100g": 2.6 }
+          ]
+        },
+        {
+          "nome": "Salada de folhas e legumes", "categoria": "vegetal", "percentual_da_refeicao": 0.1, "calorias_por_100g": 20, "proteinas_por_100g": 1.2, "carboidratos_por_100g": 3.6, "gorduras_por_100g": 0.2, "unidade": "g",
+          "alternativas": [
+            { "nome": "Brócolis no vapor", "calorias_por_100g": 34, "proteinas_por_100g": 2.8, "carboidratos_por_100g": 6.6, "gorduras_por_100g": 0.4 }
+          ]
+        },
+        {
+          "nome": "Azeite de oliva", "categoria": "gordura", "percentual_da_refeicao": 0.05, "calorias_por_100g": 884, "proteinas_por_100g": 0, "carboidratos_por_100g": 0, "gorduras_por_100g": 100, "unidade": "ml",
+          "alternativas": [
+            { "nome": "Pasta de amendoim", "calorias_por_100g": 588, "proteinas_por_100g": 25, "carboidratos_por_100g": 19.6, "gorduras_por_100g": 49.9 }
+          ]
+        }
+      ]
+    },
+    {
+      "tipo": "Lanche da tarde",
+      "horario_sugerido": "16:00",
+      "percentual_calorias": 0.1,
+      "itens": [
+        {
+          "nome": "Whey protein", "categoria": "proteina", "percentual_da_refeicao": 0.6, "calorias_por_100g": 400, "proteinas_por_100g": 80, "carboidratos_por_100g": 10, "gorduras_por_100g": 6, "unidade": "g",
+          "alternativas": [
+            { "nome": "Atum em lata (água)", "calorias_por_100g": 116, "proteinas_por_100g": 26, "carboidratos_por_100g": 0, "gorduras_por_100g": 0.8 }
+          ]
+        },
+        {
+          "nome": "Maçã", "categoria": "fruta", "percentual_da_refeicao": 0.4, "calorias_por_100g": 52, "proteinas_por_100g": 0.3, "carboidratos_por_100g": 13.8, "gorduras_por_100g": 0.2, "unidade": "g",
+          "alternativas": [
+            { "nome": "Banana", "calorias_por_100g": 89, "proteinas_por_100g": 1.1, "carboidratos_por_100g": 22.8, "gorduras_por_100g": 0.3 }
+          ]
+        }
+      ]
+    },
+    {
+      "tipo": "Jantar",
+      "horario_sugerido": "19:30",
+      "percentual_calorias": 0.2,
+      "itens": [
+        {
+          "nome": "Tilápia grelhada", "categoria": "proteina", "percentual_da_refeicao": 0.45, "calorias_por_100g": 128, "proteinas_por_100g": 26.2, "carboidratos_por_100g": 0, "gorduras_por_100g": 2.7, "unidade": "g",
+          "alternativas": [
+            { "nome": "Frango grelhado", "calorias_por_100g": 165, "proteinas_por_100g": 31, "carboidratos_por_100g": 0, "gorduras_por_100g": 3.6 },
+            { "nome": "Ovos mexidos", "calorias_por_100g": 155, "proteinas_por_100g": 13, "carboidratos_por_100g": 1.1, "gorduras_por_100g": 11 }
+          ]
+        },
+        {
+          "nome": "Batata doce cozida", "categoria": "carboidrato", "percentual_da_refeicao": 0.35, "calorias_por_100g": 86, "proteinas_por_100g": 1.6, "carboidratos_por_100g": 20.1, "gorduras_por_100g": 0.1, "unidade": "g",
+          "alternativas": [
+            { "nome": "Arroz integral cozido", "calorias_por_100g": 112, "proteinas_por_100g": 2.6, "carboidratos_por_100g": 23.5, "gorduras_por_100g": 0.9 },
+            { "nome": "Macarrão integral cozido", "calorias_por_100g": 124, "proteinas_por_100g": 5.3, "carboidratos_por_100g": 26.5, "gorduras_por_100g": 0.5 }
+          ]
+        },
+        {
+          "nome": "Legumes no vapor", "categoria": "vegetal", "percentual_da_refeicao": 0.2, "calorias_por_100g": 34, "proteinas_por_100g": 2.8, "carboidratos_por_100g": 6.6, "gorduras_por_100g": 0.4, "unidade": "g",
+          "alternativas": [
+            { "nome": "Abobrinha refogada", "calorias_por_100g": 17, "proteinas_por_100g": 1.2, "carboidratos_por_100g": 3.1, "gorduras_por_100g": 0.3 }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "nome": "HIIT Corporal para Emagrecimento — 6 dias",
+  "modalidade": "pesocorporal",
+  "objetivo": "emagrecimento",
+  "dias": 6,
+  "duracao_estimada_min": 35,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Circuito Inferior 1",
+      "exercicios": [
+        { "nome": "Agachamento com salto", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Salto explosivo com aterrissagem macia." },
+        { "nome": "Afundo alternado", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Troque as pernas a cada repetição." },
+        { "nome": "Agachamento sumô", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Pés afastados e pontas para fora." },
+        { "nome": "Ponte de glúteo", "grupo": "gluteos", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Aperte o glúteo no topo." },
+        { "nome": "Panturrilha com pausa no topo", "grupo": "panturrilha", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Segure 1 segundo na ponta dos pés." },
+        { "nome": "Polichinelo", "grupo": "cardio", "tipo": "cardio", "series": 3, "repeticoes_min": 30, "repeticoes_max": 45, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Ritmo constante por 30 a 45 segundos." }
+      ]
+    },
+    {
+      "titulo": "Dia B — Circuito Superior 1",
+      "exercicios": [
+        { "nome": "Flexão declinada (pés elevados)", "grupo": "peito", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Pés sobre uma cadeira para focar a parte superior do peito." },
+        { "nome": "Flexão diamante", "grupo": "triceps", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Mãos unidas em losango sob o peito." },
+        { "nome": "Flexão aranha", "grupo": "peito", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Joelho em direção ao cotovelo a cada repetição." },
+        { "nome": "Mergulho no banco com pernas estendidas", "grupo": "triceps", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Pernas à frente aumenta a intensidade; dobre os joelhos para facilitar." },
+        { "nome": "Prancha com toque de ombro", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Quadril estável — só o braço se move." },
+        { "nome": "Corrida estacionária", "grupo": "cardio", "tipo": "cardio", "series": 3, "repeticoes_min": 30, "repeticoes_max": 45, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Joelhos altos e braços ativos por 30 a 45 segundos." }
+      ]
+    },
+    {
+      "titulo": "Dia C — HIIT Total 1",
+      "exercicios": [
+        { "nome": "Burpee", "grupo": "corpointeiro", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Agachamento, flexão e salto em um movimento fluido." },
+        { "nome": "Salto horizontal contínuo", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Salte para a frente e volte andando para trás." },
+        { "nome": "Agachamento com salto", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Explosão máxima em cada repetição." },
+        { "nome": "Montanhista cruzado", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Joelho em direção ao cotovelo oposto." },
+        { "nome": "Skater (patinador)", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Salto lateral amplo, aterrissando em uma perna só." },
+        { "nome": "Joelhos altos", "grupo": "cardio", "tipo": "cardio", "series": 3, "repeticoes_min": 30, "repeticoes_max": 45, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Corra no lugar com os joelhos na altura do quadril." }
+      ]
+    },
+    {
+      "titulo": "Dia D — Circuito Inferior 2",
+      "exercicios": [
+        { "nome": "Afundo lateral", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Passo para o lado e quadril para trás." },
+        { "nome": "Agachamento sumô com pulso", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Pequenos pulsos na posição baixa." },
+        { "nome": "Ponte de glúteo unilateral", "grupo": "gluteos", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Uma perna estendida; aperte o glúteo no topo." },
+        { "nome": "Coice de glúteo", "grupo": "gluteos", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Em quatro apoios, chute o calcanhar para o teto." },
+        { "nome": "Panturrilha unipodal", "grupo": "panturrilha", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Amplitude total na ponta do pé." },
+        { "nome": "Pular corda (ou simular)", "grupo": "cardio", "tipo": "cardio", "series": 3, "repeticoes_min": 30, "repeticoes_max": 45, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "30 a 45 segundos por série; sem corda, simule o movimento." }
+      ]
+    },
+    {
+      "titulo": "Dia E — Circuito Superior 2",
+      "exercicios": [
+        { "nome": "Flexão de braço", "grupo": "peito", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Corpo em linha reta; desça até quase tocar o chão." },
+        { "nome": "Flexão pike (desenvolvimento invertido)", "grupo": "ombro", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Quadril alto, desça a cabeça em direção ao chão." },
+        { "nome": "Mergulho no banco", "grupo": "triceps", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Cotovelos para trás, costas próximas do apoio." },
+        { "nome": "Superman", "grupo": "lombar", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Eleve braços e pernas do chão e segure 1 segundo." },
+        { "nome": "Abdominal canivete", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Tronco e pernas sobem juntos, tocando os pés com as mãos." },
+        { "nome": "Sombra de boxe", "grupo": "cardio", "tipo": "cardio", "series": 3, "repeticoes_min": 30, "repeticoes_max": 45, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Golpes diretos em ritmo forte por 30 a 45 segundos." }
+      ]
+    },
+    {
+      "titulo": "Dia F — HIIT Total 2",
+      "exercicios": [
+        { "nome": "Burpee com salto", "grupo": "corpointeiro", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Salto alto ao final de cada repetição." },
+        { "nome": "Afundo alternado com salto", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Troque as pernas no ar com aterrissagem macia." },
+        { "nome": "Flexão com palma", "grupo": "peito", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Empurre com força para bater palmas; se difícil, faça a flexão normal." },
+        { "nome": "Montanhista (mountain climber)", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Joelhos no peito em ritmo máximo." },
+        { "nome": "Skater (patinador)", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Salto lateral amplo, aterrissando em uma perna só." },
+        { "nome": "Corrida estacionária", "grupo": "cardio", "tipo": "cardio", "series": 3, "repeticoes_min": 30, "repeticoes_max": 45, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Joelhos altos e braços ativos por 30 a 45 segundos." }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "nome": "Corrida — Força e Técnica Essencial (2 dias)",
+  "modalidade": "academia",
+  "objetivo": "corrida",
+  "dias": 2,
+  "duracao_estimada_min": 55,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Força Total + Core",
+      "exercicios": [
+        { "nome": "Agachamento livre", "grupo": "pernas", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.6, "dicas": "Base de força para a passada — desça com controle e suba firme." },
+        { "nome": "Levantamento terra", "grupo": "posterior", "tipo": "composto", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.7, "dicas": "Potência de cadeia posterior, essencial para encarar subidas." },
+        { "nome": "Supino reto com halteres", "grupo": "peito", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.25, "dicas": "Força de empurrar para uma braçada firme e econômica." },
+        { "nome": "Remada curvada com barra", "grupo": "costas", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.35, "dicas": "Ombros longe das orelhas — postura de corrida preservada." },
+        { "nome": "Elevação pélvica com barra", "grupo": "gluteos", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.3, "dicas": "Glúteos fortes estabilizam o quadril em cada aterrissagem." },
+        { "nome": "Prancha isométrica", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Segure 30 a 45 segundos com o corpo em linha reta." }
+      ]
+    },
+    {
+      "titulo": "Dia B — Pernas, Técnica e Cardio",
+      "exercicios": [
+        { "nome": "Stiff com barra", "grupo": "posterior", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.5, "dicas": "Protege os isquiotibiais nas tiradas de velocidade." },
+        { "nome": "Agachamento búlgaro", "grupo": "pernas", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.2, "dicas": "Trabalho unilateral que corrige desequilíbrios entre as pernas." },
+        { "nome": "Panturrilha em pé", "grupo": "panturrilha", "tipo": "isolador", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": 0.4, "dicas": "O motor da propulsão — não negligencie a amplitude." },
+        { "nome": "Skipping alto (educativo)", "grupo": "tecnica", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Joelhos altos, aterrissando na parte da frente do pé." },
+        { "nome": "Abdominal infra no banco", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Controle a descida das pernas sem soltar a lombar." },
+        { "nome": "Corrida leve", "grupo": "cardio", "tipo": "cardio", "series": 1, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 0, "percentual_carga_peso_corporal": null, "dicas": "20 a 30 minutos de corrida leve em ritmo confortável." }
+      ]
+    }
+  ]
+}

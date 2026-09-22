@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ProtocolFit — Treino e dieta personalizados em segundos</title>
+  <meta name="description" content="ProtocolFit: SaaS gratuito que gera treinos e dietas personalizados com motor de cálculo determinístico (Mifflin-St Jeor). Sem assinatura, sem cartão de crédito." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💚</text></svg>" />
+  <style>
+    /* ------------------------------------------------------------------
+       Design system da página estática — mesma psicologia de cores da
+       saúde usada na aplicação: verde esmeralda (vitalidade), teal
+       (frescor/água), fundo claro (leveza) e verde-petróleo (confiança).
+       ------------------------------------------------------------------ */
+    :root {
+      --primaria: #10a37f;
+      --primaria-escura: #0b7d61;
+      --acento: #14b8a6;
+      --fundo: #f7fbf9;
+      --texto: #14342b;
+      --texto-suave: #5b7a70;
+      --borda: #d9ece5;
+      --cartao: #ffffff;
+      --raio: 14px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--fundo);
+      color: var(--texto);
+      line-height: 1.6;
+    }
+    .envoltorio { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
+
+    /* Cabeçalho fixo com gradiente da marca. */
+    header {
+      background: linear-gradient(135deg, var(--primaria), var(--acento));
+      color: #fff;
+      padding: 64px 0 72px;
+      text-align: center;
+    }
+    header .logo {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 20px; font-weight: 700; letter-spacing: .2px;
+      background: rgba(255,255,255,.16); padding: 8px 16px; border-radius: 999px;
+    }
+    header h1 { font-size: 42px; line-height: 1.15; margin: 26px 0 14px; }
+    header p { font-size: 18px; max-width: 640px; margin: 0 auto; opacity: .95; }
+    .selos { margin-top: 26px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .selo {
+      background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.32);
+      padding: 6px 14px; border-radius: 999px; font-size: 14px; font-weight: 600;
+    }
+    .botoes { margin-top: 30px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .botao {
+      display: inline-block; text-decoration: none; font-weight: 700; font-size: 15px;
+      padding: 13px 26px; border-radius: 10px; transition: transform .15s ease, opacity .15s ease;
+    }
+    .botao:hover { transform: translateY(-2px); opacity: .93; }
+    .botao-claro { background: #fff; color: var(--primaria-escura); }
+    .botao-contorno { border: 2px solid rgba(255,255,255,.6); color: #fff; }
+
+    /* Seções de conteúdo. */
+    section { padding: 54px 0; }
+    h2 { font-size: 26px; margin-bottom: 8px; }
+    .subtitulo { color: var(--texto-suave); margin-bottom: 26px; }
+    .grade { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+    .cartao {
+      background: var(--cartao); border: 1px solid var(--borda);
+      border-radius: var(--raio); padding: 22px;
+      box-shadow: 0 10px 30px -18px rgba(16,163,127,.45);
+    }
+    .cartao h3 { font-size: 17px; margin-bottom: 8px; }
+    .cartao p, .cartao li { color: var(--texto-suave); font-size: 15px; }
+    .cartao ul { margin: 8px 0 0 18px; }
+    .icone {
+      width: 40px; height: 40px; border-radius: 10px; display: flex;
+      align-items: center; justify-content: center; font-size: 20px;
+      background: #e6f7f1; margin-bottom: 12px;
+    }
+    pre {
+      background: #0f2c25; color: #d7f5ec; padding: 18px; border-radius: 12px;
+      overflow-x: auto; font-size: 14px; line-height: 1.7;
+      font-family: 'Cascadia Code', Consolas, monospace;
+    }
+    code { font-family: 'Cascadia Code', Consolas, monospace; }
+    .aviso {
+      background: #fff8e6; border: 1px solid #ffe1a8; color: #6b4c00;
+      border-radius: var(--raio); padding: 18px; font-size: 15px;
+    }
+    table { width: 100%; border-collapse: collapse; background: var(--cartao); border-radius: var(--raio); overflow: hidden; border: 1px solid var(--borda); }
+    th, td { padding: 12px 14px; text-align: left; font-size: 15px; border-bottom: 1px solid var(--borda); }
+    th { background: #eef8f4; font-size: 14px; text-transform: uppercase; letter-spacing: .4px; color: var(--texto-suave); }
+    tr:last-child td { border-bottom: none; }
+    footer {
+      background: #0f2c25; color: #a8cfc4; text-align: center;
+      padding: 34px 20px; font-size: 14px; margin-top: 20px;
+    }
+    footer a { color: #6fe3c4; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    @media (max-width: 600px) {
+      header h1 { font-size: 30px; }
+      header { padding: 46px 0 52px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- ===================== CABEÇALHO / HERO ===================== -->
+  <header>
+    <div class="envoltorio">
+      <span class="logo">💚 ProtocolFit</span>
+      <h1>Seu treino e dieta personalizados em segundos</h1>
+      <p>
+        Geração e gestão automatizada de treinos e dietas com motor de cálculo
+        determinístico (fórmula Mifflin-St Jeor): calorias, macronutrientes,
+        fibras e água calculados com exatidão para o seu corpo e objetivo.
+      </p>
+      <div class="selos">
+        <span class="selo">100% gratuito</span>
+        <span class="selo">Sem assinatura</span>
+        <span class="selo">Sem cartão de crédito</span>
+        <span class="selo">Resposta em milissegundos</span>
+      </div>
+      <div class="botoes">
+        <a class="botao botao-claro" id="linkRepositorio" href="https://github.com/leostella97/ProtocolFit">Ver o repositório no GitHub</a>
+        <a class="botao botao-contorno" href="#executar">Como executar</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== O QUE O SISTEMA FAZ ===================== -->
+  <section>
+    <div class="envoltorio">
+      <h2>O que o ProtocolFit entrega</h2>
+      <p class="subtitulo">Do cadastro ao plano completo em três passos.</p>
+      <div class="grade">
+        <div class="cartao">
+          <div class="icone">📋</div>
+          <h3>1. Onboarding inteligente</h3>
+          <p>Sexo, faixa etária (17 opções de 15 a 83 anos), altura, peso decimal, objetivo, frequência semanal, dias disponíveis e modalidade (academia ou peso do corpo).</p>
+        </div>
+        <div class="cartao">
+          <div class="icone">🧮</div>
+          <h3>2. Motor determinístico</h3>
+          <p>TMB por Mifflin-St Jeor, fator de atividade, déficit/superávit por objetivo, macros em gramas, fibras (14 g/1000 kcal) e água (35–40 ml/kg) — sem IA e sem erro de conta.</p>
+        </div>
+        <div class="cartao">
+          <div class="icone">🏋️</div>
+          <h3>3. Plano clonado para você</h3>
+          <p>O treino é montado a partir de modelos JSON mestres (36 combinações) e clonado para o seu registro no SQLite. Você edita cargas e troca alimentos sem afetar os mestres.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ARQUITETURA ===================== -->
+  <section style="background:#eef8f4">
+    <div class="envoltorio">
+      <h2>Arquitetura</h2>
+      <p class="subtitulo">Backend leve com SQLite local e frontend Next.js — custo de infraestrutura mínimo.</p>
+      <table>
+        <tr><th>Camada</th><th>Tecnologia</th><th>Destaque</th></tr>
+        <tr><td>Backend</td><td>Node.js + TypeScript + Fastify</td><td>Respostas em milissegundos</td></tr>
+        <tr><td>Banco</td><td>SQLite (modo WAL)</td><td>Plano individual por usuário</td></tr>
+        <tr><td>Autenticação</td><td>Bcrypt + JWT</td><td>Bloqueio de 3 tentativas por 5 horas</td></tr>
+        <tr><td>Modelos</td><td>JSON mestres em <code>/modelos</code></td><td>36 treinos + 3 dietas</td></tr>
+        <tr><td>Frontend</td><td>Next.js (App Router) + Tailwind v4</td><td>shadcn/ui, recharts, framer-motion</td></tr>
+        <tr><td>Deploy</td><td>Docker + Caddy (HTTPS automático)</td><td>VPS, Render ou Railway</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- ===================== COMO EXECUTAR ===================== -->
+  <section id="executar">
+    <div class="envoltorio">
+      <h2>Como executar localmente</h2>
+      <p class="subtitulo">Dois comandos, dois terminais.</p>
+      <pre><code># 1) Instalar as dependências do monorepo
+npm install
+
+# 2) Terminal 1 — API (http://localhost:3333)
+npm run dev:api
+
+# 3) Terminal 2 — site (http://localhost:3000)
+npm run dev:web</code></pre>
+      <div class="aviso" style="margin-top:20px">
+        <strong>⚠️ Sobre esta página:</strong> aqui no GitHub Pages fica apenas esta
+        vitrine estática. O sistema funcional (login, onboarding, painel, banco SQLite)
+        precisa da API Fastify rodando em um servidor com disco persistente — use o
+        <code>docker-compose.yml</code> do repositório em um VPS, Render ou Railway.
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== QUALIDADE ===================== -->
+  <section style="background:#eef8f4">
+    <div class="envoltorio">
+      <h2>Qualidade verificada</h2>
+      <p class="subtitulo">Testes automatizados incluídos no repositório.</p>
+      <div class="grade">
+        <div class="cartao"><h3>10 cenários ponta a ponta</h3><p><code>scripts/teste-da-api.ps1</code> — cadastro, geração, edições, isolamento de dados e bloqueio de login.</p></div>
+        <div class="cartao"><h3>36 treinos vinculados</h3><p><code>scripts/teste-da-matriz.ps1</code> — todas as combinações de modalidade, objetivo e dias conferidas na API.</p></div>
+        <div class="cartao"><h3>212 perfis de dados</h3><p><code>scripts/teste-dos-dados-possiveis.ps1</code> — 2 sexos × 17 faixas × 3 objetivos × 2 modalidades + casos-limite.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== RODAPÉ ===================== -->
+  <footer>
+    <p>
+      <strong>ProtocolFit</strong> — treino e dieta com ciência determinística, sem achismo.
+    </p>
+    <p style="margin-top:8px">
+      <a href="https://github.com/leostella97/ProtocolFit">Repositório</a> ·
+      <a href="https://github.com/leostella97/ProtocolFit#readme">Documentação</a> ·
+      <a href="https://github.com/leostella97/ProtocolFit/blob/main/docs/ESPECIFICACAO-DO-FRONTEND.md">Especificação do frontend</a>
+    </p>
+  </footer>
+
+  <script>
+    /* Ajusta o link do repositório para a URL real do Pages (usuário/repo). */
+    (function () {
+      // Extrai "usuario/repositorio" do endereço atual do GitHub Pages.
+      var partes = window.location.pathname.split('/').filter(Boolean);
+      if (window.location.hostname.endsWith('github.io') && partes.length > 0) {
+        // Monta a URL oficial do repositório a partir do caminho publicado.
+        document.getElementById('linkRepositorio').href =
+          'https://github.com/' + window.location.hostname.replace('.github.io', '') + '/' + partes[0];
+      }
+    })();
+  </script>
+</body>
+</html>

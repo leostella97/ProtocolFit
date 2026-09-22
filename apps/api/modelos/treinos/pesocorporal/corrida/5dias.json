@@ -1,0 +1,59 @@
+{
+  "nome": "Corrida — Preparação Completa sem Equipamentos (5 dias)",
+  "modalidade": "pesocorporal",
+  "objetivo": "corrida",
+  "dias": 5,
+  "duracao_estimada_min": 40,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Força de Pernas",
+      "exercicios": [
+        { "nome": "Agachamento livre profundo", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Desça fundo com o peito erguido." },
+        { "nome": "Afundo caminhando", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Passos contínuos com o joelho alinhado ao tornozelo." },
+        { "nome": "Agachamento búlgaro", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Pé de trás apoiado em uma cadeira; desça com controle." },
+        { "nome": "Ponte de glúteo unilateral", "grupo": "gluteos", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Glúteo forte estabiliza a passada." },
+        { "nome": "Panturrilha no degrau", "grupo": "panturrilha", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Use um degrau para alongar e encurtar ao máximo o movimento." }
+      ]
+    },
+    {
+      "titulo": "Dia B — Core",
+      "exercicios": [
+        { "nome": "Prancha com toque de ombro", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Quadril estável — só o braço se move." },
+        { "nome": "Abdominal bicicleta", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Cotovelo em direção ao joelho oposto." },
+        { "nome": "Abdominal canivete", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Eleve tronco e pernas juntos, tocando os pés com as mãos." },
+        { "nome": "Superman", "grupo": "lombar", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Eleve braços e pernas do chão e segure 1 segundo." },
+        { "nome": "Círculos de quadril", "grupo": "mobilidade", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Círculos amplos nos dois sentidos." }
+      ]
+    },
+    {
+      "titulo": "Dia C — Potência",
+      "exercicios": [
+        { "nome": "Agachamento com salto", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Salto alto e aterrissagem silenciosa." },
+        { "nome": "Afundo com salto", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Troca de pernas no ar com controle." },
+        { "nome": "Burpee", "grupo": "corpointeiro", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Condicionamento e potência em um só movimento." },
+        { "nome": "Skater (patinador)", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Salto lateral amplo, aterrissando em uma perna só." },
+        { "nome": "Pular corda (ou simular)", "grupo": "cardio", "tipo": "cardio", "series": 3, "repeticoes_min": 30, "repeticoes_max": 45, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "30 a 45 segundos por série; sem corda, simule o movimento." }
+      ]
+    },
+    {
+      "titulo": "Dia D — Técnica e Corrida Leve",
+      "exercicios": [
+        { "nome": "Skipping alto (educativo)", "grupo": "tecnica", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Joelhos altos aterrissando na parte da frente do pé." },
+        { "nome": "Anfersen (calcanhar no glúteo)", "grupo": "tecnica", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Passadas curtas e rápidas levando o calcanhar ao glúteo." },
+        { "nome": "Saltitos unipodais", "grupo": "tecnica", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Pequenos saltos em uma perna, pousando no antepé." },
+        { "nome": "Círculos de tornozelo", "grupo": "mobilidade", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Gire o tornozelo nos dois sentidos antes de correr." },
+        { "nome": "Corrida leve", "grupo": "cardio", "tipo": "cardio", "series": 1, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 0, "percentual_carga_peso_corporal": null, "dicas": "20 a 30 minutos em ritmo confortável." }
+      ]
+    },
+    {
+      "titulo": "Dia E — Força Unilateral e Mobilidade",
+      "exercicios": [
+        { "nome": "Agachamento unipodal no banco", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Sente e levante de uma cadeira com uma perna só." },
+        { "nome": "Afundo caminhando", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Passos contínuos com o tronco firme." },
+        { "nome": "Ponte de glúteo com pausa de 3 segundos no topo", "grupo": "gluteos", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Segure 3 segundos no topo com o glúteo contraído." },
+        { "nome": "Agachamento cossaco", "grupo": "mobilidade", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Desloque o peso para um lado, abrindo bem o quadril." },
+        { "nome": "Panturrilha no degrau", "grupo": "panturrilha", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Use um degrau para alongar e encurtar ao máximo o movimento." }
+      ]
+    }
+  ]
+}

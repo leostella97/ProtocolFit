@@ -1,0 +1,53 @@
+{
+  "nome": "HIIT Corporal para Emagrecimento — 4 dias",
+  "modalidade": "pesocorporal",
+  "objetivo": "emagrecimento",
+  "dias": 4,
+  "duracao_estimada_min": 35,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Circuito Metabólico Inferior",
+      "exercicios": [
+        { "nome": "Agachamento com salto", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Explosão no salto; aterrisse com os joelhos macios." },
+        { "nome": "Afundo lateral", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Passo para o lado e quadril para trás, como se sentasse." },
+        { "nome": "Agachamento com pausa de 3 segundos", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Segure na posição mais baixa por 3 segundos." },
+        { "nome": "Ponte de glúteo unilateral", "grupo": "gluteos", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Uma perna estendida; aperte o glúteo no topo." },
+        { "nome": "Panturrilha unipodal", "grupo": "panturrilha", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Amplitude total na ponta do pé." },
+        { "nome": "Pular corda (ou simular)", "grupo": "cardio", "tipo": "cardio", "series": 3, "repeticoes_min": 30, "repeticoes_max": 45, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "30 a 45 segundos por série; sem corda, simule o movimento." }
+      ]
+    },
+    {
+      "titulo": "Dia B — Circuito Metabólico Superior",
+      "exercicios": [
+        { "nome": "Flexão com mãos afastadas", "grupo": "peito", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Mãos além da linha dos ombros para abrir o peito." },
+        { "nome": "Flexão diamante", "grupo": "triceps", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Mãos unidas em losango; se difícil, apoie os joelhos." },
+        { "nome": "Flexão pike (desenvolvimento invertido)", "grupo": "ombro", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Quadril alto, desça a cabeça em direção ao chão." },
+        { "nome": "Flexão aranha", "grupo": "peito", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Leve um joelho ao cotovelo a cada repetição." },
+        { "nome": "Superman", "grupo": "lombar", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Eleve braços e pernas do chão e segure 1 segundo." },
+        { "nome": "Sombra de boxe", "grupo": "cardio", "tipo": "cardio", "series": 3, "repeticoes_min": 30, "repeticoes_max": 45, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Golpes diretos em ritmo forte por 30 a 45 segundos." }
+      ]
+    },
+    {
+      "titulo": "Dia C — HIIT de Corpo Inteiro",
+      "exercicios": [
+        { "nome": "Burpee", "grupo": "corpointeiro", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Agachamento, flexão e salto em um movimento fluido." },
+        { "nome": "Tuck jump (salto grupado)", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Salte alto levando os joelhos ao peito." },
+        { "nome": "Flexão com palma", "grupo": "peito", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Empurre com força para bater palmas; se difícil, faça a flexão normal." },
+        { "nome": "Montanhista cruzado", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Leve o joelho em direção ao cotovelo oposto." },
+        { "nome": "Skater (patinador)", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Salto lateral amplo, aterrissando em uma perna só." },
+        { "nome": "Polichinelo", "grupo": "cardio", "tipo": "cardio", "series": 3, "repeticoes_min": 30, "repeticoes_max": 45, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Ritmo forte até o final — 30 a 45 segundos por série." }
+      ]
+    },
+    {
+      "titulo": "Dia D — Core e Condicionamento",
+      "exercicios": [
+        { "nome": "Montanhista (mountain climber)", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Ritmo constante, quadril baixo." },
+        { "nome": "Abdominal bicicleta", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Cotovelo em direção ao joelho oposto." },
+        { "nome": "Abdominal canivete", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Eleve tronco e pernas juntos, tocando os pés com as mãos." },
+        { "nome": "Toque de calcanhar", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Deitado, toque o calcanhar alternando os lados." },
+        { "nome": "Abdominal infra", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Pernas estendidas, lombar colada no chão." },
+        { "nome": "Corrida estacionária", "grupo": "cardio", "tipo": "cardio", "series": 3, "repeticoes_min": 30, "repeticoes_max": 45, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Joelhos altos e braços ativos por 30 a 45 segundos." }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "nome": "HIIT Corporal para Emagrecimento — 7 dias",
+  "modalidade": "pesocorporal",
+  "objetivo": "emagrecimento",
+  "dias": 7,
+  "duracao_estimada_min": 35,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Circuito Inferior",
+      "exercicios": [
+        { "nome": "Agachamento sumô com elevação de calcanhar", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Pés afastados e pontas para fora; suba na ponta dos pés no topo." },
+        { "nome": "Afundo lateral", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Passo para o lado e quadril para trás." },
+        { "nome": "Coice de glúteo", "grupo": "gluteos", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Em quatro apoios, chute o calcanhar para o teto." },
+        { "nome": "Ponte de glúteo com pausa no topo", "grupo": "gluteos", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Aperte o glúteo e segure 1 segundo no topo." },
+        { "nome": "Panturrilha no degrau", "grupo": "panturrilha", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Use um degrau para alongar e encurtar ao máximo o movimento." },
+        { "nome": "Pular corda (ou simular)", "grupo": "cardio", "tipo": "cardio", "series": 3, "repeticoes_min": 30, "repeticoes_max": 45, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "30 a 45 segundos por série; sem corda, simule o movimento." }
+      ]
+    },
+    {
+      "titulo": "Dia B — Circuito Superior",
+      "exercicios": [
+        { "nome": "Flexão com pausa embaixo", "grupo": "peito", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Segure 1 segundo com o peito perto do chão." },
+        { "nome": "Flexão declinada (pés elevados)", "grupo": "peito", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Pés sobre uma cadeira para focar a parte superior do peito." },
+        { "nome": "Flexão pike (desenvolvimento invertido)", "grupo": "ombro", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Quadril alto, desça a cabeça em direção ao chão." },
+        { "nome": "Mergulho no banco com pernas estendidas", "grupo": "triceps", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Pernas à frente aumenta a intensidade; dobre os joelhos para facilitar." },
+        { "nome": "Superman", "grupo": "lombar", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Eleve braços e pernas do chão e segure 1 segundo." },
+        { "nome": "Corrida estacionária", "grupo": "cardio", "tipo": "cardio", "series": 3, "repeticoes_min": 30, "repeticoes_max": 45, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Joelhos altos e braços ativos por 30 a 45 segundos." }
+      ]
+    },
+    {
+      "titulo": "Dia C — HIIT Total",
+      "exercicios": [
+        { "nome": "Burpee com salto", "grupo": "corpointeiro", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Salto alto ao final de cada repetição." },
+        { "nome": "Tuck jump (salto grupado)", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Salte alto levando os joelhos ao peito." },
+        { "nome": "Salto horizontal contínuo", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Salte para a frente e volte andando para trás." },
+        { "nome": "Montanhista (mountain climber)", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Joelhos no peito em ritmo máximo." },
+        { "nome": "Skater (patinador)", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Salto lateral amplo, aterrissando em uma perna só." },
+        { "nome": "Polichinelo", "grupo": "cardio", "tipo": "cardio", "series": 3, "repeticoes_min": 30, "repeticoes_max": 45, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Ritmo constante por 30 a 45 segundos." }
+      ]
+    },
+    {
+      "titulo": "Dia D — Core e Glúteos",
+      "exercicios": [
+        { "nome": "Prancha com toque de ombro", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Quadril estável — só o braço se move." },
+        { "nome": "Montanhista cruzado", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Joelho em direção ao cotovelo oposto." },
+        { "nome": "Abdominal infra", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Pernas estendidas, lombar colada no chão." },
+        { "nome": "Abdominal supra", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Subida lenta, descida controlada." },
+        { "nome": "Ponte de glúteo unilateral", "grupo": "gluteos", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Uma perna estendida; aperte o glúteo no topo." },
+        { "nome": "Corrida estacionária com joelhos altos", "grupo": "cardio", "tipo": "cardio", "series": 3, "repeticoes_min": 30, "repeticoes_max": 45, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Joelhos na altura do quadril por 30 a 45 segundos." }
+      ]
+    },
+    {
+      "titulo": "Dia E — Circuito Inferior 2",
+      "exercicios": [
+        { "nome": "Afundo alternado com salto", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Troque as pernas no ar com aterrissagem macia." },
+        { "nome": "Afundo caminhando", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Passos contínuos com o tronco firme." },
+        { "nome": "Agachamento sumô", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Pés afastados e pontas para fora." },
+        { "nome": "Ponte de glúteo com pulso", "grupo": "gluteos", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "No topo, faça pequenos pulsos para cima e para baixo." },
+        { "nome": "Panturrilha unipodal", "grupo": "panturrilha", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Ritmo rápido e amplitude total." },
+        { "nome": "Joelhos altos", "grupo": "cardio", "tipo": "cardio", "series": 3, "repeticoes_min": 30, "repeticoes_max": 45, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Corra no lugar com os joelhos na altura do quadril." }
+      ]
+    },
+    {
+      "titulo": "Dia F — Circuito Superior 2",
+      "exercicios": [
+        { "nome": "Flexão de braço", "grupo": "peito", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Corpo em linha reta; desça até quase tocar o chão." },
+        { "nome": "Flexão aranha", "grupo": "peito", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Joelho em direção ao cotovelo a cada repetição." },
+        { "nome": "Flexão diamante", "grupo": "triceps", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Mãos unidas em losango sob o peito." },
+        { "nome": "Mergulho no banco", "grupo": "triceps", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Cotovelos para trás, costas próximas do apoio." },
+        { "nome": "Prancha com toque de ombro", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Quadril estável — só o braço se move." },
+        { "nome": "Polichinelo", "grupo": "cardio", "tipo": "cardio", "series": 3, "repeticoes_min": 30, "repeticoes_max": 45, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Ritmo constante por 30 a 45 segundos." }
+      ]
+    },
+    {
+      "titulo": "Dia G — Mobilidade e Recuperação Ativa",
+      "exercicios": [
+        { "nome": "Alongamento de cadeia posterior", "grupo": "mobilidade", "tipo": "corporal", "series": 1, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Segure 30 segundos em cada posição, sem quicar." },
+        { "nome": "Círculos de quadril", "grupo": "mobilidade", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Círculos amplos nos dois sentidos." },
+        { "nome": "Balanço de pernas", "grupo": "mobilidade", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Frente, trás e lados — solte o quadril." },
+        { "nome": "Rotação de tronco deitado", "grupo": "mobilidade", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Joelhos caem para o lado enquanto os ombros ficam no chão." },
+        { "nome": "Alongamento de panturrilha", "grupo": "mobilidade", "tipo": "corporal", "series": 1, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Segure 30 segundos em cada perna." },
+        { "nome": "Caminhada rápida", "grupo": "cardio", "tipo": "cardio", "series": 1, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 0, "percentual_carga_peso_corporal": null, "dicas": "Caminhe por 20 a 30 minutos em ritmo leve a moderado." }
+      ]
+    }
+  ]
+}

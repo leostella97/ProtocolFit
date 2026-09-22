@@ -1,0 +1,25 @@
+# ============================================================================
+# Caddyfile — proxy reverso do ProtocolFit (HTTPS automático via Let's Encrypt)
+#
+# O Caddy usa a variável DOMINIO definida no docker-compose.yml.
+#   https://seusite.com      -> frontend Next.js (web:3000)
+#   https://seusite.com/api* -> API Fastify      (api:3333)
+# ============================================================================
+
+{$DOMINIO} {
+	# Frontend: todo o tráfego normal vai para o Next.js.
+	handle {
+		reverse_proxy web:3000
+	}
+
+	# API: o caminho /api* é encaminhado para o Fastify (prefixo preservado).
+	handle /api/* {
+		reverse_proxy api:3333
+	}
+
+	# Logs e compactação padrão.
+	encode gzip
+	log {
+		output stdout
+	}
+}

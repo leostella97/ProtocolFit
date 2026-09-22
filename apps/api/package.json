@@ -1,0 +1,28 @@
+{
+  "name": "@protocolfit/api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Backend do ProtocolFit — Fastify + TypeScript + SQLite com motor de cálculo determinístico (Mifflin-St Jeor) e clonagem de planos a partir de modelos JSON.",
+  "type": "module",
+  "main": "dist/servidor.js",
+  "scripts": {
+    "dev": "tsx watch src/servidor.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/servidor.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@fastify/cors": "^10.0.2",
+    "@fastify/jwt": "^9.0.3",
+    "bcryptjs": "^3.0.2",
+    "better-sqlite3": "^12.2.0",
+    "dotenv": "^16.4.7",
+    "fastify": "^5.3.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^24.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}

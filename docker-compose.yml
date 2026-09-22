@@ -1,0 +1,65 @@
+# ============================================================================
+# docker-compose.yml — ProtocolFit completo (API + web + volume SQLite + proxy)
+#
+# Uso em um VPS com Docker instalado:
+#   docker compose up -d --build
+#
+# Configure as variáveis em um arquivo .env na mesma pasta (ou no painel do VPS):
+#   PROTOCOLFIT_JWT_SECRET=troque-por-um-segredo-forte
+#   DOMINIO=seusite.com
+# ============================================================================
+
+services:
+  # ---- API (Fastify + SQLite) ---------------------------------------------
+  api:
+    build:
+      context: ./apps/api
+    # Volume persistente: o banco SQLite sobrevive a reinícios e atualizações.
+    volumes:
+      - dados_api:/app/dados
+    environment:
+      # Segredo do JWT (obrigatório trocar em produção!).
+      - PROTOCOLFIT_JWT_SECRET=${PROTOCOLFIT_JWT_SECRET:-troque-este-segredo-agora}
+      # Origem permitida pelo CORS (o domínio público do site).
+      - PROTOCOLFIT_ORIGEM_WEB=https://${DOMINIO:-seusite.com}
+    restart: unless-stopped
+    # A API fica exposta apenas na rede interna; o Caddy faz o proxy público.
+    expose:
+      - "3333"
+
+  # ---- Frontend (Next.js standalone) ---------------------------------------
+  web:
+    build:
+      context: ./apps/web
+      args:
+        # URL pública da API usada pelo navegador do usuário.
+        NEXT_PUBLIC_URL_API: https://${DOMINIO:-seusite.com}/api
+    depends_on:
+      - api
+    restart: unless-stopped
+    expose:
+      - "3000"
+
+  # ---- Proxy reverso (Caddy: HTTPS automático + roteamento /api) -----------
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      # Portas públicas 80 e 443 (HTTP redireciona para HTTPS).
+      - "80:80"
+      - "443:443"
+    environment:
+      - DOMINIO=${DOMINIO:-seusite.com}
+    volumes:
+      # Configuração do Caddy e certificados TLS.
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - dados_caddy:/data
+    depends_on:
+      - api
+      - web
+    restart: unless-stopped
+
+volumes:
+  # Volume do banco SQLite (persistência dos dados dos usuários).
+  dados_api:
+  # Volume dos certificados HTTPS do Caddy.
+  dados_caddy:

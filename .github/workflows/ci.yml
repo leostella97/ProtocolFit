@@ -1,0 +1,45 @@
+# ============================================================================
+# ci.yml — Integração Contínua do ProtocolFit (GitHub Actions)
+# A cada push/pull request: instala dependências, valida tipos e compila
+# a API e o frontend — garantindo que o repositório esteja sempre saudável.
+# ============================================================================
+name: Validacao do ProtocolFit
+
+# Dispara em pushes na main e em pull requests.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Job único: typecheck + build dos dois aplicativos.
+  # ---------------------------------------------------------------------------
+  validar:
+    # Máquina Ubuntu mais recente.
+    runs-on: ubuntu-latest
+
+    steps:
+      # Baixa o código do repositório.
+      - name: Baixar o código
+        uses: actions/checkout@v4
+
+      # Instala o Node.js 22.
+      - name: Configurar Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # Instala as dependências do monorepo (npm ci usa o package-lock).
+      - name: Instalar dependências
+        run: npm ci
+
+      # Valida os tipos da API e do frontend.
+      - name: Verificar tipos (TypeScript)
+        run: npm run typecheck
+
+      # Compila a API (tsc) e o frontend (next build).
+      - name: Compilar API e frontend
+        run: npm run build

@@ -1,0 +1,26 @@
+# Dependências instaladas (nunca versionar)
+node_modules/
+
+# Artefatos de build
+dist/
+.next/
+out/
+
+# Banco de dados SQLite gerado em tempo de execução (dados dos usuários)
+*.db
+*.db-wal
+*.db-shm
+apps/api/dados/
+
+# Variáveis de ambiente locais (segredos!)
+.env
+.env.local
+
+# Logs e arquivos temporários
+*.log
+.DS_Store
+Thumbs.db
+
+# Cache do TypeScript / Next.js
+*.tsbuildinfo
+next-env.d.ts

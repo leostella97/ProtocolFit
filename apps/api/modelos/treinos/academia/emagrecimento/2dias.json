@@ -1,0 +1,31 @@
+{
+  "nome": "Emagrecimento Full Body — 2 dias + cardio",
+  "modalidade": "academia",
+  "objetivo": "emagrecimento",
+  "dias": 2,
+  "duracao_estimada_min": 60,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Corpo Inteiro A + Cardio",
+      "exercicios": [
+        { "nome": "Agachamento goblet com halter", "grupo": "pernas", "tipo": "composto", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.25, "dicas": "Segure o halter junto ao peito e desça fundo mantendo os calcanhares no chão." },
+        { "nome": "Supino reto com halteres", "grupo": "peito", "tipo": "composto", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.25, "dicas": "Controle a descida em 2 segundos e suba com força." },
+        { "nome": "Remada unilateral com halter", "grupo": "costas", "tipo": "composto", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.15, "dicas": "Apoie-se no banco e puxe o halter em direção ao quadril." },
+        { "nome": "Elevação pélvica com barra", "grupo": "gluteos", "tipo": "composto", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.3, "dicas": "Aperte o glúteo no topo e segure 1 segundo." },
+        { "nome": "Abdominal supra", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Subida lenta e descida ainda mais lenta." },
+        { "nome": "Esteira ou bicicleta", "grupo": "cardio", "tipo": "cardio", "series": 1, "repeticoes_min": 25, "repeticoes_max": 35, "descanso_segundos": 0, "percentual_carga_peso_corporal": null, "dicas": "25 a 35 minutos em ritmo moderado após o treino de força." }
+      ]
+    },
+    {
+      "titulo": "Dia B — Corpo Inteiro B + HIIT",
+      "exercicios": [
+        { "nome": "Levantamento terra", "grupo": "posterior", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.6, "dicas": "Exercício de alto gasto calórico — capriche na postura da coluna." },
+        { "nome": "Desenvolvimento com halteres", "grupo": "ombro", "tipo": "composto", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.15, "dicas": "Subida e descida controladas, sem travar os cotovelos." },
+        { "nome": "Agachamento sumô", "grupo": "pernas", "tipo": "composto", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.4, "dicas": "Pés afastados e pontas para fora; desça com o peito erguido." },
+        { "nome": "Puxada frente na polia", "grupo": "costas", "tipo": "composto", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.45, "dicas": "Estufe o peito e leve a barra até a clavícula." },
+        { "nome": "Prancha lateral", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "20 a 30 segundos de cada lado, quadril elevado." },
+        { "nome": "HIIT na bicicleta", "grupo": "cardio", "tipo": "cardio", "series": 1, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 0, "percentual_carga_peso_corporal": null, "dicas": "15 a 20 minutos alternando 30s no máximo com 60s leve." }
+      ]
+    }
+  ]
+}

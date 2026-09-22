@@ -68,7 +68,7 @@ export function idadeRepresentativaDaFaixa(valorFaixa: string): number {
   if (!faixa) {
     throw new Error(`Faixa etária desconhecida: ${valorFaixa}`);
   }
-  // Usa o ponto médio da faixa (ex.: "15-19" → 17).
+  // Usa o ponto médio da faixa (ex.: "18-19" → 19).
   return Math.round((faixa.inicio + faixa.fim) / 2);
 }
 

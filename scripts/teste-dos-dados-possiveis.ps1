@@ -13,7 +13,7 @@
 $base = "http://localhost:3333/api"
 
 # Faixas etarias oferecidas pelo site (todas as 17).
-$faixas = @("15-19","19-23","23-27","27-31","31-35","35-39","39-43","43-47","47-51","51-55","55-59","59-63","63-67","67-71","71-75","75-79","79-83")
+$faixas = @("18-19","19-23","23-27","27-31","31-35","35-39","39-43","43-47","47-51","51-55","55-59","59-63","63-67","67-71","71-75","75-79","79-83")
 
 # Dias da semana (para montar dias_disponiveis).
 $diasDaSemana = @("segunda","terca","quarta","quinta","sexta","sabado","domingo")
@@ -76,9 +76,9 @@ foreach ($sexo in @("masculino", "feminino")) {
 # ============================================================================
 # 2) CASOS-LIMITE: pesos, alturas e dias extremos
 # ============================================================================
-TestarPerfil "limite/peso-30kg"  "masculino" "15-19" 30.0 178 "hipertrofia"   4 "academia"
+TestarPerfil "limite/peso-30kg"  "masculino" "18-19" 30.0 178 "hipertrofia"   4 "academia"
 TestarPerfil "limite/peso-300kg" "masculino" "79-83" 300.0 178 "emagrecimento" 4 "pesocorporal"
-TestarPerfil "limite/altura-100" "feminino"  "15-19" 45.0 100 "corrida"      4 "academia"
+TestarPerfil "limite/altura-100" "feminino"  "18-19" 45.0 100 "corrida"      4 "academia"
 TestarPerfil "limite/altura-230" "masculino" "79-83" 90.0 230 "hipertrofia"   4 "pesocorporal"
 TestarPerfil "limite/peso-decimal" "feminino" "27-31" 57.35 162 "emagrecimento" 4 "academia"
 TestarPerfil "limite/2-dias"  "masculino" "27-31" 82.5 178 "hipertrofia"   2 "academia"

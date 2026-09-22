@@ -24,7 +24,7 @@ export type Nivel = 'iniciante' | 'intermediario' | 'avancado';
 
 /** Faixa etária selecionável no onboarding (limites inclusivos). */
 export interface FaixaEtaria {
-  /** Valor canônico usado pela API (ex.: "15-19"). */
+  /** Valor canônico usado pela API (ex.: "18-19"). */
   valor: string;
   /** Limite inferior da faixa, em anos. */
   inicio: number;

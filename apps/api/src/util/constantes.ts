@@ -33,7 +33,7 @@ export const LIMITES_CORPO = {
 
 /** Faixas etárias selecionáveis no onboarding (limites inclusivos). */
 export const FAIXAS_ETARIAS: FaixaEtaria[] = [
-  { valor: '15-19', inicio: 15, fim: 19, rotulo: '15 a 19 anos' },
+  { valor: '18-19', inicio: 18, fim: 19, rotulo: '18 a 19 anos' },
   { valor: '19-23', inicio: 19, fim: 23, rotulo: '19 a 23 anos' },
   { valor: '23-27', inicio: 23, fim: 27, rotulo: '23 a 27 anos' },
   { valor: '27-31', inicio: 27, fim: 31, rotulo: '27 a 31 anos' },

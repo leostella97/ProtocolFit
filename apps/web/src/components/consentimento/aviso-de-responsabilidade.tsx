@@ -25,7 +25,6 @@ import type { LucideIcon } from 'lucide-react';
 import { Botao } from '@/components/ui/button';
 import {
   EVENTO_ABRIR_TERMO,
-  VERSAO_DO_TERMO,
   registrarAceiteDoTermo,
   termoFoiAceito,
 } from '@/lib/termo-de-uso';
@@ -196,9 +195,6 @@ export function ProvedorDoTermo({ children }: { children: React.ReactNode }) {
             <Botao variante="gradiente" className="w-full" tamanho="grande" onClick={aceitar} disabled={salvando} autoFocus>
               {salvando ? 'Registrando aceite...' : 'Li e aceito — continuar'}
             </Botao>
-            <p className="text-center text-[11px] text-muted-foreground">
-              O aceite fica gravado apenas no seu navegador (versão {VERSAO_DO_TERMO} do termo).
-            </p>
           </footer>
         </div>
       </div>

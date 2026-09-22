@@ -20,6 +20,9 @@ apps/web/out/
 paginas-teste/
 *.log
 
+# Repositório do site raiz da conta (tem git próprio, publicado separadamente)
+.site-raiz/
+
 # Variáveis de ambiente locais (segredos!)
 .env
 .env.local

@@ -149,6 +149,13 @@ funciona no GitHub Pages:
 
 👉 **https://leostella97.github.io/ProtocolFit/**
 
+Também funciona digitando **https://leostella97.github.io/** ou qualquer grafia
+com a caixa trocada (ex.: `/protocolfit/`, `/PROTOCOLFIT/painel/`): o repositório
+[leostella97.github.io](https://github.com/leostella97/leostella97.github.io)
+serve um `404.html` que reconstrói a URL oficial e redireciona automaticamente.
+Isso resolve a limitação do GitHub Pages, que diferencia maiúsculas de
+minúsculas no caminho do projeto.
+
 Nesse modo (ativado por `NEXT_PUBLIC_MODO_LOCAL=true`):
 
 - O **motor de cálculo determinístico** (TMB, macros, montagem dos planos) roda no

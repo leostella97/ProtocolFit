@@ -21,7 +21,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { HeartPulse, LogOut } from 'lucide-react';
+import { ArrowLeft, HeartPulse, LogOut } from 'lucide-react';
 import { BarraLateral } from '@/components/painel/barra-lateral';
 import { Botao } from '@/components/ui/button';
 import { Esqueleto } from '@/components/ui/skeleton';
@@ -80,6 +80,11 @@ function LayoutClienteDoPainel({ children }: { children: ReactNode }) {
     roteador.replace('/login');
   }
 
+  /** Volta para a página anterior do histórico do navegador. */
+  function voltarPagina() {
+    roteador.back();
+  }
+
   // Enquanto verifica a sessão, exibe esqueletos centralizados.
   if (verificando) {
     return (
@@ -98,9 +103,13 @@ function LayoutClienteDoPainel({ children }: { children: ReactNode }) {
       {/* Barra lateral fixa (oculta em telas pequenas). */}
       <BarraLateral nomeDoUsuario={nomeDoUsuario} aoSair={sairDaConta} />
 
-      {/* Cabeçalho mobile simples: logo + botão de sair. */}
+      {/* Cabeçalho mobile: seta de voltar + logo + botão de sair. */}
       <header className="sticky top-0 z-20 flex items-center justify-between border-b bg-card px-4 py-3 md:hidden">
         <div className="flex items-center gap-2">
+          {/* Seta para a esquerda: volta para a página anterior. */}
+          <Botao variante="fantasma" tamanho="icone" onClick={voltarPagina} aria-label="Voltar para a página anterior">
+            <ArrowLeft />
+          </Botao>
           <HeartPulse className="size-5 shrink-0 text-primary" />
           <span className="font-display text-base font-bold text-foreground">ProtocolFit</span>
         </div>
@@ -112,6 +121,12 @@ function LayoutClienteDoPainel({ children }: { children: ReactNode }) {
       {/* Área principal com compensação da largura da barra lateral. */}
       <main className="md:pl-64">
         <div className="p-6 lg:p-10">
+          {/* Seta para a esquerda: volta para a página anterior (todas as telas). */}
+          <div className="mb-4">
+            <Botao variante="fantasma" tamanho="pequeno" onClick={voltarPagina} className="text-muted-foreground">
+              <ArrowLeft /> Voltar
+            </Botao>
+          </div>
           {/* Conteúdo da rota com animação de entrada suave. */}
           <motion.div
             initial={ANIMACAO_DE_ENTRADA.escondido}

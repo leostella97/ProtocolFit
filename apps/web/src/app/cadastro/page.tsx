@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation';
 // Animação de entrada do cartão.
 import { motion } from 'framer-motion';
 // Ícones da interface.
-import { AlertCircle, Eye, EyeOff, HeartPulse, Loader2 } from 'lucide-react';
+import { AlertCircle, ArrowLeft, Eye, EyeOff, HeartPulse, Loader2 } from 'lucide-react';
 // Cadastro e erro tipado da API.
 import { cadastrarUsuario, ErroDaApi } from '@/lib/api';
 // Gestão da sessão no navegador (token e dados do usuário).
@@ -135,6 +135,14 @@ export default function PaginaDeCadastro() {
 
   return (
     <div className="relative flex min-h-dvh items-center justify-center overflow-hidden bg-background px-4 py-10">
+      {/* Seta para a esquerda: volta para a página inicial. */}
+      <Link
+        href="/"
+        aria-label="Voltar para a página inicial"
+        className="absolute left-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+      >
+        <ArrowLeft className="size-4" /> Início
+      </Link>
       {/* Brilho decorativo atrás do cartão. */}
       <div
         aria-hidden

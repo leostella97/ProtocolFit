@@ -1,8 +1,15 @@
 /**
  * api.ts
  * ---------------------------------------------------------------------------
- * Cliente HTTP do ProtocolFit — centraliza todas as chamadas à API Fastify.
- * Adiciona o token JWT automaticamente e traduz erros em mensagens amigáveis.
+ * Cliente de dados do ProtocolFit — funciona em DOIS MODOS:
+ *
+ *  1) MODO SERVIDOR (padrão): conversa com a API Fastify + SQLite e envia o
+ *     token JWT automaticamente.
+ *  2) MODO NAVEGADOR (NEXT_PUBLIC_MODO_LOCAL=true): usa o motor determinístico
+ *     e o armazenamento local do navegador — é o modo usado no site publicado
+ *     no GitHub Pages, onde não existe servidor.
+ *
+ * A interface (telas) chama SEMPRE as mesmas funções; o modo é transparente.
  * ---------------------------------------------------------------------------
  */
 import type {
@@ -16,21 +23,17 @@ import type {
   Usuario,
 } from './tipos';
 import { obterToken } from './armazenamento';
+import { ErroDaApi } from './erro-api';
+import * as local from './repositorio-local';
+
+// Reexporta o erro para que as telas continuem importando de '@/lib/api'.
+export { ErroDaApi };
+
+/** Indica se o sistema está rodando no modo navegador (site estático). */
+export const MODO_LOCAL = process.env.NEXT_PUBLIC_MODO_LOCAL === 'true';
 
 /** URL base da API (configurável por variável de ambiente). */
 const URL_BASE = process.env.NEXT_PUBLIC_URL_API ?? 'http://localhost:3333/api';
-
-/** Erro de API com código HTTP — exibido de forma amigável na interface. */
-export class ErroDaApi extends Error {
-  /** Código de status HTTP da resposta. */
-  status: number;
-
-  constructor(status: number, mensagem: string) {
-    super(mensagem);
-    this.status = status;
-    this.name = 'ErroDaApi';
-  }
-}
 
 /** Executa uma chamada HTTP à API com headers e tratamento de erro padronizados. */
 async function chamarApi<T>(caminho: string, opcoes: RequestInit = {}): Promise<T> {
@@ -80,15 +83,23 @@ export interface CorpoPerfil {
 }
 
 /** Cria a conta do usuário e devolve token + dados públicos. */
-export function cadastrarUsuario(corpo: CorpoCadastro): Promise<RespostaDeAutenticacao> {
+export async function cadastrarUsuario(corpo: CorpoCadastro): Promise<RespostaDeAutenticacao> {
+  // Modo navegador: cria a conta no armazenamento local.
+  if (MODO_LOCAL) {
+    return local.cadastrarLocal(corpo);
+  }
   return chamarApi<RespostaDeAutenticacao>('/auth/cadastro', {
     method: 'POST',
     body: JSON.stringify(corpo),
   });
 }
 
-/** Autentica o usuário (com bloqueio de 3 tentativas por 5 horas no servidor). */
-export function entrarUsuario(corpo: CorpoLogin): Promise<RespostaDeAutenticacao> {
+/** Autentica o usuário (com bloqueio de 3 tentativas por 5 horas). */
+export async function entrarUsuario(corpo: CorpoLogin): Promise<RespostaDeAutenticacao> {
+  // Modo navegador: valida a senha no armazenamento local.
+  if (MODO_LOCAL) {
+    return local.entrarLocal(corpo);
+  }
   return chamarApi<RespostaDeAutenticacao>('/auth/login', {
     method: 'POST',
     body: JSON.stringify(corpo),
@@ -96,27 +107,42 @@ export function entrarUsuario(corpo: CorpoLogin): Promise<RespostaDeAutenticacao
 }
 
 /** Busca a conta logada e o estado do onboarding. */
-export function buscarContaAtual(): Promise<{ usuario: Usuario; perfil: Perfil | null; possui_planos: boolean }> {
+export async function buscarContaAtual(): Promise<{ usuario: Usuario; perfil: Perfil | null; possui_planos: boolean }> {
+  if (MODO_LOCAL) {
+    return local.buscarContaLocal();
+  }
   return chamarApi('/eu');
 }
 
 /** Busca as opções estáticas do onboarding (faixas, objetivos, modalidades...). */
-export function buscarOpcoes(): Promise<OpcoesDoSistema> {
+export async function buscarOpcoes(): Promise<OpcoesDoSistema> {
+  if (MODO_LOCAL) {
+    return local.buscarOpcoesLocal();
+  }
   return chamarApi('/opcoes');
 }
 
 /** Salva o perfil e gera os planos personalizados (retorna tudo pronto). */
-export function salvarPerfilEGerarPlanos(corpo: CorpoPerfil): Promise<{ perfil: Perfil; treino: PlanoTreino; dieta: PlanoDieta }> {
+export async function salvarPerfilEGerarPlanos(corpo: CorpoPerfil): Promise<{ perfil: Perfil; treino: PlanoTreino; dieta: PlanoDieta }> {
+  if (MODO_LOCAL) {
+    return local.salvarPerfilEGerarPlanosLocal(corpo);
+  }
   return chamarApi('/perfil', { method: 'POST', body: JSON.stringify(corpo) });
 }
 
 /** Recalcula os planos usando a evolução física mais recente. */
-export function recalcularPlanos(): Promise<{ perfil: Perfil; treino: PlanoTreino; dieta: PlanoDieta }> {
+export async function recalcularPlanos(): Promise<{ perfil: Perfil; treino: PlanoTreino; dieta: PlanoDieta }> {
+  if (MODO_LOCAL) {
+    return local.recalcularPlanosLocal();
+  }
   return chamarApi('/perfil/recalcular', { method: 'POST' });
 }
 
 /** Busca o plano vigente completo (perfil + treino + dieta). */
-export function buscarPlanoAtual(): Promise<PlanoCompleto> {
+export async function buscarPlanoAtual(): Promise<PlanoCompleto> {
+  if (MODO_LOCAL) {
+    return local.buscarPlanoAtualLocal();
+  }
   return chamarApi('/plano/atual');
 }
 
@@ -130,7 +156,10 @@ export interface CorpoEdicaoExercicio {
 }
 
 /** Edita séries/repetições/carga de um exercício na CÓPIA do usuário. */
-export function editarExercicio(planoId: number, corpo: CorpoEdicaoExercicio): Promise<PlanoTreino> {
+export async function editarExercicio(planoId: number, corpo: CorpoEdicaoExercicio): Promise<PlanoTreino> {
+  if (MODO_LOCAL) {
+    return local.editarExercicioLocal(planoId, corpo);
+  }
   return chamarApi(`/plano/treino/${planoId}`, { method: 'PATCH', body: JSON.stringify(corpo) });
 }
 
@@ -142,16 +171,25 @@ export interface CorpoSubstituicao {
 }
 
 /** Substitui um alimento por um substituto equivalente na CÓPIA do usuário. */
-export function substituirAlimento(planoId: number, corpo: CorpoSubstituicao): Promise<PlanoDieta> {
+export async function substituirAlimento(planoId: number, corpo: CorpoSubstituicao): Promise<PlanoDieta> {
+  if (MODO_LOCAL) {
+    return local.substituirAlimentoLocal(planoId, corpo);
+  }
   return chamarApi(`/plano/dieta/${planoId}/substituir`, { method: 'PATCH', body: JSON.stringify(corpo) });
 }
 
 /** Registra uma pesagem na evolução corporal. */
-export function registrarPesagem(pesoKg: number, data?: string): Promise<RegistroEvolucao> {
+export async function registrarPesagem(pesoKg: number, data?: string): Promise<RegistroEvolucao> {
+  if (MODO_LOCAL) {
+    return local.registrarPesagemLocal(pesoKg, data);
+  }
   return chamarApi('/evolucao', { method: 'POST', body: JSON.stringify({ peso_kg: pesoKg, data }) });
 }
 
 /** Lista o histórico de pesagens (gráfico de evolução). */
-export function listarEvolucao(): Promise<RegistroEvolucao[]> {
+export async function listarEvolucao(): Promise<RegistroEvolucao[]> {
+  if (MODO_LOCAL) {
+    return local.listarEvolucaoLocal();
+  }
   return chamarApi('/evolucao');
 }

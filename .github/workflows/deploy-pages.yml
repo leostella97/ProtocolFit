@@ -1,0 +1,83 @@
+# ============================================================================
+# deploy-pages.yml — Publica o SISTEMA ProtocolFit no GitHub Pages
+#
+# O que este fluxo faz:
+#   1) Instala as dependências do monorepo.
+#   2) Copia os modelos JSON mestres para os arquivos públicos do site.
+#   3) Compila o Next.js em modo ESTÁTICO com o motor de cálculo rodando no
+#      navegador (NEXT_PUBLIC_MODO_LOCAL=true) e caminho base /ProtocolFit.
+#   4) Publica o resultado no GitHub Pages.
+#
+# Resultado: o sistema completo (cadastro, onboarding, treino, dieta,
+# evolução e recálculo) funciona no link público do Pages, sem servidor:
+# os planos são calculados no navegador e salvos no armazenamento local.
+# ============================================================================
+name: Publicar sistema no GitHub Pages
+
+# Dispara em pushes na main e manualmente pela aba Actions.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Permissões necessárias para publicar no Pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Garante uma publicação por vez.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Etapa 1: compilar o site estático.
+  # ---------------------------------------------------------------------------
+  construir:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Compilar o site estático (motor no navegador)
+        run: npm run build:pages
+        env:
+          # Ativa o modo navegador (motor + dados no próprio navegador).
+          NEXT_PUBLIC_MODO_LOCAL: 'true'
+          # Gera o site como exportação estática.
+          MODO_PAGES: 'true'
+          # Prefixo do projeto no GitHub Pages.
+          NEXT_PUBLIC_BASE_PATH: '/ProtocolFit'
+
+      - name: Configurar o GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Enviar o site compilado como artefato
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/web/out
+
+  # ---------------------------------------------------------------------------
+  # Etapa 2: publicar no Pages.
+  # ---------------------------------------------------------------------------
+  publicar:
+    needs: construir
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publicar no GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

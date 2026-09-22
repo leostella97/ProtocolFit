@@ -12,6 +12,14 @@ out/
 *.db-shm
 apps/api/dados/
 
+# Site estático gerado para o GitHub Pages (modelos copiados + exportação)
+apps/web/public/modelos/
+apps/web/out/
+
+# Arquivos temporários de teste local
+paginas-teste/
+*.log
+
 # Variáveis de ambiente locais (segredos!)
 .env
 .env.local

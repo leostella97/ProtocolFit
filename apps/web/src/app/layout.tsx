@@ -7,6 +7,7 @@
  */
 import type { Metadata } from 'next';
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
+import { AvisoModoLocal } from '@/components/aviso-modo-local';
 import './globals.css';
 
 /** Fonte de texto: Inter — legibilidade máxima em telas. */
@@ -46,6 +47,8 @@ export default function LayoutRaiz({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
     >
       <body className="min-h-dvh font-sans antialiased" suppressHydrationWarning>
+        {/* Faixa informativa exibida apenas no modo navegador (GitHub Pages). */}
+        <AvisoModoLocal />
         {children}
       </body>
     </html>

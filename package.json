@@ -15,6 +15,7 @@
     "dev:web": "npm run dev --workspace @protocolfit/web",
     "build:api": "npm run build --workspace @protocolfit/api",
     "build:web": "npm run build --workspace @protocolfit/web",
+    "build:pages": "npm run build:pages --workspace @protocolfit/web",
     "build": "npm run build:api && npm run build:web",
     "typecheck": "npm run typecheck --workspaces --if-present"
   },

@@ -131,6 +131,40 @@ Build de produção: `npm run build` (compila API com `tsc` e frontend com `next
 
 ## 🌍 Como hospedar no GitHub e colocar online
 
+### 0. Modo navegador no GitHub Pages (sistema rodando de graça, sem servidor)
+
+O ProtocolFit pode rodar **inteiro no navegador do visitante** — é assim que ele
+funciona no GitHub Pages:
+
+👉 **https://leostella97.github.io/ProtocolFit/**
+
+Nesse modo (ativado por `NEXT_PUBLIC_MODO_LOCAL=true`):
+
+- O **motor de cálculo determinístico** (TMB, macros, montagem dos planos) roda no
+  próprio navegador, a partir dos **36 modelos JSON** publicados como arquivos
+  estáticos em `/modelos`.
+- As **contas, perfis, planos e pesagens** ficam no `localStorage` do visitante
+  (mesmas validações, mesmas mensagens e mesmos códigos de erro da API: 401, 409, 423).
+- O **mesmo motor** do backend é usado: os números são **idênticos** aos do servidor
+  (há teste automatizado comprovando — veja abaixo).
+- **Nada é enviado a servidores**: cada visitante tem o seu próprio "banco" local.
+
+A publicação é automática pelo workflow `.github/workflows/deploy-pages.yml`:
+a cada push na `main`, o GitHub compila o site estático (`npm run build:pages`) e o
+publica no Pages. Para publicar manualmente:
+
+```bash
+MODO_PAGES=true NEXT_PUBLIC_MODO_LOCAL=true NEXT_PUBLIC_BASE_PATH=/ProtocolFit npm run build:pages
+# o site pronto fica em apps/web/out
+```
+
+**Verificações do modo navegador** (executadas também localmente):
+
+```bash
+npm run testar:motor --workspace @protocolfit/web   # motor do navegador == motor do servidor (16 verificações)
+npm run testar:local --workspace @protocolfit/web   # fluxo completo: cadastro → plano → edições → recálculo (25 verificações)
+```
+
 ### 1. Subir o código para o GitHub
 
 ```bash

@@ -16,10 +16,12 @@ import {
   LayoutDashboard,
   LogOut,
   Salad,
+  ScrollText,
   UserRound,
   type LucideIcon,
 } from 'lucide-react';
 import { Botao } from '@/components/ui/button';
+import { abrirTermoDeUso } from '@/components/consentimento/aviso-de-responsabilidade';
 import { combinarClasses } from '@/lib/util';
 
 /** Item de navegação da barra lateral (rótulo, destino e ícone). */
@@ -110,10 +112,18 @@ export function BarraLateral({ nomeDoUsuario, aoSair }: PropriedadesDaBarraLater
             <p className="text-xs text-muted-foreground">Plano ativo</p>
           </div>
         </div>
+        {/* Botão que reabre o termo de uso e responsabilidade a qualquer momento. */}
+        <Botao
+          variante="fantasma"
+          className="mt-2 w-full justify-start text-muted-foreground"
+          onClick={abrirTermoDeUso}
+        >
+          <ScrollText /> Termo de uso
+        </Botao>
         {/* Botão que encerra a sessão (callback vem do layout). */}
         <Botao
           variante="fantasma"
-          className="mt-3 w-full justify-start text-muted-foreground"
+          className="mt-1 w-full justify-start text-muted-foreground"
           onClick={aoSair}
         >
           <LogOut /> Sair da conta

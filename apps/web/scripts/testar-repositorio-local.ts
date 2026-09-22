@@ -71,6 +71,8 @@ function conferir(descricao: string, esperado: unknown, obtido: unknown): void {
 async function principal(): Promise<void> {
   // Importa o repositório APÓS simular o navegador (localStorage, crypto, fetch).
   const repositorio = await import('../src/lib/repositorio-local');
+  // Utilitários do termo de uso (aceite do aviso de responsabilidade).
+  const { registrarAceiteDoTermo, termoFoiAceito } = await import('../src/lib/termo-de-uso');
 
   // ---- 1) Cadastro ---------------------------------------------------------
   const cadastro = await repositorio.cadastrarLocal({ nome: 'Maria Teste', email: 'maria@teste.com', senha: 'senhaSegura123' });
@@ -89,16 +91,29 @@ async function principal(): Promise<void> {
   const conta = await repositorio.buscarContaLocal();
   conferir('Antes do onboarding não possui planos', false, conta.possui_planos);
 
-  const gerado = await repositorio.salvarPerfilEGerarPlanosLocal({
-    sexo: 'masculino',
+  // AVISO DE RESPONSABILIDADE: sem o aceite, a geração é BLOQUEADA (403).
+  const perfilDeTeste = {
+    sexo: 'masculino' as const,
     faixa_etaria: '27-31',
     peso_kg: 82.5,
     altura_cm: 178,
-    objetivo: 'hipertrofia',
+    objetivo: 'hipertrofia' as const,
     frequencia_semanal: 5,
     dias_disponiveis: ['segunda', 'terca', 'quarta', 'quinta', 'sexta'],
-    modalidade: 'academia',
-  });
+    modalidade: 'academia' as const,
+  };
+  try {
+    await repositorio.salvarPerfilEGerarPlanosLocal(perfilDeTeste);
+    conferir('Geracao bloqueada sem aceite do termo', '403', 'não bloqueou');
+  } catch (erro) {
+    conferir('Geracao bloqueada sem aceite do termo', 403, (erro as { status: number }).status);
+  }
+
+  // Depois de ACEITAR o termo, a geração funciona normalmente.
+  registrarAceiteDoTermo();
+  conferir('Termo aceito fica registrado no navegador', true, termoFoiAceito());
+
+  const gerado = await repositorio.salvarPerfilEGerarPlanosLocal(perfilDeTeste);
   conferir('Treino gerado com 5 dias', 5, gerado.treino.dias);
   conferir('Modelo mestre vinculado', 'treinos/academia/hipertrofia/5dias.json', gerado.treino.modelo_origem);
   conferir('Dieta vinculada ao objetivo', 'dietas/hipertrofia.json', gerado.dieta.modelo_origem);

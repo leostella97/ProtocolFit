@@ -35,6 +35,7 @@ import type {
   Usuario,
 } from './tipos';
 import { guardarToken, guardarUsuario, obterToken } from './armazenamento';
+import { termoFoiAceito } from './termo-de-uso';
 import { ErroDaApi } from './erro-api';
 import { calcularPlanoNutricional } from './motor/calculos';
 import { buscarModeloDieta, buscarModeloTreino } from './motor/carregadorModelos';
@@ -439,6 +440,15 @@ async function gerarPlanos(banco: BancoLocal, usuarioId: number, perfil: Perfil)
 export async function salvarPerfilEGerarPlanosLocal(
   corpo: CorpoPerfilLocal,
 ): Promise<{ perfil: Perfil; treino: PlanoTreino; dieta: PlanoDieta }> {
+  // BLOQUEIO OBRIGATÓRIO: sem o aceite do aviso de responsabilidade a geração
+  // é impedida (o aviso também bloqueia a interface, mas esta é a garantia
+  // definitiva no motor do navegador).
+  if (!termoFoiAceito()) {
+    throw new ErroDaApi(
+      403,
+      'É necessário ler e aceitar o aviso de responsabilidade antes de gerar o plano.',
+    );
+  }
   const banco = lerBanco();
   const conta = exigirSessao(banco);
   // Valida antes de qualquer processamento.

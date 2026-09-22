@@ -8,6 +8,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
 import { AvisoModoLocal } from '@/components/aviso-modo-local';
+import { ProvedorDoTermo } from '@/components/consentimento/aviso-de-responsabilidade';
 import { ProvedorPwa } from '@/components/pwa/provedor-pwa';
 import './globals.css';
 
@@ -80,7 +81,8 @@ export default function LayoutRaiz({ children }: { children: React.ReactNode }) 
       <body className="min-h-dvh font-sans antialiased" suppressHydrationWarning>
         {/* Faixa informativa exibida apenas no modo navegador (GitHub Pages). */}
         <AvisoModoLocal />
-        {children}
+        {/* AVISO OBRIGATÓRIO: bloqueia o sistema até o usuário aceitar o termo. */}
+        <ProvedorDoTermo>{children}</ProvedorDoTermo>
         {/* Service worker + aviso para instalar o aplicativo (PWA). */}
         <ProvedorPwa />
       </body>

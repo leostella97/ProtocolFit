@@ -318,8 +318,6 @@ export default function PaginaDoTreino() {
           <h1 className="font-display text-2xl font-bold text-foreground lg:text-3xl">{treino.nome}</h1>
           <Selo variante="secundario">{rotuloDoObjetivo(treino.objetivo)}</Selo>
           <Selo variante="contorno">Versão {treino.versao}</Selo>
-          {/* Vínculo explícito com o modelo mestre escolhido no onboarding. */}
-          <Selo variante="contorno">{treino.modelo_origem}</Selo>
         </div>
         <p className="flex items-center gap-2 text-sm text-muted-foreground">
           <Clock className="size-4 shrink-0 text-primary" /> Duração estimada: {treino.duracao_estimada_min} min

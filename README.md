@@ -219,6 +219,30 @@ Resultado: `https://seusite.com` (site) e `https://seusite.com/api` (API), com H
 
 > ⚠️ GitHub Pages **não** serve o sistema completo (só arquivos estáticos): o ProtocolFit precisa da API Fastify + SQLite rodando em servidor.
 
+## 🛡️ Aviso de responsabilidade (obrigatório)
+
+Antes de usar o sistema, todo visitante vê um **aviso de responsabilidade e
+termo de uso** que **bloqueia a aplicação até o aceite** — sem botão de fechar,
+sem fechar pelo clique fora e sem fechar com Esc: a única saída é o botão
+**"Li e aceito — continuar"**.
+
+O aviso contém os cinco pontos exigidos:
+
+1. **Sua privacidade em 1º lugar** — sem servidor nem banco de dados; os dados ficam só no navegador/celular do usuário;
+2. **Caráter exclusivamente informativo e educativo** — ferramenta automatizada, de código aberto e sem fins lucrativos, baseada em estimativas gerais;
+3. **Consulte um profissional** — médico, nutricionista e profissional de educação física habilitado;
+4. **Ausência de responsabilidade** — criador e mantenedores não se responsabilizam por danos, lesões ou prejuízos;
+5. **Aptidão física** — o usuário declara estar em plenas condições de saúde e assume total responsabilidade.
+
+Detalhes técnicos:
+
+- O aceite fica gravado **apenas no navegador do usuário** (`protocolfit_termo_aceito`),
+  com a **versão do texto**: se o aviso mudar, todos precisam aceitar de novo.
+- **Impedimento real da geração**: além de bloquear a interface, o motor do
+  navegador recusa gerar planos sem o aceite (erro 403) — coberto por teste
+  automatizado (`testar:local`).
+- O botão **"Termo de uso"** na barra lateral reabre o aviso a qualquer momento.
+
 ## 📱 Aplicativo instalável (PWA) com aviso de instalação
 
 O ProtocolFit é um **PWA completo**: pode ser instalado no celular ou no

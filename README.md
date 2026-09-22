@@ -201,6 +201,23 @@ Resultado: `https://seusite.com` (site) e `https://seusite.com/api` (API), com H
 
 > ⚠️ GitHub Pages **não** serve o sistema completo (só arquivos estáticos): o ProtocolFit precisa da API Fastify + SQLite rodando em servidor.
 
+## 📱 Aplicativo instalável (PWA) com aviso de instalação
+
+O ProtocolFit é um **PWA completo**: pode ser instalado no celular ou no
+computador e funciona **offline**.
+
+| Recurso | Como funciona |
+| --- | --- |
+| **Aviso para instalar** | Um cartão aparece no canto da tela assim que o app fica instalável (Android/Chrome/Edge, com o botão "Instalar agora"). No iPhone/iPad o aviso ensina o caminho *Compartilhar → Adicionar à Tela de Início*. Quem dispensar só vê o aviso de novo depois de 7 dias, e ele nunca aparece se o app já estiver instalado |
+| **Manifesto** | `src/app/manifest.ts` → nome, cores da marca, `display: standalone`, ícones 192/512 + **maskable** (Android) e **atalhos** para Treino, Dieta e Perfil ao segurar o ícone |
+| **Ícones** | Gerados por `npm run icones --workspace @protocolfit/web` (codificador PNG próprio, sem dependências): `icon-192`, `icon-512`, `icon-maskable-512`, `apple-touch-icon` (iOS) e `favicon` |
+| **Modo offline** | `public/sw.js` (service worker): navegação com estratégia *rede primeiro* e cache como reserva; JS/CSS/imagens/modelos JSON com *cache primeiro* e atualização em segundo plano. Depois da primeira visita, o sistema abre e **gera planos sem internet** |
+| **Verificação automática** | `npm run verificar:pwa --workspace @protocolfit/web` roda no fim de `build:pages`: confere manifesto, ícones, service worker e metadados — se o app deixar de ser instalável, o build quebra |
+
+Para testar no seu aparelho: abra **https://leostella97.github.io/ProtocolFit/** no
+celular e toque em **"Instalar agora"** no aviso (ou use o menu do navegador →
+*Instalar aplicativo*).
+
 ## 🔌 Endpoints da API
 
 | Método | Rota | Descrição |

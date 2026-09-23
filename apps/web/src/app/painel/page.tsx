@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { Clock, Droplets, Dumbbell, Flame, Gauge, TrendingDown, TrendingUp, Weight } from 'lucide-react';
 import { CartaoResumo } from '@/components/painel/cartao-resumo';
+import { FormularioNovaPesagem } from '@/components/painel/formulario-nova-pesagem';
 import { GraficoEvolucaoPeso } from '@/components/painel/grafico-evolucao-peso';
 import { GraficoMacros } from '@/components/painel/grafico-macros';
 import { Botao } from '@/components/ui/button';
@@ -27,7 +28,7 @@ import {
 } from '@/components/ui/card';
 import { BarraDeProgresso } from '@/components/ui/progress';
 import { Esqueleto } from '@/components/ui/skeleton';
-import { buscarCheckins, buscarPlanoAtual, listarEvolucao, ErroDaApi } from '@/lib/api';
+import { buscarCheckins, buscarPlanoAtual, listarEvolucao, registrarPesagem, ErroDaApi } from '@/lib/api';
 import { encerrarSessao, obterUsuario } from '@/lib/armazenamento';
 import { formatarDecimal } from '@/lib/util';
 import type { PlanoCompleto, RegistroEvolucao, ResumoDeCheckins } from '@/lib/tipos';
@@ -270,7 +271,17 @@ export default function PaginaDoPainel() {
             <CartaoDescricao>Suas pesagens ao longo do tempo</CartaoDescricao>
           </CartaoCabecalho>
           <CartaoConteudo>
+            {/* Gráfico + progressão (tendência desde a primeira pesagem). */}
             <GraficoEvolucaoPeso registros={evolucao} />
+            {/* Nova pesagem direto no gráfico (funciona também para a primeira). */}
+            <FormularioNovaPesagem
+              pesoAtualKg={perfil.peso_kg}
+              aoRegistrar={async (pesoKg) => {
+                // Grava a pesagem do dia e recarrega o gráfico/progressão.
+                await registrarPesagem(pesoKg);
+                definirEvolucao(await listarEvolucao());
+              }}
+            />
           </CartaoConteudo>
         </Cartao>
         <Cartao>

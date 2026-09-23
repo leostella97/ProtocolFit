@@ -98,6 +98,8 @@ interface BancoLocal {
     versao: number;
     ativo: boolean;
     modelo_origem: string;
+    /** Data de criação da cópia (base do "há quanto tempo com o plano"). */
+    criado_em: string;
     conteudo: string;
   }[];
   /** Pesagens registradas. */
@@ -407,9 +409,10 @@ async function gerarPlanos(banco: BancoLocal, usuarioId: number, perfil: Perfil)
   const versaoTreino = Math.max(0, ...banco.planos.filter((p) => p.usuario_id === usuarioId && p.tipo === 'treino').map((p) => p.versao)) + 1;
   const versaoDieta = Math.max(0, ...banco.planos.filter((p) => p.usuario_id === usuarioId && p.tipo === 'dieta').map((p) => p.versao)) + 1;
 
-  // 7) Grava as novas cópias do usuário.
+  // 7) Grava as novas cópias do usuário (com a data de criação atual).
   const idTreino = proximoId(banco);
   const idDieta = proximoId(banco);
+  const criadoEm = new Date().toISOString();
   banco.planos.push({
     id: idTreino,
     usuario_id: usuarioId,
@@ -417,6 +420,7 @@ async function gerarPlanos(banco: BancoLocal, usuarioId: number, perfil: Perfil)
     versao: versaoTreino,
     ativo: true,
     modelo_origem: caminhoTreino,
+    criado_em: criadoEm,
     conteudo: JSON.stringify(treinoMontado),
   });
   banco.planos.push({
@@ -426,13 +430,14 @@ async function gerarPlanos(banco: BancoLocal, usuarioId: number, perfil: Perfil)
     versao: versaoDieta,
     ativo: true,
     modelo_origem: caminhoDieta,
+    criado_em: criadoEm,
     conteudo: JSON.stringify(dietaMontada),
   });
 
   // 8) Devolve os planos prontos para a interface.
   return {
-    treino: { id: idTreino, versao: versaoTreino, modelo_origem: caminhoTreino, ...treinoMontado },
-    dieta: { id: idDieta, versao: versaoDieta, modelo_origem: caminhoDieta, ...dietaMontada },
+    treino: { id: idTreino, versao: versaoTreino, modelo_origem: caminhoTreino, criado_em: criadoEm, ...treinoMontado },
+    dieta: { id: idDieta, versao: versaoDieta, modelo_origem: caminhoDieta, criado_em: criadoEm, ...dietaMontada },
   };
 }
 
@@ -530,8 +535,8 @@ export async function buscarPlanoAtualLocal(): Promise<PlanoCompleto> {
   }
   return {
     perfil,
-    treino: { id: linhaTreino.id, versao: linhaTreino.versao, modelo_origem: linhaTreino.modelo_origem, ...JSON.parse(linhaTreino.conteudo) } as PlanoTreino,
-    dieta: { id: linhaDieta.id, versao: linhaDieta.versao, modelo_origem: linhaDieta.modelo_origem, ...JSON.parse(linhaDieta.conteudo) } as PlanoDieta,
+    treino: { id: linhaTreino.id, versao: linhaTreino.versao, modelo_origem: linhaTreino.modelo_origem, criado_em: linhaTreino.criado_em, ...JSON.parse(linhaTreino.conteudo) } as PlanoTreino,
+    dieta: { id: linhaDieta.id, versao: linhaDieta.versao, modelo_origem: linhaDieta.modelo_origem, criado_em: linhaDieta.criado_em, ...JSON.parse(linhaDieta.conteudo) } as PlanoDieta,
   };
 }
 
@@ -554,11 +559,11 @@ export async function editarExercicioLocal(planoId: number, corpo: EdicaoDeExerc
     throw new ErroDaApi(400, 'Informe o dia e o exercício que deseja editar.');
   }
   // Aplica a edição na cópia (o modelo mestre permanece intacto).
-  const conteudo = JSON.parse(plano.conteudo) as Omit<PlanoTreino, 'id' | 'versao' | 'modelo_origem'>;
+  const conteudo = JSON.parse(plano.conteudo) as Omit<PlanoTreino, 'id' | 'versao' | 'modelo_origem' | 'criado_em'>;
   aplicarEdicaoTreino(conteudo, corpo);
   plano.conteudo = JSON.stringify(conteudo);
   salvarBanco(banco);
-  return { id: plano.id, versao: plano.versao, modelo_origem: plano.modelo_origem, ...conteudo };
+  return { id: plano.id, versao: plano.versao, modelo_origem: plano.modelo_origem, criado_em: plano.criado_em, ...conteudo };
 }
 
 /** Substitui um alimento por substituto (espelha PATCH /plano/dieta/:id/substituir). */
@@ -572,11 +577,11 @@ export async function substituirAlimentoLocal(
     throw new ErroDaApi(400, 'Informe a refeição, o alimento e o substituto desejado.');
   }
   // Aplica a substituição recalculando a porção.
-  const conteudo = JSON.parse(plano.conteudo) as Omit<PlanoDieta, 'id' | 'versao' | 'modelo_origem'>;
+  const conteudo = JSON.parse(plano.conteudo) as Omit<PlanoDieta, 'id' | 'versao' | 'modelo_origem' | 'criado_em'>;
   aplicarSubstituicao(conteudo, corpo.refeicao_indice, corpo.item_indice, corpo.alternativa_nome);
   plano.conteudo = JSON.stringify(conteudo);
   salvarBanco(banco);
-  return { id: plano.id, versao: plano.versao, modelo_origem: plano.modelo_origem, ...conteudo };
+  return { id: plano.id, versao: plano.versao, modelo_origem: plano.modelo_origem, criado_em: plano.criado_em, ...conteudo };
 }
 
 /* ===========================================================================

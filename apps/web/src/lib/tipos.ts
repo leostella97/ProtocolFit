@@ -69,6 +69,8 @@ export interface PlanoTreino {
   versao: number;
   /** Caminho do modelo JSON mestre que originou esta cópia. */
   modelo_origem: string;
+  /** Data de criação da cópia (ISO — base do "há quanto tempo com o plano"). */
+  criado_em: string;
   nome: string;
   modalidade: Modalidade;
   objetivo: Objetivo;
@@ -142,6 +144,8 @@ export interface PlanoDieta {
   versao: number;
   /** Caminho do modelo JSON mestre que originou esta cópia. */
   modelo_origem: string;
+  /** Data de criação da cópia (ISO — base do "há quanto tempo com o plano"). */
+  criado_em: string;
   nome: string;
   objetivo: Objetivo;
   meta: MetaDaDieta;

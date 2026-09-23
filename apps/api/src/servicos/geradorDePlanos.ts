@@ -15,7 +15,7 @@
  *   6) Insere as novas cópias       → tabela `planos` do SQLite
  * ---------------------------------------------------------------------------
  */
-import { desativarPlanosDoUsuario, inserirPlano, proximaVersaoDoPlano } from '../bd/banco.js';
+import { buscarPlanoPorId, desativarPlanosDoUsuario, inserirPlano, proximaVersaoDoPlano } from '../bd/banco.js';
 import { calcularPlanoNutricional } from '../motor/calculos.js';
 import { buscarModeloDieta, buscarModeloTreino } from '../motor/carregadorModelos.js';
 import { montarPlanoDieta, montarPlanoTreino } from '../motor/montadorPlano.js';
@@ -61,9 +61,14 @@ export function gerarPlanosParaPerfil(usuarioId: number, perfil: Perfil): { trei
     JSON.stringify(dietaMontada),
   );
 
-  // 8) Devolve os planos prontos (com id, versão e vínculo com o modelo mestre).
+  // 8) Recupera a data de criação gravada de cada cópia (para exibir há
+  // quanto tempo o usuário está com o plano atual).
+  const linhaTreino = buscarPlanoPorId(idTreino);
+  const linhaDieta = buscarPlanoPorId(idDieta);
+
+  // 9) Devolve os planos prontos (com id, versão, vínculo e data de criação).
   return {
-    treino: { id: idTreino, versao: versaoTreino, modelo_origem: modeloOrigemTreino, ...treinoMontado },
-    dieta: { id: idDieta, versao: versaoDieta, modelo_origem: modeloOrigemDieta, ...dietaMontada },
+    treino: { id: idTreino, versao: versaoTreino, modelo_origem: modeloOrigemTreino, criado_em: linhaTreino?.criado_em ?? new Date().toISOString(), ...treinoMontado },
+    dieta: { id: idDieta, versao: versaoDieta, modelo_origem: modeloOrigemDieta, criado_em: linhaDieta?.criado_em ?? new Date().toISOString(), ...dietaMontada },
   };
 }

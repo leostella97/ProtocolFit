@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation';
 import { Clock, Droplets, Flame, Lightbulb, Wheat } from 'lucide-react';
 import { Botao } from '@/components/ui/button';
 import { Selo } from '@/components/ui/badge';
+import { CartaoTempoDoPlano } from '@/components/painel/cartao-tempo-do-plano';
 import {
   Cartao,
   CartaoCabecalho,
@@ -23,7 +24,7 @@ import {
 import { BarraDeProgresso } from '@/components/ui/progress';
 import { MenuDeSelecao } from '@/components/ui/select';
 import { Esqueleto } from '@/components/ui/skeleton';
-import { buscarPlanoAtual, substituirAlimento, ErroDaApi, type CorpoSubstituicao } from '@/lib/api';
+import { buscarPlanoAtual, recalcularPlanos, substituirAlimento, ErroDaApi, type CorpoSubstituicao } from '@/lib/api';
 import { encerrarSessao } from '@/lib/armazenamento';
 import type { ItemDaDieta, PlanoCompleto, PlanoDieta } from '@/lib/tipos';
 
@@ -187,6 +188,16 @@ export default function PaginaDaDieta() {
     definirPlano((planoAtual) => (planoAtual ? { ...planoAtual, dieta: novaDieta } : planoAtual));
   }
 
+  /**
+   * Atualiza o plano inteiro (treino + dieta) pela evolução física.
+   * Usado pelo botão "Atualizar plano" do cartão de tempo — ao recalcular,
+   * o criado_em/versão mudam e o contador de dias recomeça.
+   */
+  async function atualizarPlano() {
+    const resposta = await recalcularPlanos();
+    definirPlano({ perfil: resposta.perfil, treino: resposta.treino, dieta: resposta.dieta });
+  }
+
   // Esqueleto de carregamento enquanto o plano chega.
   if (carregando) {
     return (
@@ -287,6 +298,16 @@ export default function PaginaDaDieta() {
           </div>
         </CartaoConteudo>
       </Cartao>
+
+      {/* Há quanto tempo com a dieta + quando renovar + botão atualizar. */}
+      <CartaoTempoDoPlano
+        tipo="dieta"
+        criadoEm={dieta.criado_em}
+        versao={dieta.versao}
+        aoAtualizar={async () => {
+          await atualizarPlano();
+        }}
+      />
 
       {/* Seção das refeições do dia. */}
       <section className="space-y-4">

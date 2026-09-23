@@ -78,7 +78,7 @@ ProtocolFit/
 
 1. **Onboarding** — o usuário cadastra-se e informa sexo, faixa etária (17 opções, de "18-19" a "79-83"), altura, peso (decimal), objetivo (emagrecimento | hipertrofia | corrida), frequência semanal, dias disponíveis e modalidade (academia | peso do corpo).
 2. **Geração** — o backend cruza os filtros, localiza o modelo JSON mestre e injeta os valores calculados.
-3. **Painel** — o usuário visualiza treino e dieta, **edita cargas e substitui alimentos na própria cópia**, **altera peso e altura direto no painel** (a altura aparece acima do peso), faz o **check-in diário** (treino, dieta, água, peso e observação, com sequência/recorde de dias) e solicita **recálculos** baseados na sua evolução física.
+3. **Painel** — o usuário visualiza treino e dieta, **edita cargas e substitui alimentos na própria cópia**, **altera peso e altura direto no painel** (a altura aparece acima do peso), faz o **check-in diário** (treino, dieta, água, peso e observação, com sequência/recorde de dias) e solicita **recálculos** baseados na sua evolução física. As páginas de **Treino** e **Dieta** mostram **há quanto tempo o usuário está com o plano** e **quando é bom renovar** (recomendado a cada 30 dias), com botão **Atualizar plano**.
 
 ### ✅ Check-in diário
 

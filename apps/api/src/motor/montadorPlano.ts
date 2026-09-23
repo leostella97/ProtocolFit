@@ -143,7 +143,7 @@ function montarDia(dia: ModeloDiaTreino, perfil: Perfil): DiaDeTreino {
 export function montarPlanoTreino(
   modelo: ModeloTreino,
   perfil: Perfil,
-): Omit<PlanoTreino, 'id' | 'versao' | 'modelo_origem'> {
+): Omit<PlanoTreino, 'id' | 'versao' | 'modelo_origem' | 'criado_em'> {
   // Aplica as regras do objetivo a cada dia do modelo mestre.
   const dias_da_semana = modelo.dias_da_semana.map((dia) => montarDia(dia, perfil));
   return {
@@ -193,7 +193,7 @@ export function montarPlanoDieta(
   modelo: ModeloDieta,
   perfil: Perfil,
   metas: DistribuicaoMacros,
-): Omit<PlanoDieta, 'id' | 'versao' | 'modelo_origem'> {
+): Omit<PlanoDieta, 'id' | 'versao' | 'modelo_origem' | 'criado_em'> {
   // Monta cada refeição do modelo mestre com as calorias do usuário.
   const refeicoes = modelo.refeicoes.map((refeicao) => {
     // Calorias da refeição = fração dela sobre a meta diária do usuário.
@@ -234,9 +234,9 @@ export interface EdicaoDeExercicio {
 
 /** Aplica a edição do usuário na CÓPIA do plano (mestre fica intacto). */
 export function aplicarEdicaoTreino(
-  plano: Omit<PlanoTreino, 'id' | 'versao' | 'modelo_origem'>,
+  plano: Omit<PlanoTreino, 'id' | 'versao' | 'modelo_origem' | 'criado_em'>,
   edicao: EdicaoDeExercicio,
-): Omit<PlanoTreino, 'id' | 'versao' | 'modelo_origem'> {
+): Omit<PlanoTreino, 'id' | 'versao' | 'modelo_origem' | 'criado_em'> {
   const dia = plano.dias_da_semana[edicao.dia_indice];
   if (!dia) {
     throw new Error('Dia de treino não encontrado no plano.');
@@ -265,11 +265,11 @@ export function aplicarEdicaoTreino(
  * recalculando a porção em gramas para manter as mesmas calorias-alvo.
  */
 export function aplicarSubstituicao(
-  plano: Omit<PlanoDieta, 'id' | 'versao' | 'modelo_origem'>,
+  plano: Omit<PlanoDieta, 'id' | 'versao' | 'modelo_origem' | 'criado_em'>,
   refeicaoIndice: number,
   itemIndice: number,
   nomeAlternativa: string,
-): Omit<PlanoDieta, 'id' | 'versao' | 'modelo_origem'> {
+): Omit<PlanoDieta, 'id' | 'versao' | 'modelo_origem' | 'criado_em'> {
   const refeicao = plano.refeicoes[refeicaoIndice];
   if (!refeicao) {
     throw new Error('Refeição não encontrada no plano.');

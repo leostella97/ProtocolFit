@@ -58,18 +58,20 @@ export async function rotasPlanos(app: FastifyInstance): Promise<void> {
       return enviarErro(resposta, 404, 'Planos ainda não gerados. Atualize seu perfil para gerá-los.');
     }
 
-    // Monta os planos com id, versão e vínculo com o modelo mestre embutidos.
+    // Monta os planos com id, versão, vínculo e data de criação embutidos.
     const treino: PlanoTreino = {
       id: linhaTreino.id,
       versao: linhaTreino.versao,
       modelo_origem: linhaTreino.modelo_origem,
-      ...interpretarConteudo<Omit<PlanoTreino, 'id' | 'versao' | 'modelo_origem'>>(linhaTreino),
+      criado_em: linhaTreino.criado_em,
+      ...interpretarConteudo<Omit<PlanoTreino, 'id' | 'versao' | 'modelo_origem' | 'criado_em'>>(linhaTreino),
     };
     const dieta: PlanoDieta = {
       id: linhaDieta.id,
       versao: linhaDieta.versao,
       modelo_origem: linhaDieta.modelo_origem,
-      ...interpretarConteudo<Omit<PlanoDieta, 'id' | 'versao' | 'modelo_origem'>>(linhaDieta),
+      criado_em: linhaDieta.criado_em,
+      ...interpretarConteudo<Omit<PlanoDieta, 'id' | 'versao' | 'modelo_origem' | 'criado_em'>>(linhaDieta),
     };
 
     return resposta.send({ perfil, treino, dieta });
@@ -107,14 +109,14 @@ export async function rotasPlanos(app: FastifyInstance): Promise<void> {
     }
 
     // Aplica a edição na cópia do usuário (o mestre permanece intacto).
-    const plano = interpretarConteudo<Omit<PlanoTreino, 'id' | 'versao' | 'modelo_origem'>>(linha);
+    const plano = interpretarConteudo<Omit<PlanoTreino, 'id' | 'versao' | 'modelo_origem' | 'criado_em'>>(linha);
     aplicarEdicaoTreino(plano, edicao);
 
     // Persiste a cópia atualizada no SQLite.
     atualizarConteudoDoPlano(planoId, JSON.stringify(plano));
 
-    // Responde com o treino atualizado (id/versão/modelo sobrescrevem o conteúdo).
-    return resposta.send({ ...plano, id: planoId, versao: linha.versao, modelo_origem: linha.modelo_origem });
+    // Responde com o treino atualizado (id/versão/modelo/data sobrescrevem o conteúdo).
+    return resposta.send({ ...plano, id: planoId, versao: linha.versao, modelo_origem: linha.modelo_origem, criado_em: linha.criado_em });
   });
 
   /** PATCH /api/plano/dieta/:planoId/substituir — troca um alimento por substituto. */
@@ -140,13 +142,13 @@ export async function rotasPlanos(app: FastifyInstance): Promise<void> {
     }
 
     // Aplica a substituição na cópia do usuário com recálculo da porção.
-    const plano = interpretarConteudo<Omit<PlanoDieta, 'id' | 'versao' | 'modelo_origem'>>(linha);
+    const plano = interpretarConteudo<Omit<PlanoDieta, 'id' | 'versao' | 'modelo_origem' | 'criado_em'>>(linha);
     aplicarSubstituicao(plano, corpo.refeicao_indice as number, corpo.item_indice as number, corpo.alternativa_nome);
 
     // Persiste a cópia atualizada no SQLite.
     atualizarConteudoDoPlano(planoId, JSON.stringify(plano));
 
-    // Responde com a dieta atualizada (id/versão/modelo sobrescrevem o conteúdo).
-    return resposta.send({ ...plano, id: planoId, versao: linha.versao, modelo_origem: linha.modelo_origem });
+    // Responde com a dieta atualizada (id/versão/modelo/data sobrescrevem o conteúdo).
+    return resposta.send({ ...plano, id: planoId, versao: linha.versao, modelo_origem: linha.modelo_origem, criado_em: linha.criado_em });
   });
 }

@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation';
 import { Clock, Lightbulb, Pencil, Save, Timer } from 'lucide-react';
 import { Botao } from '@/components/ui/button';
 import { Selo } from '@/components/ui/badge';
+import { CartaoTempoDoPlano } from '@/components/painel/cartao-tempo-do-plano';
 import {
   Cartao,
   CartaoCabecalho,
@@ -25,7 +26,7 @@ import { Rotulo } from '@/components/ui/label';
 import { Separador } from '@/components/ui/separator';
 import { Esqueleto } from '@/components/ui/skeleton';
 import { Abas, ConteudoDeAba, GatilhoDeAba, ListaDeAbas } from '@/components/ui/tabs';
-import { buscarPlanoAtual, editarExercicio, ErroDaApi, type CorpoEdicaoExercicio } from '@/lib/api';
+import { buscarPlanoAtual, editarExercicio, recalcularPlanos, ErroDaApi, type CorpoEdicaoExercicio } from '@/lib/api';
 import { encerrarSessao } from '@/lib/armazenamento';
 import { rotuloDoObjetivo } from '@/lib/util';
 import type { ExercicioDoPlano, PlanoCompleto, PlanoTreino } from '@/lib/tipos';
@@ -274,6 +275,16 @@ export default function PaginaDoTreino() {
     definirPlano((planoAtual) => (planoAtual ? { ...planoAtual, treino: novoTreino } : planoAtual));
   }
 
+  /**
+   * Atualiza o plano inteiro (treino + dieta) pela evolução física.
+   * Usado pelo botão "Atualizar plano" do cartão de tempo — ao recalcular,
+   * o criado_em/versão mudam e o contador de dias recomeça.
+   */
+  async function atualizarPlano() {
+    const resposta = await recalcularPlanos();
+    definirPlano({ perfil: resposta.perfil, treino: resposta.treino, dieta: resposta.dieta });
+  }
+
   // Esqueleto de carregamento enquanto o plano chega.
   if (carregando) {
     return (
@@ -323,6 +334,16 @@ export default function PaginaDoTreino() {
           <Clock className="size-4 shrink-0 text-primary" /> Duração estimada: {treino.duracao_estimada_min} min
         </p>
       </section>
+
+      {/* Há quanto tempo com o treino + quando renovar + botão atualizar. */}
+      <CartaoTempoDoPlano
+        tipo="treino"
+        criadoEm={treino.criado_em}
+        versao={treino.versao}
+        aoAtualizar={async () => {
+          await atualizarPlano();
+        }}
+      />
 
       {/* Abas: um gatilho "Dia N" por dia de treino. */}
       <Abas valorPadrao="0">

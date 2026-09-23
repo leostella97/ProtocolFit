@@ -216,6 +216,8 @@ export interface PlanoTreino {
   versao: number;
   /** Caminho relativo do modelo JSON mestre que originou esta cópia. */
   modelo_origem: string;
+  /** Data de criação da cópia (ISO, usada para mostrar há quanto tempo o usuário está com o plano). */
+  criado_em: string;
   /** Nome do plano. */
   nome: string;
   /** Modalidade do plano. */
@@ -296,6 +298,8 @@ export interface PlanoDieta {
   versao: number;
   /** Caminho relativo do modelo JSON mestre que originou esta cópia. */
   modelo_origem: string;
+  /** Data de criação da cópia (ISO, usada para mostrar há quanto tempo o usuário está com o plano). */
+  criado_em: string;
   /** Nome do plano. */
   nome: string;
   /** Objetivo do plano. */

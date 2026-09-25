@@ -1,0 +1,42 @@
+{
+  "nome": "Full Body - 3 Dias (A/B/C)",
+  "modalidade": "academia",
+  "objetivo": "hipertrofia",
+  "dias": 3,
+  "duracao_estimada_min": 65,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A - Foco Empurrar",
+      "exercicios": [
+        { "nome": "Supino Reto", "grupo": "peito", "tipo": "composto", "series": 4, "repeticoes_min": 6, "repeticoes_max": 10, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.6, "dicas": "Controle excêntrico 2s, explosivo na subida." },
+        { "nome": "Desenvolvimento Militar", "grupo": "ombro", "tipo": "composto", "series": 4, "repeticoes_min": 6, "repeticoes_max": 10, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.4, "dicas": "Core firme, não arqueie lombar." },
+        { "nome": "Tríceps Corda", "grupo": "triceps", "tipo": "isolador", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.2, "dicas": "Abra corda no final, cotovelos fixos." },
+        { "nome": "Elevação Lateral", "grupo": "ombro", "tipo": "isolador", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.08, "dicas": "Polegar para baixo no topo." },
+        { "nome": "Rosca Martelo", "grupo": "biceps", "tipo": "isolador", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.15, "dicas": "Pegada neutra, braquial." },
+        { "nome": "Prancha", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "45-60s, glúteos contraídos." }
+      ]
+    },
+    {
+      "titulo": "Dia B - Puxar + Pernas",
+      "exercicios": [
+        { "nome": "Barra Fixa Assistida", "grupo": "costas", "tipo": "corporal", "series": 4, "repeticoes_min": 6, "repeticoes_max": 10, "descanso_segundos": 120, "percentual_carga_peso_corporal": null, "dicas": "Elástico se necessário, amplitude total." },
+        { "nome": "Remada Curvada", "grupo": "costas", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.5, "dicas": "Tronco 45°, puxe até o abdômen." },
+        { "nome": "Agachamento Livre", "grupo": "pernas", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.5, "dicas": "Desça até paralelo, joelhos acompanham pés." },
+        { "nome": "Remada Baixa", "grupo": "costas", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.35, "dicas": "Pegada neutra, puxe até o abdômen." },
+        { "nome": "Elevação Pélvica", "grupo": "gluteos", "tipo": "composto", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.3, "dicas": "Aperte glúteo no topo 2s." },
+        { "nome": "Prancha", "grupo": "core", "tipo": "corporal", "series": 2, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "45-60s, corpo reto." }
+      ]
+    },
+    {
+      "titulo": "Dia C - Foco Pernas + Core",
+      "exercicios": [
+        { "nome": "Agachamento Livre", "grupo": "pernas", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.5, "dicas": "Profundidade total, joelhos acompanham pés." },
+        { "nome": "Stiff Halteres", "grupo": "posterior", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.3, "dicas": "Alongamento posterior, lombar neutra." },
+        { "nome": "Afundo Alternado", "grupo": "pernas", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.2, "dicas": "Passo largo, joelho alinhado." },
+        { "nome": "Panturrilha Sentado", "grupo": "panturrilha", "tipo": "isolador", "series": 4, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": 0.3, "dicas": "Amplitude total, pausa 1s no topo." },
+        { "nome": "Prancha Lateral", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "30s cada lado, quadril elevado." },
+        { "nome": "Abdominal Infra", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Lombar no chão, pernas estendidas." }
+      ]
+    }
+  ]
+}

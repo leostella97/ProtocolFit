@@ -1,0 +1,41 @@
+{
+  "nome": "Treino para Idosos - 3 Dias (Saúde + Força)",
+  "modalidade": "academia",
+  "objetivo": "hipertrofia",
+  "dias": 3,
+  "duracao_estimada_min": 50,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A - Superior Seguro",
+      "exercicios": [
+        { "nome": "Supino Máquina", "grupo": "peito", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.2, "dicas": "Ajuste assento, cotovelos 45°." },
+        { "nome": "Remada Máquina", "grupo": "costas", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.2, "dicas": "Pegada neutra, puxe até o peito." },
+        { "nome": "Desenvolvimento Máquina", "grupo": "ombro", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.15, "dicas": "Banco com apoio lombar." },
+        { "nome": "Extensão Pernas", "grupo": "pernas", "tipo": "isolador", "series": 3, "repeticoes_min": 12, "repeticoes_max": 20, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.1, "dicas": "Sem travar joelho no topo." },
+        { "nome": "Flexão Pernas Máquina", "grupo": "posterior", "tipo": "isolador", "series": 3, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.1, "dicas": "Controle a descida 2s." },
+        { "nome": "Prancha Joelhos", "grupo": "core", "tipo": "corporal", "series": 2, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "20-30s, lombar reta." }
+      ]
+    },
+    {
+      "titulo": "Dia B - Inferior + Core",
+      "exercicios": [
+        { "nome": "Leg Press", "grupo": "pernas", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.4, "dicas": "Pés largura ombros, não trave joelhos." },
+        { "nome": "Cadeira Extensora", "grupo": "pernas", "tipo": "isolador", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.1, "dicas": "Sem travar joelho no topo." },
+        { "nome": "Mesa Flexora", "grupo": "posterior", "tipo": "isolador", "series": 3, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.1, "dicas": "Controle a descida." },
+        { "nome": "Ponte Glúteo", "grupo": "gluteos", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Aperte glúteo no topo." },
+        { "nome": "Prancha Joelhos", "grupo": "core", "tipo": "corporal", "series": 2, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "20-30s, lombar reta." },
+        { "nome": "Alongamento Cadeia Posterior", "grupo": "mobilidade", "tipo": "corporal", "series": 2, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Sentado, pernas esticadas, 30s." }
+      ]
+    },
+    {
+      "titulo": "Dia C - Mobilidade + Equilíbrio",
+      "exercicios": [
+        { "nome": "Círculos Quadril", "grupo": "mobilidade", "tipo": "corporal", "series": 2, "repeticoes_min": 10, "repeticoes_max": 10, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Círculos amplos, dois sentidos." },
+        { "nome": "Agachamento Apoio", "grupo": "pernas", "tipo": "corporal", "series": 2, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Apoio em cadeira, desça devagar." },
+        { "nome": "Ponte Glúteo", "grupo": "gluteos", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Aperte glúteo no topo." },
+        { "nome": "Equilíbrio 1 Perna", "grupo": "equilibrio", "tipo": "corporal", "series": 2, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "30s cada perna, apoio se precisar." },
+        { "nome": "Alongamento Cadeia Posterior", "grupo": "mobilidade", "tipo": "corporal", "series": 2, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Sentado, pernas esticadas, 30s." }
+      ]
+    }
+  ]
+}

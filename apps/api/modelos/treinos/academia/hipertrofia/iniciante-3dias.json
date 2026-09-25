@@ -1,0 +1,42 @@
+{
+  "nome": "Iniciante - 3 Dias (Full Body)",
+  "modalidade": "academia",
+  "objetivo": "hipertrofia",
+  "dias": 3,
+  "duracao_estimada_min": 50,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A - Corpo Inteiro A",
+      "exercicios": [
+        { "nome": "Agachamento Goblet", "grupo": "pernas", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.3, "dicas": "Segure halter no peito, agache até cotovelos tocarem joelhos." },
+        { "nome": "Supino Máquina", "grupo": "peito", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.3, "dicas": "Ajuste assento, cotovelos a 45°." },
+        { "nome": "Remada Máquina", "grupo": "costas", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.3, "dicas": "Pegada neutra, puxe até o peito." },
+        { "nome": "Desenvolvimento Máquina", "grupo": "ombro", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.2, "dicas": "Cotovelos a 90° na descida." },
+        { "nome": "Prancha", "grupo": "core", "tipo": "corporal", "series": 2, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "30-45s, lombar reta, glúteos contraídos." },
+        { "nome": "Prancha Lateral", "grupo": "core", "tipo": "corporal", "series": 2, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "20-30s cada lado, quadril alto." }
+      ]
+    },
+    {
+      "titulo": "Dia B - Corpo Inteiro B",
+      "exercicios": [
+        { "nome": "Levantamento Terra Rumano", "grupo": "posterior", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.4, "dicas": "Quadril para trás, coluna neutra, alongamento posterior." },
+        { "nome": "Supino Inclinado Halteres", "grupo": "peito", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.2, "dicas": "Banco 30°, cotovelos 45°." },
+        { "nome": "Remada Baixa Cabo", "grupo": "costas", "tipo": "composto", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.25, "dicas": "Pegada neutra, puxe até o abdômen." },
+        { "nome": "Desenvolvimento Halteres", "grupo": "ombro", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.2, "dicas": "Não trave cotovelos no topo." },
+        { "nome": "Elevação Lateral", "grupo": "ombro", "tipo": "isolador", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.05, "dicas": "Cotovelos levemente flexionados." },
+        { "nome": "Prancha Lateral", "grupo": "core", "tipo": "corporal", "series": 2, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "20-30s cada lado." }
+      ]
+    },
+    {
+      "titulo": "Dia C - Corpo Inteiro C",
+      "exercicios": [
+        { "nome": "Agachamento Búlgaro", "grupo": "pernas", "tipo": "composto", "series": 3, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.2, "dicas": "Pé traseiro no banco, joelho alinhado." },
+        { "nome": "Flexão de Braço", "grupo": "peito", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Joelhos no chão se precisar." },
+        { "nome": "Remada Australiana", "grupo": "costas", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Barra na altura da cintura, puxe peito." },
+        { "nome": "Desenvolvimento Arnold", "grupo": "ombro", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.15, "dicas": "Rotação dos halteres na subida." },
+        { "nome": "Tríceps Banco", "grupo": "triceps", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Cotovelos para trás, ombros longe das orelhas." },
+        { "nome": "Ponte de Glúteo", "grupo": "gluteos", "tipo": "corporal", "series": 2, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Aperte glúteo no topo 2s." }
+      ]
+    }
+  ]
+}

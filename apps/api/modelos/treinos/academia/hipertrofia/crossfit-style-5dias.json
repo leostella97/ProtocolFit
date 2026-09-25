@@ -1,0 +1,59 @@
+{
+  "nome": "CrossFit Style - 5 Dias (WOD + Força)",
+  "modalidade": "academia",
+  "objetivo": "hipertrofia",
+  "dias": 5,
+  "duracao_estimada_min": 60,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia 1 - WOD 'Fran' + Força",
+      "exercicios": [
+        { "nome": "Thruster", "grupo": "corpointeiro", "tipo": "composto", "series": 3, "repeticoes_min": 15, "repeticoes_max": 21, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.3, "dicas": "21-15-9 reps estilo Fran, ritmo forte." },
+        { "nome": "Pull-up", "grupo": "costas", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 21, "descanso_segundos": 120, "percentual_carga_peso_corporal": null, "dicas": "Kipping se souber, senão estrita." },
+        { "nome": "Front Squat", "grupo": "pernas", "tipo": "composto", "series": 4, "repeticoes_min": 5, "repeticoes_max": 8, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.5, "dicas": "Cotovelos altos, cotovelos altos!" },
+        { "nome": "Push Press", "grupo": "ombro", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.3, "dicas": "Dip & drive, trave overhead." },
+        { "nome": "Toes-to-Bar", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Kipping se souber, senão joelho no peito." }
+      ]
+    },
+    {
+      "titulo": "Dia 2 - Força Pura",
+      "exercicios": [
+        { "nome": "Supino Reto", "grupo": "peito", "tipo": "composto", "series": 5, "repeticoes_min": 5, "repeticoes_max": 5, "descanso_segundos": 180, "percentual_carga_peso_corporal": 0.8, "dicas": "5x5 força, pausa 1s no peito." },
+        { "nome": "Levantamento Terra", "grupo": "posterior", "tipo": "composto", "series": 5, "repeticoes_min": 3, "repeticoes_max": 5, "descanso_segundos": 180, "percentual_carga_peso_corporal": 0.85, "dicas": "Potência de cadeia posterior." },
+        { "nome": "Supino Inclinado", "grupo": "peito", "tipo": "composto", "series": 4, "repeticoes_min": 6, "repeticoes_max": 8, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.4, "dicas": "Equilíbrio muscular: empurrar." },
+        { "nome": "Remada Curvada", "grupo": "costas", "tipo": "composto", "series": 4, "repeticoes_min": 6, "repeticoes_max": 8, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.5, "dicas": "Costas retas, puxe até o abdômen." },
+        { "nome": "Elevação Pélvica", "grupo": "gluteos", "tipo": "composto", "series": 4, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.3, "dicas": "Glúteo contraído no topo 1s." }
+      ]
+    },
+    {
+      "titulo": "Dia 3 - WOD 'Cindy' + Força",
+      "exercicios": [
+        { "nome": "Pull-up", "grupo": "costas", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 120, "percentual_carga_peso_corporal": null, "dicas": "Kipping se souber, senão estrita." },
+        { "nome": "Flexão", "grupo": "peito", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "5-10-15 estilo Cindy." },
+        { "nome": "Agachamento Livre", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 25, "repeticoes_max": 30, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Agachamento completo, ritmo." },
+        { "nome": "Abmat Sit-up", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 25, "repeticoes_max": 30, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Âncora pés, subida completa." },
+        { "nome": "Corrida 400m", "grupo": "cardio", "tipo": "cardio", "series": 1, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 180, "percentual_carga_peso_corporal": null, "dicas": "Ritmo forte, 80-90% FCmáx." }
+      ]
+    },
+    {
+      "titulo": "Dia 4 - Força Total",
+      "exercicios": [
+        { "nome": "Agachamento Frontal", "grupo": "pernas", "tipo": "composto", "series": 4, "repeticoes_min": 5, "repeticoes_max": 8, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.5, "dicas": "Cotovelos altos, peito aberto." },
+        { "nome": "Supino Inclinado", "grupo": "peito", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.4, "dicas": "Banco 30°, toque no peito superior." },
+        { "nome": "Remada Curvada", "grupo": "costas", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.5, "dicas": "Costas retas, puxe até o abdômen." },
+        { "nome": "Push Press", "grupo": "ombro", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.35, "dicas": "Dip & drive, trave overhead." },
+        { "nome": "Sit-up GHD", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Âncora pés, subida completa." }
+      ]
+    },
+    {
+      "titulo": "Dia 5 - WOD 'Murph' Style + Força",
+      "exercicios": [
+        { "nome": "Corrida 1km", "grupo": "cardio", "tipo": "cardio", "series": 1, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 180, "percentual_carga_peso_corporal": null, "dicas": "Ritmo forte, 85-90% FCmáx." },
+        { "nome": "Pull-up", "grupo": "costas", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 120, "percentual_carga_peso_corporal": null, "dicas": "Kipping se souber, senão elástico." },
+        { "nome": "Push-up", "grupo": "peito", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Padrão Murph: 100-200 reps total." },
+        { "nome": "Agachamento com Salto", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Explosão no salto, aterrissagem suave." },
+        { "nome": "Burpee", "grupo": "corpointeiro", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 120, "percentual_carga_peso_corporal": null, "dicas": "Agachamento + flexão + salto." }
+      ]
+    }
+  ]
+}

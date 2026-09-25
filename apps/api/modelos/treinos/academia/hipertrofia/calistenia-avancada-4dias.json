@@ -1,0 +1,50 @@
+{
+  "nome": "Calistenia Avançada - 4 Dias (Skill + Força)",
+  "modalidade": "pesocorporal",
+  "objetivo": "hipertrofia",
+  "dias": 4,
+  "duracao_estimada_min": 70,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A - Empurrar (Skill + Força)",
+      "exercicios": [
+        { "nome": "Flexão Diamante", "grupo": "triceps", "tipo": "corporal", "series": 4, "repeticoes_min": 6, "repeticoes_max": 8, "descanso_segundos": 120, "percentual_carga_peso_corporal": null, "dicas": "Mãos formando diamante, cotovelos rentes." },
+        { "nome": "Flexão Pseudo Planche", "grupo": "peito", "tipo": "corporal", "series": 4, "repeticoes_min": 5, "repeticoes_max": 8, "descanso_segundos": 120, "percentual_carga_peso_corporal": null, "dicas": "Mãos na altura do quadril, incline-se à frente." },
+        { "nome": "Flexão Pike (Desenvolvimento Invertido)", "grupo": "ombro", "tipo": "corporal", "series": 4, "repeticoes_min": 6, "repeticoes_max": 10, "descanso_segundos": 120, "percentual_carga_peso_corporal": null, "dicas": "Quadril alto, desça a cabeça em direção ao chão." },
+        { "nome": "Mergulho no Banco", "grupo": "triceps", "tipo": "corporal", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 120, "percentual_carga_peso_corporal": null, "dicas": "Cotovelos para trás, ombros baixos." },
+        { "nome": "Prancha Planche Lean", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Incline à frente, ombros à frente das mãos." }
+      ]
+    },
+    {
+      "titulo": "Dia B - Puxar (Skill + Força)",
+      "exercicios": [
+        { "nome": "Barra Fixa Supinada", "grupo": "costas", "tipo": "corporal", "series": 4, "repeticoes_min": 6, "repeticoes_max": 10, "descanso_segundos": 120, "percentual_carga_peso_corporal": null, "dicas": "Palmas voltadas para você, queixo acima da barra." },
+        { "nome": "Barra Fixa Pronada", "grupo": "costas", "tipo": "corporal", "series": 3, "repeticoes_min": 5, "repeticoes_max": 8, "descanso_segundos": 120, "percentual_carga_peso_corporal": null, "dicas": "Se precisar, use elástico de assistência." },
+        { "nome": "Remada Australiana", "grupo": "costas", "tipo": "corporal", "series": 4, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Use uma mesa resistente; puxe o peito em direção à borda." },
+        { "nome": "Isometria na Barra (Topo)", "grupo": "costas", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Segure 15 a 30 segundos com o queixo acima da barra." },
+        { "nome": "Flexão com Pegada Fechada Invertida", "grupo": "biceps", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Mãos apontadas para os pés — recruta bastante o bíceps." }
+      ]
+    },
+    {
+      "titulo": "Dia C - Pernas + Core",
+      "exercicios": [
+        { "nome": "Agachamento Búlgaro", "grupo": "pernas", "tipo": "corporal", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Pé de trás apoiado em uma cadeira; desça com controle." },
+        { "nome": "Agachamento com Salto", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Explosão no salto e aterrissagem macia." },
+        { "nome": "Afundo Alternado", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Passo largo e joelho alinhado ao tornozelo." },
+        { "nome": "Ponte de Glúteo Unilateral", "grupo": "gluteos", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Aperte o glúteo no topo e segure 1 segundo." },
+        { "nome": "Panturrilha Unipodal", "grupo": "panturrilha", "tipo": "corporal", "series": 4, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Amplitude total na ponta do pé." },
+        { "nome": "Prancha Lateral", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "30-45 segundos de cada lado, quadril elevado." }
+      ]
+    },
+    {
+      "titulo": "Dia D - Mobilidade + Skill Work",
+      "exercicios": [
+        { "nome": "Handstand Hold Parede", "grupo": "ombro", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "30-60s, ombros ativos, core firme." },
+        { "nome": "Negativa na Barra", "grupo": "costas", "tipo": "corporal", "series": 3, "repeticoes_min": 3, "repeticoes_max": 5, "descanso_segundos": 120, "percentual_carga_peso_corporal": null, "dicas": "Desça em 3-5s, controle total." },
+        { "nome": "Skipping Alto (Educativo)", "grupo": "tecnica", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Joelhos altos, aterrissagem no antepé." },
+        { "nome": "Anfersen (Calcanhar no Glúteo)", "grupo": "tecnica", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Leve os calcanhares ao glúteo em passadas curtas e rápidas." },
+        { "nome": "Montanhista (Mountain Climber)", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Ritmo acelerado, quadril baixo e estável." }
+      ]
+    }
+  ]
+}

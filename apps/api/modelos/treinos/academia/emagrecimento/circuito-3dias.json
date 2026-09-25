@@ -1,0 +1,39 @@
+{
+  "nome": "Circuito Emagrecimento - 3 Dias",
+  "modalidade": "academia",
+  "objetivo": "emagrecimento",
+  "dias": 3,
+  "duracao_estimada_min": 45,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A - Circuito Superior + Cardio",
+      "exercicios": [
+        { "nome": "Flexão + Remada", "grupo": "peito", "tipo": "corporal", "series": 4, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Flexão + remada alternada com halteres." },
+        { "nome": "Desenvolvimento Halteres", "grupo": "ombro", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.15, "dicas": "Rotação Arnold na subida." },
+        { "nome": "Burpee", "grupo": "corpointeiro", "tipo": "corporal", "series": 4, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Ritmo controlado, sem parar." },
+        { "nome": "Afundo Alternado", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Passo largo, joelho alinhado." },
+        { "nome": "Prancha", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "45-60s, corpo reto." }
+      ]
+    },
+    {
+      "titulo": "Dia B - Inferior + Core",
+      "exercicios": [
+        { "nome": "Agachamento com Salto", "grupo": "pernas", "tipo": "corporal", "series": 4, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Salto explosivo, aterrissagem macia." },
+        { "nome": "Afundo com Salto", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Troca de perna no ar." },
+        { "nome": "Elevação Pélvica", "grupo": "gluteos", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Aperte glúteo no topo 2s." },
+        { "nome": "Montanhista", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Ritmo acelerado, quadril estável." },
+        { "nome": "Polichinelo", "grupo": "cardio", "tipo": "cardio", "series": 3, "repeticoes_min": 45, "repeticoes_max": 60, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Ritmo constante, braços ativos." }
+      ]
+    },
+    {
+      "titulo": "Dia C - Full Body HIIT",
+      "exercicios": [
+        { "nome": "Burpee", "grupo": "corpointeiro", "tipo": "corporal", "series": 4, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Completo: agachamento, flexão, salto." },
+        { "nome": "Afundo com Salto", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Troca de perna no ar." },
+        { "nome": "Flexão + Rotação", "grupo": "peito", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Flexão + rotação tronco, alterne lados." },
+        { "nome": "Montanhista", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Ritmo acelerado, quadril estável." },
+        { "nome": "Corrida Estacionária", "grupo": "cardio", "tipo": "cardio", "series": 3, "repeticoes_min": 45, "repeticoes_max": 60, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Joelhos altos, braços ativos." }
+      ]
+    }
+  ]
+}

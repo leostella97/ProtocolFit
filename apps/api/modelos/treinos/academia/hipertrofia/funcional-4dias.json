@@ -1,0 +1,49 @@
+{
+  "nome": "Funcional - 4 Dias (Full Body)",
+  "modalidade": "academia",
+  "objetivo": "hipertrofia",
+  "dias": 4,
+  "duracao_estimada_min": 60,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A - Empurrar + Core",
+      "exercicios": [
+        { "nome": "Supino Reto Halteres", "grupo": "peito", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.3, "dicas": "Amplitude total, cotovelos a 45°." },
+        { "nome": "Desenvolvimento Arnold", "grupo": "ombro", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.25, "dicas": "Rotação dos halteres na subida." },
+        { "nome": "Tríceps Corda", "grupo": "triceps", "tipo": "isolador", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.15, "dicas": "Abra a corda no final." },
+        { "nome": "Flexão de Braço", "grupo": "peito", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 20, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Corpo reto, peito no chão." },
+        { "nome": "Prancha com Toque no Ombro", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 16, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Quadril estável, toque ombro alternado." }
+      ]
+    },
+    {
+      "titulo": "Dia B - Puxar + Core",
+      "exercicios": [
+        { "nome": "Barra Fixa Pronada", "grupo": "costas", "tipo": "corporal", "series": 4, "repeticoes_min": 6, "repeticoes_max": 10, "descanso_segundos": 120, "percentual_carga_peso_corporal": null, "dicas": "Assistida se necessário, amplitude total." },
+        { "nome": "Remada Invertida", "grupo": "costas", "tipo": "corporal", "series": 4, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Corpo reto, puxe o peito na barra." },
+        { "nome": "Rosca Direta Halteres", "grupo": "biceps", "tipo": "isolador", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.15, "dicas": "Supinação na subida." },
+        { "nome": "Face Pull", "grupo": "ombro", "tipo": "isolador", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.15, "dicas": "Rotação externa no final." },
+        { "nome": "Prancha Lateral", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "30-45s cada lado." }
+      ]
+    },
+    {
+      "titulo": "Dia C - Pernas + Core",
+      "exercicios": [
+        { "nome": "Agachamento Livre", "grupo": "pernas", "tipo": "composto", "series": 4, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.5, "dicas": "Profundidade total, joelhos acompanhando pés." },
+        { "nome": "Afundo Caminhando", "grupo": "pernas", "tipo": "composto", "series": 3, "repeticoes_min": 12, "repeticoes_max": 16, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.2, "dicas": "Passos longos, joelho não passa do pé." },
+        { "nome": "Elevação Pélvica", "grupo": "gluteos", "tipo": "composto", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.3, "dicas": "Aperte glúteo no topo 2s." },
+        { "nome": "Panturrilha Unipodal", "grupo": "panturrilha", "tipo": "isolador", "series": 4, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Uma perna por vez, amplitude total." },
+        { "nome": "Dead Bug", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Lombar colada, movimento controlado." }
+      ]
+    },
+    {
+      "titulo": "Dia D - Mobilidade + Ativação",
+      "exercicios": [
+        { "nome": "Alongamento Dinâmico", "grupo": "mobilidade", "tipo": "corporal", "series": 1, "repeticoes_min": 5, "repeticoes_max": 5, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Círculos de quadril, balanço pernas, rotação tronco." },
+        { "nome": "Y-T-W-L", "grupo": "ombro", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Escápulas retraídas e deprimidas." },
+        { "nome": "Alongamento Peitoral", "grupo": "peito", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "30s cada lado, porta/coluna." },
+        { "nome": "Alongamento Posterior", "grupo": "posterior", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Sentado/em pé, 30s cada perna." },
+        { "nome": "Respiração Diafragmática", "grupo": "respiracao", "tipo": "corporal", "series": 1, "repeticoes_min": 10, "repeticoes_max": 10, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Inspira 4s, segura 4s, expira 6s." }
+      ]
+    }
+  ]
+}

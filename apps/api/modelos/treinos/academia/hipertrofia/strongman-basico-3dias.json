@@ -1,0 +1,39 @@
+{
+  "nome": "Strongman Básico - 3 Dias",
+  "modalidade": "academia",
+  "objetivo": "hipertrofia",
+  "dias": 3,
+  "duracao_estimada_min": 90,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia 1 - Empurrar + Carregamento",
+      "exercicios": [
+        { "nome": "Supino Reto", "grupo": "peito", "tipo": "composto", "series": 5, "repeticoes_min": 5, "repeticoes_max": 8, "descanso_segundos": 180, "percentual_carga_peso_corporal": 0.7, "dicas": "Pausa 1s no peito, explosão na subida." },
+        { "nome": "Desenvolvimento Log/Barra", "grupo": "ombro", "tipo": "composto", "series": 4, "repeticoes_min": 5, "repeticoes_max": 8, "descanso_segundos": 180, "percentual_carga_peso_corporal": 0.4, "dicas": "Empurre overhead, trave cotovelos." },
+        { "nome": "Supino Inclinado Halteres", "grupo": "peito", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.3, "dicas": "Banco 30°, junte halteres no topo." },
+        { "nome": "Tríceps Corda", "grupo": "triceps", "tipo": "isolador", "series": 4, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.15, "dicas": "Abra corda no final, cotovelos fixos." },
+        { "nome": "Face Pull", "grupo": "ombro", "tipo": "isolador", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.15, "dicas": "Rotação externa, cotovelos altos." }
+      ]
+    },
+    {
+      "titulo": "Dia 2 - Puxar + Carregamento",
+      "exercicios": [
+        { "nome": "Levantamento Terra", "grupo": "posterior", "tipo": "composto", "series": 4, "repeticoes_min": 4, "repeticoes_max": 6, "descanso_segundos": 240, "percentual_carga_peso_corporal": 0.9, "dicas": "Explosão do quadril, barra rente ao corpo." },
+        { "nome": "Remada T-Barra", "grupo": "costas", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 150, "percentual_carga_peso_corporal": 0.5, "dicas": "Puxe até o peito, escápulas juntas." },
+        { "nome": "Puxada Frontal Larga", "grupo": "costas", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.5, "dicas": "Peito na barra, escápulas retraídas." },
+        { "nome": "Farmer's Walk", "grupo": "corpointeiro", "tipo": "composto", "series": 4, "repeticoes_min": 30, "repeticoes_max": 40, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.5, "dicas": "Caminhe 20-30m, core firme, ombros baixos." },
+        { "nome": "Rosca Martelo", "grupo": "biceps", "tipo": "isolador", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.12, "dicas": "Pegada neutra, braquial." }
+      ]
+    },
+    {
+      "titulo": "Dia 3 - Pernas + Core Forte",
+      "exercicios": [
+        { "nome": "Agachamento Frontal", "grupo": "pernas", "tipo": "composto", "series": 4, "repeticoes_min": 5, "repeticoes_max": 8, "descanso_segundos": 180, "percentual_carga_peso_corporal": 0.6, "dicas": "Barra nos deltoides, cotovelos altos." },
+        { "nome": "Stiff Unilateral", "grupo": "posterior", "tipo": "composto", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.3, "dicas": "Uma perna, equilíbrio, alongamento posterior." },
+        { "nome": "Step-Up Caixa", "grupo": "pernas", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.25, "dicas": "Subida explosiva, descida controlada." },
+        { "nome": "Prancha + Toque Ombro", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 16, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Quadril estável, toque ombro alternado." },
+        { "nome": "Prancha Lateral", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "30-45s cada lado, quadril alto." }
+      ]
+    }
+  ]
+}

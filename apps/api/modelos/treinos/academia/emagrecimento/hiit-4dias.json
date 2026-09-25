@@ -1,0 +1,49 @@
+{
+  "nome": "HIIT Emagrecimento - 4 Dias",
+  "modalidade": "academia",
+  "objetivo": "emagrecimento",
+  "dias": 4,
+  "duracao_estimada_min": 45,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A - HIIT Superior + Core",
+      "exercicios": [
+        { "nome": "Burpee", "grupo": "corpointeiro", "tipo": "corporal", "series": 4, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Agachamento, flexão, salto - ritmo forte." },
+        { "nome": "Flexão Diamante", "grupo": "triceps", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Mãos juntas formando diamante." },
+        { "nome": "Montanhista", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Ritmo acelerado, quadril baixo." },
+        { "nome": "Prancha com Toque", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 16, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Toque ombro oposto, quadril estável." },
+        { "nome": "Corrida no Lugar", "grupo": "cardio", "tipo": "cardio", "series": 3, "repeticoes_min": 45, "repeticoes_max": 60, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Joelhos altos, braços ativos." }
+      ]
+    },
+    {
+      "titulo": "Dia B - HIIT Inferior + Core",
+      "exercicios": [
+        { "nome": "Agachamento com Salto", "grupo": "pernas", "tipo": "corporal", "series": 4, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Salto explosivo, aterrissagem suave." },
+        { "nome": "Afundo com Salto", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Troca de perna no ar, aterrissagem macia." },
+        { "nome": "Afundo Reverso", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Passo para trás, joelho alinhado." },
+        { "nome": "Ponte Glúteo", "grupo": "gluteos", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Contraia glúteo no topo 1s." },
+        { "nome": "Abdominal Infra", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Lombar no chão, pernas estendidas." }
+      ]
+    },
+    {
+      "titulo": "Dia C - Full Body HIIT + Core",
+      "exercicios": [
+        { "nome": "Burpee", "grupo": "corpointeiro", "tipo": "corporal", "series": 4, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Ritmo forte, fluidez no movimento." },
+        { "nome": "Afundo com Salto", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Troca de perna no ar, aterrissagem macia." },
+        { "nome": "Montanhista", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Ritmo acelerado, quadril baixo." },
+        { "nome": "Prancha com Toque", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Toque ombro oposto, quadril estável." },
+        { "nome": "Corrida no Lugar", "grupo": "cardio", "tipo": "cardio", "series": 3, "repeticoes_min": 45, "repeticoes_max": 60, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Joelhos altos, braços ativos." }
+      ]
+    },
+    {
+      "titulo": "Dia D - Circuito Full Body + Core",
+      "exercicios": [
+        { "nome": "Thruster Halteres", "grupo": "corpointeiro", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.2, "dicas": "Agachamento + desenvolvimento fluido." },
+        { "nome": "Remada Renegada", "grupo": "costas", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.15, "dicas": "Remada alternada em prancha." },
+        { "nome": "Swing Haltere", "grupo": "posterior", "tipo": "composto", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.2, "dicas": "Impulso quadril, braço esticado." },
+        { "nome": "Prancha Lateral", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "30-45s cada lado." },
+        { "nome": "Skipping", "grupo": "cardio", "tipo": "cardio", "series": 3, "repeticoes_min": 30, "repeticoes_max": 45, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Joelhos altos, ritmo acelerado." }
+      ]
+    }
+  ]
+}

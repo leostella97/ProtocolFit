@@ -1,0 +1,47 @@
+{
+  "nome": "Powerlifting - 4 Dias (Agachamento/Supino/Terra)",
+  "modalidade": "academia",
+  "objetivo": "hipertrofia",
+  "dias": 4,
+  "duracao_estimada_min": 90,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia 1 - Agachamento (Foco Força)",
+      "exercicios": [
+        { "nome": "Agachamento Livre", "grupo": "pernas", "tipo": "composto", "series": 5, "repeticoes_min": 3, "repeticoes_max": 5, "descanso_segundos": 300, "percentual_carga_peso_corporal": 0.85, "dicas": "Técnica impecável, descida controlada, explosão na subida. Use cinto se necessário." },
+        { "nome": "Agachamento Frontal", "grupo": "pernas", "tipo": "composto", "series": 3, "repeticoes_min": 6, "repeticoes_max": 8, "descanso_segundos": 180, "percentual_carga_peso_corporal": 0.6, "dicas": "Peso menor, foco na postura ereta." },
+        { "nome": "Bom Dia", "grupo": "posterior", "tipo": "composto", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 150, "percentual_carga_peso_corporal": 0.4, "dicas": "Flexão de quadril, lombar neutra." },
+        { "nome": "Panturrilha Sentado", "grupo": "panturrilha", "tipo": "isolador", "series": 4, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.5, "dicas": "Amplitude total, pausa no topo." }
+      ]
+    },
+    {
+      "titulo": "Dia 2 - Supino (Foco Força)",
+      "exercicios": [
+        { "nome": "Supino Reto", "grupo": "peito", "tipo": "composto", "series": 5, "repeticoes_min": 3, "repeticoes_max": 5, "descanso_segundos": 300, "percentual_carga_peso_corporal": 0.8, "dicas": "Escápulas retraídas, pés firmes, barra no peito." },
+        { "nome": "Supino Fechado", "grupo": "triceps", "tipo": "composto", "series": 3, "repeticoes_min": 5, "repeticoes_max": 8, "descanso_segundos": 180, "percentual_carga_peso_corporal": 0.6, "dicas": "Pegada fechada, cotovelos rentes ao corpo." },
+        { "nome": "Desenvolvimento Militar", "grupo": "ombro", "tipo": "composto", "series": 3, "repeticoes_min": 6, "repeticoes_max": 8, "descanso_segundos": 180, "percentual_carga_peso_corporal": 0.4, "dicas": "Core firme, não arqueie a lombar." },
+        { "nome": "Tríceps Testa", "grupo": "triceps", "tipo": "isolador", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.2, "dicas": "Cotovelos fixos apontados para frente." }
+      ]
+    },
+    {
+      "titulo": "Dia 3 - Terra (Foco Força)",
+      "exercicios": [
+        { "nome": "Levantamento Terra", "grupo": "posterior", "tipo": "composto", "series": 5, "repeticoes_min": 3, "repeticoes_max": 5, "descanso_segundos": 300, "percentual_carga_peso_corporal": 1.0, "dicas": "Pegada mista ou hook grip, barra rente ao corpo." },
+        { "nome": "Stiff Unilateral", "grupo": "posterior", "tipo": "composto", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 150, "percentual_carga_peso_corporal": 0.4, "dicas": "Uma perna de cada vez, equilíbrio e alongamento." },
+        { "nome": "Remada Curvada", "grupo": "costas", "tipo": "composto", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 150, "percentual_carga_peso_corporal": 0.55, "dicas": "Puxe até o abdômen, escápulas retraídas." },
+        { "nome": "Face Pull", "grupo": "ombro", "tipo": "isolador", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.2, "dicas": "Rotação externa no final, cotovelos altos." }
+      ]
+    },
+    {
+      "titulo": "Dia 4 - Acessórios e Core",
+      "exercicios": [
+        { "nome": "Supino Inclinado Halteres", "grupo": "peito", "tipo": "composto", "series": 3, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.3, "dicas": "Banco a 30°, amplitude total." },
+        { "nome": "Remada Unilateral", "grupo": "costas", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.3, "dicas": "Apoio no banco, puxe até o quadril." },
+        { "nome": "Elevação Lateral", "grupo": "ombro", "tipo": "isolador", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.08, "dicas": "Cotovelos levemente flexionados, sem impulso." },
+        { "nome": "Rosca Direta", "grupo": "biceps", "tipo": "isolador", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.2, "dicas": "Cotovelos fixos, supinação no topo." },
+        { "nome": "Tríceps Corda", "grupo": "triceps", "tipo": "isolador", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.15, "dicas": "Abra a corda na extensão final." },
+        { "nome": "Prancha + Variações", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Prancha frontal 45s + lateral 30s cada lado." }
+      ]
+    }
+  ]
+}

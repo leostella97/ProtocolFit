@@ -1,0 +1,41 @@
+{
+  "nome": "Gestante - 3 Dias (Adaptado Trimestres 2-3)",
+  "modalidade": "academia",
+  "objetivo": "hipertrofia",
+  "dias": 3,
+  "duracao_estimada_min": 45,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A - Superior + Core Seguro",
+      "exercicios": [
+        { "nome": "Supino Inclinado Halteres (Leve)", "grupo": "peito", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.1, "dicas": "Banco 30°, evite posição supina prolongada." },
+        { "nome": "Remada Cabo Sentada", "grupo": "costas", "tipo": "composto", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.15, "dicas": "Sentada, pegada neutra, puxe até o abdômen." },
+        { "nome": "Desenvolvimento Sentada Halteres", "grupo": "ombro", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.1, "dicas": "Apoio lombar no banco, não arqueie." },
+        { "nome": "Elevação Lateral Leve", "grupo": "ombro", "tipo": "isolador", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.03, "dicas": "Cargas bem leves, controle total." },
+        { "nome": "Cat-Camel", "grupo": "mobilidade", "tipo": "corporal", "series": 2, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Mobilidade coluna, sincronize respiração." },
+        { "nome": "Respiração Diafragmática", "grupo": "respiracao", "tipo": "corporal", "series": 1, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Inspira 4s, segura 2s, expira 6s." }
+      ]
+    },
+    {
+      "titulo": "Dia B - Inferior + Core Seguro",
+      "exercicios": [
+        { "nome": "Agachamento com Cadeira", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Sente na cadeira, levante sem impulso." },
+        { "nome": "Ponte Glúteo", "grupo": "gluteos", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Aperte glúteo no topo 1s." },
+        { "nome": "Afundo Apoio", "grupo": "pernas", "tipo": "corporal", "series": 2, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Apoio em parede/cadeira, joelho alinhado." },
+        { "nome": "Ponte Glúteo", "grupo": "gluteos", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Aperte glúteo no topo 1s." },
+        { "nome": "Bird Dog", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Braço/perna opostos, lombar neutra." },
+        { "nome": "Respiração Diafragmática", "grupo": "respiracao", "tipo": "corporal", "series": 1, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Inspira 4s, segura 2s, expira 6s." }
+      ]
+    },
+    {
+      "titulo": "Dia C - Mobilidade + Relaxamento",
+      "exercicios": [
+        { "nome": "Círculos Quadril", "grupo": "mobilidade", "tipo": "corporal", "series": 2, "repeticoes_min": 10, "repeticoes_max": 10, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Círculos amplos, dois sentidos." },
+        { "nome": "Balanço Pernas", "grupo": "mobilidade", "tipo": "corporal", "series": 2, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Frente/trás e lateral, apoie na parede." },
+        { "nome": "Alongamento Quadril", "grupo": "mobilidade", "tipo": "corporal", "series": 2, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "30s cada lado, relaxe." },
+        { "nome": "Alongamento Peitoral Porta", "grupo": "peito", "tipo": "corporal", "series": 2, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Antebraço na porta, 30s cada lado." },
+        { "nome": "Respiração Diafragmática", "grupo": "respiracao", "tipo": "corporal", "series": 1, "repeticoes_min": 6, "repeticoes_max": 8, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Inspira 4s, segura 2s, expira 6s." }
+      ]
+    }
+  ]
+}

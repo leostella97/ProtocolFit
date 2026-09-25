@@ -1,0 +1,42 @@
+{
+  "nome": "Força Máxima - 3 Dias (Upper/Lower)",
+  "modalidade": "academia",
+  "objetivo": "hipertrofia",
+  "dias": 3,
+  "duracao_estimada_min": 75,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A - Superior (Força)",
+      "exercicios": [
+        { "nome": "Supino Reto com Barra", "grupo": "peito", "tipo": "composto", "series": 5, "repeticoes_min": 3, "repeticoes_max": 5, "descanso_segundos": 180, "percentual_carga_peso_corporal": 0.7, "dicas": "Foco em força máxima. Controle a descida, explosão na subida." },
+        { "nome": "Desenvolvimento Militar", "grupo": "ombro", "tipo": "composto", "series": 4, "repeticoes_min": 4, "repeticoes_max": 6, "descanso_segundos": 150, "percentual_carga_peso_corporal": 0.5, "dicas": "Core contraído, não arqueie a lombar." },
+        { "nome": "Remada Curvada Pronada", "grupo": "costas", "tipo": "composto", "series": 4, "repeticoes_min": 5, "repeticoes_max": 8, "descanso_segundos": 150, "percentual_carga_peso_corporal": 0.6, "dicas": "Puxe até o abdômen, cotovelos rentes ao corpo." },
+        { "nome": "Puxada Frontal Aberta", "grupo": "costas", "tipo": "composto", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.55, "dicas": "Leve a barra até o peito, não atrás do pescoço." },
+        { "nome": "Rosca Direta com Barra", "grupo": "biceps", "tipo": "isolador", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.25, "dicas": "Cotovelos fixos, sem balanço." },
+        { "nome": "Tríceps Testa", "grupo": "triceps", "tipo": "isolador", "series": 3, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.2, "dicas": "Cotovelos fixos, desça até a testa." }
+      ]
+    },
+    {
+      "titulo": "Dia B - Inferior (Força)",
+      "exercicios": [
+        { "nome": "Agachamento Livre", "grupo": "pernas", "tipo": "composto", "series": 5, "repeticoes_min": 3, "repeticoes_max": 5, "descanso_segundos": 240, "percentual_carga_peso_corporal": 0.8, "dicas": "Profundidade total, core travado, impulso explosivo." },
+        { "nome": "Stiff", "grupo": "posterior", "tipo": "composto", "series": 4, "repeticoes_min": 5, "repeticoes_max": 8, "descanso_segundos": 180, "percentual_carga_peso_corporal": 0.6, "dicas": "Alongamento total dos posteriores, lombar neutra." },
+        { "nome": "Leg Press 45°", "grupo": "pernas", "tipo": "composto", "series": 4, "repeticoes_min": 6, "repeticoes_max": 8, "descanso_segundos": 150, "percentual_carga_peso_corporal": 1.2, "dicas": "Pés na largura dos ombros, não trave os joelhos." },
+        { "nome": "Mesa Flexora", "grupo": "posterior", "tipo": "isolador", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.3, "dicas": "Contraia bem na subida, controle na descida." },
+        { "nome": "Panturrilha em Pé", "grupo": "panturrilha", "tipo": "isolador", "series": 4, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.5, "dicas": "Amplitude total, pause no topo." },
+        { "nome": "Prancha Abdominal", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Segure 45-60s, core contraído, respiração controlada." }
+      ]
+    },
+    {
+      "titulo": "Dia C - Superior/Posterior (Acessórios)",
+      "exercicios": [
+        { "nome": "Supino Inclinado Halteres", "grupo": "peito", "tipo": "composto", "series": 3, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.3, "dicas": "Banco a 30°, foco na porção clavicular." },
+        { "nome": "Remada Unilateral Halter", "grupo": "costas", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.3, "dicas": "Apoie joelho no banco, puxe até o quadril." },
+        { "nome": "Elevação Lateral", "grupo": "ombro", "tipo": "isolador", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.08, "dicas": "Cotovelos levemente flexionados, não use impulso." },
+        { "nome": "Face Pull", "grupo": "ombro", "tipo": "isolador", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.15, "dicas": "Puxe em direção ao rosto, cotovelos altos." },
+        { "nome": "Rosca Martelo", "grupo": "biceps", "tipo": "isolador", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.15, "dicas": "Palmas viradas uma para a outra." },
+        { "nome": "Tríceps Corda", "grupo": "triceps", "tipo": "isolador", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.15, "dicas": "Separe a corda no final do movimento." }
+      ]
+    }
+  ]
+}

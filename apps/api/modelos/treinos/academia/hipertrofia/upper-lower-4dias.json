@@ -1,0 +1,52 @@
+{
+  "nome": "Upper/Lower - 4 Dias",
+  "modalidade": "academia",
+  "objetivo": "hipertrofia",
+  "dias": 4,
+  "duracao_estimada_min": 70,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A - Superior A (Força)",
+      "exercicios": [
+        { "nome": "Supino Reto", "grupo": "peito", "tipo": "composto", "series": 4, "repeticoes_min": 5, "repeticoes_max": 8, "descanso_segundos": 180, "percentual_carga_peso_corporal": 0.7, "dicas": "Foco força, pausa 1s no peito." },
+        { "nome": "Remada Curvada", "grupo": "costas", "tipo": "composto", "series": 4, "repeticoes_min": 6, "repeticoes_max": 8, "descanso_segundos": 150, "percentual_carga_peso_corporal": 0.6, "dicas": "Tronco 45°, puxe até o abdômen." },
+        { "nome": "Desenvolvimento Militar", "grupo": "ombro", "tipo": "composto", "series": 4, "repeticoes_min": 6, "repeticoes_max": 8, "descanso_segundos": 150, "percentual_carga_peso_corporal": 0.4, "dicas": "Core firme, não arqueie lombar." },
+        { "nome": "Rosca Direta Barra", "grupo": "biceps", "tipo": "isolador", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.2, "dicas": "Cotovelos fixos, sem balanço." },
+        { "nome": "Tríceps Testa", "grupo": "triceps", "tipo": "isolador", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.15, "dicas": "Cotovelos apontados pra frente." }
+      ]
+    },
+    {
+      "titulo": "Dia B - Inferior A (Força)",
+      "exercicios": [
+        { "nome": "Agachamento Livre", "grupo": "pernas", "tipo": "composto", "series": 4, "repeticoes_min": 5, "repeticoes_max": 8, "descanso_segundos": 180, "percentual_carga_peso_corporal": 0.7, "dicas": "Profundidade total, impulso explosivo." },
+        { "nome": "Stiff", "grupo": "posterior", "tipo": "composto", "series": 4, "repeticoes_min": 6, "repeticoes_max": 8, "descanso_segundos": 150, "percentual_carga_peso_corporal": 0.6, "dicas": "Quadril para trás, alongamento posterior." },
+        { "nome": "Leg Press", "grupo": "pernas", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.9, "dicas": "Pés médios, não travar joelhos." },
+        { "nome": "Panturrilha em Pé", "grupo": "panturrilha", "tipo": "isolador", "series": 4, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.5, "dicas": "Amplitude total, pausa 1s no topo." },
+        { "nome": "Prancha", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "45-60s, core travado." }
+      ]
+    },
+    {
+      "titulo": "Dia C - Superior B (Hipertrofia)",
+      "exercicios": [
+        { "nome": "Supino Inclinado Halteres", "grupo": "peito", "tipo": "composto", "series": 4, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.3, "dicas": "Banco 30°, junte halteres no topo." },
+        { "nome": "Remada Baixa Cabo", "grupo": "costas", "tipo": "composto", "series": 4, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.4, "dicas": "Pegada neutra, puxe até o abdômen." },
+        { "nome": "Desenvolvimento Halteres", "grupo": "ombro", "tipo": "composto", "series": 4, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.25, "dicas": "Rotação leve no topo." },
+        { "nome": "Crucifixo Cabo", "grupo": "peito", "tipo": "isolador", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.15, "dicas": "Aperte peito no fechamento." },
+        { "nome": "Elevação Lateral", "grupo": "ombro", "tipo": "isolador", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.05, "dicas": "Polegar para baixo no topo." },
+        { "nome": "Tríceps Corda", "grupo": "triceps", "tipo": "isolador", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.15, "dicas": "Abra corda no final." },
+        { "nome": "Rosca Martelo", "grupo": "biceps", "tipo": "isolador", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.12, "dicas": "Pegada neutra, braquial." }
+      ]
+    },
+    {
+      "titulo": "Dia D - Inferior B (Hipertrofia)",
+      "exercicios": [
+        { "nome": "Leg Press 45°", "grupo": "pernas", "tipo": "composto", "series": 4, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 120, "percentual_carga_peso_corporal": 1.0, "dicas": "Pés médios, amplitude total." },
+        { "nome": "Stiff Halteres", "grupo": "posterior", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.4, "dicas": "Alongamento máximo, lombar neutra." },
+        { "nome": "Afundo Búlgaro", "grupo": "pernas", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.2, "dicas": "Pé traseiro no banco, joelho alinhado." },
+        { "nome": "Cadeira Extensora", "grupo": "pernas", "tipo": "isolador", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.15, "dicas": "Pausa 1s no topo." },
+        { "nome": "Mesa Flexora", "grupo": "posterior", "tipo": "isolador", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.15, "dicas": "Controle excêntrico 3s." },
+        { "nome": "Prancha + Toque Ombro", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 16, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Quadril estável, toque ombro alternado." }
+      ]
+    }
+  ]
+}

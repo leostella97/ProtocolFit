@@ -102,10 +102,30 @@ export interface ModeloDieta {
   refeicoes: ModeloRefeicao[];
 }
 
+/** Estilo (variação) de treino disponível para uma combinação. */
+export interface VariacaoDeTreino {
+  /** Identificador do estilo: "padrao" ou o slug do arquivo (ex.: "forca-maxima"). */
+  id: string;
+  /** Rótulo curto exibido na interface (ex.: "Força Máxima"). */
+  nome: string;
+  /** Nome do arquivo do modelo dentro da pasta da combinação. */
+  arquivo: string;
+  /** Quantidade de dias coberta pelo modelo. */
+  dias: number;
+  /** Modalidade do modelo. */
+  modalidade: Modalidade;
+  /** Objetivo do modelo. */
+  objetivo: Objetivo;
+  /** Duração estimada de cada sessão, em minutos. */
+  duracao_estimada_min: number;
+}
+
 /** Índice dos modelos disponíveis (gerado no build para navegação estática). */
 export interface IndiceDeModelos {
   /** Dias de treino disponíveis por modalidade e objetivo. */
   treinos: Record<string, Record<string, number[]>>;
+  /** Todos os estilos de treino disponíveis (padrão + variações nomeadas). */
+  variacoes: VariacaoDeTreino[];
   /** Objetivos com modelo de dieta disponível. */
   dietas: string[];
 }

@@ -1,8 +1,8 @@
 {
-  "nome": "Push/Pull/Legs - 6 Dias (PPL x2)",
+  "nome": "Push/Pull/Legs - 7 Dias (PPL x2 + Legs)",
   "modalidade": "academia",
   "objetivo": "hipertrofia",
-  "dias": 6,
+  "dias": 7,
   "duracao_estimada_min": 75,
   "dias_da_semana": [
     {
@@ -70,7 +70,7 @@
       ]
     },
     {
-      "titulo": "Dia 6 - Legs B (Posterior + Unilateral)",
+      "titulo": "Dia 7 - Legs C (Posterior + Unilateral)",
       "exercicios": [
         { "nome": "Stiff", "grupo": "posterior", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 150, "percentual_carga_peso_corporal": 0.6, "dicas": "Alongamento máximo, lombar neutra." },
         { "nome": "Levantamento Terra", "grupo": "posterior", "tipo": "composto", "series": 4, "repeticoes_min": 6, "repeticoes_max": 8, "descanso_segundos": 180, "percentual_carga_peso_corporal": 0.7, "dicas": "Impulso de quadril, barra rente." },

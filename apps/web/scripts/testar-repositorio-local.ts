@@ -167,6 +167,24 @@ async function principal(): Promise<void> {
   const pesagensDeHoje = evolucaoApos.filter((registro) => registro.data === hoje);
   conferir('Pesagem do dia sem duplicar', 1, pesagensDeHoje.length);
 
+  // ---- 8.1) Estilo (variação) de treino: troca e volta ao clássico --------
+  const comEstilo = await repositorio.atualizarEstiloDeTreinoLocal('crossfit');
+  conferir('Estilo gravado no perfil', 'crossfit', comEstilo.perfil.variacao_treino);
+  conferir('Treino do estilo CrossFit', 'CrossFit Style - 5 Dias (WOD + Força)', comEstilo.treino.nome);
+  conferir(
+    'Modelo do estilo vinculado',
+    'treinos/academia/hipertrofia/5dias-crossfit.json',
+    comEstilo.treino.modelo_origem,
+  );
+  // Voltar ao clássico limpa o estilo (null) e restaura o modelo padrão.
+  const semEstilo = await repositorio.atualizarEstiloDeTreinoLocal(null);
+  conferir('Volta ao estilo padrão', 'null', semEstilo.perfil.variacao_treino);
+  conferir(
+    'Treino clássico restaurado',
+    'Hipertrofia Split Clássico — 5 dias (ABCDE)',
+    semEstilo.treino.nome,
+  );
+
   // ---- 9) CHECK-IN DIÁRIO: hoje, ontem e anteontem (sequência de 3 dias) ---
   const ontem = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
   const anteontem = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);

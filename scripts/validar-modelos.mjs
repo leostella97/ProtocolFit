@@ -7,7 +7,9 @@
  *   2) campos obrigatórios do esquema (nome, modalidade, objetivo, dias...);
  *   3) "dias" coerente com a quantidade de dias em dias_da_semana;
  *   4) exercícios com campos válidos e percentual de carga dentro de 0..1;
- *   5) matriz completa: 2 modalidades x 3 objetivos x dias 2..7.
+ *   5) matriz completa: 2 modalidades x 3 objetivos x dias 2..7;
+ *   6) variações nomeadas no padrão "{dias}dias-{slug}.json" com conteúdo
+ *      coerente com a pasta (modalidade/objetivo) e com o nome (dias).
  * Uso: node scripts/validar-modelos.mjs
  * ---------------------------------------------------------------------------
  */
@@ -36,8 +38,12 @@ function registrarErro(caminhoRelativo, mensagem) {
   console.error(`ERRO  ${caminhoRelativo}: ${mensagem}`);
 }
 
-/** Valida um único arquivo de treino. */
-function validarArquivo(caminhoRelativo) {
+/**
+ * Valida um único arquivo de treino.
+ * `contexto` traz a modalidade/objetivo da pasta e o número de dias do NOME do
+ * arquivo — assim garantimos que o conteúdo nunca "minta" sobre o caminho.
+ */
+function validarArquivo(caminhoRelativo, contexto = {}) {
   totalArquivos += 1;
   const caminhoCompleto = join(PASTA_TREINOS, caminhoRelativo);
 
@@ -48,6 +54,17 @@ function validarArquivo(caminhoRelativo) {
   } catch (erro) {
     registrarErro(caminhoRelativo, `JSON invalido: ${erro.message}`);
     return;
+  }
+
+  // 1.1) Coerência entre o NOME do arquivo e o conteúdo (evita modelo "órfão").
+  if (contexto.modalidade && modelo.modalidade !== contexto.modalidade) {
+    registrarErro(caminhoRelativo, `modalidade "${modelo.modalidade}" nao bate com a pasta "${contexto.modalidade}"`);
+  }
+  if (contexto.objetivo && modelo.objetivo !== contexto.objetivo) {
+    registrarErro(caminhoRelativo, `objetivo "${modelo.objetivo}" nao bate com a pasta "${contexto.objetivo}"`);
+  }
+  if (contexto.dias && modelo.dias !== contexto.dias) {
+    registrarErro(caminhoRelativo, `"dias"=${modelo.dias} nao bate com o nome do arquivo (${contexto.dias} dias)`);
   }
 
   // 2) Campos obrigatórios.
@@ -118,15 +135,39 @@ for (const modalidade of MODALIDADES) {
       registrarErro(`${modalidade}/${objetivo}`, 'pasta ausente');
       continue;
     }
-    // 5) Confere a matriz completa por pasta.
-    const arquivosDaPasta = readdirSync(pasta).filter((nome) => /^\d+dias\.json$/.test(nome));
-    const diasDaPasta = arquivosDaPasta.map((nome) => Number(nome.split('dias')[0])).sort((a, b) => a - b);
+    // Todos os arquivos da pasta: o PADRÃO é "{n}dias.json" e cada VARIAÇÃO
+    // extra é "{n}dias-{slug}.json" (ex.: 3dias-forca-maxima.json).
+    const todosOsArquivos = readdirSync(pasta).filter((nome) => nome.endsWith('.json'));
+    // 5) Confere a matriz completa por pasta (apenas os arquivos padrão).
+    const arquivosPadrao = todosOsArquivos.filter((nome) => /^\d+dias\.json$/.test(nome));
+    const diasDaPasta = arquivosPadrao.map((nome) => Number(nome.split('dias')[0])).sort((a, b) => a - b);
     const esperados = DIAS.filter((d) => !diasDaPasta.includes(d));
     if (esperados.length > 0) {
       registrarErro(`${modalidade}/${objetivo}`, `faltam arquivos: ${esperados.map((d) => `${d}dias.json`).join(', ')}`);
     }
-    for (const arquivo of arquivosDaPasta) {
-      validarArquivo(`${modalidade}/${objetivo}/${arquivo}`);
+    // Valida o arquivo padrão de cada quantidade de dias.
+    for (const arquivo of arquivosPadrao) {
+      const diasDoNome = Number(arquivo.split('dias')[0]);
+      validarArquivo(`${modalidade}/${objetivo}/${arquivo}`, { modalidade, objetivo, dias: diasDoNome });
+    }
+    // Valida (e conta) cada variação nomeada da pasta.
+    for (const arquivo of todosOsArquivos) {
+      if (arquivosPadrao.includes(arquivo)) {
+        continue;
+      }
+      const reconhecido = /^(\d+)dias-([a-z0-9]+(?:-[a-z0-9]+)*)\.json$/.exec(arquivo);
+      if (!reconhecido) {
+        registrarErro(
+          `${modalidade}/${objetivo}/${arquivo}`,
+          'nome fora do padrao: use "{dias}dias.json" ou "{dias}dias-{slug}.json"',
+        );
+        continue;
+      }
+      validarArquivo(`${modalidade}/${objetivo}/${arquivo}`, {
+        modalidade,
+        objetivo,
+        dias: Number(reconhecido[1]),
+      });
     }
   }
 }

@@ -75,6 +75,8 @@ interface LinhaPerfil {
   modalidade: string;
   /** Nível de experiência. */
   nivel: string;
+  /** Estilo de treino escolhido (null = estilo padrão). */
+  variacao_treino: string | null;
   /** Data da última atualização. */
   atualizado_em: string;
 }
@@ -138,6 +140,7 @@ function criarTabelas(): void {
       dias_disponiveis   TEXT    NOT NULL,                  -- JSON: ["segunda","quarta"]
       modalidade         TEXT    NOT NULL,                  -- academia | pesocorporal
       nivel              TEXT    NOT NULL DEFAULT 'iniciante', -- nível de experiência
+      variacao_treino    TEXT,                              -- estilo de treino (null = padrão)
       atualizado_em      TEXT    NOT NULL DEFAULT (datetime('now')) -- última atualização
     );
 
@@ -189,8 +192,23 @@ function criarTabelas(): void {
   `);
 }
 
+/**
+ * Migrações leves para bancos criados por versões anteriores do sistema.
+ * O SQLite não aceita "ADD COLUMN IF NOT EXISTS": por isso conferimos as
+ * colunas existentes com PRAGMA table_info antes de alterar.
+ */
+function migrarTabelas(): void {
+  // Colunas atuais da tabela de perfis.
+  const colunas = banco.prepare('PRAGMA table_info(perfis)').all() as { name: string }[];
+  // Bancos antigos não têm a coluna do estilo de treino.
+  if (!colunas.some((coluna) => coluna.name === 'variacao_treino')) {
+    banco.exec('ALTER TABLE perfis ADD COLUMN variacao_treino TEXT');
+  }
+}
+
 /** Executa a criação do esquema assim que o módulo é importado. */
 criarTabelas();
+migrarTabelas();
 
 /* ---------------------------------------------------------------------------
  * FUNÇÕES DE REPOSITÓRIO (todas as consultas SQL centralizadas aqui)
@@ -244,6 +262,7 @@ export function buscarPerfilPorUsuario(usuarioId: number): Perfil | undefined {
     dias_disponiveis: JSON.parse(linha.dias_disponiveis) as string[],
     modalidade: linha.modalidade as Modalidade,
     nivel: linha.nivel as Nivel,
+    variacao_treino: linha.variacao_treino ?? null,
   };
 }
 
@@ -254,8 +273,8 @@ export function salvarPerfil(
 ): Perfil {
   banco
     .prepare(
-      `INSERT INTO perfis (usuario_id, sexo, faixa_etaria, peso_kg, altura_cm, objetivo, frequencia_semanal, dias_disponiveis, modalidade, nivel)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `INSERT INTO perfis (usuario_id, sexo, faixa_etaria, peso_kg, altura_cm, objetivo, frequencia_semanal, dias_disponiveis, modalidade, nivel, variacao_treino)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
        ON CONFLICT (usuario_id) DO UPDATE SET
          sexo = excluded.sexo,
          faixa_etaria = excluded.faixa_etaria,
@@ -266,6 +285,7 @@ export function salvarPerfil(
          dias_disponiveis = excluded.dias_disponiveis,
          modalidade = excluded.modalidade,
          nivel = excluded.nivel,
+         variacao_treino = excluded.variacao_treino,
          atualizado_em = datetime('now')`,
     )
     .run(
@@ -279,6 +299,7 @@ export function salvarPerfil(
       JSON.stringify(dados.dias_disponiveis),
       dados.modalidade,
       dados.nivel,
+      dados.variacao_treino ?? null,
     );
   return buscarPerfilPorUsuario(usuarioId) as Perfil;
 }

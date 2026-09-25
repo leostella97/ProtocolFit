@@ -82,6 +82,8 @@ export interface CorpoPerfil {
   dias_disponiveis: string[];
   modalidade: Perfil['modalidade'];
   nivel?: Perfil['nivel'];
+  /** Estilo de treino escolhido (null/ausente = estilo padrão). */
+  variacao_treino?: string | null;
 }
 
 /** Cria a conta do usuário e devolve token + dados públicos. */
@@ -138,6 +140,22 @@ export async function recalcularPlanos(): Promise<{ perfil: Perfil; treino: Plan
     return local.recalcularPlanosLocal();
   }
   return chamarApi('/perfil/recalcular', { method: 'POST' });
+}
+
+/**
+ * Troca o ESTILO (variação) de treino e regenera os planos na hora.
+ * `null` volta ao modelo clássico da combinação escolhida.
+ */
+export async function atualizarEstiloDeTreino(
+  variacao: string | null,
+): Promise<{ perfil: Perfil; treino: PlanoTreino; dieta: PlanoDieta }> {
+  if (MODO_LOCAL) {
+    return local.atualizarEstiloDeTreinoLocal(variacao);
+  }
+  return chamarApi('/perfil/treino', {
+    method: 'PATCH',
+    body: JSON.stringify({ variacao_treino: variacao }),
+  });
 }
 
 /** Busca o plano vigente completo (perfil + treino + dieta). */

@@ -35,10 +35,13 @@ ProtocolFit/
     │   ├── dados/                   # SQLite (protocolfit.db, criado em runtime)
     │   ├── modelos/                 # ── MODELOS JSON MESTRES (somente leitura)
     │   │   ├── LEIA-ME.md           # esquema dos modelos
-    │   │   ├── treinos/             # MATRIZ COMPLETA: 36 arquivos (2 modalidades
-    │   │   │   │                    # x 3 objetivos x 2..7 dias = academia e peso corporal)
+    │   │   ├── treinos/             # MATRIZ COMPLETA: 36 arquivos padrão + 14 estilos
+    │   │   │   │                    # (2 modalidades x 3 objetivos x 2..7 dias = academia e peso corporal)
     │   │   │   ├── academia/        # hipertrofia, emagrecimento, corrida (2dias..7dias cada)
     │   │   │   └── pesocorporal/    # hipertrofia, emagrecimento, corrida (2dias..7dias cada)
+    │   │   │                        # + estilos extras: "{dias}dias-{slug}.json"
+    │   │   │                        # (forca-maxima, powerlifting, funcional, crossfit,
+    │   │   │                        #  hiit, circuito, upper-lower, push-pull-legs...)
     │   │   └── dietas/              # emagrecimento.json, hipertrofia.json, corrida.json
     │   └── src/
     │       ├── servidor.ts          # bootstrap do Fastify (porta 3333)
@@ -93,6 +96,7 @@ Regras: um check-in por dia por usuário (atualizar o mesmo dia não duplica) e 
 ## 🧮 A lógica de processamento no backend
 
 - **Matriz de seleção por templates JSON** — `/modelos/treinos/{modalidade}/{objetivo}/{dias}dias.json` contém apenas a estrutura de exercícios; `/modelos/dietas/{objetivo}.json` contém os tipos de refeição. Sem arquivo exato de dias, o carregador escolhe o modelo mais próximo e ajusta (corte/repetição cíclica) de forma determinística.
+- **Estilos de treino (variações)** — a mesma combinação pode oferecer mais de um formato de treino: o padrão é `{dias}dias.json` e cada alternativa é `{dias}dias-{slug}.json` (ex.: `3dias-forca-maxima.json`, `5dias-crossfit.json`). A lista de estilos vai no `GET /opcoes` (`variacoes_de_treino`) e o usuário escolhe no onboarding (passo 4) ou depois em **Perfil → Estilo de treino** (`PATCH /perfil/treino`, que regenera os planos na hora). O estilo fica gravado no perfil (`variacao_treino`) e os recálculos continuam usando o mesmo formato. Hoje são 36 modelos padrão + 14 estilos extras.
 - **Motor de cálculo determinístico** — `TMB (Mifflin-St Jeor) → fator de atividade → gasto total → déficit/superávit por objetivo → macros exatos em gramas`, com piso calórico de segurança (1500 kcal ♂ / 1200 kcal ♀), fibras (14 g/1000 kcal) e água (35–40 ml/kg). Cargas iniciais = fração do peso corporal (arredondada a 2,5 kg).
 - **Clonagem para a conta do usuário** — o plano montado é gravado na tabela `planos` do SQLite com o id do usuário; recálculos criam nova versão e desativam a anterior.
 - **Isolamento de dados** — o usuário lê e edita **unicamente** a cópia no SQLite; os JSON mestres ficam protegidos e intactos.
@@ -130,10 +134,11 @@ npm run dev:api
 npm run dev:web
 
 # 4. (Opcional) Validar a API ponta a ponta
-powershell -File scripts/teste-da-api.ps1           # fluxo completo (10 cenários)
+powershell -File scripts/teste-da-api.ps1           # fluxo completo (11 cenários, inclui troca de estilo)
 powershell -File scripts/teste-da-matriz.ps1        # 36 combinações de treino vinculadas ao usuário
 powershell -File scripts/teste-dos-dados-possiveis.ps1  # 212 perfis possíveis gerados (treino + dieta)
 powershell -File scripts/teste-do-checkin.ps1       # check-in diário + alteração de peso e altura
+node scripts/validar-modelos.mjs                    # 50 modelos JSON (36 padrão + 14 estilos) válidos
 ```
 
 Configurações opcionais em `apps/api/.env` (copie de `.env.example`): `PORTA`, `PROTOCOLFIT_JWT_SECRET`, `PROTOCOLFIT_ORIGEM_WEB`.
@@ -159,8 +164,9 @@ minúsculas no caminho do projeto.
 Nesse modo (ativado por `NEXT_PUBLIC_MODO_LOCAL=true`):
 
 - O **motor de cálculo determinístico** (TMB, macros, montagem dos planos) roda no
-  próprio navegador, a partir dos **36 modelos JSON** publicados como arquivos
-  estáticos em `/modelos`.
+  próprio navegador, a partir dos **50 modelos JSON** publicados como arquivos
+  estáticos em `/modelos` (36 padrão + 14 estilos alternativos, indexados no
+  `indice.json` gerado no build).
 - As **contas, perfis, planos e pesagens** ficam no `localStorage` do visitante
   (mesmas validações, mesmas mensagens e mesmos códigos de erro da API: 401, 409, 423).
 - O **mesmo motor** do backend é usado: os números são **idênticos** aos do servidor

@@ -9,6 +9,7 @@
  */
 import type { FastifyInstance } from 'fastify';
 import type { OpcoesDoSistema } from '../tipos.js';
+import { listarVariacoesDeTreino } from '../motor/carregadorModelos.js';
 import {
   DIAS_DA_SEMANA,
   FAIXAS_ETARIAS,
@@ -29,6 +30,8 @@ export async function rotasOpcoes(app: FastifyInstance): Promise<void> {
       modalidades: MODALIDADES,
       frequencias_semanais: FREQUENCIAS_SEMANAIS,
       dias_semana: DIAS_DA_SEMANA,
+      // Estilos de treino lidos direto da pasta de modelos mestres.
+      variacoes_de_treino: listarVariacoesDeTreino(),
       seguranca: { tentativas_limite: LIMITE_TENTATIVAS_LOGIN, horas_bloqueio: HORAS_DE_BLOQUEIO },
     };
     return opcoes;

@@ -7,7 +7,7 @@
  * no SQLite.
  *
  * Fluxo:
- *   1) Localiza o modelo de treino  → /modelos/treinos/{modalidade}/{objetivo}/{dias}dias.json
+ *   1) Localiza o modelo de treino  → /modelos/treinos/{modalidade}/{objetivo}/{dias}dias[-estilo].json
  *   2) Localiza o modelo de dieta   → /modelos/dietas/{objetivo}.json
  *   3) Calcula o plano nutricional  → motor determinístico (Mifflin-St Jeor)
  *   4) Monta os planos              → injeção de séries, cargas e gramas
@@ -23,8 +23,14 @@ import type { Perfil, PlanoDieta, PlanoTreino } from '../tipos.js';
 
 /** Gera (ou regenera) os planos de treino e dieta do usuário e devolve ambos. */
 export function gerarPlanosParaPerfil(usuarioId: number, perfil: Perfil): { treino: PlanoTreino; dieta: PlanoDieta } {
-  // 1) Localiza o modelo mestre de treino cruzando modalidade + objetivo + dias.
-  const modeloTreino = buscarModeloTreino(perfil.modalidade, perfil.objetivo, perfil.dias_disponiveis.length);
+  // 1) Localiza o modelo mestre de treino cruzando modalidade + objetivo +
+  //    dias + estilo escolhido (padrão quando variacao_treino é null).
+  const modeloTreino = buscarModeloTreino(
+    perfil.modalidade,
+    perfil.objetivo,
+    perfil.dias_disponiveis.length,
+    perfil.variacao_treino,
+  );
 
   // 2) Localiza o modelo mestre de dieta do objetivo.
   const modeloDieta = buscarModeloDieta(perfil.objetivo);

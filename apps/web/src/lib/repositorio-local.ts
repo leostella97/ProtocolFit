@@ -38,7 +38,7 @@ import { guardarToken, guardarUsuario, obterToken } from './armazenamento';
 import { termoFoiAceito } from './termo-de-uso';
 import { ErroDaApi } from './erro-api';
 import { calcularPlanoNutricional } from './motor/calculos';
-import { buscarModeloDieta, buscarModeloTreino } from './motor/carregadorModelos';
+import { buscarModeloDieta, buscarModeloTreino, listarVariacoesDeTreino } from './motor/carregadorModelos';
 import {
   aplicarEdicaoTreino,
   aplicarSubstituicao,
@@ -145,7 +145,13 @@ function lerBanco(): BancoLocal {
     return bancoVazio();
   }
   try {
-    return JSON.parse(bruto) as BancoLocal;
+    const banco = JSON.parse(bruto) as BancoLocal;
+    // MIGRAÇÃO LEVE: bancos salvos antes do seletor de estilo não têm o campo
+    // `variacao_treino` — normaliza para null (estilo clássico).
+    for (const perfil of banco.perfis ?? []) {
+      perfil.variacao_treino = perfil.variacao_treino ?? null;
+    }
+    return banco;
   } catch {
     // Banco corrompido: recomeça do zero em vez de quebrar a aplicação.
     return bancoVazio();
@@ -317,7 +323,9 @@ export async function buscarContaLocal(): Promise<{ usuario: Usuario; perfil: Pe
 
 /** Opções estáticas do onboarding (espelha GET /api/opcoes). */
 export async function buscarOpcoesLocal(): Promise<OpcoesDoSistema> {
-  return opcoesDoSistema();
+  // Estilos de treino vêm do indice.json gerado no build (arquivos estáticos).
+  const variacoes = await listarVariacoesDeTreino();
+  return { ...opcoesDoSistema(), variacoes_de_treino: variacoes };
 }
 
 /* ===========================================================================
@@ -335,7 +343,12 @@ export interface CorpoPerfilLocal {
   dias_disponiveis: string[];
   modalidade: Modalidade;
   nivel?: Nivel;
+  /** Estilo de treino escolhido (null/ausente = estilo padrão). */
+  variacao_treino?: string | null;
 }
+
+/** Formato aceito para o identificador de estilo de treino (slug). */
+const FORMATO_DO_ESTILO = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 /** Valida o perfil com as MESMAS regras e mensagens do servidor. */
 function validarPerfil(corpo: Partial<CorpoPerfilLocal>): void {
@@ -378,6 +391,17 @@ function validarPerfil(corpo: Partial<CorpoPerfilLocal>): void {
   if (corpo.nivel && !NIVEIS.includes(corpo.nivel)) {
     throw new ErroDaApi(400, 'Nível de experiência inválido.');
   }
+  // Valida o FORMATO do estilo de treino (a existência é conferida depois,
+  // pois depende dos arquivos estáticos do índice). "padrao" é sempre aceito.
+  if (corpo.variacao_treino !== undefined && corpo.variacao_treino !== null && corpo.variacao_treino !== 'padrao') {
+    if (
+      typeof corpo.variacao_treino !== 'string' ||
+      corpo.variacao_treino.length > 40 ||
+      !FORMATO_DO_ESTILO.test(corpo.variacao_treino)
+    ) {
+      throw new ErroDaApi(400, 'Estilo de treino inválido.');
+    }
+  }
 }
 
 /**
@@ -385,11 +409,13 @@ function validarPerfil(corpo: Partial<CorpoPerfilLocal>): void {
  * injeta cargas e quantidades em gramas e grava as cópias do usuário.
  */
 async function gerarPlanos(banco: BancoLocal, usuarioId: number, perfil: Perfil): Promise<{ treino: PlanoTreino; dieta: PlanoDieta }> {
-  // 1) Localiza o modelo mestre de treino cruzando modalidade + objetivo + dias.
+  // 1) Localiza o modelo mestre de treino cruzando modalidade + objetivo +
+  //    dias + estilo escolhido (padrão quando variacao_treino é null).
   const { modelo: modeloTreino, caminhoDoModelo: caminhoTreino } = await buscarModeloTreino(
     perfil.modalidade,
     perfil.objetivo,
     perfil.dias_disponiveis.length,
+    perfil.variacao_treino,
   );
   // 2) Localiza o modelo mestre de dieta do objetivo.
   const { modelo: modeloDieta, caminhoDoModelo: caminhoDieta } = await buscarModeloDieta(perfil.objetivo);
@@ -459,6 +485,20 @@ export async function salvarPerfilEGerarPlanosLocal(
   // Valida antes de qualquer processamento.
   validarPerfil(corpo);
 
+  // O estilo escolhido precisa existir no índice (senão o plano cairia no
+  // padrão silenciosamente — melhor avisar).
+  const estiloPedido = corpo.variacao_treino ?? null;
+  if (estiloPedido && estiloPedido !== 'padrao') {
+    const disponiveis = await listarVariacoesDeTreino();
+    // Índice indisponível (ex.: rodando fora do build): segue adiante e deixa o
+    // carregador cair no modelo padrão em vez de bloquear o usuário.
+    if (disponiveis.length > 0 && !disponiveis.some((variacao) => variacao.id === estiloPedido)) {
+      throw new ErroDaApi(400, 'Estilo de treino indisponível.');
+    }
+  }
+  // "padrao" é o identificador interno do estilo clássico (gravado como null).
+  const estiloGravado = !estiloPedido || estiloPedido === 'padrao' ? null : estiloPedido;
+
   // Grava (ou atualiza) o perfil do usuário.
   const existente = banco.perfis.find((candidato) => candidato.usuario_id === conta.id);
   let perfil: Perfil;
@@ -472,6 +512,7 @@ export async function salvarPerfilEGerarPlanosLocal(
     existente.dias_disponiveis = corpo.dias_disponiveis;
     existente.modalidade = corpo.modalidade;
     existente.nivel = corpo.nivel ?? 'iniciante';
+    existente.variacao_treino = estiloGravado;
     perfil = existente;
   } else {
     perfil = {
@@ -486,6 +527,7 @@ export async function salvarPerfilEGerarPlanosLocal(
       dias_disponiveis: corpo.dias_disponiveis,
       modalidade: corpo.modalidade,
       nivel: corpo.nivel ?? 'iniciante',
+      variacao_treino: estiloGravado,
     };
     banco.perfis.push(perfil);
   }
@@ -510,6 +552,41 @@ export async function recalcularPlanosLocal(): Promise<{ perfil: Perfil; treino:
   if (ultima) {
     perfil.peso_kg = ultima.peso_kg;
   }
+  const planos = await gerarPlanos(banco, conta.id, perfil);
+  salvarBanco(banco);
+  return { perfil, ...planos };
+}
+
+/* ===========================================================================
+ * ESTILO DE TREINO (espelha PATCH /api/perfil/treino)
+ * ======================================================================== */
+
+/**
+ * Troca o ESTILO de treino do usuário e regenera os planos na hora.
+ * `null` (ou "padrao") volta ao modelo clássico da combinação.
+ */
+export async function atualizarEstiloDeTreinoLocal(
+  variacao: string | null,
+): Promise<{ perfil: Perfil; treino: PlanoTreino; dieta: PlanoDieta }> {
+  const banco = lerBanco();
+  const conta = exigirSessao(banco);
+  const perfil = banco.perfis.find((candidato) => candidato.usuario_id === conta.id);
+  if (!perfil) {
+    throw new ErroDaApi(404, 'Perfil não encontrado. Complete o onboarding primeiro.');
+  }
+  // Normaliza o identificador: "padrao"/vazio = estilo clássico (null).
+  const estiloPedido = variacao ?? null;
+  const estiloNormalizado = !estiloPedido || estiloPedido === 'padrao' ? null : estiloPedido;
+  // Valida o estilo pedido contra o índice de modelos disponíveis.
+  if (estiloNormalizado) {
+    const disponiveis = await listarVariacoesDeTreino();
+    // Índice indisponível: não bloqueia — o carregador cai no modelo padrão.
+    if (disponiveis.length > 0 && !disponiveis.some((disponivel) => disponivel.id === estiloNormalizado)) {
+      throw new ErroDaApi(400, 'Estilo de treino indisponível.');
+    }
+  }
+  // Grava o estilo e regenera os planos (nova versão, antigas inativas).
+  perfil.variacao_treino = estiloNormalizado;
   const planos = await gerarPlanos(banco, conta.id, perfil);
   salvarBanco(banco);
   return { perfil, ...planos };

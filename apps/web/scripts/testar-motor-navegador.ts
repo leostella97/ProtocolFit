@@ -50,6 +50,7 @@ const perfilDeTeste: Perfil = {
   dias_disponiveis: ['segunda', 'terca', 'quarta', 'quinta', 'sexta'],
   modalidade: 'academia',
   nivel: 'iniciante',
+  variacao_treino: null,
 };
 
 /** Lista de verificações executadas. */
@@ -92,6 +93,21 @@ async function principal(): Promise<void> {
   // ---- 4) Fallback determinístico (dias sem arquivo exato) ----------------
   const { modelo: modelo5Dias, caminhoDoModelo: caminhoFallback } = await buscarModeloTreino('pesocorporal', 'emagrecimento', 5);
   conferir('Fallback ajusta a quantidade de dias', 5, modelo5Dias.dias_da_semana.length);
+
+  // ---- 5) Estilos (variações) de treino -----------------------------------
+  // O estilo escolhido aponta direto para o arquivo "{dias}dias-{slug}.json".
+  const { modelo: modeloForca, caminhoDoModelo: caminhoDoEstilo } = await buscarModeloTreino(
+    'academia',
+    'hipertrofia',
+    3,
+    'forca-maxima',
+  );
+  conferir('Estilo Força Máxima carregado', 'treinos/academia/hipertrofia/3dias-forca-maxima.json', caminhoDoEstilo);
+  conferir('Estilo com a quantidade de dias certa', 3, modeloForca.dias_da_semana.length);
+  conferir('Nome do modelo do estilo', 'Força Máxima - 3 Dias (Upper/Lower)', modeloForca.nome);
+  // Estilo sem arquivo naquele número de dias: cai no modelo PADRÃO do dia.
+  const { caminhoDoModelo: caminhoSemEstilo } = await buscarModeloTreino('academia', 'hipertrofia', 5, 'forca-maxima');
+  conferir('Estilo indisponível cai no padrão', 'treinos/academia/hipertrofia/5dias.json', caminhoSemEstilo);
 
   // ---- Relatório final ----------------------------------------------------
   for (const resultado of resultados) {

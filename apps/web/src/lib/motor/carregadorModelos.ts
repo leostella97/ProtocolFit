@@ -8,7 +8,7 @@
  * e ajusta (corta ou repete dias em ciclo).
  * ---------------------------------------------------------------------------
  */
-import type { ModeloDieta, ModeloTreino, IndiceDeModelos } from './tipos-modelos';
+import type { ModeloDieta, ModeloTreino, IndiceDeModelos, VariacaoDeTreino } from './tipos-modelos';
 import type { Modalidade, Objetivo } from '../tipos';
 
 /**
@@ -68,21 +68,63 @@ export function ajustarDiasDoModelo(modelo: ModeloTreino, diasAlvo: number): Mod
 }
 
 /**
- * Localiza o modelo de treino cruzando modalidade + objetivo + dias.
+ * Monta o nome do arquivo do modelo de treino.
+ * Sem estilo (ou com "padrao") usa o clássico "{dias}dias.json"; com estilo
+ * nomeado usa "{dias}dias-{slug}.json" (ex.: "3dias-forca-maxima.json").
+ */
+export function nomeDoArquivoDoTreino(dias: number, variacao?: string | null): string {
+  // Normaliza o identificador recebido da interface/perfil.
+  const identificador = (variacao ?? '').trim();
+  if (!identificador || identificador === 'padrao') {
+    return `${dias}dias.json`;
+  }
+  return `${dias}dias-${identificador}.json`;
+}
+
+/** Lista todos os estilos de treino disponíveis (índice gerado no build). */
+export async function listarVariacoesDeTreino(): Promise<VariacaoDeTreino[]> {
+  const indice = await lerIndice();
+  return indice?.variacoes ?? [];
+}
+
+/** Filtra os estilos de uma combinação exata de modalidade + objetivo + dias. */
+export async function variacoesDaCombinacao(
+  modalidade: Modalidade,
+  objetivo: Objetivo,
+  dias: number,
+): Promise<VariacaoDeTreino[]> {
+  const todas = await listarVariacoesDeTreino();
+  return todas.filter(
+    (variacao) =>
+      variacao.modalidade === modalidade && variacao.objetivo === objetivo && variacao.dias === dias,
+  );
+}
+
+/**
+ * Localiza o modelo de treino cruzando modalidade + objetivo + dias + estilo.
  * Usa o arquivo exato quando existe; caso contrário, aplica o fallback.
  */
 export async function buscarModeloTreino(
   modalidade: Modalidade,
   objetivo: Objetivo,
   dias: number,
+  variacao: string | null = 'padrao',
 ): Promise<{ modelo: ModeloTreino; caminhoDoModelo: string }> {
   const pasta = `treinos/${modalidade}/${objetivo}`;
-  // 1) Tenta o arquivo EXATO (ex.: treinos/academia/hipertrofia/5dias.json).
-  const exato = await buscarJson<ModeloTreino>(`${pasta}/${dias}dias.json`);
-  if (exato) {
-    return { modelo: exato, caminhoDoModelo: `${pasta}/${dias}dias.json` };
+  // 1) Tenta o arquivo EXATO do estilo escolhido
+  //    (ex.: treinos/academia/hipertrofia/3dias-forca-maxima.json).
+  const arquivoDoEstilo = nomeDoArquivoDoTreino(dias, variacao);
+  const estiloExato = await buscarJson<ModeloTreino>(`${pasta}/${arquivoDoEstilo}`);
+  if (estiloExato) {
+    return { modelo: estiloExato, caminhoDoModelo: `${pasta}/${arquivoDoEstilo}` };
   }
-  // 2) Fallback: consulta o índice e escolhe o modelo mais próximo.
+  // 2) Estilo indisponível nesta quantidade de dias: cai no modelo PADRÃO exato.
+  const arquivoPadrao = `${dias}dias.json`;
+  const padraoExato = await buscarJson<ModeloTreino>(`${pasta}/${arquivoPadrao}`);
+  if (padraoExato) {
+    return { modelo: padraoExato, caminhoDoModelo: `${pasta}/${arquivoPadrao}` };
+  }
+  // 3) Fallback: consulta o índice e escolhe o modelo padrão mais próximo.
   const indice = await lerIndice();
   const disponiveis = indice?.treinos?.[modalidade]?.[objetivo] ?? [];
   if (disponiveis.length === 0) {

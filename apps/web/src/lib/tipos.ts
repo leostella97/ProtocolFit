@@ -41,6 +41,29 @@ export interface Perfil {
   dias_disponiveis: string[];
   modalidade: Modalidade;
   nivel: Nivel;
+  /**
+   * Estilo (variação) de treino escolhido, ou null para o estilo padrão.
+   * Ex.: "forca-maxima" aponta para "{dias}dias-forca-maxima.json".
+   */
+  variacao_treino: string | null;
+}
+
+/** Estilo (variação) de treino disponível para uma combinação. */
+export interface VariacaoDeTreino {
+  /** Identificador do estilo: "padrao" ou o slug do arquivo. */
+  id: string;
+  /** Rótulo curto exibido na interface (ex.: "Força Máxima"). */
+  nome: string;
+  /** Nome do arquivo do modelo dentro da pasta da combinação. */
+  arquivo: string;
+  /** Quantidade de dias coberta pelo modelo. */
+  dias: number;
+  /** Modalidade do modelo. */
+  modalidade: Modalidade;
+  /** Objetivo do modelo. */
+  objetivo: Objetivo;
+  /** Duração estimada de cada sessão, em minutos. */
+  duracao_estimada_min: number;
 }
 
 /** Exercício montado dentro do plano de treino clonado. */
@@ -209,6 +232,8 @@ export interface OpcoesDoSistema {
   modalidades: { valor: Modalidade; rotulo: string; descricao: string }[];
   frequencias_semanais: number[];
   dias_semana: { valor: string; rotulo: string }[];
+  /** Estilos de treino disponíveis (padrão + variações nomeadas). */
+  variacoes_de_treino: VariacaoDeTreino[];
   seguranca: { tentativas_limite: number; horas_bloqueio: number };
 }
 

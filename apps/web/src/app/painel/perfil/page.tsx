@@ -2,15 +2,16 @@
  * page.tsx — Perfil do painel
  * ---------------------------------------------------------------------------
  * Exibe os dados do perfil, permite registrar pesagens (registrarPesagem)
- * com histórico comparado, recalcular os planos (recalcularPlanos) com
- * confirmação, e encerrar a sessão. Carrega plano + evolução em paralelo.
+ * com histórico comparado, TROCAR O ESTILO DE TREINO (atualizarEstiloDeTreino),
+ * recalcular os planos (recalcularPlanos) com confirmação, e encerrar a sessão.
+ * Carrega plano + evolução + opções em paralelo.
  * ---------------------------------------------------------------------------
  */
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Loader2, LogOut, Plus, RefreshCw, TrendingDown, TrendingUp } from 'lucide-react';
+import { Loader2, LogOut, Plus, RefreshCw, Sparkles, TrendingDown, TrendingUp } from 'lucide-react';
 import { Botao } from '@/components/ui/button';
 import { Selo } from '@/components/ui/badge';
 import {
@@ -25,6 +26,8 @@ import { Rotulo } from '@/components/ui/label';
 import { Separador } from '@/components/ui/separator';
 import { Esqueleto } from '@/components/ui/skeleton';
 import {
+  atualizarEstiloDeTreino,
+  buscarOpcoes,
   buscarPlanoAtual,
   listarEvolucao,
   recalcularPlanos,
@@ -32,8 +35,15 @@ import {
   ErroDaApi,
 } from '@/lib/api';
 import { encerrarSessao } from '@/lib/armazenamento';
-import { formatarData, formatarDecimal, rotuloDaModalidade, rotuloDoDia, rotuloDoObjetivo } from '@/lib/util';
-import type { PlanoCompleto, RegistroEvolucao } from '@/lib/tipos';
+import {
+  combinarClasses,
+  formatarData,
+  formatarDecimal,
+  rotuloDaModalidade,
+  rotuloDoDia,
+  rotuloDoObjetivo,
+} from '@/lib/util';
+import type { OpcoesDoSistema, PlanoCompleto, RegistroEvolucao, VariacaoDeTreino } from '@/lib/tipos';
 
 /** Data de hoje no formato AAAA-MM-DD (fuso local do navegador). */
 function dataDeHoje(): string {
@@ -52,9 +62,40 @@ interface MensagemDaPesagem {
   texto: string;
 }
 
+/**
+ * Estilos (variações) de treino disponíveis para a combinação do usuário.
+ * O estilo padrão vem sempre primeiro; os demais em ordem alfabética.
+ */
+function estilosDaCombinacao(
+  opcoes: OpcoesDoSistema | null,
+  plano: PlanoCompleto | null,
+): VariacaoDeTreino[] {
+  // Sem opções ou sem perfil não há estilos para listar.
+  if (!opcoes || !plano) {
+    return [];
+  }
+  const { modalidade, objetivo, dias_disponiveis } = plano.perfil;
+  return opcoes.variacoes_de_treino
+    .filter(
+      (estilo) =>
+        estilo.modalidade === modalidade &&
+        estilo.objetivo === objetivo &&
+        estilo.dias === dias_disponiveis.length,
+    )
+    .sort((primeiro, segundo) => {
+      // O estilo padrão é sempre a primeira opção da lista.
+      if (primeiro.id === 'padrao') {
+        return -1;
+      }
+      if (segundo.id === 'padrao') {
+        return 1;
+      }
+      return primeiro.nome.localeCompare(segundo.nome, 'pt-BR');
+    });
+}
+
 /** Linha de um dado do perfil (rótulo + valor). */
-function LinhaDeDado({ rotulo, valor }: { rotulo: string; valor: string }) {
-  return (
+function LinhaDeDado({ rotulo, valor }: { rotulo: string; valor: string }) {  return (
     <div className="flex items-center justify-between gap-4 border-b border-border/60 py-2 last:border-0">
       <span className="text-sm text-muted-foreground">{rotulo}</span>
       <span className="text-sm font-semibold capitalize text-foreground">{valor}</span>
@@ -85,16 +126,32 @@ export default function PaginaDoPerfil() {
   // Mensagens de sucesso/erro do recálculo.
   const [mensagemDeRecalculo, definirMensagemDeRecalculo] = useState<string | null>(null);
   const [erroDeRecalculo, definirErroDeRecalculo] = useState<string | null>(null);
+  // Opções do sistema (traz a lista de estilos de treino disponíveis).
+  const [opcoes, definirOpcoes] = useState<OpcoesDoSistema | null>(null);
+  // Estilo de treino escolhido no seletor ("padrao" = modelo clássico).
+  const [estiloEscolhido, definirEstiloEscolhido] = useState<string>('padrao');
+  // Troca de estilo em andamento.
+  const [aplicandoEstilo, definirAplicandoEstilo] = useState(false);
+  // Mensagens de sucesso/erro da troca de estilo.
+  const [mensagemDoEstilo, definirMensagemDoEstilo] = useState<string | null>(null);
+  const [erroDoEstilo, definirErroDoEstilo] = useState<string | null>(null);
 
   /** Carrega o plano atual e a evolução em paralelo (404 → onboarding; 401 → login). */
   const carregarDados = useCallback(async () => {
     definirCarregando(true);
     definirErro(null);
     try {
-      // Busca os dois recursos ao mesmo tempo (Promise.all).
-      const [planoAtual, registros] = await Promise.all([buscarPlanoAtual(), listarEvolucao()]);
+      // Busca os três recursos ao mesmo tempo (Promise.all).
+      const [planoAtual, registros, opcoesRecebidas] = await Promise.all([
+        buscarPlanoAtual(),
+        listarEvolucao(),
+        buscarOpcoes(),
+      ]);
       definirPlano(planoAtual);
       definirEvolucao(registros);
+      definirOpcoes(opcoesRecebidas);
+      // Sincroniza o seletor com o estilo gravado no perfil.
+      definirEstiloEscolhido(planoAtual.perfil.variacao_treino ?? 'padrao');
     } catch (erroCapturado: unknown) {
       // Erro da API com status conhecido.
       if (erroCapturado instanceof ErroDaApi) {
@@ -184,6 +241,39 @@ export default function PaginaDoPerfil() {
     }
   }
 
+  /**
+   * Troca o estilo de treino e regenera os planos na hora.
+   * O estilo "padrao" é enviado como null (modelo clássico da combinação).
+   */
+  async function aplicarEstilo() {
+    definirAplicandoEstilo(true);
+    definirMensagemDoEstilo(null);
+    definirErroDoEstilo(null);
+    try {
+      // Gera os planos já com o novo estilo escolhido.
+      const resultado = await atualizarEstiloDeTreino(
+        estiloEscolhido === 'padrao' ? null : estiloEscolhido,
+      );
+      // Atualiza a tela com os planos recém-gerados.
+      definirPlano({ perfil: resultado.perfil, treino: resultado.treino, dieta: resultado.dieta });
+      definirMensagemDoEstilo(
+        `Estilo aplicado! Seu treino agora é "${resultado.treino.nome}" (versão ${resultado.treino.versao}).`,
+      );
+    } catch (erroCapturado: unknown) {
+      // Sessão inválida: limpa e volta ao login.
+      if (erroCapturado instanceof ErroDaApi && erroCapturado.status === 401) {
+        encerrarSessao();
+        roteador.replace('/login');
+        return;
+      }
+      definirErroDoEstilo(
+        erroCapturado instanceof Error ? erroCapturado.message : 'Não foi possível trocar o estilo.',
+      );
+    } finally {
+      definirAplicandoEstilo(false);
+    }
+  }
+
   /** Encerra a sessão e redireciona para o login. */
   function sairDaConta() {
     encerrarSessao();
@@ -230,6 +320,15 @@ export default function PaginaDoPerfil() {
   // Últimas pesagens (mais recentes primeiro, máximo 5).
   const ultimasPesagens = [...evolucao].reverse().slice(0, 5);
 
+  // Estilos de treino disponíveis para a combinação atual do usuário.
+  const estilosDisponiveis = estilosDaCombinacao(opcoes, plano);
+  // Estilo vigente no perfil (null = clássico) e o rótulo exibido.
+  const estiloAtual = perfil.variacao_treino ?? 'padrao';
+  const rotuloDoEstiloAtual =
+    estilosDisponiveis.find((estilo) => estilo.id === estiloAtual)?.nome ?? 'Padrão';
+  // Só habilita o botão quando o estilo escolhido muda de fato.
+  const estiloMudou = estiloEscolhido !== estiloAtual;
+
   return (
     <div className="space-y-6">
       {/* Título da página. */}
@@ -258,6 +357,7 @@ export default function PaginaDoPerfil() {
             <LinhaDeDado rotulo="Objetivo" valor={rotuloDoObjetivo(perfil.objetivo)} />
             <LinhaDeDado rotulo="Modalidade" valor={rotuloDaModalidade(perfil.modalidade)} />
             <LinhaDeDado rotulo="Dias" valor={perfil.dias_disponiveis.map(rotuloDoDia).join(', ')} />
+            <LinhaDeDado rotulo="Estilo do treino" valor={rotuloDoEstiloAtual} />
           </CartaoConteudo>
         </Cartao>
 
@@ -341,6 +441,71 @@ export default function PaginaDoPerfil() {
           </CartaoConteudo>
         </Cartao>
       </div>
+
+      {/* Seção: trocar o estilo (variação) do treino e regenerar os planos. */}
+      <Cartao>
+        <CartaoCabecalho>
+          <CartaoTitulo>Estilo de treino</CartaoTitulo>
+          <CartaoDescricao>
+            Cansou da mesma rotina? Troque o formato das sessões sem mudar o seu objetivo — o treino
+            é regerado na hora.
+          </CartaoDescricao>
+        </CartaoCabecalho>
+        <CartaoConteudo className="space-y-4">
+          {/* Sem alternativa: apenas informa qual estilo está em uso. */}
+          {estilosDisponiveis.length <= 1 ? (
+            <p className="text-sm text-muted-foreground">
+              Para a sua combinação de modalidade, objetivo e dias existe apenas o estilo{' '}
+              <span className="font-semibold text-foreground">{rotuloDoEstiloAtual}</span>.
+            </p>
+          ) : (
+            <>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {estilosDisponiveis.map((estilo) => {
+                  const escolhido = estiloEscolhido === estilo.id;
+                  const emUso = estiloAtual === estilo.id;
+                  return (
+                    <button
+                      key={estilo.id}
+                      type="button"
+                      onClick={() => definirEstiloEscolhido(estilo.id)}
+                      aria-pressed={escolhido}
+                      className={combinarClasses(
+                        'flex flex-col items-start gap-1 rounded-xl border px-4 py-3 text-left transition-colors',
+                        escolhido
+                          ? 'border-primary bg-secondary ring-2 ring-primary/30'
+                          : 'border-border bg-card hover:border-primary/50 hover:bg-secondary/60',
+                      )}
+                    >
+                      <span className="font-display text-sm font-bold">{estilo.nome}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {estilo.duracao_estimada_min} min por sessão
+                      </span>
+                      {/* Marca o estilo que já está em uso agora. */}
+                      {emUso ? (
+                        <span className="text-xs font-semibold text-primary">Em uso</span>
+                      ) : null}
+                    </button>
+                  );
+                })}
+              </div>
+              {/* Botão de aplicação + feedback da troca de estilo. */}
+              <div className="flex flex-wrap items-center gap-3">
+                <Botao onClick={() => void aplicarEstilo()} disabled={aplicandoEstilo || !estiloMudou}>
+                  {aplicandoEstilo ? <Loader2 className="animate-spin" /> : <Sparkles />} Aplicar
+                  estilo
+                </Botao>
+                {mensagemDoEstilo ? (
+                  <span className="text-sm font-medium text-primary">{mensagemDoEstilo}</span>
+                ) : null}
+                {erroDoEstilo ? (
+                  <span className="text-sm font-medium text-destructive">{erroDoEstilo}</span>
+                ) : null}
+              </div>
+            </>
+          )}
+        </CartaoConteudo>
+      </Cartao>
 
       {/* Seção em destaque: renovar plano com confirmação em duas etapas. */}
       <Cartao className="border-primary/50">

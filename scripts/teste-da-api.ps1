@@ -69,6 +69,21 @@ Requisitar "POST" "/evolucao" @{ peso_kg = 80.0 } $token | Out-Null
 $recalculo = Requisitar "POST" "/perfil/recalcular" $null $token
 Write-Output ("Peso atualizado: " + $recalculo.perfil.peso_kg + "kg | treino v" + $recalculo.treino.versao + " | meta kcal: " + $recalculo.dieta.meta.meta_kcal)
 
+Write-Output "=== 8.1) Estilo de treino (variacoes) ==="
+# A lista de estilos vem dentro de /opcoes (lida da pasta de modelos mestres).
+$totalDeEstilos = @($opcoes.variacoes_de_treino).Count
+$temCrossfit = @($opcoes.variacoes_de_treino | Where-Object { $_.id -eq "crossfit" }).Count -gt 0
+Write-Output ("Estilos disponiveis: " + $totalDeEstilos + " | crossfit presente: " + $temCrossfit)
+# Troca o estilo do treino (o plano do usuario e regenerado na hora).
+$comEstilo = Requisitar "PATCH" "/perfil/treino" @{ variacao_treino = "crossfit" } $token
+Write-Output ("Estilo gravado: " + $comEstilo.perfil.variacao_treino + " | treino: " + $comEstilo.treino.nome + " | v" + $comEstilo.treino.versao)
+# Estilo inexistente deve ser recusado com 400.
+$estiloInvalido = Requisitar "PATCH" "/perfil/treino" @{ variacao_treino = "estilo-inexistente" } $token
+Write-Output ("Estilo invalido: status " + $estiloInvalido.status)
+# Volta ao estilo classico (null).
+$semEstilo = Requisitar "PATCH" "/perfil/treino" @{ variacao_treino = $null } $token
+Write-Output ("Volta ao padrao: " + $semEstilo.treino.nome)
+
 Write-Output "=== 9) Isolamento (outro usuario nao edita o plano) ==="
 $cadastro2 = Requisitar "POST" "/auth/cadastro" @{ nome = "Intruso"; email = "intruso" + (Get-Random -Minimum 1000 -Maximum 9999) + "@example.com"; senha = "senhaSegura123" } $null
 $intruso = Requisitar "PATCH" ("/plano/treino/" + $plano.treino.id) @{ dia_indice = 0; exercicio_indice = 0; carga_kg = 999 } $cadastro2.token

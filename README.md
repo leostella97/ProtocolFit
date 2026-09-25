@@ -195,9 +195,10 @@ O código do AdSense (`ca-pub-2430276497312227`) é inserido no **layout raiz**
 (`apps/web/src/app/layout.tsx`): o React eleva o `<script async>` para o `<head>`
 de **todas** as páginas geradas e o `build:pages` reprova o build se alguma
 página ficar sem o script (ver `apps/web/scripts/verificar-pwa.mjs`).
-O `ads.txt` fica na **raiz do domínio** (`https://leostella97.github.io/ads.txt`),
-publicado pelo repositório `leostella97.github.io` — e não dentro de `/ProtocolFit/`,
-como exige o Google.
+O `ads.txt` com a linha `google.com, pub-2430276497312227, DIRECT, f08c47fec0942fa0`
+é publicado em **dois lugares**, para atender às duas leituras do Google:
+`apps/web/public/ads.txt` (raiz deste site → `/ProtocolFit/ads.txt`) e no
+repositório `leostella97.github.io` (raiz do domínio → `leostella97.github.io/ads.txt`).
 
 ### 1. Subir o código para o GitHub
 

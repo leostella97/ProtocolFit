@@ -12,7 +12,8 @@
  *  2) manifesto é JSON válido e tem os campos obrigatórios (name, start_url,
  *     display: standalone, tema e ícones 192/512 + maskable);
  *  3) a página inicial referencia o manifesto, a cor do tema e o ícone do iOS;
- *  4) o script do Google AdSense aparece dentro do <head> de cada HTML.
+ *  4) o script do Google AdSense aparece dentro do <head> de cada HTML;
+ *  5) o ads.txt do AdSense está na raiz do site publicado.
  *
  * Uso: node scripts/verificar-pwa.mjs
  * ---------------------------------------------------------------------------
@@ -26,6 +27,9 @@ const SAIDA = join(dirname(fileURLToPath(import.meta.url)), '..', 'out');
 
 /** Identificador do publisher do Google AdSense esperado em todas as páginas. */
 const ID_ADSENSE = 'ca-pub-2430276497312227';
+
+/** Mesmo publisher no formato usado pelo ads.txt (sem o prefixo "ca-"). */
+const ID_ADSENSE_NO_ADS_TXT = ID_ADSENSE.replace(/^ca-/, '');
 
 /** Lista de problemas encontrados. */
 const problemas = [];
@@ -128,7 +132,21 @@ if (existsSync(SAIDA)) {
   }
 }
 
-// ---- 5) Service worker: estratégias mínimas -------------------------------
+// ---- 5) ads.txt do Google AdSense na raiz do site -------------------------
+// O Google exige o arquivo na RAIZ (aqui: /ProtocolFit/ads.txt, que é a raiz
+// deste site publicado). A cópia do domínio raiz (leostella97.github.io/ads.txt)
+// mora no repositório leostella97.github.io.
+const LINHA_ESPERADA_DO_ADS_TXT = `google.com, ${ID_ADSENSE_NO_ADS_TXT}, DIRECT, f08c47fec0942fa0`;
+if (existsSync(join(SAIDA, 'ads.txt'))) {
+  const conteudo = readFileSync(join(SAIDA, 'ads.txt'), 'utf-8');
+  if (!conteudo.includes(LINHA_ESPERADA_DO_ADS_TXT)) {
+    problemas.push(`ads.txt sem a linha do publisher: ${LINHA_ESPERADA_DO_ADS_TXT}`);
+  }
+} else {
+  problemas.push('ads.txt ausente na raiz do site publicado');
+}
+
+// ---- 6) Service worker: estratégias mínimas -------------------------------
 if (existsSync(join(SAIDA, 'sw.js'))) {
   const sw = readFileSync(join(SAIDA, 'sw.js'), 'utf-8');
   if (!/addEventListener\('install'/.test(sw)) problemas.push('sw.js sem evento de install');
@@ -144,5 +162,5 @@ if (problemas.length > 0) {
   process.exit(1);
 }
 console.log(
-  '[pwa] OK: manifesto, ícones, service worker, metadados e AdSense (todas as páginas) validados — app instalável e offline.',
+  '[pwa] OK: manifesto, ícones, service worker, metadados e AdSense (script no <head> de todas as páginas + ads.txt) validados — app instalável e offline.',
 );

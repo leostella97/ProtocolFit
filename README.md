@@ -185,9 +185,19 @@ MODO_PAGES=true NEXT_PUBLIC_MODO_LOCAL=true NEXT_PUBLIC_BASE_PATH=/ProtocolFit n
 **Verificações do modo navegador** (executadas também localmente):
 
 ```bash
-npm run testar:motor --workspace @protocolfit/web   # motor do navegador == motor do servidor (16 verificações)
-npm run testar:local --workspace @protocolfit/web   # fluxo completo: cadastro → plano → edições → recálculo (25 verificações)
+npm run testar:motor --workspace @protocolfit/web   # motor do navegador == motor do servidor (20 verificações)
+npm run testar:local --workspace @protocolfit/web   # fluxo completo: cadastro → plano → edições → recálculo (47 verificações)
 ```
+
+### 0.1 Anúncios (Google AdSense)
+
+O código do AdSense (`ca-pub-2430276497312227`) é inserido no **layout raiz**
+(`apps/web/src/app/layout.tsx`): o React eleva o `<script async>` para o `<head>`
+de **todas** as páginas geradas e o `build:pages` reprova o build se alguma
+página ficar sem o script (ver `apps/web/scripts/verificar-pwa.mjs`).
+O `ads.txt` fica na **raiz do domínio** (`https://leostella97.github.io/ads.txt`),
+publicado pelo repositório `leostella97.github.io` — e não dentro de `/ProtocolFit/`,
+como exige o Google.
 
 ### 1. Subir o código para o GitHub
 

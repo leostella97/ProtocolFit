@@ -2,24 +2,30 @@
  * verificar-pwa.mjs
  * ---------------------------------------------------------------------------
  * Verifica se o pacote PUBLICADO (apps/web/out) está realmente instalável
- * como aplicativo (PWA). Roda automaticamente no fim do `build:pages`, então
- * qualquer regressão no PWA quebra o build (e o GitHub Actions avisa).
+ * como aplicativo (PWA) e se o código do Google AdSense está no <head> de
+ * TODAS as páginas. Roda automaticamente no fim do `build:pages`, então
+ * qualquer regressão no PWA ou nos anúncios quebra o build (e o GitHub
+ * Actions avisa).
  *
  * Confere:
  *  1) existência do manifesto, do service worker e de todos os ícones;
  *  2) manifesto é JSON válido e tem os campos obrigatórios (name, start_url,
  *     display: standalone, tema e ícones 192/512 + maskable);
- *  3) a página inicial referencia o manifesto, a cor do tema e o ícone do iOS.
+ *  3) a página inicial referencia o manifesto, a cor do tema e o ícone do iOS;
+ *  4) o script do Google AdSense aparece dentro do <head> de cada HTML.
  *
  * Uso: node scripts/verificar-pwa.mjs
  * ---------------------------------------------------------------------------
  */
-import { existsSync, readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 /** Pasta com o site exportado. */
 const SAIDA = join(dirname(fileURLToPath(import.meta.url)), '..', 'out');
+
+/** Identificador do publisher do Google AdSense esperado em todas as páginas. */
+const ID_ADSENSE = 'ca-pub-2430276497312227';
 
 /** Lista de problemas encontrados. */
 const problemas = [];
@@ -85,7 +91,44 @@ if (existsSync(join(SAIDA, 'index.html'))) {
   if (!/apple-touch-icon/.test(html)) problemas.push('index.html sem apple-touch-icon (iOS)');
 }
 
-// ---- 4) Service worker: estratégias mínimas -------------------------------
+// ---- 4) Google AdSense: script no <head> de TODAS as páginas exportadas ----
+/**
+ * Lista recursivamente todos os arquivos .html do site exportado.
+ * Cada rota do App Router vira uma pasta com index.html (ex.: painel/index.html).
+ */
+function listarPaginasHtml(pasta) {
+  const paginas = [];
+  for (const entrada of readdirSync(pasta, { withFileTypes: true })) {
+    const caminho = join(pasta, entrada.name);
+    if (entrada.isDirectory()) {
+      paginas.push(...listarPaginasHtml(caminho));
+    } else if (entrada.name.endsWith('.html')) {
+      paginas.push(caminho);
+    }
+  }
+  return paginas;
+}
+
+if (existsSync(SAIDA)) {
+  const paginas = listarPaginasHtml(SAIDA);
+  if (paginas.length === 0) {
+    problemas.push('nenhuma página HTML encontrada no pacote exportado');
+  }
+  for (const pagina of paginas) {
+    const html = readFileSync(pagina, 'utf-8');
+    // Só o trecho ANTES de </head> conta: é onde o Google exige o código.
+    const posicaoDoFimDoHead = html.indexOf('</head>');
+    const cabecalho = posicaoDoFimDoHead >= 0 ? html.slice(0, posicaoDoFimDoHead) : '';
+    const nomeDaPagina = relative(SAIDA, pagina).replace(/\\/g, '/');
+    if (!cabecalho.includes('adsbygoogle.js')) {
+      problemas.push(`sem o script do AdSense no <head>: ${nomeDaPagina}`);
+    } else if (!cabecalho.includes(ID_ADSENSE)) {
+      problemas.push(`script do AdSense com publisher diferente de ${ID_ADSENSE}: ${nomeDaPagina}`);
+    }
+  }
+}
+
+// ---- 5) Service worker: estratégias mínimas -------------------------------
 if (existsSync(join(SAIDA, 'sw.js'))) {
   const sw = readFileSync(join(SAIDA, 'sw.js'), 'utf-8');
   if (!/addEventListener\('install'/.test(sw)) problemas.push('sw.js sem evento de install');
@@ -100,4 +143,6 @@ if (problemas.length > 0) {
   }
   process.exit(1);
 }
-console.log('[pwa] OK: manifesto, ícones, service worker e metadados validados (app instalável e offline).');
+console.log(
+  '[pwa] OK: manifesto, ícones, service worker, metadados e AdSense (todas as páginas) validados — app instalável e offline.',
+);

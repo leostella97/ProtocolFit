@@ -95,7 +95,10 @@ if (existsSync(join(SAIDA, 'index.html'))) {
   if (!/apple-touch-icon/.test(html)) problemas.push('index.html sem apple-touch-icon (iOS)');
 }
 
-// ---- 4) Google AdSense: script no <head> de TODAS as páginas exportadas ----
+// ---- 4) Google AdSense: script E meta no <head> de TODAS as páginas -------
+// O Google pede os dois códigos em cada página:
+//   • <script async src=".../adsbygoogle.js?client=ca-pub-...">
+//   • <meta name="google-adsense-account" content="ca-pub-...">
 /**
  * Lista recursivamente todos os arquivos .html do site exportado.
  * Cada rota do App Router vira uma pasta com index.html (ex.: painel/index.html).
@@ -120,7 +123,7 @@ if (existsSync(SAIDA)) {
   }
   for (const pagina of paginas) {
     const html = readFileSync(pagina, 'utf-8');
-    // Só o trecho ANTES de </head> conta: é onde o Google exige o código.
+    // Só o trecho ANTES de </head> conta: é onde o Google exige os códigos.
     const posicaoDoFimDoHead = html.indexOf('</head>');
     const cabecalho = posicaoDoFimDoHead >= 0 ? html.slice(0, posicaoDoFimDoHead) : '';
     const nomeDaPagina = relative(SAIDA, pagina).replace(/\\/g, '/');
@@ -128,6 +131,11 @@ if (existsSync(SAIDA)) {
       problemas.push(`sem o script do AdSense no <head>: ${nomeDaPagina}`);
     } else if (!cabecalho.includes(ID_ADSENSE)) {
       problemas.push(`script do AdSense com publisher diferente de ${ID_ADSENSE}: ${nomeDaPagina}`);
+    }
+    // A metatag de conta do AdSense também precisa estar no <head> da página.
+    const metaEsperada = `<meta name="google-adsense-account" content="${ID_ADSENSE}"`;
+    if (!cabecalho.includes(metaEsperada)) {
+      problemas.push(`sem a metatag google-adsense-account no <head>: ${nomeDaPagina}`);
     }
   }
 }
@@ -162,5 +170,5 @@ if (problemas.length > 0) {
   process.exit(1);
 }
 console.log(
-  '[pwa] OK: manifesto, ícones, service worker, metadados e AdSense (script no <head> de todas as páginas + ads.txt) validados — app instalável e offline.',
+  '[pwa] OK: manifesto, ícones, service worker, metadados e AdSense (script + metatag em todas as páginas, ads.txt na raiz) validados — app instalável e offline.',
 );

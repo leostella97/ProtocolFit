@@ -35,7 +35,7 @@ import type {
   Usuario,
 } from './tipos';
 import { guardarToken, guardarUsuario, obterToken } from './armazenamento';
-import { termoFoiAceito } from './termo-de-uso';
+import { CHAVE_DO_ACEITE, termoFoiAceito, VERSAO_DO_TERMO } from './termo-de-uso';
 import { ErroDaApi } from './erro-api';
 import { calcularPlanoNutricional } from './motor/calculos';
 import { buscarModeloDieta, buscarModeloTreino, listarVariacoesDeTreino } from './motor/carregadorModelos';
@@ -882,4 +882,360 @@ export async function salvarCheckinLocal(corpo: {
     },
     ...montarResumo(registros),
   };
+}
+
+/* ===========================================================================
+ * PORTABILIDADE — exportar/importar o progresso entre dispositivos
+ * ---------------------------------------------------------------------------
+ * TEAM_001: no modo navegador os dados moram APENAS no localStorage — não
+ * existe nuvem. Para não perder tudo ao trocar de dispositivo, o usuário
+ * exporta um arquivo JSON (o "backup") e o importa no destino.
+ *
+ * Decisões:
+ *  - O backup NÃO carrega ids internos (`id`, `usuario_id`): na importação
+ *    cada registro ganha um id novo via `proximoId`, sem risco de colisão
+ *    com contas que já existam no navegador de destino.
+ *  - O hash da senha viaja no arquivo — a pessoa entra no novo dispositivo
+ *    com a MESMA senha (a interface avisa para guardar o arquivo com zelo).
+ *  - Se o e-mail importado já existir no navegador, a conta e os dados dela
+ *    são substituídos pelo snapshot do arquivo (restauração fiel).
+ *  - O aceite do termo de uso viaja junto: quem já aceitou não é barrado de
+ *    novo no novo dispositivo.
+ * ======================================================================== */
+
+/** Versão atual do formato do arquivo de backup. */
+const VERSAO_DO_BACKUP = 1;
+
+/** Envelope do arquivo de backup (formato público, sem ids internos). */
+interface BackupDeProgresso {
+  /** Assinatura do formato: sempre "protocolfit". */
+  aplicativo: 'protocolfit';
+  /** Tipo do arquivo: sempre "progresso". */
+  tipo: 'progresso';
+  /** Versão do formato do backup (permite evoluir sem quebrar). */
+  versao: number;
+  /** Quando o backup foi gerado (ISO). */
+  exportado_em: string;
+  /** Aceite do aviso de responsabilidade gravado no navegador de origem. */
+  aceite_do_termo: { versao: number; aceito_em: string } | null;
+  /** Conta do usuário (com o hash — a mesma senha funciona no destino). */
+  conta: { nome: string; email: string; senha_hash: string; criado_em: string };
+  /** Perfil físico (sem ids — recriados na importação), ou null. */
+  perfil: Omit<Perfil, 'id' | 'usuario_id'> | null;
+  /** Planos do usuário — todas as versões, ativos e histórico. */
+  planos: {
+    tipo: 'treino' | 'dieta';
+    versao: number;
+    ativo: boolean;
+    modelo_origem: string;
+    criado_em: string;
+    conteudo: string;
+  }[];
+  /** Pesagens registradas. */
+  evolucao: { data: string; peso_kg: number }[];
+  /** Check-ins diários. */
+  checkins: Omit<CheckinDiarioInterno, 'id' | 'usuario_id'>[];
+}
+
+/** Resumo do backup exibido na prévia de importação (confirmação da interface). */
+export interface ResumoDoBackup {
+  /** Nome do dono do backup. */
+  nome: string;
+  /** E-mail da conta do backup. */
+  email: string;
+  /** Data em que o arquivo foi gerado (ISO). */
+  exportado_em: string;
+  /** Total de planos (treino + dieta, todas as versões). */
+  total_planos: number;
+  /** Total de pesagens registradas. */
+  total_pesagens: number;
+  /** Total de check-ins diários. */
+  total_checkins: number;
+  /** Indica se o backup inclui o perfil (onboarding concluído). */
+  possui_perfil: boolean;
+}
+
+/** Monta o arquivo de backup do usuário logado (nome de arquivo + conteúdo JSON). */
+export async function exportarProgressoLocal(): Promise<{ nomeDoArquivo: string; conteudo: string }> {
+  const banco = lerBanco();
+  const conta = exigirSessao(banco);
+
+  // Lê o aceite do termo gravado neste navegador (viaja junto no backup).
+  let aceiteDoTermo: BackupDeProgresso['aceite_do_termo'] = null;
+  try {
+    const brutoAceite = window.localStorage.getItem(CHAVE_DO_ACEITE);
+    if (brutoAceite) {
+      const registro = JSON.parse(brutoAceite) as { versao?: number; aceito_em?: string };
+      if (typeof registro.versao === 'number' && typeof registro.aceito_em === 'string') {
+        aceiteDoTermo = { versao: registro.versao, aceito_em: registro.aceito_em };
+      }
+    }
+  } catch {
+    // Aceite ilegível: segue sem ele (o destino pedirá o aceite de novo).
+  }
+
+  // Reúne SÓ os dados do usuário logado, sem os ids internos do banco.
+  const perfilDoUsuario = banco.perfis.find((candidato) => candidato.usuario_id === conta.id);
+  const backup: BackupDeProgresso = {
+    aplicativo: 'protocolfit',
+    tipo: 'progresso',
+    versao: VERSAO_DO_BACKUP,
+    exportado_em: new Date().toISOString(),
+    aceite_do_termo: aceiteDoTermo,
+    conta: {
+      nome: conta.nome,
+      email: conta.email,
+      senha_hash: conta.senha_hash,
+      criado_em: conta.criado_em,
+    },
+    perfil: perfilDoUsuario ? (({ id: _id, usuario_id: _dono, ...dados }) => dados)(perfilDoUsuario) : null,
+    planos: banco.planos
+      .filter((plano) => plano.usuario_id === conta.id)
+      .map((plano) => ({
+        tipo: plano.tipo,
+        versao: plano.versao,
+        ativo: plano.ativo,
+        modelo_origem: plano.modelo_origem,
+        criado_em: plano.criado_em,
+        conteudo: plano.conteudo,
+      })),
+    evolucao: banco.evolucao
+      .filter((registro) => registro.usuario_id === conta.id)
+      .map((registro) => ({ data: registro.data, peso_kg: registro.peso_kg })),
+    checkins: (banco.checkins ?? [])
+      .filter((registro) => registro.usuario_id === conta.id)
+      .map((registro) => ({
+        data: registro.data,
+        treino_feito: registro.treino_feito,
+        dieta_seguida: registro.dieta_seguida,
+        agua_ml: registro.agua_ml,
+        peso_kg: registro.peso_kg,
+        observacao: registro.observacao,
+      })),
+  };
+
+  return {
+    nomeDoArquivo: `protocolfit-progresso-${dataDeHoje()}.json`,
+    conteudo: JSON.stringify(backup, null, 2),
+  };
+}
+
+/**
+ * Interpreta e VALIDA o texto de um arquivo de backup.
+ * Devolve o objeto normalizado ou lança ErroDaApi(400) com mensagem amigável.
+ * Usado tanto pela prévia (inspecionarBackupLocal) quanto pela importação.
+ */
+function interpretarBackup(texto: string): BackupDeProgresso {
+  // 1) O conteúdo precisa ser JSON.
+  let bruto: unknown;
+  try {
+    bruto = JSON.parse(texto);
+  } catch {
+    throw new ErroDaApi(400, 'Não conseguimos ler este arquivo. Escolha o backup gerado pelo ProtocolFit.');
+  }
+  const backup = bruto as Partial<BackupDeProgresso> | null;
+
+  // 2) Envelope: precisa ser um backup de progresso do ProtocolFit.
+  if (!backup || typeof backup !== 'object' || backup.aplicativo !== 'protocolfit' || backup.tipo !== 'progresso') {
+    throw new ErroDaApi(400, 'Este arquivo não é um backup do ProtocolFit.');
+  }
+  // 3) Versão do formato: backups de versões mais novas são recusados.
+  if (typeof backup.versao !== 'number' || backup.versao < 1) {
+    throw new ErroDaApi(400, 'Este backup está incompleto ou corrompido.');
+  }
+  if (backup.versao > VERSAO_DO_BACKUP) {
+    throw new ErroDaApi(400, 'Este backup foi criado em uma versão mais nova do ProtocolFit. Atualize este dispositivo e tente de novo.');
+  }
+
+  // 4) A conta é obrigatória: nome, e-mail válido e o hash da senha.
+  const conta = backup.conta;
+  if (
+    !conta ||
+    typeof conta.nome !== 'string' ||
+    conta.nome.trim().length < 3 ||
+    typeof conta.email !== 'string' ||
+    !emailValido(conta.email.trim().toLowerCase()) ||
+    typeof conta.senha_hash !== 'string' ||
+    conta.senha_hash.length === 0 ||
+    typeof conta.criado_em !== 'string'
+  ) {
+    throw new ErroDaApi(400, 'Este backup está incompleto ou corrompido.');
+  }
+
+  // 5) O perfil é opcional (conta criada sem onboarding), mas se existir
+  //    precisa ter os campos centrais no tipo certo.
+  const perfil = backup.perfil ?? null;
+  if (
+    perfil !== null &&
+    (typeof perfil !== 'object' ||
+      typeof perfil.peso_kg !== 'number' ||
+      typeof perfil.altura_cm !== 'number' ||
+      typeof perfil.faixa_etaria !== 'string' ||
+      typeof perfil.objetivo !== 'string' ||
+      typeof perfil.modalidade !== 'string' ||
+      typeof perfil.frequencia_semanal !== 'number' ||
+      !Array.isArray(perfil.dias_disponiveis))
+  ) {
+    throw new ErroDaApi(400, 'Este backup está incompleto ou corrompido.');
+  }
+
+  // 6) Planos: cada um precisa ter tipo válido e conteúdo JSON legível —
+  //    um plano corrompido quebraria o painel depois, então falha aqui.
+  const planosBrutos = Array.isArray(backup.planos) ? backup.planos : [];
+  const planos: BackupDeProgresso['planos'] = [];
+  for (const plano of planosBrutos) {
+    const valido =
+      plano &&
+      (plano.tipo === 'treino' || plano.tipo === 'dieta') &&
+      typeof plano.versao === 'number' &&
+      typeof plano.ativo === 'boolean' &&
+      typeof plano.modelo_origem === 'string' &&
+      typeof plano.criado_em === 'string' &&
+      typeof plano.conteudo === 'string';
+    if (!valido) {
+      throw new ErroDaApi(400, 'Este backup está incompleto ou corrompido.');
+    }
+    try {
+      JSON.parse(plano.conteudo);
+    } catch {
+      throw new ErroDaApi(400, 'Este backup está incompleto ou corrompido.');
+    }
+    planos.push({
+      tipo: plano.tipo,
+      versao: plano.versao,
+      ativo: plano.ativo,
+      modelo_origem: plano.modelo_origem,
+      criado_em: plano.criado_em,
+      conteudo: plano.conteudo,
+    });
+  }
+
+  // 7) Históricos (pesagens e check-ins): entradas malformadas são ignoradas
+  //    em vez de derrubar a importação inteira — não são críticas.
+  const evolucao: BackupDeProgresso['evolucao'] = (Array.isArray(backup.evolucao) ? backup.evolucao : [])
+    .filter((registro) => registro && typeof registro.data === 'string' && typeof registro.peso_kg === 'number')
+    .map((registro) => ({ data: registro.data, peso_kg: registro.peso_kg }));
+  const checkins: BackupDeProgresso['checkins'] = (Array.isArray(backup.checkins) ? backup.checkins : [])
+    .filter((registro) => registro && typeof registro.data === 'string')
+    .map((registro) => ({
+      data: registro.data,
+      treino_feito: registro.treino_feito === true,
+      dieta_seguida: registro.dieta_seguida === true,
+      agua_ml: typeof registro.agua_ml === 'number' ? registro.agua_ml : 0,
+      peso_kg: typeof registro.peso_kg === 'number' ? registro.peso_kg : null,
+      observacao: typeof registro.observacao === 'string' ? registro.observacao : null,
+    }));
+
+  // 8) Aceite do termo: só viaja se tiver o formato esperado.
+  const aceiteBruto = backup.aceite_do_termo;
+  const aceiteDoTermo =
+    aceiteBruto && typeof aceiteBruto.versao === 'number' && typeof aceiteBruto.aceito_em === 'string'
+      ? { versao: aceiteBruto.versao, aceito_em: aceiteBruto.aceito_em }
+      : null;
+
+  // 9) Devolve o backup normalizado (e-mail minúsculo, nome sem espaços extras).
+  return {
+    aplicativo: 'protocolfit',
+    tipo: 'progresso',
+    versao: backup.versao,
+    exportado_em: typeof backup.exportado_em === 'string' ? backup.exportado_em : '',
+    aceite_do_termo: aceiteDoTermo,
+    conta: {
+      nome: conta.nome.trim(),
+      email: conta.email.trim().toLowerCase(),
+      senha_hash: conta.senha_hash,
+      criado_em: conta.criado_em,
+    },
+    perfil,
+    planos,
+    evolucao,
+    checkins,
+  };
+}
+
+/** Lê um backup e devolve um resumo para a prévia (sem gravar nada). */
+export function inspecionarBackupLocal(texto: string): ResumoDoBackup {
+  const backup = interpretarBackup(texto);
+  return {
+    nome: backup.conta.nome,
+    email: backup.conta.email,
+    exportado_em: backup.exportado_em,
+    total_planos: backup.planos.length,
+    total_pesagens: backup.evolucao.length,
+    total_checkins: backup.checkins.length,
+    possui_perfil: backup.perfil !== null,
+  };
+}
+
+/**
+ * Importa um backup e ABRE A SESSÃO da conta restaurada.
+ * Se o e-mail já existir neste navegador, os dados antigos da conta são
+ * substituídos pelo snapshot do arquivo (restauração, não fusão).
+ */
+export async function importarProgressoLocal(texto: string): Promise<{ usuario: Usuario; possui_planos: boolean }> {
+  // Valida o arquivo inteiro antes de tocar no banco.
+  const backup = interpretarBackup(texto);
+  const banco = lerBanco();
+  const email = backup.conta.email;
+
+  // Conta já existe neste navegador: remove ela e TODOS os dados dela —
+  // a importação é uma restauração fiel do snapshot, não uma fusão.
+  const existente = banco.contas.find((candidata) => candidata.email === email);
+  if (existente) {
+    banco.perfis = banco.perfis.filter((perfil) => perfil.usuario_id !== existente.id);
+    banco.planos = banco.planos.filter((plano) => plano.usuario_id !== existente.id);
+    banco.evolucao = banco.evolucao.filter((registro) => registro.usuario_id !== existente.id);
+    banco.checkins = (banco.checkins ?? []).filter((registro) => registro.usuario_id !== existente.id);
+    banco.contas = banco.contas.filter((candidata) => candidata.id !== existente.id);
+  }
+
+  // Recria a conta com um id novo (não colide com nada que já exista aqui).
+  const contaImportada: ContaLocal = {
+    id: proximoId(banco),
+    nome: backup.conta.nome,
+    email,
+    senha_hash: backup.conta.senha_hash,
+    tentativas_falhas: 0,
+    bloqueado_ate: null,
+    criado_em: backup.conta.criado_em,
+  };
+  banco.contas.push(contaImportada);
+
+  // Perfil e coleções ganham ids novos apontando para a conta recriada.
+  if (backup.perfil) {
+    banco.perfis.push({ ...backup.perfil, id: proximoId(banco), usuario_id: contaImportada.id });
+  }
+  for (const plano of backup.planos) {
+    banco.planos.push({
+      id: proximoId(banco),
+      usuario_id: contaImportada.id,
+      tipo: plano.tipo,
+      versao: plano.versao,
+      ativo: plano.ativo,
+      modelo_origem: plano.modelo_origem,
+      criado_em: plano.criado_em,
+      conteudo: plano.conteudo,
+    });
+  }
+  for (const registro of backup.evolucao) {
+    banco.evolucao.push({ id: proximoId(banco), usuario_id: contaImportada.id, data: registro.data, peso_kg: registro.peso_kg });
+  }
+  banco.checkins = banco.checkins ?? [];
+  for (const registro of backup.checkins) {
+    banco.checkins.push({ id: proximoId(banco), usuario_id: contaImportada.id, ...registro });
+  }
+  salvarBanco(banco);
+
+  // Restaura o aceite do termo quando a versão do texto é a mesma —
+  // quem já leu e aceitou não é barrado de novo no novo dispositivo.
+  if (backup.aceite_do_termo && backup.aceite_do_termo.versao === VERSAO_DO_TERMO) {
+    window.localStorage.setItem(CHAVE_DO_ACEITE, JSON.stringify(backup.aceite_do_termo));
+  }
+
+  // Abre a sessão da conta importada: o usuário continua de onde parou.
+  const token = `${PREFIXO_TOKEN}${contaImportada.id}`;
+  guardarToken(token);
+  guardarUsuario({ id: contaImportada.id, nome: contaImportada.nome, email: contaImportada.email });
+
+  return { usuario: usuarioPublico(contaImportada), possui_planos: backup.perfil !== null };
 }

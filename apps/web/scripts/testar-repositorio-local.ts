@@ -12,6 +12,9 @@
  *   6) Registro de pesagem
  *   7) Recálculo do plano pela evolução física (nova versão)
  *   8) Isolamento: outra conta não edita o plano alheio
+ *   9) Portabilidade: exportar o backup e restaurá-lo num "novo dispositivo"
+ *      (armazenamento zerado), mantendo planos, pesagens, check-ins, senha
+ *      e o aceite do termo — sem duplicar a conta numa reimportação.
  *
  * O `localStorage` e o `fetch` são simulados em memória/disco para que o
  * mesmo código que roda no navegador seja exercitado aqui.
@@ -255,6 +258,99 @@ async function principal(): Promise<void> {
   } catch (erro) {
     conferir('Conta bloqueada recusa senha correta', 423, (erro as { status: number }).status);
   }
+
+  // ---- 12) PORTABILIDADE: exportar e importar o progresso ------------------
+  // A sessão ativa ainda é a da Maria (o bloqueio vale só para NOVOS logins).
+  const backup = await repositorio.exportarProgressoLocal();
+  conferir('Nome do arquivo de backup', true, backup.nomeDoArquivo.startsWith('protocolfit-progresso-'));
+  const pacote = JSON.parse(backup.conteudo) as {
+    aplicativo?: string;
+    conta?: { email?: string };
+    planos?: { id?: number; usuario_id?: number }[];
+    evolucao?: unknown[];
+    checkins?: unknown[];
+    aceite_do_termo?: { versao?: number } | null;
+  };
+  conferir('Envelope do backup', 'protocolfit', pacote.aplicativo);
+  conferir('Backup carrega a conta', 'maria@teste.com', pacote.conta?.email);
+  conferir('Backup carrega os 8 planos', 8, pacote.planos?.length);
+  conferir('Backup carrega as pesagens', 2, pacote.evolucao?.length);
+  conferir('Backup carrega os check-ins', 4, pacote.checkins?.length);
+  conferir('Aceite do termo viaja no backup', 1, pacote.aceite_do_termo?.versao);
+  conferir(
+    'Backup não vaza ids internos',
+    true,
+    (pacote.planos ?? []).every((plano) => plano.id === undefined && plano.usuario_id === undefined),
+  );
+
+  // Prévia (a mesma usada na confirmação da interface).
+  const resumoBackup = repositorio.inspecionarBackupLocal(backup.conteudo);
+  conferir('Prévia identifica a dona', 'Maria Teste', resumoBackup.nome);
+  conferir('Prévia conta os check-ins', 4, resumoBackup.total_checkins);
+
+  // Arquivos inválidos são recusados com mensagens amigáveis (400).
+  try {
+    repositorio.inspecionarBackupLocal('isto não é json');
+    conferir('Arquivo que não é JSON recusado', '400', 'não recusou');
+  } catch (erro) {
+    conferir('Arquivo que não é JSON recusado', 400, (erro as { status: number }).status);
+  }
+  try {
+    repositorio.inspecionarBackupLocal('{"aplicativo":"outro-app"}');
+    conferir('JSON de outro app recusado', '400', 'não recusou');
+  } catch (erro) {
+    conferir('JSON de outro app recusado', 400, (erro as { status: number }).status);
+  }
+
+  // Simula OUTRO dispositivo: o armazenamento recomeça completamente vazio.
+  armazenamento.clear();
+  const restaurado = await repositorio.importarProgressoLocal(backup.conteudo);
+  conferir('Importação devolve a dona', 'Maria Teste', restaurado.usuario.nome);
+  conferir(
+    'Importação já abre a sessão',
+    true,
+    String(armazenamento.getItem('protocolfit_token')).startsWith('local:'),
+  );
+  conferir('Aceite do termo restaurado no destino', true, termoFoiAceito());
+
+  // O progresso inteiro continua disponível no "novo" dispositivo.
+  const planoRestaurado = await repositorio.buscarPlanoAtualLocal();
+  conferir(
+    'Treino restaurado no novo dispositivo',
+    'Hipertrofia Split Clássico — 5 dias (ABCDE)',
+    planoRestaurado.treino.nome,
+  );
+  conferir('Versão do treino preservada', 4, planoRestaurado.treino.versao);
+  conferir('Peso do perfil preservado', 79.5, planoRestaurado.perfil.peso_kg);
+  const evolucaoRestaurada = await repositorio.listarEvolucaoLocal();
+  conferir('Pesagens restauradas', 2, evolucaoRestaurada.length);
+  const checkinsRestaurados = await repositorio.buscarCheckinsLocal();
+  conferir('Check-ins restaurados', 4, checkinsRestaurados.total);
+  conferir('Sequência de dias preservada', 3, checkinsRestaurados.sequencia_atual);
+
+  // A mesma senha continua funcionando (o hash viajou no arquivo).
+  const loginRestaurado = await repositorio.entrarLocal({ email: 'maria@teste.com', senha: 'senhaSegura123' });
+  conferir('Mesma senha funciona no novo dispositivo', 'Maria Teste', loginRestaurado.usuario.nome);
+
+  // Reimportar no MESMO navegador substitui a conta — nunca duplica. E contas
+  // de outras pessoas que já existam aqui ficam intactas.
+  await repositorio.cadastrarLocal({ nome: 'Vizinha Local', email: 'vizinha@teste.com', senha: 'senhaSegura123' });
+  await repositorio.importarProgressoLocal(backup.conteudo);
+  const bancoDepois = JSON.parse(armazenamento.getItem('protocolfit_banco_local') ?? '{}') as {
+    contas?: { email?: string }[];
+  };
+  conferir(
+    'Reimportar não duplica a conta',
+    1,
+    (bancoDepois.contas ?? []).filter((conta) => conta.email === 'maria@teste.com').length,
+  );
+  conferir(
+    'Conta de outra pessoa preservada',
+    true,
+    (bancoDepois.contas ?? []).some((conta) => conta.email === 'vizinha@teste.com'),
+  );
+  const checkinsAposReimportar = await repositorio.buscarCheckinsLocal();
+  conferir('Check-ins não duplicam na reimportação', 4, checkinsAposReimportar.total);
 
   // ---- Relatório ---------------------------------------------------------
   for (const resultado of resultados) {

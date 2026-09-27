@@ -93,6 +93,10 @@ O painel tem o cartão **"Check-in de hoje"**: o usuário marca *treino feito*, 
 
 Regras: um check-in por dia por usuário (atualizar o mesmo dia não duplica) e a sequência só quebra quando um dia inteiro passa sem nenhuma marcação. No modo navegador (GitHub Pages) o check-in fica no `localStorage`; no modo servidor vai para a tabela `checkins` do SQLite.
 
+### 🧳 Portabilidade do progresso
+
+No modo navegador os dados moram só no `localStorage` — não existe nuvem. Em **Perfil → Leve seu progresso com você** o usuário pode **Exportar progresso** (baixa um `protocolfit-progresso-AAAA-MM-DD.json` com conta, perfil, todas as versões dos planos, pesagens e check-ins) e **Importar progresso** (com prévia do conteúdo e confirmação em duas etapas). A importação recria a conta com ids novos — sem colidir com o que já existe no navegador — restaura o aceite do termo e abre a sessão: a mesma senha funciona no novo dispositivo, pois o hash viaja no arquivo. Reimportar no mesmo navegador **substitui** o snapshot daquela conta, sem duplicar. A entrada de importação também fica na tela de login ("Trocou de dispositivo?"). O recurso só aparece no modo navegador; no modo servidor basta entrar na conta pelo outro dispositivo.
+
 ## 🧮 A lógica de processamento no backend
 
 - **Matriz de seleção por templates JSON** — `/modelos/treinos/{modalidade}/{objetivo}/{dias}dias.json` contém apenas a estrutura de exercícios; `/modelos/dietas/{objetivo}.json` contém os tipos de refeição. Sem arquivo exato de dias, o carregador escolhe o modelo mais próximo e ajusta (corte/repetição cíclica) de forma determinística.

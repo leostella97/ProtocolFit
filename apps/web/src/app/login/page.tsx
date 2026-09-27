@@ -13,7 +13,9 @@ import { motion } from 'framer-motion';
 // Ícones da interface.
 import { AlertCircle, ArrowLeft, Eye, EyeOff, HeartPulse, Loader2, Lock } from 'lucide-react';
 // Autenticação, estado da conta e erro tipado da API.
-import { buscarContaAtual, entrarUsuario, ErroDaApi } from '@/lib/api';
+import { buscarContaAtual, entrarUsuario, ErroDaApi, importarProgresso, MODO_LOCAL } from '@/lib/api';
+// TEAM_001: entrada discreta para restaurar um backup de outro dispositivo.
+import { BotaoImportarProgresso } from '@/components/portabilidade/botao-importar-progresso';
 // Gestão da sessão no navegador (token e dados do usuário).
 import { guardarToken, guardarUsuario, possuiSessao } from '@/lib/armazenamento';
 // Constantes de animação do design system.
@@ -49,6 +51,8 @@ export default function PaginaDeLogin() {
   const [erro, definirErro] = useState<string | null>(null);
   // Marca o erro 423 (conta bloqueada) para destacar com o ícone de cadeado.
   const [contaBloqueada, definirContaBloqueada] = useState(false);
+  // TEAM_001: erro da importação de backup (arquivo inválido/corrompido).
+  const [erroDeImportacao, definirErroDeImportacao] = useState<string | null>(null);
 
   // Ao montar a página: quem já tem sessão ativa vai direto ao painel.
   useEffect(() => {
@@ -92,6 +96,18 @@ export default function PaginaDeLogin() {
       // Encerra o estado de carregamento em qualquer desfecho.
       definirCarregando(false);
     }
+  }
+
+  /**
+   * TEAM_001: importa um backup salvo (outro dispositivo) e entra direto —
+   * a sessão já vem aberta pela importação, então é só rotear pelo onboarding.
+   */
+  async function importarBackup(conteudo: string): Promise<void> {
+    definirErroDeImportacao(null);
+    // Lança ErroDaApi(400) em arquivo inválido — o botão exibe via aoErro.
+    const resultado = await importarProgresso(conteudo);
+    roteador.replace(resultado.possui_planos ? '/painel' : '/onboarding');
+    roteador.refresh();
   }
 
   return (
@@ -195,11 +211,32 @@ export default function PaginaDeLogin() {
               </Botao>
             </form>
           </CartaoConteudo>
-          <CartaoRodape className="justify-center text-sm text-muted-foreground">
-            Ainda não tem conta?{' '}
-            <Link href="/cadastro" className="font-semibold text-primary hover:underline">
-              Criar conta
-            </Link>
+          <CartaoRodape className="flex-col justify-center gap-3 text-sm text-muted-foreground">
+            <p>
+              Ainda não tem conta?{' '}
+              <Link href="/cadastro" className="font-semibold text-primary hover:underline">
+                Criar conta
+              </Link>
+            </p>
+            {/* TEAM_001: portabilidade — só existe no modo navegador (site estático). */}
+            {MODO_LOCAL ? (
+              <div className="w-full border-t border-border/60 pt-3 text-center">
+                <p className="text-xs text-muted-foreground">Trocou de dispositivo?</p>
+                <BotaoImportarProgresso
+                  variante="link"
+                  tamanho="pequeno"
+                  rotulo="Importar meu progresso"
+                  aoSelecionar={importarBackup}
+                  aoErro={definirErroDeImportacao}
+                />
+                {/* Erro de arquivo inválido/corrompido exibido sob o link. */}
+                {erroDeImportacao ? (
+                  <p role="alert" className="mt-1 text-xs text-destructive">
+                    {erroDeImportacao}
+                  </p>
+                ) : null}
+              </div>
+            ) : null}
           </CartaoRodape>
         </Cartao>
       </motion.div>

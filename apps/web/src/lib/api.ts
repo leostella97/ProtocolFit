@@ -261,3 +261,40 @@ export async function salvarCheckin(corpo: CorpoCheckin): Promise<ResumoDeChecki
   }
   return chamarApi('/checkin', { method: 'POST', body: JSON.stringify(corpo) });
 }
+
+/* ===========================================================================
+ * PORTABILIDADE — TEAM_001: exportar/importar o progresso entre dispositivos.
+ * Só existe no modo navegador: no modo servidor os dados já ficam no backend
+ * e basta entrar na conta pelo outro dispositivo.
+ * ======================================================================== */
+
+/** Resumo de um backup, usado na prévia de confirmação da importação. */
+export type { ResumoDoBackup } from './repositorio-local';
+
+/** Mensagem padrão quando a portabilidade é chamada fora do modo navegador. */
+const ERRO_PORTABILIDADE_FORA_DO_LOCAL =
+  'A transferência de progresso só está disponível no modo navegador. No modo servidor, basta entrar na sua conta no outro dispositivo.';
+
+/** Gera o arquivo de backup do usuário logado (nome sugerido + conteúdo JSON). */
+export async function exportarProgresso(): Promise<{ nomeDoArquivo: string; conteudo: string }> {
+  if (MODO_LOCAL) {
+    return local.exportarProgressoLocal();
+  }
+  throw new ErroDaApi(501, ERRO_PORTABILIDADE_FORA_DO_LOCAL);
+}
+
+/** Valida um arquivo de backup e devolve um resumo para a prévia (sem gravar). */
+export function inspecionarBackup(conteudo: string): local.ResumoDoBackup {
+  if (MODO_LOCAL) {
+    return local.inspecionarBackupLocal(conteudo);
+  }
+  throw new ErroDaApi(501, ERRO_PORTABILIDADE_FORA_DO_LOCAL);
+}
+
+/** Restaura um backup neste navegador e abre a sessão da conta importada. */
+export async function importarProgresso(conteudo: string): Promise<{ usuario: Usuario; possui_planos: boolean }> {
+  if (MODO_LOCAL) {
+    return local.importarProgressoLocal(conteudo);
+  }
+  throw new ErroDaApi(501, ERRO_PORTABILIDADE_FORA_DO_LOCAL);
+}

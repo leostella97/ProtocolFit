@@ -35,6 +35,8 @@ import {
   ErroDaApi,
 } from '@/lib/api';
 import { encerrarSessao } from '@/lib/armazenamento';
+// TEAM_001: cartão "Leve seu progresso com você" (exportar/importar backup).
+import { CartaoPortabilidade } from '@/components/portabilidade/cartao-portabilidade';
 import {
   combinarClasses,
   formatarData,
@@ -555,6 +557,9 @@ export default function PaginaDoPerfil() {
           </div>
         </CartaoConteudo>
       </Cartao>
+
+      {/* TEAM_001: exportar/importar o progresso entre dispositivos. */}
+      <CartaoPortabilidade />
 
       {/* Seção: sair da conta. */}
       <Cartao>

@@ -22,7 +22,11 @@ const modoPaginas = process.env.MODO_PAGES === 'true';
 const caminhoBase = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 
 /** Configuração do Next.js conforme o modo de publicação. */
-const proximaConfiguracao: NextConfig = modoPaginas
+const proximaConfiguracao: NextConfig = {
+  // TEAM_001: esconde o botão circular "N" do DevTools no canto da tela em dev
+  // (o build de produção/Pages nunca exibe esse indicador).
+  devIndicators: false,
+  ...(modoPaginas
   ? {
       // Site estático: nenhum servidor Node é necessário.
       output: 'export',
@@ -37,6 +41,7 @@ const proximaConfiguracao: NextConfig = modoPaginas
   : {
       // Servidor standalone para a imagem Docker de produção.
       output: 'standalone',
-    };
+    }),
+};
 
 export default proximaConfiguracao;

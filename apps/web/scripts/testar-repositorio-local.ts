@@ -153,6 +153,9 @@ async function principal(): Promise<void> {
   const evolucao = await repositorio.listarEvolucaoLocal();
   conferir('Pesagem registrada', 1, evolucao.length);
   conferir('Peso da pesagem', 80, evolucao[0].peso_kg);
+  // TEAM_001: a pesagem mais recente passa a ser o "peso atual" do perfil.
+  const contaAposPesagem = await repositorio.buscarContaLocal();
+  conferir('Pesagem vira o peso atual do perfil', 80, contaAposPesagem.perfil?.peso_kg);
 
   // ---- 7) Recálculo pela evolução ----------------------------------------
   const recalculado = await repositorio.recalcularPlanosLocal();
@@ -169,6 +172,29 @@ async function principal(): Promise<void> {
   const hoje = new Date().toISOString().slice(0, 10);
   const pesagensDeHoje = evolucaoApos.filter((registro) => registro.data === hoje);
   conferir('Pesagem do dia sem duplicar', 1, pesagensDeHoje.length);
+
+  // TEAM_001: pesagem no MESMO dia atualiza o registro (um ponto por data) —
+  // e o "peso atual" acompanha o valor mais recente.
+  await repositorio.registrarPesagemLocal(79.8);
+  const evolucaoMesmoDia = await repositorio.listarEvolucaoLocal();
+  conferir(
+    'Pesagem do mesmo dia não duplica',
+    1,
+    evolucaoMesmoDia.filter((registro) => registro.data === hoje).length,
+  );
+  conferir(
+    'Peso atual acompanha a última pesagem',
+    79.8,
+    (await repositorio.buscarContaLocal()).perfil?.peso_kg,
+  );
+
+  // TEAM_001: pesagem retroativa entra no histórico SEM mudar o peso atual.
+  await repositorio.registrarPesagemLocal(99, '2020-01-01');
+  conferir(
+    'Pesagem retroativa não muda o peso atual',
+    79.8,
+    (await repositorio.buscarContaLocal()).perfil?.peso_kg,
+  );
 
   // ---- 8.1) Estilo (variação) de treino: troca e volta ao clássico --------
   const comEstilo = await repositorio.atualizarEstiloDeTreinoLocal('crossfit');
@@ -203,6 +229,12 @@ async function principal(): Promise<void> {
   conferir('Check-in de hoje salvo', true, checkinHoje.checkin.treino_feito);
   conferir('Água do check-in (ml)', 2500, checkinHoje.checkin.agua_ml);
   conferir('Sequência com 1 dia', 1, checkinHoje.sequencia_atual);
+  // TEAM_001: o peso informado no check-in também vira o "peso atual".
+  conferir(
+    'Peso do check-in vira o peso atual',
+    79.5,
+    (await repositorio.buscarContaLocal()).perfil?.peso_kg,
+  );
 
   // Check-ins dos dois dias anteriores (mantêm a sequência viva).
   await repositorio.salvarCheckinLocal({ data: ontem, treino_feito: true, agua_ml: 2000 });
@@ -274,7 +306,7 @@ async function principal(): Promise<void> {
   conferir('Envelope do backup', 'protocolfit', pacote.aplicativo);
   conferir('Backup carrega a conta', 'maria@teste.com', pacote.conta?.email);
   conferir('Backup carrega os 8 planos', 8, pacote.planos?.length);
-  conferir('Backup carrega as pesagens', 2, pacote.evolucao?.length);
+  conferir('Backup carrega as pesagens', 3, pacote.evolucao?.length);
   conferir('Backup carrega os check-ins', 4, pacote.checkins?.length);
   conferir('Aceite do termo viaja no backup', 1, pacote.aceite_do_termo?.versao);
   conferir(
@@ -323,7 +355,7 @@ async function principal(): Promise<void> {
   conferir('Versão do treino preservada', 4, planoRestaurado.treino.versao);
   conferir('Peso do perfil preservado', 79.5, planoRestaurado.perfil.peso_kg);
   const evolucaoRestaurada = await repositorio.listarEvolucaoLocal();
-  conferir('Pesagens restauradas', 2, evolucaoRestaurada.length);
+  conferir('Pesagens restauradas', 3, evolucaoRestaurada.length);
   const checkinsRestaurados = await repositorio.buscarCheckinsLocal();
   conferir('Check-ins restaurados', 4, checkinsRestaurados.total);
   conferir('Sequência de dias preservada', 3, checkinsRestaurados.sequencia_atual);

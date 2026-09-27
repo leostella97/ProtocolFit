@@ -53,6 +53,34 @@ apenas o autor configurado no git do usuário (`leostella97`).
 - Push na `main` feito: o workflow `deploy-pages.yml` compila e publica no
   GitHub Pages automaticamente.
 
+## Parte 3 — sincronização pesagem ↔ "Peso atual" + README
+Regra adotada: **o "peso atual" do perfil é sempre a pesagem mais recente**
+(maior `data`; em empate, maior `id`). Aplicada num único ponto por modo:
+
+- **Servidor** (`apps/api/src/bd/banco.ts`): `salvarPesagemDoDia` faz o upsert
+  por data e, em seguida, grava em `perfis.peso_kg` o valor de
+  `buscarUltimaEvolucao` (`ORDER BY data DESC, id DESC`). Cobre de uma vez as
+  rotas `/api/evolucao`, `/api/perfil/corpo` e `/api/checkin`.
+- **Navegador** (`repositorio-local.ts`): `registrarPesagemLocal` passou a usar
+  `salvarPesagemDoDiaNoBanco` (antes fazia `push` direto — podia duplicar dois
+  pontos no mesmo dia, divergindo do servidor). Nova `sincronizarPesoAtual`
+  aplica a mesma regra de "mais recente".
+- **UI**: `painel/page.tsx` recarrega o perfil (`buscarContaAtual`) após
+  pesagem nova e após check-in com peso — "Peso atual", gráfico e o valor
+  sugerido no formulário mudam juntos. `painel/perfil/page.tsx` idem após a
+  pesagem do histórico.
+- Efeito colateral proposital: `atualizarCorpo` continua escrevendo a pesagem
+  do dia — os dois caminhos convergem para o mesmo estado.
+- README: linha de atribuição
+  `🤖 *Projeto desenvolvido com auxílio de inteligência artificial` no rodapé.
+
+### Verificação (parte 3)
+- `testar:local`: 77/77 (3 asserts novos: pesagem→peso atual, mesmo-dia não
+  duplica + peso acompanha, pesagem retroativa NÃO altera o peso atual;
+  contagens de pesagens no backup 2→3).
+- `tsc --noEmit` (web e api): limpo.
+- `build:pages`: ok (12 páginas estáticas, PWA validado).
+
 ## Notas de transferência
 - Formato do backup: `{ aplicativo: 'protocolfit', tipo: 'progresso', versao: 1, ... }`.
   Se o formato evoluir, subir `VERSAO_DO_BACKUP` e tratar a leitura de versões

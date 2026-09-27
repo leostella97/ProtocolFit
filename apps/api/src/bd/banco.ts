@@ -384,10 +384,19 @@ export function salvarPesagemDoDia(usuarioId: number, data: string, pesoKg: numb
   if (existente) {
     // Atualiza o valor do dia (evita pontos duplicados no gráfico).
     banco.prepare('UPDATE registros_evolucao SET peso_kg = ? WHERE id = ?').run(pesoKg, existente.id);
-    return;
+  } else {
+    // Primeiro registro do dia: insere normalmente.
+    registrarEvolucao(usuarioId, data, pesoKg);
   }
-  // Primeiro registro do dia: insere normalmente.
-  registrarEvolucao(usuarioId, data, pesoKg);
+  // TEAM_001: a pesagem mais recente (maior data) passa a ser o "peso atual"
+  // do perfil — evolução e resumo do painel nunca divergem (mesma regra do
+  // modo navegador em repositorio-local.ts).
+  const ultima = buscarUltimaEvolucao(usuarioId);
+  if (ultima) {
+    banco
+      .prepare("UPDATE perfis SET peso_kg = ?, atualizado_em = datetime('now') WHERE usuario_id = ?")
+      .run(ultima.peso_kg, usuarioId);
+  }
 }
 
 /**

@@ -27,6 +27,7 @@ import { Separador } from '@/components/ui/separator';
 import { Esqueleto } from '@/components/ui/skeleton';
 import {
   atualizarEstiloDeTreino,
+  buscarContaAtual,
   buscarOpcoes,
   buscarPlanoAtual,
   listarEvolucao,
@@ -199,6 +200,12 @@ export default function PaginaDoPerfil() {
       // Recarrega o histórico para exibir a lista atualizada.
       const registros = await listarEvolucao();
       definirEvolucao(registros);
+      // TEAM_001: a pesagem mais recente vira o "Peso" exibido em Meus dados.
+      const conta = await buscarContaAtual();
+      const perfilSincronizado = conta.perfil;
+      if (perfilSincronizado) {
+        definirPlano((atual) => (atual ? { ...atual, perfil: perfilSincronizado } : atual));
+      }
       definirPesoDigitado('');
       definirMensagemDaPesagem({ tipo: 'sucesso', texto: 'Pesagem registrada! 🎉' });
     } catch (erroCapturado: unknown) {

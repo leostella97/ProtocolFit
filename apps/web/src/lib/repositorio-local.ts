@@ -673,8 +673,9 @@ export async function registrarPesagemLocal(pesoKg: number, data?: string): Prom
     throw new ErroDaApi(400, `Informe um peso válido entre ${LIMITES_CORPO.peso_minimo_kg} e ${LIMITES_CORPO.peso_maximo_kg} kg.`);
   }
   const dataDoRegistro = data && /^\d{4}-\d{2}-\d{2}$/.test(data) ? data : dataDeHoje();
-  const registro = { id: proximoId(banco), usuario_id: conta.id, data: dataDoRegistro, peso_kg: pesoKg };
-  banco.evolucao.push(registro);
+  // TEAM_001: um registro por data (mesma regra do servidor) — e a pesagem
+  // mais recente passa a ser o "peso atual" do perfil (sincronizarPesoAtual).
+  const registro = salvarPesagemDoDiaNoBanco(banco, conta.id, dataDoRegistro, pesoKg);
   salvarBanco(banco);
   return { id: registro.id, data: registro.data, peso_kg: registro.peso_kg };
 }
@@ -728,15 +729,52 @@ export async function atualizarCorpoLocal(corpo: { peso_kg?: number; altura_cm?:
   return { perfil, mensagem: 'Dados atualizados. Use "Recalcular" para renovar o plano.' };
 }
 
-/** Grava a pesagem de um dia mantendo apenas um registro por data. */
-function salvarPesagemDoDiaNoBanco(banco: BancoLocal, usuarioId: number, data: string, pesoKg: number): void {
+/**
+ * Grava a pesagem de um dia mantendo APENAS UM registro por data
+ * (se já existir pesagem no dia, ela é atualizada em vez de duplicada).
+ * Devolve o registro gravado e mantém o "peso atual" do perfil em dia.
+ */
+function salvarPesagemDoDiaNoBanco(
+  banco: BancoLocal,
+  usuarioId: number,
+  data: string,
+  pesoKg: number,
+): BancoLocal['evolucao'][number] {
   const existente = banco.evolucao.find((registro) => registro.usuario_id === usuarioId && registro.data === data);
   if (existente) {
     // Atualiza o valor do dia (evita pontos duplicados no gráfico).
     existente.peso_kg = pesoKg;
+    sincronizarPesoAtual(banco, usuarioId);
+    return existente;
+  }
+  const registro = { id: proximoId(banco), usuario_id: usuarioId, data, peso_kg: pesoKg };
+  banco.evolucao.push(registro);
+  sincronizarPesoAtual(banco, usuarioId);
+  return registro;
+}
+
+/**
+ * TEAM_001: o "peso atual" do perfil é sempre a pesagem mais recente
+ * (maior data; em empate, a de maior id — a última gravada). Assim a
+ * "Evolução de peso" e o resumo do painel nunca divergem.
+ */
+function sincronizarPesoAtual(banco: BancoLocal, usuarioId: number): void {
+  const perfil = banco.perfis.find((candidato) => candidato.usuario_id === usuarioId);
+  if (!perfil) {
     return;
   }
-  banco.evolucao.push({ id: proximoId(banco), usuario_id: usuarioId, data, peso_kg: pesoKg });
+  let maisRecente: BancoLocal['evolucao'][number] | null = null;
+  for (const registro of banco.evolucao) {
+    if (registro.usuario_id !== usuarioId) {
+      continue;
+    }
+    if (!maisRecente || registro.data > maisRecente.data || (registro.data === maisRecente.data && registro.id > maisRecente.id)) {
+      maisRecente = registro;
+    }
+  }
+  if (maisRecente) {
+    perfil.peso_kg = maisRecente.peso_kg;
+  }
 }
 
 /* ===========================================================================

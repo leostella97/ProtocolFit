@@ -302,3 +302,7 @@ celular e toque em **"Instalar agora"** no aviso (ou use o menu do navegador →
 ## 📝 Convenções do código
 
 Todo o código está **comentado em português** e usa **nomes de variáveis, funções e componentes em português** (`calcularTMB`, `buscarPlanoAtual`, `gerarPlanosParaPerfil`...).
+
+---
+
+🤖 *Projeto desenvolvido com auxílio de inteligência artificial*

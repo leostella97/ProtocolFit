@@ -28,7 +28,7 @@ import {
 } from '@/components/ui/card';
 import { BarraDeProgresso } from '@/components/ui/progress';
 import { Esqueleto } from '@/components/ui/skeleton';
-import { buscarCheckins, buscarPlanoAtual, listarEvolucao, registrarPesagem, ErroDaApi } from '@/lib/api';
+import { buscarCheckins, buscarContaAtual, buscarPlanoAtual, listarEvolucao, registrarPesagem, ErroDaApi } from '@/lib/api';
 import { encerrarSessao, obterUsuario } from '@/lib/armazenamento';
 import { formatarDecimal } from '@/lib/util';
 import type { PlanoCompleto, RegistroEvolucao, ResumoDeCheckins } from '@/lib/tipos';
@@ -247,6 +247,12 @@ export default function PaginaDoPainel() {
                 definirCheckins(resumoAtualizado);
                 // Se o check-in trouxe um peso novo, recarrega o gráfico de evolução.
                 void listarEvolucao().then(definirEvolucao);
+                // TEAM_001: o peso do check-in também vira o "peso atual" do resumo.
+                void buscarContaAtual().then((conta) => {
+                  if (conta.perfil) {
+                    definirPlano({ ...plano, perfil: conta.perfil });
+                  }
+                });
               }}
             />
           </div>
@@ -280,6 +286,11 @@ export default function PaginaDoPainel() {
                 // Grava a pesagem do dia e recarrega o gráfico/progressão.
                 await registrarPesagem(pesoKg);
                 definirEvolucao(await listarEvolucao());
+                // TEAM_001: a pesagem vira o "peso atual" exibido no resumo.
+                const conta = await buscarContaAtual();
+                if (conta.perfil) {
+                  definirPlano({ ...plano, perfil: conta.perfil });
+                }
               }}
             />
           </CartaoConteudo>

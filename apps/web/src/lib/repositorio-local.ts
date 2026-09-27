@@ -35,6 +35,7 @@ import type {
   Usuario,
 } from './tipos';
 import { guardarToken, guardarUsuario, obterToken } from './armazenamento';
+import { hojeLocal } from './checkin-util';
 import { CHAVE_DO_ACEITE, termoFoiAceito, VERSAO_DO_TERMO } from './termo-de-uso';
 import { ErroDaApi } from './erro-api';
 import { calcularPlanoNutricional } from './motor/calculos';
@@ -180,9 +181,13 @@ async function calcularHash(texto: string): Promise<string> {
     .join('');
 }
 
-/** Data de hoje no formato AAAA-MM-DD. */
+/**
+ * Data de hoje no formato AAAA-MM-DD — no FUSO DO USUÁRIO (não em UTC).
+ * TEAM_001: usar UTC aqui gravava o check-in/pesagem "amanhã" para quem usa o
+ * app depois das 21h no Brasil (UTC-3) — o registro sumia do dia seguinte.
+ */
 function dataDeHoje(): string {
-  return new Date().toISOString().slice(0, 10);
+  return hojeLocal();
 }
 
 /** Devolve o id do usuário da sessão atual (ou null). */

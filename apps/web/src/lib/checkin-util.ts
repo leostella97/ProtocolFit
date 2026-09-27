@@ -19,6 +19,39 @@ export interface DiaDoHistorico {
   cumprido: boolean;
 }
 
+/** Situação de um dia no calendário de check-ins. */
+export type EstadoDoDiaNoCalendario =
+  // Célula de preenchimento antes/depois do mês.
+  | 'fora_do_mes'
+  // Dia ainda não chegou (não dá para fazer check-in do futuro).
+  | 'futuro'
+  // Dia passado/hoje sem nenhum check-in registrado.
+  | 'sem_checkin'
+  // Check-in existe, mas sem treino nem dieta marcados (não conta na sequência).
+  | 'registrado'
+  // Dia cumprido: treino feito OU dieta seguida (conta na sequência).
+  | 'cumprido';
+
+/** Uma célula da grade mensal do calendário de check-ins. */
+export interface CelulaDoCalendario {
+  /** Data no formato AAAA-MM-DD ('' nas células de preenchimento). */
+  data: string;
+  /** Número do dia exibido (null nas células de preenchimento). */
+  dia: number | null;
+  /** Situação do dia (ver EstadoDoDiaNoCalendario). */
+  estado: EstadoDoDiaNoCalendario;
+}
+
+/** Check-in mínimo necessário para montar o calendário. */
+export interface CheckinParaCalendario {
+  /** Dia do check-in (AAAA-MM-DD). */
+  data: string;
+  /** Treino concluído. */
+  treino_feito: boolean;
+  /** Dieta seguida. */
+  dieta_seguida: boolean;
+}
+
 /** Iniciais dos dias da semana na ordem do JavaScript (0 = domingo). */
 const INICIAIS_DOS_DIAS = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
 
@@ -50,4 +83,59 @@ export function separadorDeDatas(diasCumpridos: string[], quantidade = 7): DiaDo
     });
   }
   return dias;
+}
+
+/**
+ * Monta a grade do calendário de um mês (semanas de 7 células, começando no
+ * domingo), marcando cada dia como cumprido/registrado/sem check-in/futuro.
+ *
+ * Função pura: recebe os check-ins conhecidos e a data de hoje, o que a torna
+ * fácil de testar e isenta do relógio do sistema.
+ */
+export function montarCalendarioDoMes(
+  ano: number,
+  mes: number,
+  checkins: CheckinParaCalendario[],
+  hoje: string = hojeLocal(),
+): CelulaDoCalendario[][] {
+  // Mapa data → check-in para consulta rápida.
+  const porData = new Map<string, CheckinParaCalendario>();
+  for (const checkin of checkins) {
+    porData.set(checkin.data, checkin);
+  }
+
+  // Quantos dias tem o mês (dia 0 do mês seguinte = último dia deste mês).
+  const totalDeDias = new Date(Date.UTC(ano, mes + 1, 0)).getUTCDate();
+  // Dia da semana do 1º do mês (0 = domingo) — define o preenchimento inicial.
+  const primeiroDiaDaSemana = new Date(Date.UTC(ano, mes, 1)).getUTCDay();
+
+  // Lista linear de células: preenchimento + dias do mês.
+  const celulas: CelulaDoCalendario[] = [];
+  for (let vazio = 0; vazio < primeiroDiaDaSemana; vazio += 1) {
+    celulas.push({ data: '', dia: null, estado: 'fora_do_mes' });
+  }
+  for (let dia = 1; dia <= totalDeDias; dia += 1) {
+    const data = `${ano}-${String(mes + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
+    const checkin = porData.get(data);
+    let estado: EstadoDoDiaNoCalendario;
+    if (data > hoje) {
+      estado = 'futuro';
+    } else if (!checkin) {
+      estado = 'sem_checkin';
+    } else {
+      estado = checkin.treino_feito || checkin.dieta_seguida ? 'cumprido' : 'registrado';
+    }
+    celulas.push({ data, dia, estado });
+  }
+  // Completa a última semana com células de preenchimento.
+  while (celulas.length % 7 !== 0) {
+    celulas.push({ data: '', dia: null, estado: 'fora_do_mes' });
+  }
+
+  // Agrupa em semanas de 7 células.
+  const semanas: CelulaDoCalendario[][] = [];
+  for (let indice = 0; indice < celulas.length; indice += 7) {
+    semanas.push(celulas.slice(indice, indice + 7));
+  }
+  return semanas;
 }

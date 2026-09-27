@@ -22,6 +22,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ArrowLeft, HeartPulse, LogOut } from 'lucide-react';
+import { BarraInferiorMobile } from '@/components/painel/barra-inferior-mobile';
 import { BarraLateral } from '@/components/painel/barra-lateral';
 import { Botao } from '@/components/ui/button';
 import { Esqueleto } from '@/components/ui/skeleton';
@@ -118,9 +119,13 @@ function LayoutClienteDoPainel({ children }: { children: ReactNode }) {
         </Botao>
       </header>
 
-      {/* Área principal com compensação da largura da barra lateral. */}
+      {/* Navegação inferior fixa (só mobile — o desktop usa a barra lateral). */}
+      <BarraInferiorMobile />
+
+      {/* Área principal: compensa a barra lateral (desktop) e a barra
+          inferior do mobile (pb-24) para o conteúdo não ficar por baixo. */}
       <main className="md:pl-64">
-        <div className="p-6 lg:p-10">
+        <div className="p-6 pb-24 lg:p-10 md:pb-10">
           {/* Seta para a esquerda: volta para a página anterior (todas as telas). */}
           <div className="mb-4">
             <Botao variante="fantasma" tamanho="pequeno" onClick={voltarPagina} className="text-muted-foreground">

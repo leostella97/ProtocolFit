@@ -169,7 +169,14 @@ async function principal(): Promise<void> {
   conferir('Peso alterado no painel (kg)', 79.5, corpoAtualizado.perfil.peso_kg);
   // O peso alterado entra na evolução do dia (um único ponto por data).
   const evolucaoApos = await repositorio.listarEvolucaoLocal();
-  const hoje = new Date().toISOString().slice(0, 10);
+  // TEAM_001: "hoje" é o DIA CIVIL do usuário (hojeLocal), não a data UTC.
+  const { hojeLocal, montarCalendarioDoMes } = await import('../src/lib/checkin-util');
+  const hoje = hojeLocal();
+  /** Desloca uma data AAAA-MM-DD em N dias (sem depender de fuso). */
+  const deslocarDias = (dataIso: string, dias: number): string => {
+    const numero = Math.floor(new Date(`${dataIso}T00:00:00Z`).getTime() / 86400000) + dias;
+    return new Date(numero * 86400000).toISOString().slice(0, 10);
+  };
   const pesagensDeHoje = evolucaoApos.filter((registro) => registro.data === hoje);
   conferir('Pesagem do dia sem duplicar', 1, pesagensDeHoje.length);
 
@@ -215,8 +222,9 @@ async function principal(): Promise<void> {
   );
 
   // ---- 9) CHECK-IN DIÁRIO: hoje, ontem e anteontem (sequência de 3 dias) ---
-  const ontem = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-  const anteontem = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  // TEAM_001: as datas vizinhas partem do dia civil do usuário (não do UTC).
+  const ontem = deslocarDias(hoje, -1);
+  const anteontem = deslocarDias(hoje, -2);
 
   // Check-in de hoje com treino, dieta, água e peso.
   const checkinHoje = await repositorio.salvarCheckinLocal({
@@ -254,9 +262,25 @@ async function principal(): Promise<void> {
   conferir('Resumo lido pelo painel', 3, resumoLido.total);
 
   // Dia sem treino e sem dieta não conta para a sequência.
-  const diaVazio = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const diaVazio = deslocarDias(hoje, -3);
   const resumoComDiaVazio = await repositorio.salvarCheckinLocal({ data: diaVazio, agua_ml: 500 });
   conferir('Dia sem treino/dieta não quebra a sequência atual', 3, resumoComDiaVazio.sequencia_atual);
+
+  // TEAM_001: o check-in cai no DIA CIVIL do usuário (hojeLocal), não no UTC —
+  // era o bug "check-in não permanece" de quem usava o app depois das 21h.
+  conferir('Check-in cai no dia civil do usuário', hoje, resumoLido.hoje?.data);
+
+  // TEAM_001: grade do calendário mensal (check-in cumprido/registrado/faltante).
+  // Janeiro/2025 começa numa quarta-feira; referência fixa = 2025-01-15.
+  const grade = montarCalendarioDoMes(2025, 0, [
+    { data: '2025-01-10', treino_feito: true, dieta_seguida: false },
+    { data: '2025-01-12', treino_feito: false, dieta_seguida: false },
+  ], '2025-01-15');
+  conferir('Calendário marca dia cumprido', 'cumprido', grade[1][5].estado); // 2025-01-10
+  conferir('Calendário marca check-in sem treino/dieta', 'registrado', grade[2][0].estado); // 2025-01-12
+  conferir('Calendário marca dia sem check-in', 'sem_checkin', grade[1][0].estado); // 2025-01-05
+  conferir('Calendário bloqueia dia futuro', 'futuro', grade[3][1].estado); // 2025-01-20
+  conferir('Preenchimento antes do mês', 'fora_do_mes', grade[0][0].estado);
 
   // ---- 10) Isolamento entre contas ---------------------------------------
   await repositorio.cadastrarLocal({ nome: 'Intruso Teste', email: 'intruso@teste.com', senha: 'senhaSegura123' });

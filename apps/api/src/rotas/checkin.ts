@@ -49,10 +49,16 @@ export async function rotasCheckin(app: FastifyInstance): Promise<void> {
   app.get('/', { onRequest: [exigirAutenticacao] }, async (requisicao, resposta) => {
     // Recupera o id do usuário autenticado.
     const usuarioId = usuarioIdDaRequisicao(requisicao);
+    // TEAM_001: o cliente informa o próprio dia civil (?hoje=AAAA-MM-DD) —
+    // o servidor não conhece o fuso do usuário (UTC quebraria o check-in à noite).
+    const { hoje } = (requisicao.query ?? {}) as { hoje?: string };
+    if (hoje !== undefined && !dataValida(hoje)) {
+      return enviarErro(resposta, 400, 'Informe uma data válida no formato AAAA-MM-DD.');
+    }
     // Busca os check-ins mais recentes (60 dias cobrem qualquer sequência).
     const registros = listarCheckins(usuarioId, 60);
     // Responde com o resumo calculado (hoje, sequências e histórico).
-    return resposta.send(montarResumoDeCheckins(registros));
+    return resposta.send(montarResumoDeCheckins(registros, hoje));
   });
 
   /** POST /api/checkin — salva (ou atualiza) o check-in do dia. */

@@ -15,13 +15,14 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Check, Droplets, Flame, Loader2, NotebookPen, Trophy, Dumbbell, Salad } from 'lucide-react';
+import { CalendarDays, Check, Droplets, Flame, Loader2, NotebookPen, Trophy, Dumbbell, Salad } from 'lucide-react';
 import { Botao } from '@/components/ui/button';
 import { Cartao, CartaoCabecalho, CartaoConteudo, CartaoDescricao, CartaoTitulo } from '@/components/ui/card';
 import { CampoDeEntrada } from '@/components/ui/input';
 import { Rotulo } from '@/components/ui/label';
 import { AreaDeTexto } from '@/components/ui/textarea';
 import { Selo } from '@/components/ui/badge';
+import { CalendarioDeCheckins } from '@/components/painel/calendario-checkins';
 import { separadorDeDatas } from '@/lib/checkin-util';
 import { salvarCheckin } from '@/lib/api';
 import type { Perfil, ResumoDeCheckins } from '@/lib/tipos';
@@ -51,6 +52,8 @@ export function CartaoCheckin({ resumo, perfil, aoSalvar }: PropriedadesDoCartao
   const [salvando, definirSalvando] = useState(false);
   const [sucesso, definirSucesso] = useState(false);
   const [erro, definirErro] = useState<string | null>(null);
+  // Calendário de check-ins aberto/fechado (botão "Ver calendário").
+  const [calendarioAberto, definirCalendarioAberto] = useState(false);
 
   // Últimos 7 dias (do mais antigo para o mais recente) para o mini histórico.
   const ultimosSeteDias = useMemo(() => separadorDeDatas(resumo.dias_cumpridos, 7), [resumo.dias_cumpridos]);
@@ -224,7 +227,7 @@ export function CartaoCheckin({ resumo, perfil, aoSalvar }: PropriedadesDoCartao
           {erro ? <span className="text-sm font-medium text-destructive">{erro}</span> : null}
         </div>
 
-        {/* Mini histórico dos últimos 7 dias + recorde. */}
+        {/* Mini histórico dos últimos 7 dias + recorde + abertura do calendário. */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-t pt-4">
           <div className="flex items-center gap-2">
             {ultimosSeteDias.map((dia) => (
@@ -240,11 +243,25 @@ export function CartaoCheckin({ resumo, perfil, aoSalvar }: PropriedadesDoCartao
               </span>
             ))}
           </div>
-          <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <Trophy className="size-3.5 text-primary" /> recorde: {resumo.sequencia_maxima}{' '}
-            {resumo.sequencia_maxima === 1 ? 'dia' : 'dias'} · total: {resumo.total} check-in(s)
-          </span>
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <Trophy className="size-3.5 text-primary" /> recorde: {resumo.sequencia_maxima}{' '}
+              {resumo.sequencia_maxima === 1 ? 'dia' : 'dias'} · total: {resumo.total} check-in(s)
+            </span>
+            {/* Abre/fecha o calendário mensal com os check-ins marcados. */}
+            <Botao
+              variante="contorno"
+              tamanho="pequeno"
+              onClick={() => definirCalendarioAberto((aberto) => !aberto)}
+              aria-expanded={calendarioAberto}
+            >
+              <CalendarDays /> {calendarioAberto ? 'Ocultar calendário' : 'Ver calendário'}
+            </Botao>
+          </div>
         </div>
+
+        {/* Calendário mensal: quais dias tiveram check-in (cumprido ou não). */}
+        {calendarioAberto ? <CalendarioDeCheckins registros={resumo.registros} /> : null}
       </CartaoConteudo>
     </Cartao>
   );

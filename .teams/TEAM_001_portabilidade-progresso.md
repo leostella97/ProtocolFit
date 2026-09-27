@@ -81,6 +81,37 @@ Regra adotada: **o "peso atual" do perfil é sempre a pesagem mais recente**
 - `tsc --noEmit` (web e api): limpo.
 - `build:pages`: ok (12 páginas estáticas, PWA validado).
 
+## Parte 4 — fuso horário do check-in, nav mobile e calendário
+Três pedidos do usuário depois de usar o app no celular:
+
+- **Bug "check-in não permanece"**: o "hoje" era calculado em UTC
+  (`toISOString()`) nos dois modos — no Brasil (UTC-3), das 21h à meia-noite o
+  check-in caía "no dia seguinte" e parecia sumir. Correção: o DIA CIVIL é do
+  cliente. `repositorio-local.ts` passou a usar `hojeLocal()` (checkin-util);
+  `api.ts` envia `data`/`?hoje=` em `salvarCheckin`, `buscarCheckins`,
+  `registrarPesagem` e `atualizarCorpo`; o servidor aceita `?hoje=` no GET
+  /checkin (`montarResumoDeCheckins(registros, referenciaDeHoje?)`) e `data`
+  no PATCH /perfil/corpo — fallback UTC preservado para clientes antigos.
+- **Nav mobile inexistente**: a barra lateral era `hidden md:flex` e o
+  cabeçalho mobile não tinha links — "Meu perfil" (e os botões de
+  importar/exportar que lá moram) era inalcançável no celular. Nova
+  `BarraInferiorMobile` (tab bar fixa, `md:hidden`) alimentada por
+  `ITENS_DE_NAVEGACAO` exportado de `barra-lateral.tsx` (fonte única).
+  `main` ganhou `pb-24` no mobile para o conteúdo não ficar sob a barra.
+- **Calendário de check-ins**: botão "Ver calendário" no `CartaoCheckin`
+  abre `CalendarioDeCheckins` — grade mensal (domingo→sábado) com navegação
+  entre meses limitada aos registros (60 dias do resumo), anel no dia de
+  hoje e legenda: cumprido / registrado sem treino nem dieta / sem check-in /
+  futuro bloqueado. Lógica pura em `montarCalendarioDoMes` (checkin-util.ts).
+
+### Verificação (parte 4)
+- `testar:local`: 83/83 (6 asserts novos: dia civil do check-in + grade do
+  calendário com mês fixo Janeiro/2025).
+- `tsc --noEmit` (web e api): limpo. `build:pages`: ok.
+- Backup do modo navegador já carrega TUDO (conta+senha, perfil, todas as
+  versões dos planos, pesagens, check-ins e aceite do termo) — os botões
+  estavam em /painel/perfil e /login; agora alcançáveis no mobile.
+
 ## Notas de transferência
 - Formato do backup: `{ aplicativo: 'protocolfit', tipo: 'progresso', versao: 1, ... }`.
   Se o formato evoluir, subir `VERSAO_DO_BACKUP` e tratar a leitura de versões

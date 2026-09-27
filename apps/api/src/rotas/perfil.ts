@@ -187,7 +187,9 @@ export async function rotasPerfil(app: FastifyInstance): Promise<void> {
   app.patch('/corpo', { onRequest: [exigirAutenticacao] }, async (requisicao, resposta) => {
     // Recupera o id do usuário autenticado.
     const usuarioId = usuarioIdDaRequisicao(requisicao);
-    const corpo = (requisicao.body ?? {}) as { peso_kg?: number; altura_cm?: number };
+    // TEAM_001: `data` opcional = dia civil do cliente (o padrão UTC do
+    // servidor gravaria a pesagem "amanhã" para quem usa o app à noite no Brasil).
+    const corpo = (requisicao.body ?? {}) as { peso_kg?: number; altura_cm?: number; data?: string };
 
     // Garante que o perfil existe antes de alterar.
     const perfilAtual = buscarPerfilPorUsuario(usuarioId);
@@ -230,7 +232,11 @@ export async function rotasPerfil(app: FastifyInstance): Promise<void> {
 
     // Quando o peso muda, registra a pesagem do dia (alimenta o gráfico).
     if (corpo.peso_kg !== undefined) {
-      salvarPesagemDoDia(usuarioId, new Date().toISOString().slice(0, 10), corpo.peso_kg);
+      const dataDaPesagem =
+        corpo.data && /^\d{4}-\d{2}-\d{2}$/.test(corpo.data) && !Number.isNaN(Date.parse(corpo.data))
+          ? corpo.data
+          : new Date().toISOString().slice(0, 10);
+      salvarPesagemDoDia(usuarioId, dataDaPesagem, corpo.peso_kg);
     }
 
     // Responde com o perfil já atualizado.

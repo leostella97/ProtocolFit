@@ -24,15 +24,28 @@ import { Botao } from '@/components/ui/button';
 import { abrirTermoDeUso } from '@/components/consentimento/aviso-de-responsabilidade';
 import { combinarClasses } from '@/lib/util';
 
-/** Item de navegação da barra lateral (rótulo, destino e ícone). */
-interface ItemDeNavegacao {
+/** Item de navegação do painel (rótulo, destino e ícone). */
+export interface ItemDeNavegacao {
   /** Texto exibido no link. */
   rotulo: string;
+  /** Rótulo curto exibido na barra inferior do mobile. */
+  rotuloCurto: string;
   /** Rota de destino do link. */
   href: string;
   /** Ícone do lucide-react. */
   icone: LucideIcon;
 }
+
+/**
+ * Itens de navegação do painel — fonte única usada tanto pela barra lateral
+ * (desktop) quanto pela barra inferior (mobile em barra-inferior-mobile.tsx).
+ */
+export const ITENS_DE_NAVEGACAO: ItemDeNavegacao[] = [
+  { rotulo: 'Dashboard', rotuloCurto: 'Início', href: '/painel', icone: LayoutDashboard },
+  { rotulo: 'Meu treino', rotuloCurto: 'Treino', href: '/painel/treino', icone: Dumbbell },
+  { rotulo: 'Minha dieta', rotuloCurto: 'Dieta', href: '/painel/dieta', icone: Salad },
+  { rotulo: 'Meu perfil', rotuloCurto: 'Perfil', href: '/painel/perfil', icone: UserRound },
+];
 
 /** Link de navegação com destaque quando a rota atual corresponde. */
 function LinkDeNavegacao({ item }: { item: ItemDeNavegacao }) {
@@ -68,14 +81,6 @@ interface PropriedadesDaBarraLateral {
 
 /** Barra lateral fixa do painel (visível em telas médias/grandes). */
 export function BarraLateral({ nomeDoUsuario, aoSair }: PropriedadesDaBarraLateral) {
-  // Itens fixos de navegação do painel.
-  const itensDeNavegacao: ItemDeNavegacao[] = [
-    { rotulo: 'Dashboard', href: '/painel', icone: LayoutDashboard },
-    { rotulo: 'Meu treino', href: '/painel/treino', icone: Dumbbell },
-    { rotulo: 'Minha dieta', href: '/painel/dieta', icone: Salad },
-    { rotulo: 'Meu perfil', href: '/painel/perfil', icone: UserRound },
-  ];
-
   // Inicial do nome para o avatar circular.
   const inicialDoNome = (nomeDoUsuario?.trim().charAt(0) ?? 'U').toUpperCase();
 
@@ -92,7 +97,7 @@ export function BarraLateral({ nomeDoUsuario, aoSair }: PropriedadesDaBarraLater
 
       {/* Navegação principal com rolagem própria. */}
       <nav className="flex-1 space-y-1 overflow-y-auto p-4">
-        {itensDeNavegacao.map((item) => (
+        {ITENS_DE_NAVEGACAO.map((item) => (
           <LinkDeNavegacao key={item.href} item={item} />
         ))}
       </nav>

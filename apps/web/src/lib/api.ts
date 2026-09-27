@@ -25,6 +25,7 @@ import type {
   Usuario,
 } from './tipos';
 import { obterToken } from './armazenamento';
+import { hojeLocal } from './checkin-util';
 import { ErroDaApi } from './erro-api';
 import * as local from './repositorio-local';
 
@@ -203,7 +204,8 @@ export async function registrarPesagem(pesoKg: number, data?: string): Promise<R
   if (MODO_LOCAL) {
     return local.registrarPesagemLocal(pesoKg, data);
   }
-  return chamarApi('/evolucao', { method: 'POST', body: JSON.stringify({ peso_kg: pesoKg, data }) });
+  // TEAM_001: informa o dia civil do usuário — o servidor não conhece o fuso.
+  return chamarApi('/evolucao', { method: 'POST', body: JSON.stringify({ peso_kg: pesoKg, data: data ?? hojeLocal() }) });
 }
 
 /** Lista o histórico de pesagens (gráfico de evolução). */
@@ -227,7 +229,8 @@ export async function atualizarCorpo(corpo: CorpoAtualizacaoDoCorpo): Promise<{ 
   if (MODO_LOCAL) {
     return local.atualizarCorpoLocal(corpo);
   }
-  return chamarApi('/perfil/corpo', { method: 'PATCH', body: JSON.stringify(corpo) });
+  // TEAM_001: a pesagem gerada pelo novo peso usa o dia civil do usuário.
+  return chamarApi('/perfil/corpo', { method: 'PATCH', body: JSON.stringify({ ...corpo, data: hojeLocal() }) });
 }
 
 /** Corpo do check-in diário. */
@@ -251,7 +254,8 @@ export async function buscarCheckins(): Promise<ResumoDeCheckins> {
   if (MODO_LOCAL) {
     return local.buscarCheckinsLocal();
   }
-  return chamarApi('/checkin');
+  // TEAM_001: informa o dia civil do usuário — o "hoje" do resumo é dele.
+  return chamarApi(`/checkin?hoje=${hojeLocal()}`);
 }
 
 /** Salva (ou atualiza) o check-in do dia e devolve o resumo atualizado. */
@@ -259,7 +263,8 @@ export async function salvarCheckin(corpo: CorpoCheckin): Promise<ResumoDeChecki
   if (MODO_LOCAL) {
     return local.salvarCheckinLocal(corpo);
   }
-  return chamarApi('/checkin', { method: 'POST', body: JSON.stringify(corpo) });
+  // TEAM_001: informa o dia civil do usuário (o padrão do servidor é UTC).
+  return chamarApi('/checkin', { method: 'POST', body: JSON.stringify({ data: hojeLocal(), ...corpo }) });
 }
 
 /* ===========================================================================

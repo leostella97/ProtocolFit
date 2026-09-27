@@ -36,8 +36,16 @@ export function diaCumprido(checkin: CheckinDiario): boolean {
   return checkin.treino_feito || checkin.dieta_seguida;
 }
 
-/** Calcula o resumo completo dos check-ins (hoje, sequências e histórico). */
-export function montarResumoDeCheckins(registros: CheckinDiario[]): ResumoDeCheckins {
+/**
+ * Calcula o resumo completo dos check-ins (hoje, sequências e histórico).
+ *
+ * TEAM_001: "hoje" é o DIA CIVIL DO CLIENTE — o servidor não sabe o fuso do
+ * usuário, então a rota aceita ?hoje=AAAA-MM-DD. Sem o parâmetro, cai no
+ * fallback `hojeEmTexto()` (UTC do servidor).
+ */
+export function montarResumoDeCheckins(registros: CheckinDiario[], referenciaDeHoje?: string): ResumoDeCheckins {
+  // Dia civil usado para "hoje" e para a sequência atual.
+  const hojeTexto = referenciaDeHoje ?? hojeEmTexto();
   // Datas cumpridas em ordem crescente e sem repetição.
   const diasCumpridos = registros.filter(diaCumprido).map((registro) => registro.data).sort();
   const conjuntoDeDias = new Set(diasCumpridos);
@@ -55,7 +63,7 @@ export function montarResumoDeCheckins(registros: CheckinDiario[]): ResumoDeChec
   }
 
   // ---- Sequência atual: conta de trás para frente a partir de hoje -------
-  const hoje = paraNumeroDeDias(hojeEmTexto());
+  const hoje = paraNumeroDeDias(hojeTexto);
   // Se hoje ainda não foi cumprido, a contagem começa em ontem.
   let cursor = conjuntoDeDias.has(paraData(hoje)) ? hoje : hoje - 1;
   let sequenciaAtual = 0;
@@ -65,7 +73,7 @@ export function montarResumoDeCheckins(registros: CheckinDiario[]): ResumoDeChec
   }
 
   return {
-    hoje: registros.find((registro) => registro.data === hojeEmTexto()) ?? null,
+    hoje: registros.find((registro) => registro.data === hojeTexto) ?? null,
     // Os registros já chegam ordenados do mais recente para o mais antigo.
     registros,
     sequencia_atual: sequenciaAtual,

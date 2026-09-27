@@ -19,7 +19,7 @@
 'use client';
 
 import { useEffect, useState, type ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ArrowLeft, HeartPulse, LogOut } from 'lucide-react';
 import { BarraInferiorMobile } from '@/components/painel/barra-inferior-mobile';
@@ -33,6 +33,9 @@ import { ANIMACAO_DE_ENTRADA, TRANSICAO_SUAVE } from '@/lib/constantes';
 /** Componente cliente com a guarda de sessão e o shell do painel. */
 function LayoutClienteDoPainel({ children }: { children: ReactNode }) {
   const roteador = useRouter();
+  // Rota atual — decide se a seta "voltar" faz sentido (na raiz do painel não).
+  const caminhoAtual = usePathname();
+  const naRaizDoPainel = caminhoAtual === '/painel';
   // Verificação inicial de sessão em andamento.
   const [verificando, definirVerificando] = useState(true);
   // Nome do usuário logado (exibido na barra lateral).
@@ -81,9 +84,14 @@ function LayoutClienteDoPainel({ children }: { children: ReactNode }) {
     roteador.replace('/login');
   }
 
-  /** Volta para a página anterior do histórico do navegador. */
+  /**
+   * Volta para a página anterior. TEAM_001: dentro do painel a volta é
+   * HIERÁRQUICA (sobe para o dashboard) — usar o histórico do navegador
+   * poderia levar o usuário de volta ao login/onboarding, o que não faz
+   * sentido para quem já está logado.
+   */
   function voltarPagina() {
-    roteador.back();
+    roteador.push('/painel');
   }
 
   // Enquanto verifica a sessão, exibe esqueletos centralizados.
@@ -107,10 +115,13 @@ function LayoutClienteDoPainel({ children }: { children: ReactNode }) {
       {/* Cabeçalho mobile: seta de voltar + logo + botão de sair. */}
       <header className="sticky top-0 z-20 flex items-center justify-between border-b bg-card px-4 py-3 md:hidden">
         <div className="flex items-center gap-2">
-          {/* Seta para a esquerda: volta para a página anterior. */}
-          <Botao variante="fantasma" tamanho="icone" onClick={voltarPagina} aria-label="Voltar para a página anterior">
-            <ArrowLeft />
-          </Botao>
+          {/* Seta de voltar: só fora da raiz do painel (no dashboard ela
+              voltaria ao login, o que não faz sentido logado). */}
+          {!naRaizDoPainel ? (
+            <Botao variante="fantasma" tamanho="icone" onClick={voltarPagina} aria-label="Voltar para o dashboard">
+              <ArrowLeft />
+            </Botao>
+          ) : null}
           <HeartPulse className="size-5 shrink-0 text-primary" />
           <span className="font-display text-base font-bold text-foreground">ProtocolFit</span>
         </div>
@@ -126,12 +137,14 @@ function LayoutClienteDoPainel({ children }: { children: ReactNode }) {
           inferior do mobile (pb-24) para o conteúdo não ficar por baixo. */}
       <main className="md:pl-64">
         <div className="p-6 pb-24 lg:p-10 md:pb-10">
-          {/* Seta para a esquerda: volta para a página anterior (todas as telas). */}
-          <div className="mb-4">
-            <Botao variante="fantasma" tamanho="pequeno" onClick={voltarPagina} className="text-muted-foreground">
-              <ArrowLeft /> Voltar
-            </Botao>
-          </div>
+          {/* Seta de voltar: some na raiz do painel (voltar dali sairia do app). */}
+          {!naRaizDoPainel ? (
+            <div className="mb-4">
+              <Botao variante="fantasma" tamanho="pequeno" onClick={voltarPagina} className="text-muted-foreground">
+                <ArrowLeft /> Voltar
+              </Botao>
+            </div>
+          ) : null}
           {/* Conteúdo da rota com animação de entrada suave. */}
           <motion.div
             initial={ANIMACAO_DE_ENTRADA.escondido}

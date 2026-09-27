@@ -10,7 +10,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Clock, Lightbulb, Pencil, Save, Timer } from 'lucide-react';
+import { Clock, Lightbulb, Pencil, Save, Timer, Youtube } from 'lucide-react';
 import { Botao } from '@/components/ui/button';
 import { Selo } from '@/components/ui/badge';
 import { CartaoTempoDoPlano } from '@/components/painel/cartao-tempo-do-plano';
@@ -221,6 +221,16 @@ function CartaoDeExercicio({
           <p className="flex items-start gap-1.5">
             <Lightbulb className="mt-0.5 size-4 shrink-0 text-primary" /> {exercicio.dicas}
           </p>
+          {/* TEAM_001: link de exemplo — busca a execução do exercício no
+              YouTube (abre em nova aba, sem sair do app). */}
+          <a
+            href={`https://www.youtube.com/results?search_query=${encodeURIComponent(`${exercicio.nome} execução correta`)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 font-medium text-primary hover:underline"
+          >
+            <Youtube className="size-4 shrink-0" /> Exemplo: ver a execução no YouTube
+          </a>
         </div>
       </CartaoConteudo>
     </Cartao>

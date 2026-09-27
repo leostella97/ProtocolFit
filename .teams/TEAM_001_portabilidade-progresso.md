@@ -112,6 +112,19 @@ Três pedidos do usuário depois de usar o app no celular:
   versões dos planos, pesagens, check-ins e aceite do termo) — os botões
   estavam em /painel/perfil e /login; agora alcançáveis no mobile.
 
+## Parte 5 — seta voltar do painel + exemplo de exercício no YouTube
+- **Seta voltar**: era `router.back()` — podia devolver o usuário logado ao
+  login/onboarding. Agora é navegação HIERÁRQUICA: escondida na raiz
+  `/painel` (usePathname) e, nas subpáginas, sobe para `/painel`. Nunca sai
+  da área logada. Aplicado no cabeçalho mobile e no botão "Voltar" do
+  desktop (layout.tsx).
+- **Exemplo no YouTube**: rodapé do cartão de exercício ganhou o link
+  "Exemplo: ver a execução no YouTube" → busca `<nome> execução correta` em
+  youtube.com/results (nova aba, rel=noopener). Abaixo das dicas, como pedido.
+
+### Verificação (parte 5)
+- `tsc --noEmit` limpo · `testar:local` 83/83 · `build:pages` ok.
+
 ## Notas de transferência
 - Formato do backup: `{ aplicativo: 'protocolfit', tipo: 'progresso', versao: 1, ... }`.
   Se o formato evoluir, subir `VERSAO_DO_BACKUP` e tratar a leitura de versões

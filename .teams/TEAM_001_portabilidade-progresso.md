@@ -45,6 +45,14 @@ apenas o autor configurado no git do usuário (`leostella97`).
 - [x] Testes + typecheck + build:pages verdes depois (72/72, tsc limpo, build ok, PWA ok)
 - [x] Commit sem co-autor de ferramenta (apenas `leostella97`)
 
+## Parte 2 — limpeza de crome de ferramenta + publicação
+- `devIndicators: false` no `next.config.ts`: remove o botão circular "N" do
+  DevTools do Next no modo dev (nunca existiu no build estático do Pages).
+- O botão "Send element" era do overlay do preview do Devin — não é código do
+  site; basta navegar em localhost:3000 direto (sem a URL de preview).
+- Push na `main` feito: o workflow `deploy-pages.yml` compila e publica no
+  GitHub Pages automaticamente.
+
 ## Notas de transferência
 - Formato do backup: `{ aplicativo: 'protocolfit', tipo: 'progresso', versao: 1, ... }`.
   Se o formato evoluir, subir `VERSAO_DO_BACKUP` e tratar a leitura de versões

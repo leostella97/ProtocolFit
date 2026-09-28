@@ -10,7 +10,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Clock, Lightbulb, Pencil, Save, Timer, Youtube } from 'lucide-react';
+import { ArrowLeftRight, Clock, Lightbulb, Pencil, Save, Timer, Youtube } from 'lucide-react';
 import { Botao } from '@/components/ui/button';
 import { Selo } from '@/components/ui/badge';
 import { CartaoTempoDoPlano } from '@/components/painel/cartao-tempo-do-plano';
@@ -23,13 +23,22 @@ import {
 } from '@/components/ui/card';
 import { CampoDeEntrada } from '@/components/ui/input';
 import { Rotulo } from '@/components/ui/label';
+import { MenuDeSelecao } from '@/components/ui/select';
 import { Separador } from '@/components/ui/separator';
 import { Esqueleto } from '@/components/ui/skeleton';
 import { Abas, ConteudoDeAba, GatilhoDeAba, ListaDeAbas } from '@/components/ui/tabs';
-import { buscarPlanoAtual, editarExercicio, recalcularPlanos, ErroDaApi, type CorpoEdicaoExercicio } from '@/lib/api';
+import {
+  buscarPlanoAtual,
+  editarExercicio,
+  listarAlternativasDeExercicio,
+  recalcularPlanos,
+  trocarExercicio,
+  ErroDaApi,
+  type CorpoEdicaoExercicio,
+} from '@/lib/api';
 import { encerrarSessao } from '@/lib/armazenamento';
 import { rotuloDoObjetivo } from '@/lib/util';
-import type { ExercicioDoPlano, PlanoCompleto, PlanoTreino } from '@/lib/tipos';
+import type { AlternativaDeExercicio, ExercicioDoPlano, PlanoCompleto, PlanoTreino } from '@/lib/tipos';
 
 /** Propriedades do cartão editável de um exercício. */
 interface PropriedadesDoCartaoDeExercicio {
@@ -68,6 +77,54 @@ function CartaoDeExercicio({
   const [mensagemDeSucesso, definirMensagemDeSucesso] = useState(false);
   // Mensagem de erro amigável.
   const [mensagemDeErro, definirMensagemDeErro] = useState<string | null>(null);
+  // TEAM_003: alternativas do mesmo grupo muscular + estado da troca.
+  const [alternativas, definirAlternativas] = useState<AlternativaDeExercicio[]>([]);
+  const [trocando, definirTrocando] = useState(false);
+
+  // TEAM_003: busca as alternativas do mesmo grupo ao montar o cartão —
+  // o seletor só aparece quando existe pelo menos uma opção.
+  useEffect(() => {
+    // Evita atualizar estado após o desmonte do cartão.
+    let ativo = true;
+    listarAlternativasDeExercicio(treino.id, diaIndice, exercicioIndice)
+      .then((lista) => {
+        if (ativo) {
+          definirAlternativas(lista);
+        }
+      })
+      .catch(() => {
+        // Catálogo indisponível: o seletor simplesmente não é exibido.
+      });
+    return () => {
+      ativo = false;
+    };
+  }, [treino.id, diaIndice, exercicioIndice]);
+
+  /** TEAM_003: troca o exercício pela alternativa escolhida (mesmo grupo). */
+  async function trocarExercicioAtual(nomeDaAlternativa: string) {
+    // Opção placeholder ("Trocar por...") — nada a fazer.
+    if (!nomeDaAlternativa) {
+      return;
+    }
+    definirTrocando(true);
+    definirMensagemDeErro(null);
+    try {
+      // Corpo da troca: índices do slot + nome da alternativa escolhida.
+      const novoTreino = await trocarExercicio(treino.id, {
+        dia_indice: diaIndice,
+        exercicio_indice: exercicioIndice,
+        exercicio_nome: nomeDaAlternativa,
+      });
+      // O cartão remonta (o key inclui o nome) com os dados do novo exercício.
+      aoAtualizarTreino(novoTreino);
+    } catch (erroCapturado: unknown) {
+      definirMensagemDeErro(
+        erroCapturado instanceof Error ? erroCapturado.message : 'Não foi possível trocar o exercício.',
+      );
+    } finally {
+      definirTrocando(false);
+    }
+  }
 
   /** Valida os campos e salva a edição via editarExercicio(). */
   async function salvarAlteracoes() {
@@ -211,6 +268,32 @@ function CartaoDeExercicio({
             <span className="text-sm font-medium text-destructive">{mensagemDeErro}</span>
           ) : null}
         </div>
+
+        {/* TEAM_003: troca do exercício por outro do MESMO grupo muscular —
+            some quando o catálogo não tem alternativa para o grupo. */}
+        {alternativas.length > 0 ? (
+          <div className="max-w-xs space-y-1.5">
+            <Rotulo htmlFor={`trocar-${diaIndice}-${exercicioIndice}`}>
+              <ArrowLeftRight className="size-3.5 text-primary" /> Trocar exercício ({exercicio.grupo})
+            </Rotulo>
+            <MenuDeSelecao
+              id={`trocar-${diaIndice}-${exercicioIndice}`}
+              value=""
+              disabled={trocando}
+              aria-label={`Trocar ${exercicio.nome}`}
+              onChange={(evento) => void trocarExercicioAtual(evento.target.value)}
+            >
+              {/* Opção placeholder: mantém o valor vazio no seletor. */}
+              <option value="">{trocando ? 'Trocando...' : 'Trocar por...'}</option>
+              {/* Uma opção para cada alternativa do mesmo grupo. */}
+              {alternativas.map((alternativa) => (
+                <option key={alternativa.nome} value={alternativa.nome}>
+                  {alternativa.nome}
+                </option>
+              ))}
+            </MenuDeSelecao>
+          </div>
+        ) : null}
 
         {/* Rodapé do exercício: descanso e dica de execução. */}
         <Separador />
@@ -372,8 +455,11 @@ export default function PaginaDoTreino() {
               <h2 className="font-display text-lg font-bold text-foreground">{dia.titulo}</h2>
               {/* Cartão editável de cada exercício do dia. */}
               {dia.exercicios.map((exercicio, exercicioIndice) => (
+                // TEAM_003: o key inclui o nome — ao trocar de exercício o
+                // cartão REMONTA, reiniciando os campos com os valores novos
+                // (a carga recalculada da alternativa aparece correta).
                 <CartaoDeExercicio
-                  key={exercicioIndice}
+                  key={`${indice}-${exercicioIndice}-${exercicio.nome}`}
                   treino={treino}
                   diaIndice={indice}
                   exercicioIndice={exercicioIndice}

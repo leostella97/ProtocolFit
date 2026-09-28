@@ -33,3 +33,10 @@ export const ANIMACAO_DE_ENTRADA = {
 
 /** Transição padrão do framer-motion (spring suave). */
 export const TRANSICAO_SUAVE = { type: 'spring', stiffness: 120, damping: 18 } as const;
+
+/**
+ * TEAM_003: destino do "Reportar bug" — abre uma issue nova no repositório
+ * do projeto. Centralizado aqui para trocar de destino (e-mail, formulário)
+ * mexendo em um único lugar.
+ */
+export const URL_DE_REPORTE_DE_BUG = 'https://github.com/leostella97/ProtocolFit/issues/new?title=Relato%20de%20bug';

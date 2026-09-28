@@ -21,14 +21,14 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { ArrowLeft, HeartPulse, LogOut } from 'lucide-react';
+import { ArrowLeft, Bug, HeartPulse, LogOut } from 'lucide-react';
 import { BarraInferiorMobile } from '@/components/painel/barra-inferior-mobile';
 import { BarraLateral } from '@/components/painel/barra-lateral';
 import { Botao } from '@/components/ui/button';
 import { Esqueleto } from '@/components/ui/skeleton';
 import { buscarContaAtual, ErroDaApi } from '@/lib/api';
 import { encerrarSessao, obterUsuario, possuiSessao } from '@/lib/armazenamento';
-import { ANIMACAO_DE_ENTRADA, TRANSICAO_SUAVE } from '@/lib/constantes';
+import { ANIMACAO_DE_ENTRADA, TRANSICAO_SUAVE, URL_DE_REPORTE_DE_BUG } from '@/lib/constantes';
 
 /** Componente cliente com a guarda de sessão e o shell do painel. */
 function LayoutClienteDoPainel({ children }: { children: ReactNode }) {
@@ -125,9 +125,18 @@ function LayoutClienteDoPainel({ children }: { children: ReactNode }) {
           <HeartPulse className="size-5 shrink-0 text-primary" />
           <span className="font-display text-base font-bold text-foreground">ProtocolFit</span>
         </div>
-        <Botao variante="fantasma" tamanho="icone" onClick={sairDaConta} aria-label="Sair da conta">
-          <LogOut />
-        </Botao>
+        <div className="flex items-center gap-1">
+          {/* TEAM_003: reporte de bug sempre à mão no mobile — abre uma issue
+              do GitHub em nova aba. */}
+          <Botao variante="fantasma" tamanho="icone" comoFilho>
+            <a href={URL_DE_REPORTE_DE_BUG} target="_blank" rel="noopener noreferrer" aria-label="Reportar bug">
+              <Bug />
+            </a>
+          </Botao>
+          <Botao variante="fantasma" tamanho="icone" onClick={sairDaConta} aria-label="Sair da conta">
+            <LogOut />
+          </Botao>
+        </div>
       </header>
 
       {/* Navegação inferior fixa (só mobile — o desktop usa a barra lateral). */}

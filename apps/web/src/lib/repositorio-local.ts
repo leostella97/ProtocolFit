@@ -17,6 +17,7 @@
  * ---------------------------------------------------------------------------
  */
 import type {
+  AlternativaDeExercicio,
   CheckinDiario,
   DiaDeTreino,
   ItemDaDieta,
@@ -39,13 +40,21 @@ import { hojeLocal } from './checkin-util';
 import { CHAVE_DO_ACEITE, termoFoiAceito, VERSAO_DO_TERMO } from './termo-de-uso';
 import { ErroDaApi } from './erro-api';
 import { calcularPlanoNutricional } from './motor/calculos';
-import { buscarModeloDieta, buscarModeloTreino, listarVariacoesDeTreino } from './motor/carregadorModelos';
+import {
+  buscarModeloDieta,
+  buscarModeloTreino,
+  listarAlternativasDeExercicio,
+  listarCatalogoDeExercicios,
+  listarVariacoesDeTreino,
+} from './motor/carregadorModelos';
 import {
   aplicarEdicaoTreino,
   aplicarSubstituicao,
+  aplicarTrocaDeExercicio,
   montarPlanoDieta,
   montarPlanoTreino,
   type EdicaoDeExercicio,
+  type TrocaDeExercicio,
 } from './motor/montadorPlano';
 import {
   DIAS_DA_SEMANA,
@@ -643,6 +652,55 @@ export async function editarExercicioLocal(planoId: number, corpo: EdicaoDeExerc
   // Aplica a edição na cópia (o modelo mestre permanece intacto).
   const conteudo = JSON.parse(plano.conteudo) as Omit<PlanoTreino, 'id' | 'versao' | 'modelo_origem' | 'criado_em'>;
   aplicarEdicaoTreino(conteudo, corpo);
+  plano.conteudo = JSON.stringify(conteudo);
+  salvarBanco(banco);
+  return { id: plano.id, versao: plano.versao, modelo_origem: plano.modelo_origem, criado_em: plano.criado_em, ...conteudo };
+}
+
+/**
+ * TEAM_003: lista as alternativas do MESMO grupo muscular para a posição
+ * indicada do plano (espelha GET /plano/treino/:id/alternativas).
+ * Exclui os exercícios que o dia já usa — inclusive o atual.
+ */
+export async function listarAlternativasDeExercicioLocal(
+  planoId: number,
+  diaIndice: number,
+  exercicioIndice: number,
+): Promise<AlternativaDeExercicio[]> {
+  const banco = lerBanco();
+  const plano = exigirPlano(banco, planoId, 'treino');
+  const conteudo = JSON.parse(plano.conteudo) as Omit<PlanoTreino, 'id' | 'versao' | 'modelo_origem' | 'criado_em'>;
+  const dia = conteudo.dias_da_semana[diaIndice];
+  const exercicio = dia?.exercicios[exercicioIndice];
+  if (!dia || !exercicio) {
+    throw new ErroDaApi(404, 'Exercício não encontrado no plano.');
+  }
+  // Nomes já usados no dia ficam fora — não dá para repetir exercício na sessão.
+  const nomesDoDia = dia.exercicios.map((item) => item.nome);
+  const alternativas = await listarAlternativasDeExercicio(conteudo.modalidade, exercicio.grupo, nomesDoDia);
+  return alternativas.map((alternativa) => ({ nome: alternativa.nome, tipo: alternativa.tipo }));
+}
+
+/** TEAM_003: troca um exercício por outro do mesmo grupo (espelha PATCH /plano/treino/:id/trocar). */
+export async function trocarExercicioLocal(planoId: number, corpo: TrocaDeExercicio): Promise<PlanoTreino> {
+  const banco = lerBanco();
+  const plano = exigirPlano(banco, planoId, 'treino');
+  if (!Number.isInteger(corpo.dia_indice) || !Number.isInteger(corpo.exercicio_indice) || !corpo.exercicio_nome) {
+    throw new ErroDaApi(400, 'Informe o dia, o exercício e a alternativa desejada.');
+  }
+  // O peso do perfil recalcula a carga sugerida do novo exercício.
+  const conta = exigirSessao(banco);
+  const perfil = banco.perfis.find((candidato) => candidato.usuario_id === conta.id);
+  if (!perfil) {
+    throw new ErroDaApi(404, 'Perfil não encontrado. Complete o onboarding primeiro.');
+  }
+  // Aplica a troca na cópia (o modelo mestre permanece intacto).
+  const conteudo = JSON.parse(plano.conteudo) as Omit<PlanoTreino, 'id' | 'versao' | 'modelo_origem' | 'criado_em'>;
+  try {
+    aplicarTrocaDeExercicio(conteudo, corpo, await listarCatalogoDeExercicios(conteudo.modalidade), perfil.peso_kg);
+  } catch (erro) {
+    throw new ErroDaApi(400, erro instanceof Error ? erro.message : 'Não foi possível trocar o exercício.');
+  }
   plano.conteudo = JSON.stringify(conteudo);
   salvarBanco(banco);
   return { id: plano.id, versao: plano.versao, modelo_origem: plano.modelo_origem, criado_em: plano.criado_em, ...conteudo };

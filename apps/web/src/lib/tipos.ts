@@ -86,6 +86,14 @@ export interface DiaDeTreino {
   exercicios: ExercicioDoPlano[];
 }
 
+/** TEAM_003: alternativa de exercício oferecida para troca (mesmo grupo muscular). */
+export interface AlternativaDeExercicio {
+  /** Nome do exercício alternativo. */
+  nome: string;
+  /** Tipo biomecânico do movimento (composto, isolador, cardio, corporal). */
+  tipo: ExercicioDoPlano['tipo'];
+}
+
 /** Plano de treino clonado do usuário. */
 export interface PlanoTreino {
   id: number;

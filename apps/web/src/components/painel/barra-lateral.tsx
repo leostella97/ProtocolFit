@@ -11,6 +11,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
+  Bug,
   Dumbbell,
   HeartPulse,
   LayoutDashboard,
@@ -22,6 +23,7 @@ import {
 } from 'lucide-react';
 import { Botao } from '@/components/ui/button';
 import { abrirTermoDeUso } from '@/components/consentimento/aviso-de-responsabilidade';
+import { URL_DE_REPORTE_DE_BUG } from '@/lib/constantes';
 import { combinarClasses } from '@/lib/util';
 
 /** Item de navegação do painel (rótulo, destino e ícone). */
@@ -117,10 +119,20 @@ export function BarraLateral({ nomeDoUsuario, aoSair }: PropriedadesDaBarraLater
             <p className="text-xs text-muted-foreground">Plano ativo</p>
           </div>
         </div>
-        {/* Botão que reabre o termo de uso e responsabilidade a qualquer momento. */}
+        {/* TEAM_003: reporte de bug — abre uma issue do GitHub em nova aba. */}
         <Botao
           variante="fantasma"
           className="mt-2 w-full justify-start text-muted-foreground"
+          comoFilho
+        >
+          <a href={URL_DE_REPORTE_DE_BUG} target="_blank" rel="noopener noreferrer">
+            <Bug /> Reportar bug
+          </a>
+        </Botao>
+        {/* Botão que reabre o termo de uso e responsabilidade a qualquer momento. */}
+        <Botao
+          variante="fantasma"
+          className="mt-1 w-full justify-start text-muted-foreground"
           onClick={abrirTermoDeUso}
         >
           <ScrollText /> Termo de uso

@@ -48,8 +48,10 @@ const armazenamento = new ArmazenamentoFalso();
 (globalThis as unknown as { window: unknown }).window = { localStorage: armazenamento, crypto: webcrypto };
 (globalThis as unknown as { localStorage: unknown }).localStorage = armazenamento;
 
-/** Pasta dos modelos mestres (servidos como conteúdo estático no site). */
-const PASTA_MODELOS = join(process.cwd(), '..', 'api', 'modelos');
+// TEAM_003: os modelos são servidos de public/modelos (cópia gerada por
+// copiar-modelos.mjs) — o catálogo de exercícios e o fallback dependem do
+// indice.json, que só existe na pasta pública.
+const PASTA_MODELOS = join(process.cwd(), 'public', 'modelos');
 
 /** Simula o fetch lendo os modelos JSON do disco. */
 globalThis.fetch = (async (entrada: string | URL) => {
@@ -72,6 +74,9 @@ function conferir(descricao: string, esperado: unknown, obtido: unknown): void {
 
 /** Executa o fluxo completo do sistema no modo navegador. */
 async function principal(): Promise<void> {
+  // TEAM_003: gera public/modelos (cópia dos mestres + indice.json) antes de
+  // tudo — o catálogo de alternativas de exercício precisa do índice.
+  await import('./copiar-modelos.mjs');
   // Importa o repositório APÓS simular o navegador (localStorage, crypto, fetch).
   const repositorio = await import('../src/lib/repositorio-local');
   // Utilitários do termo de uso (aceite do aviso de responsabilidade).
@@ -138,6 +143,63 @@ async function principal(): Promise<void> {
   });
   conferir('Carga editada (kg)', 45, treinoEditado.dias_da_semana[0].exercicios[0].carga_sugerida_kg);
   conferir('Séries editadas', 5, treinoEditado.dias_da_semana[0].exercicios[0].series);
+
+  // ---- 4.1) Troca de exercício pelo MESMO grupo muscular (TEAM_003) ------
+  // Lista as alternativas de "peito" para o exercício 0 do dia 0.
+  const alternativas = await repositorio.listarAlternativasDeExercicioLocal(plano.treino.id, 0, 0);
+  conferir('Alternativas do mesmo grupo existem', true, alternativas.length > 0);
+  // O exercício atual e os demais do dia NÃO aparecem como alternativa.
+  conferir(
+    'Exercício atual fora das alternativas',
+    false,
+    alternativas.some((alternativa) => alternativa.nome === 'Supino reto com barra'),
+  );
+  conferir(
+    'Colega de dia fora das alternativas',
+    false,
+    alternativas.some((alternativa) => alternativa.nome === 'Supino inclinado com halteres'),
+  );
+  // Aplica a troca pela primeira alternativa do catálogo.
+  const nomeEscolhido = alternativas[0].nome;
+  const treinoTrocado = await repositorio.trocarExercicioLocal(plano.treino.id, {
+    dia_indice: 0,
+    exercicio_indice: 0,
+    exercicio_nome: nomeEscolhido,
+  });
+  const exercicioTrocado = treinoTrocado.dias_da_semana[0].exercicios[0];
+  conferir('Exercício trocado tem o nome novo', nomeEscolhido, exercicioTrocado.nome);
+  conferir('Exercício trocado mantém o grupo', 'peito', exercicioTrocado.grupo);
+  // O "slot" preserva o volume — as 5 séries editadas antes continuam valendo.
+  conferir('Troca preserva séries do slot', 5, exercicioTrocado.series);
+  // A carga é recalculada pelo percentual do NOVO exercício sobre 82,5 kg.
+  const { listarCatalogoDeExercicios } = await import('../src/lib/motor/carregadorModelos');
+  const { arredondarCarga } = await import('../src/lib/motor/calculos');
+  const definicaoEscolhida = (await listarCatalogoDeExercicios('academia')).find(
+    (candidata) => candidata.nome === nomeEscolhido,
+  );
+  const cargaEsperada =
+    definicaoEscolhida?.percentual_carga_peso_corporal == null
+      ? null
+      : arredondarCarga(82.5 * definicaoEscolhida.percentual_carga_peso_corporal);
+  conferir('Carga recalculada pela alternativa', cargaEsperada, exercicioTrocado.carga_sugerida_kg);
+  // Troca para exercício de OUTRO grupo deve ser recusada (regra do motor).
+  try {
+    await repositorio.trocarExercicioLocal(plano.treino.id, {
+      dia_indice: 0,
+      exercicio_indice: 0,
+      exercicio_nome: 'Barra fixa (pegada aberta)', // grupo "costas"
+    });
+    conferir('Troca de grupo diferente recusada', '400', 'não recusou');
+  } catch (erro) {
+    conferir('Troca de grupo diferente recusada', 400, (erro as { status: number }).status);
+  }
+  // Após a troca, o exercício anterior volta a aparecer como alternativa.
+  const alternativasAposTroca = await repositorio.listarAlternativasDeExercicioLocal(plano.treino.id, 0, 0);
+  conferir(
+    'Exercício anterior volta às alternativas',
+    true,
+    alternativasAposTroca.some((alternativa) => alternativa.nome === 'Supino reto com barra'),
+  );
 
   // ---- 5) Substituição de alimento ---------------------------------------
   const dietaEditada = await repositorio.substituirAlimentoLocal(plano.dieta.id, {

@@ -295,6 +295,8 @@ celular e toque em **"Instalar agora"** no aviso (ou use o menu do navegador →
 | POST | `/api/perfil/recalcular` | **Renova planos** pela evolução física |
 | GET | `/api/plano/atual` | Plano vigente (perfil + treino + dieta) |
 | PATCH | `/api/plano/treino/:id` | Edita carga/séries/repetições (cópia do usuário) |
+| GET | `/api/plano/treino/:id/alternativas` | Alternativas do mesmo grupo muscular para um exercício |
+| PATCH | `/api/plano/treino/:id/trocar` | Troca o exercício por outro do mesmo grupo (cópia do usuário) |
 | PATCH | `/api/plano/dieta/:id/substituir` | Substitui alimento (cópia do usuário) |
 | POST | `/api/evolucao` | Registra pesagem |
 | GET | `/api/evolucao` | Histórico de pesagens |

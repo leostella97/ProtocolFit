@@ -10,7 +10,7 @@
  */
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import type { Modalidade, ModeloDieta, ModeloTreino, Objetivo, VariacaoDeTreino } from '../tipos.js';
+import type { Modalidade, ModeloDieta, ModeloExercicio, ModeloTreino, Objetivo, VariacaoDeTreino } from '../tipos.js';
 
 /** Caminho absoluto da pasta de modelos do servidor (apps/api/modelos). */
 const CAMINHO_MODELOS = fileURLToPath(new URL('../../modelos', import.meta.url));
@@ -178,4 +178,68 @@ export function buscarModeloDieta(objetivo: Objetivo): ModeloDieta {
     throw new Error(`Nenhum modelo de dieta encontrado para o objetivo ${objetivo}`);
   }
   return lerJson<ModeloDieta>(caminhoArquivo);
+}
+
+/** TEAM_003: cache do catálogo completo de exercícios por modalidade. */
+const cacheDoCatalogo = new Map<string, ModeloExercicio[]>();
+
+/**
+ * TEAM_003: catálogo de exercícios únicos de uma modalidade.
+ *
+ * Os modelos JSON mestres são o banco de exercícios do sistema — a função
+ * varre TODOS os arquivos de /modelos/treinos/{modalidade} (padrão +
+ * variações) e deduplica pelo nome. O resultado fica em cache porque os
+ * modelos são somente leitura.
+ */
+export function listarCatalogoDeExercicios(modalidade: Modalidade): ModeloExercicio[] {
+  // Reaproveita o catálogo já montado (os mestres nunca mudam em runtime).
+  const emCache = cacheDoCatalogo.get(modalidade);
+  if (emCache) {
+    return emCache;
+  }
+  const raizDaModalidade = `${CAMINHO_MODELOS}/treinos/${modalidade}`;
+  // Deduplica pelo nome — o mesmo exercício pode aparecer em vários modelos.
+  const porNome = new Map<string, ModeloExercicio>();
+  if (existsSync(raizDaModalidade)) {
+    // Percorre os objetivos e todos os modelos no padrão oficial de nomes.
+    for (const objetivo of readdirSync(raizDaModalidade)) {
+      const pastaDoObjetivo = `${raizDaModalidade}/${objetivo}`;
+      for (const arquivo of readdirSync(pastaDoObjetivo)) {
+        if (!PADRAO_DO_NOME.test(arquivo)) {
+          continue;
+        }
+        const modelo = lerJson<ModeloTreino>(`${pastaDoObjetivo}/${arquivo}`);
+        // Arquivo fora do lugar não entra no catálogo (mesma regra do índice).
+        if (modelo.modalidade !== modalidade) {
+          continue;
+        }
+        for (const dia of modelo.dias_da_semana) {
+          for (const exercicio of dia.exercicios) {
+            if (!porNome.has(exercicio.nome)) {
+              porNome.set(exercicio.nome, exercicio);
+            }
+          }
+        }
+      }
+    }
+  }
+  const catalogo = [...porNome.values()];
+  cacheDoCatalogo.set(modalidade, catalogo);
+  return catalogo;
+}
+
+/**
+ * TEAM_003: alternativas de exercício do MESMO grupo muscular dentro da
+ * modalidade, excluindo os nomes já usados no dia — evita repetir exercício
+ * na mesma sessão.
+ */
+export function listarAlternativasDeExercicio(
+  modalidade: Modalidade,
+  grupo: string,
+  nomesExcluidos: string[] = [],
+): ModeloExercicio[] {
+  const excluidos = new Set(nomesExcluidos);
+  return listarCatalogoDeExercicios(modalidade).filter(
+    (exercicio) => exercicio.grupo === grupo && !excluidos.has(exercicio.nome),
+  );
 }

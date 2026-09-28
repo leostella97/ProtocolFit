@@ -8,7 +8,7 @@
  * e ajusta (corta ou repete dias em ciclo).
  * ---------------------------------------------------------------------------
  */
-import type { ModeloDieta, ModeloTreino, IndiceDeModelos, VariacaoDeTreino } from './tipos-modelos';
+import type { ModeloDieta, ModeloExercicio, ModeloTreino, IndiceDeModelos, VariacaoDeTreino } from './tipos-modelos';
 import type { Modalidade, Objetivo } from '../tipos';
 
 /**
@@ -152,4 +152,66 @@ export async function buscarModeloDieta(
     throw new Error(`Nenhum modelo de dieta disponível para o objetivo ${objetivo}.`);
   }
   return { modelo, caminhoDoModelo: caminho };
+}
+
+/** TEAM_003: cache do catálogo completo de exercícios por modalidade. */
+const cacheDoCatalogo = new Map<string, ModeloExercicio[]>();
+
+/**
+ * TEAM_003: catálogo de exercícios únicos de uma modalidade.
+ *
+ * Os modelos JSON mestres são o banco de exercícios do sistema — a função
+ * varre TODOS os modelos da modalidade listados no índice e deduplica pelo
+ * nome. Cada arquivo é buscado uma única vez (cache do buscarJson) e o
+ * catálogo montado também fica em cache.
+ */
+export async function listarCatalogoDeExercicios(modalidade: Modalidade): Promise<ModeloExercicio[]> {
+  // Reaproveita o catálogo já montado nesta sessão.
+  const emCache = cacheDoCatalogo.get(modalidade);
+  if (emCache) {
+    return emCache;
+  }
+  const indice = await lerIndice();
+  // Apenas as variações da modalidade pedida entram no catálogo — os caminhos
+  // são treinos/{modalidade}/{objetivo}/{arquivo}, iguais aos da geração.
+  const variacoesDaModalidade = (indice?.variacoes ?? []).filter(
+    (variacao) => variacao.modalidade === modalidade,
+  );
+  // Deduplica pelo nome — o mesmo exercício pode aparecer em vários modelos.
+  const porNome = new Map<string, ModeloExercicio>();
+  for (const variacao of variacoesDaModalidade) {
+    const modelo = await buscarJson<ModeloTreino>(
+      `treinos/${modalidade}/${variacao.objetivo}/${variacao.arquivo}`,
+    );
+    if (!modelo) {
+      continue;
+    }
+    for (const dia of modelo.dias_da_semana) {
+      for (const exercicio of dia.exercicios) {
+        if (!porNome.has(exercicio.nome)) {
+          porNome.set(exercicio.nome, exercicio);
+        }
+      }
+    }
+  }
+  const catalogo = [...porNome.values()];
+  cacheDoCatalogo.set(modalidade, catalogo);
+  return catalogo;
+}
+
+/**
+ * TEAM_003: alternativas de exercício do MESMO grupo muscular dentro da
+ * modalidade, excluindo os nomes já usados no dia — evita repetir exercício
+ * na mesma sessão.
+ */
+export async function listarAlternativasDeExercicio(
+  modalidade: Modalidade,
+  grupo: string,
+  nomesExcluidos: string[] = [],
+): Promise<ModeloExercicio[]> {
+  const excluidos = new Set(nomesExcluidos);
+  const catalogo = await listarCatalogoDeExercicios(modalidade);
+  return catalogo.filter(
+    (exercicio) => exercicio.grupo === grupo && !excluidos.has(exercicio.nome),
+  );
 }

@@ -19,7 +19,7 @@ import type {
   TotaisNutricionais,
 } from '../tipos';
 import { arredondarCarga } from './calculos';
-import type { ModeloDieta, ModeloDiaTreino, ModeloItemDieta, ModeloTreino } from './tipos-modelos';
+import type { ModeloDieta, ModeloDiaTreino, ModeloExercicio, ModeloItemDieta, ModeloTreino } from './tipos-modelos';
 
 /** Regras de volume e descanso aplicadas por objetivo sobre os modelos. */
 const REGRAS_POR_OBJETIVO: Record<Objetivo, { series: number; repeticoes_min: number; repeticoes_max: number; descanso_segundos: number }> = {
@@ -296,5 +296,56 @@ export function aplicarSubstituicao(
   // Recalcula os totais da refeição alterada e do plano inteiro.
   refeicao.totais = somarTotais(refeicao.itens);
   plano.totais = somarTotaisDasRefeicoes(plano.refeicoes);
+  return plano;
+}
+
+/** Corpo da troca de um exercício por outro do mesmo grupo muscular. */
+export interface TrocaDeExercicio {
+  /** Índice do dia no plano (0-based). */
+  dia_indice: number;
+  /** Índice do exercício dentro do dia (0-based). */
+  exercicio_indice: number;
+  /** Nome da alternativa escolhida (vem do catálogo da modalidade). */
+  exercicio_nome: string;
+}
+
+/**
+ * TEAM_003: aplica a troca de um exercício por outro do MESMO grupo muscular.
+ *
+ * O "slot" mantém séries/repetições/descanso — inclusive edições feitas pelo
+ * usuário. Nome, tipo e dicas vêm da alternativa, e a carga sugerida é
+ * recalculada pelo percentual do novo exercício sobre o peso do usuário
+ * (percentual null → exercício de peso corporal, sem carga).
+ */
+export function aplicarTrocaDeExercicio(
+  plano: Omit<PlanoTreino, 'id' | 'versao' | 'modelo_origem' | 'criado_em'>,
+  troca: TrocaDeExercicio,
+  catalogo: ModeloExercicio[],
+  pesoKg: number,
+): Omit<PlanoTreino, 'id' | 'versao' | 'modelo_origem' | 'criado_em'> {
+  const dia = plano.dias_da_semana[troca.dia_indice];
+  if (!dia) {
+    throw new Error('Dia de treino não encontrado no plano.');
+  }
+  const exercicio = dia.exercicios[troca.exercicio_indice];
+  if (!exercicio) {
+    throw new Error('Exercício não encontrado no plano.');
+  }
+  const alternativa = catalogo.find((candidata) => candidata.nome === troca.exercicio_nome);
+  if (!alternativa) {
+    throw new Error('Exercício alternativo não encontrado no catálogo.');
+  }
+  // Regra central: a troca só vale entre exercícios do mesmo músculo.
+  if (alternativa.grupo !== exercicio.grupo) {
+    throw new Error('A troca só é permitida entre exercícios do mesmo grupo muscular.');
+  }
+  // Troca a identidade do exercício, preservando o volume do slot.
+  exercicio.nome = alternativa.nome;
+  exercicio.tipo = alternativa.tipo;
+  exercicio.dicas = alternativa.dicas;
+  exercicio.carga_sugerida_kg =
+    alternativa.percentual_carga_peso_corporal === null
+      ? null
+      : arredondarCarga(pesoKg * alternativa.percentual_carga_peso_corporal);
   return plano;
 }

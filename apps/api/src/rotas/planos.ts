@@ -18,7 +18,14 @@ import {
   buscarPlanoPorId,
 } from '../bd/banco.js';
 import type { LinhaPlano } from '../bd/banco.js';
-import { aplicarEdicaoTreino, aplicarSubstituicao, type EdicaoDeExercicio } from '../motor/montadorPlano.js';
+import {
+  aplicarEdicaoTreino,
+  aplicarSubstituicao,
+  aplicarTrocaDeExercicio,
+  type EdicaoDeExercicio,
+  type TrocaDeExercicio,
+} from '../motor/montadorPlano.js';
+import { listarAlternativasDeExercicio, listarCatalogoDeExercicios } from '../motor/carregadorModelos.js';
 import { buscarPerfilPorUsuario } from '../bd/banco.js';
 import type { PlanoDieta, PlanoTreino } from '../tipos.js';
 import { enviarErro, exigirAutenticacao, usuarioIdDaRequisicao } from '../util/respostas.js';
@@ -111,6 +118,93 @@ export async function rotasPlanos(app: FastifyInstance): Promise<void> {
     // Aplica a edição na cópia do usuário (o mestre permanece intacto).
     const plano = interpretarConteudo<Omit<PlanoTreino, 'id' | 'versao' | 'modelo_origem' | 'criado_em'>>(linha);
     aplicarEdicaoTreino(plano, edicao);
+
+    // Persiste a cópia atualizada no SQLite.
+    atualizarConteudoDoPlano(planoId, JSON.stringify(plano));
+
+    // Responde com o treino atualizado (id/versão/modelo/data sobrescrevem o conteúdo).
+    return resposta.send({ ...plano, id: planoId, versao: linha.versao, modelo_origem: linha.modelo_origem, criado_em: linha.criado_em });
+  });
+
+  /** GET /api/plano/treino/:planoId/alternativas — exercícios do mesmo grupo para a posição. */
+  app.get<{
+    Params: { planoId: string };
+    Querystring: { dia_indice?: string; exercicio_indice?: string };
+  }>('/treino/:planoId/alternativas', { onRequest: [exigirAutenticacao] }, async (requisicao, resposta) => {
+    // Recupera o id do usuário autenticado.
+    const usuarioId = usuarioIdDaRequisicao(requisicao);
+
+    // Converte o parâmetro da rota para número.
+    const planoId = Number(requisicao.params.planoId);
+
+    // Busca a cópia do plano no banco.
+    const linha = buscarPlanoPorId(planoId);
+
+    // Garante que o plano existe, pertence ao usuário e é do tipo treino.
+    if (!linha || linha.usuario_id !== usuarioId || linha.tipo !== 'treino') {
+      return enviarErro(resposta, 403, 'Você só pode consultar o seu próprio plano de treino.');
+    }
+
+    // Valida os índices recebidos na query.
+    const diaIndice = Number(requisicao.query.dia_indice);
+    const exercicioIndice = Number(requisicao.query.exercicio_indice);
+    if (!Number.isInteger(diaIndice) || !Number.isInteger(exercicioIndice)) {
+      return enviarErro(resposta, 400, 'Informe o dia e o exercício que deseja consultar.');
+    }
+
+    // Localiza o exercício na cópia para descobrir o grupo muscular dele.
+    const plano = interpretarConteudo<Omit<PlanoTreino, 'id' | 'versao' | 'modelo_origem' | 'criado_em'>>(linha);
+    const dia = plano.dias_da_semana[diaIndice];
+    const exercicio = dia?.exercicios[exercicioIndice];
+    if (!dia || !exercicio) {
+      return enviarErro(resposta, 404, 'Exercício não encontrado no plano.');
+    }
+
+    // TEAM_003: alternativas do mesmo grupo na modalidade do plano; os nomes
+    // já usados no dia ficam fora para não repetir exercício na sessão.
+    const nomesDoDia = dia.exercicios.map((item) => item.nome);
+    const alternativas = listarAlternativasDeExercicio(plano.modalidade, exercicio.grupo, nomesDoDia).map(
+      (alternativa) => ({ nome: alternativa.nome, tipo: alternativa.tipo }),
+    );
+    return resposta.send({ alternativas });
+  });
+
+  /** PATCH /api/plano/treino/:planoId/trocar — troca um exercício por outro do mesmo grupo. */
+  app.patch<{ Params: { planoId: string } }>('/treino/:planoId/trocar', { onRequest: [exigirAutenticacao] }, async (requisicao, resposta) => {
+    // Recupera o id do usuário autenticado.
+    const usuarioId = usuarioIdDaRequisicao(requisicao);
+
+    // Converte o parâmetro da rota para número.
+    const planoId = Number(requisicao.params.planoId);
+
+    // Busca a cópia do plano no banco.
+    const linha = buscarPlanoPorId(planoId);
+
+    // Garante que o plano existe, pertence ao usuário e é do tipo treino.
+    if (!linha || linha.usuario_id !== usuarioId || linha.tipo !== 'treino') {
+      return enviarErro(resposta, 403, 'Você só pode editar o seu próprio plano de treino.');
+    }
+
+    // Valida os índices e o nome da alternativa recebidos.
+    const corpo = (requisicao.body ?? {}) as TrocaDeExercicio;
+    if (!Number.isInteger(corpo.dia_indice) || !Number.isInteger(corpo.exercicio_indice) || !corpo.exercicio_nome) {
+      return enviarErro(resposta, 400, 'Informe o dia, o exercício e a alternativa desejada.');
+    }
+
+    // O peso do perfil recalcula a carga sugerida do novo exercício.
+    const perfil = buscarPerfilPorUsuario(usuarioId);
+    if (!perfil) {
+      return enviarErro(resposta, 404, 'Perfil não encontrado. Complete o onboarding primeiro.');
+    }
+
+    // Aplica a troca na cópia do usuário (o mestre permanece intacto) —
+    // a validação de "mesmo grupo" acontece dentro do motor.
+    const plano = interpretarConteudo<Omit<PlanoTreino, 'id' | 'versao' | 'modelo_origem' | 'criado_em'>>(linha);
+    try {
+      aplicarTrocaDeExercicio(plano, corpo, listarCatalogoDeExercicios(plano.modalidade), perfil.peso_kg);
+    } catch (erro) {
+      return enviarErro(resposta, 400, erro instanceof Error ? erro.message : 'Não foi possível trocar o exercício.');
+    }
 
     // Persiste a cópia atualizada no SQLite.
     atualizarConteudoDoPlano(planoId, JSON.stringify(plano));

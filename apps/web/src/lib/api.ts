@@ -13,6 +13,7 @@
  * ---------------------------------------------------------------------------
  */
 import type {
+  AlternativaDeExercicio,
   CheckinDiario,
   OpcoesDoSistema,
   Perfil,
@@ -182,6 +183,36 @@ export async function editarExercicio(planoId: number, corpo: CorpoEdicaoExercic
     return local.editarExercicioLocal(planoId, corpo);
   }
   return chamarApi(`/plano/treino/${planoId}`, { method: 'PATCH', body: JSON.stringify(corpo) });
+}
+
+/** Corpo da troca de um exercício por outro do mesmo grupo muscular. */
+export interface CorpoTrocaExercicio {
+  dia_indice: number;
+  exercicio_indice: number;
+  exercicio_nome: string;
+}
+
+/** TEAM_003: lista as alternativas do mesmo grupo para a posição do plano. */
+export async function listarAlternativasDeExercicio(
+  planoId: number,
+  diaIndice: number,
+  exercicioIndice: number,
+): Promise<AlternativaDeExercicio[]> {
+  if (MODO_LOCAL) {
+    return local.listarAlternativasDeExercicioLocal(planoId, diaIndice, exercicioIndice);
+  }
+  const resposta = await chamarApi<{ alternativas: AlternativaDeExercicio[] }>(
+    `/plano/treino/${planoId}/alternativas?dia_indice=${diaIndice}&exercicio_indice=${exercicioIndice}`,
+  );
+  return resposta.alternativas;
+}
+
+/** TEAM_003: troca o exercício por uma alternativa do mesmo grupo muscular. */
+export async function trocarExercicio(planoId: number, corpo: CorpoTrocaExercicio): Promise<PlanoTreino> {
+  if (MODO_LOCAL) {
+    return local.trocarExercicioLocal(planoId, corpo);
+  }
+  return chamarApi(`/plano/treino/${planoId}/trocar`, { method: 'PATCH', body: JSON.stringify(corpo) });
 }
 
 /** Corpo da substituição de um alimento da dieta. */

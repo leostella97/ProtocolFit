@@ -4,13 +4,16 @@
  * Exibe o plano de treino organizado em abas (um dia por aba). Cada
  * exercício é um cartão editável (séries, repetições e carga) que salva via
  * editarExercicio(), com feedback "Salvo ✓" temporário ou erro em vermelho.
+ * TEAM_004: cada exercício pode ser marcado como concluído na sessão de hoje;
+ * ao concluir TODOS os exercícios do dia, o check-in recebe treino_feito
+ * automaticamente — ou pelo botão "Concluir treino de hoje" da aba.
  * ---------------------------------------------------------------------------
  */
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeftRight, Clock, Lightbulb, Pencil, Save, Timer, Youtube } from 'lucide-react';
+import { ArrowLeftRight, Check, CheckCircle2, Clock, Lightbulb, Pencil, Save, Timer, Youtube } from 'lucide-react';
 import { Botao } from '@/components/ui/button';
 import { Selo } from '@/components/ui/badge';
 import { CartaoTempoDoPlano } from '@/components/painel/cartao-tempo-do-plano';
@@ -23,22 +26,58 @@ import {
 } from '@/components/ui/card';
 import { CampoDeEntrada } from '@/components/ui/input';
 import { Rotulo } from '@/components/ui/label';
+import { BarraDeProgresso } from '@/components/ui/progress';
 import { MenuDeSelecao } from '@/components/ui/select';
 import { Separador } from '@/components/ui/separator';
 import { Esqueleto } from '@/components/ui/skeleton';
 import { Abas, ConteudoDeAba, GatilhoDeAba, ListaDeAbas } from '@/components/ui/tabs';
 import {
+  buscarCheckins,
   buscarPlanoAtual,
   editarExercicio,
   listarAlternativasDeExercicio,
   recalcularPlanos,
+  salvarCheckin,
   trocarExercicio,
   ErroDaApi,
   type CorpoEdicaoExercicio,
 } from '@/lib/api';
 import { encerrarSessao } from '@/lib/armazenamento';
-import { rotuloDoObjetivo } from '@/lib/util';
+import { hojeLocal } from '@/lib/checkin-util';
+import { combinarClasses, rotuloDoObjetivo } from '@/lib/util';
 import type { AlternativaDeExercicio, ExercicioDoPlano, PlanoCompleto, PlanoTreino } from '@/lib/tipos';
+
+/* ===========================================================================
+ * TEAM_004 — progresso da sessão de hoje (checklist de exercícios).
+ * Estado efêmero por plano+dia civil+aba: zera sozinho a cada dia (a data
+ * está na chave) e não vai ao banco — o registro durável é o check-in.
+ * ======================================================================== */
+
+/** Monta a chave do localStorage para a checklist de um dia do plano. */
+function chaveDoProgresso(planoId: number, diaIndice: number): string {
+  return `protocolfit_treino_concluido:${planoId}:${hojeLocal()}:${diaIndice}`;
+}
+
+/** Lê os índices dos exercícios concluídos hoje num dia do plano. */
+function lerConcluidos(planoId: number, diaIndice: number): number[] {
+  try {
+    const bruto = localStorage.getItem(chaveDoProgresso(planoId, diaIndice));
+    const lista: unknown = JSON.parse(bruto ?? '[]');
+    // Descarta entradas corrompidas — só inteiros (índices) são válidos.
+    return Array.isArray(lista) ? lista.filter((item): item is number => Number.isInteger(item)) : [];
+  } catch {
+    return [];
+  }
+}
+
+/** Grava os índices dos exercícios concluídos hoje num dia do plano. */
+function gravarConcluidos(planoId: number, diaIndice: number, concluidos: number[]) {
+  try {
+    localStorage.setItem(chaveDoProgresso(planoId, diaIndice), JSON.stringify(concluidos));
+  } catch {
+    // Armazenamento bloqueado/cheio: a checklist segue só na memória da sessão.
+  }
+}
 
 /** Propriedades do cartão editável de um exercício. */
 interface PropriedadesDoCartaoDeExercicio {
@@ -52,6 +91,10 @@ interface PropriedadesDoCartaoDeExercicio {
   exercicio: ExercicioDoPlano;
   /** Callback que atualiza o treino no estado da página. */
   aoAtualizarTreino: (novoTreino: PlanoTreino) => void;
+  /** TEAM_004: exercício marcado como concluído na sessão de hoje. */
+  concluido: boolean;
+  /** TEAM_004: alterna a marcação de concluído do exercício. */
+  aoAlternarConcluido: () => void;
 }
 
 /** Cartão de um exercício com campos editáveis e feedback de salvamento. */
@@ -61,6 +104,8 @@ function CartaoDeExercicio({
   exercicioIndice,
   exercicio,
   aoAtualizarTreino,
+  concluido,
+  aoAlternarConcluido,
 }: PropriedadesDoCartaoDeExercicio) {
   // Campos editados localmente (strings para inputs numéricos).
   const [series, definirSeries] = useState(String(exercicio.series));
@@ -180,11 +225,34 @@ function CartaoDeExercicio({
 
   return (
     // Cartão do exercício com cabeçalho, campos e rodapé informativo.
-    <Cartao className="gap-4">
-      {/* Nome do exercício + selo do grupo muscular. */}
+    // TEAM_004: fica esverdeado enquanto o exercício estiver concluído.
+    <Cartao className={combinarClasses('gap-4 transition-colors', concluido && 'border-primary/40 bg-primary/5')}>
+      {/* TEAM_004: toggle "concluído" + nome (riscado quando feito) + selo do grupo. */}
       <CartaoCabecalho>
         <div className="flex items-center justify-between gap-2">
-          <CartaoTitulo className="text-base">{exercicio.nome}</CartaoTitulo>
+          <div className="flex min-w-0 items-center gap-3">
+            {/* Botão circular de concluído — alimenta a checklist do dia. */}
+            <button
+              type="button"
+              onClick={aoAlternarConcluido}
+              aria-pressed={concluido}
+              aria-label={`${concluido ? 'Desmarcar' : 'Marcar'} ${exercicio.nome} como concluído`}
+              title={concluido ? 'Desmarcar concluído' : 'Marcar como concluído'}
+              className={combinarClasses(
+                'flex size-7 shrink-0 items-center justify-center rounded-full border transition-colors',
+                concluido
+                  ? 'border-primary bg-primary text-primary-foreground'
+                  : 'border-border bg-card text-transparent hover:border-primary/60 hover:text-primary/40',
+              )}
+            >
+              <Check className="size-4" />
+            </button>
+            <CartaoTitulo
+              className={combinarClasses('truncate text-base', concluido && 'text-muted-foreground line-through')}
+            >
+              {exercicio.nome}
+            </CartaoTitulo>
+          </div>
           <Selo variante="secundario">{exercicio.grupo}</Selo>
         </div>
       </CartaoCabecalho>
@@ -327,14 +395,26 @@ export default function PaginaDoTreino() {
   const [carregando, definirCarregando] = useState(true);
   const [erro, definirErro] = useState<string | null>(null);
   const [plano, definirPlano] = useState<PlanoCompleto | null>(null);
+  // TEAM_004: exercícios concluídos por aba de dia (índice → índices).
+  const [concluidosPorDia, definirConcluidosPorDia] = useState<Record<number, number[]>>({});
+  // TEAM_004: estado do check-in de hoje e do salvamento dele.
+  const [treinoFeitoHoje, definirTreinoFeitoHoje] = useState(false);
+  const [salvandoCheckin, definirSalvandoCheckin] = useState(false);
+  const [erroCheckin, definirErroCheckin] = useState<string | null>(null);
 
   /** Carrega o plano atual (404 → onboarding; 401 → login). */
   const carregarDados = useCallback(async () => {
     definirCarregando(true);
     definirErro(null);
     try {
-      const planoAtual = await buscarPlanoAtual();
+      const [planoAtual, resumo] = await Promise.all([
+        buscarPlanoAtual(),
+        // TEAM_004: o check-in complementa a página — falha dele não derruba
+        // o carregamento do plano (o botão simplesmente tenta de novo).
+        buscarCheckins().catch(() => null),
+      ]);
       definirPlano(planoAtual);
+      definirTreinoFeitoHoje(resumo?.hoje?.treino_feito ?? false);
     } catch (erroCapturado: unknown) {
       // Erro da API com status conhecido.
       if (erroCapturado instanceof ErroDaApi) {
@@ -362,6 +442,64 @@ export default function PaginaDoTreino() {
   useEffect(() => {
     void carregarDados();
   }, [carregarDados]);
+
+  // TEAM_004: restaura a checklist da sessão de hoje quando o PLANO chega
+  // ou troca de id (novo plano = progresso novo). A edição de exercício não
+  // altera o id, então a checklist por índice do slot é preservada.
+  const treinoId = plano?.treino.id ?? null;
+  const diasDaSemana = plano?.treino.dias_da_semana;
+  useEffect(() => {
+    if (treinoId === null || !diasDaSemana) {
+      return;
+    }
+    const inicial: Record<number, number[]> = {};
+    diasDaSemana.forEach((_, indice) => {
+      inicial[indice] = lerConcluidos(treinoId, indice);
+    });
+    definirConcluidosPorDia(inicial);
+  }, [treinoId, diasDaSemana]);
+
+  /** TEAM_004: marca o treino de hoje como feito no check-in diário. */
+  async function concluirTreinoDoDia() {
+    definirSalvandoCheckin(true);
+    definirErroCheckin(null);
+    try {
+      // Envia só treino_feito: o merge do check-in preserva água, dieta,
+      // peso e observação já registrados no dia (regra dos dois modos).
+      const resumo = await salvarCheckin({ treino_feito: true });
+      definirTreinoFeitoHoje(resumo.hoje?.treino_feito ?? true);
+    } catch (erroCapturado: unknown) {
+      definirErroCheckin(
+        erroCapturado instanceof Error ? erroCapturado.message : 'Não foi possível registrar o check-in.',
+      );
+    } finally {
+      definirSalvandoCheckin(false);
+    }
+  }
+
+  /** TEAM_004: alterna "concluído"; TODOS concluídos → check-in automático. */
+  function alternarConcluido(diaIndice: number, exercicioIndice: number) {
+    if (!plano) {
+      return;
+    }
+    const atuais = new Set(concluidosPorDia[diaIndice] ?? []);
+    if (atuais.has(exercicioIndice)) {
+      atuais.delete(exercicioIndice);
+    } else {
+      atuais.add(exercicioIndice);
+    }
+    const lista = [...atuais].sort((a, b) => a - b);
+    definirConcluidosPorDia({ ...concluidosPorDia, [diaIndice]: lista });
+    gravarConcluidos(plano.treino.id, diaIndice, lista);
+    // Concluiu o dia inteiro → o treino conta como feito no check-in.
+    if (
+      lista.length === plano.treino.dias_da_semana[diaIndice].exercicios.length &&
+      !treinoFeitoHoje &&
+      !salvandoCheckin
+    ) {
+      void concluirTreinoDoDia();
+    }
+  }
 
   /** Atualiza o treino no estado local com a resposta da edição. */
   function atualizarTreino(novoTreino: PlanoTreino) {
@@ -448,28 +586,68 @@ export default function PaginaDoTreino() {
           ))}
         </ListaDeAbas>
         {/* Conteúdo de cada aba: título do dia + exercícios editáveis. */}
-        {treino.dias_da_semana.map((dia, indice) => (
-          <ConteudoDeAba key={indice} valor={String(indice)}>
-            <div className="space-y-4">
-              {/* Título do dia selecionado. */}
-              <h2 className="font-display text-lg font-bold text-foreground">{dia.titulo}</h2>
-              {/* Cartão editável de cada exercício do dia. */}
-              {dia.exercicios.map((exercicio, exercicioIndice) => (
-                // TEAM_003: o key inclui o nome — ao trocar de exercício o
-                // cartão REMONTA, reiniciando os campos com os valores novos
-                // (a carga recalculada da alternativa aparece correta).
-                <CartaoDeExercicio
-                  key={`${indice}-${exercicioIndice}-${exercicio.nome}`}
-                  treino={treino}
-                  diaIndice={indice}
-                  exercicioIndice={exercicioIndice}
-                  exercicio={exercicio}
-                  aoAtualizarTreino={atualizarTreino}
-                />
-              ))}
-            </div>
-          </ConteudoDeAba>
-        ))}
+        {treino.dias_da_semana.map((dia, indice) => {
+          // TEAM_004: quantos exercícios do dia já foram concluídos hoje.
+          const concluidosNoDia = (concluidosPorDia[indice] ?? []).length;
+          return (
+            <ConteudoDeAba key={indice} valor={String(indice)}>
+              <div className="space-y-4">
+                {/* Título do dia selecionado. */}
+                <h2 className="font-display text-lg font-bold text-foreground">{dia.titulo}</h2>
+
+                {/* TEAM_004: progresso da sessão de hoje + atalho que marca o
+                    treino como feito no check-in diário. */}
+                <div className="space-y-2 rounded-lg border border-border bg-card p-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <p className="text-sm font-medium text-foreground">
+                      Sessão de hoje: {concluidosNoDia}/{dia.exercicios.length} exercícios
+                    </p>
+                    {treinoFeitoHoje ? (
+                      // Check-in já registra o treino do dia como feito.
+                      <span className="flex items-center gap-1 text-sm font-medium text-primary">
+                        <CheckCircle2 className="size-4" /> Treino registrado no check-in
+                      </span>
+                    ) : (
+                      <Botao
+                        variante="contorno"
+                        tamanho="pequeno"
+                        disabled={salvandoCheckin}
+                        onClick={() => void concluirTreinoDoDia()}
+                      >
+                        <Check /> {salvandoCheckin ? 'Registrando...' : 'Concluir treino de hoje'}
+                      </Botao>
+                    )}
+                  </div>
+                  {/* Barra de progresso da checklist do dia (0–100%). */}
+                  <BarraDeProgresso
+                    valor={dia.exercicios.length > 0 ? (concluidosNoDia / dia.exercicios.length) * 100 : 0}
+                  />
+                  {/* Erro do check-in automático/manual aparece aqui. */}
+                  {erroCheckin ? (
+                    <p className="text-sm font-medium text-destructive">{erroCheckin}</p>
+                  ) : null}
+                </div>
+
+                {/* Cartão editável de cada exercício do dia. */}
+                {dia.exercicios.map((exercicio, exercicioIndice) => (
+                  // TEAM_003: o key inclui o nome — ao trocar de exercício o
+                  // cartão REMONTA, reiniciando os campos com os valores novos
+                  // (a carga recalculada da alternativa aparece correta).
+                  <CartaoDeExercicio
+                    key={`${indice}-${exercicioIndice}-${exercicio.nome}`}
+                    treino={treino}
+                    diaIndice={indice}
+                    exercicioIndice={exercicioIndice}
+                    exercicio={exercicio}
+                    aoAtualizarTreino={atualizarTreino}
+                    concluido={(concluidosPorDia[indice] ?? []).includes(exercicioIndice)}
+                    aoAlternarConcluido={() => alternarConcluido(indice, exercicioIndice)}
+                  />
+                ))}
+              </div>
+            </ConteudoDeAba>
+          );
+        })}
       </Abas>
 
       {/* Dicas gerais do objetivo — orientações para potencializar o treino. */}

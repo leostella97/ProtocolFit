@@ -1,0 +1,161 @@
+{
+  "nome": "5x5 Powerbuilding Carga — 4 Dias",
+  "modalidade": "academia",
+  "objetivo": "hipertrofia",
+  "dias": 4,
+  "duracao_estimada_min": 60,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — 5x5 Powerbuilding Carga: Peitoral Falha Total",
+      "exercicios": [
+        {
+          "nome": "Crucifixo reto no cabo",
+          "grupo": "peito",
+          "tipo": "isolador",
+          "series": 5,
+          "repeticoes_min": 5,
+          "repeticoes_max": 5,
+          "descanso_segundos": 150,
+          "percentual_carga_peso_corporal": 0.75,
+          "dicas": "Mantenha um leve cotovelo flexionado durante a abertura."
+        },
+        {
+          "nome": "Crossover na polia alta",
+          "grupo": "peito",
+          "tipo": "isolador",
+          "series": 5,
+          "repeticoes_min": 5,
+          "repeticoes_max": 5,
+          "descanso_segundos": 150,
+          "percentual_carga_peso_corporal": 0.75,
+          "dicas": "Cruze as mãos levemente no final da fase concêntrica."
+        },
+        {
+          "nome": "Tríceps corda na polia",
+          "grupo": "triceps",
+          "tipo": "isolador",
+          "series": 5,
+          "repeticoes_min": 5,
+          "repeticoes_max": 5,
+          "descanso_segundos": 150,
+          "percentual_carga_peso_corporal": 0.75,
+          "dicas": "Abra a corda no final da extensão para contração máxima."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — 5x5 Powerbuilding Carga: Dorsais Falha Total",
+      "exercicios": [
+        {
+          "nome": "Levantamento terra",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 5,
+          "repeticoes_min": 5,
+          "repeticoes_max": 5,
+          "descanso_segundos": 150,
+          "percentual_carga_peso_corporal": 0.75,
+          "dicas": "Empurre o chão com as pernas e mantenha a coluna alinhada."
+        },
+        {
+          "nome": "Puxada frontal na polia",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 5,
+          "repeticoes_min": 5,
+          "repeticoes_max": 5,
+          "descanso_segundos": 150,
+          "percentual_carga_peso_corporal": 0.75,
+          "dicas": "Puxe a barra em direção ao peito expandindo a caixa torácica."
+        },
+        {
+          "nome": "Rosca Scott na máquina",
+          "grupo": "biceps",
+          "tipo": "isolador",
+          "series": 5,
+          "repeticoes_min": 5,
+          "repeticoes_max": 5,
+          "descanso_segundos": 150,
+          "percentual_carga_peso_corporal": 0.75,
+          "dicas": "Apoie os braços confortavelmente no banco Scott."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia C — 5x5 Powerbuilding Carga: Coxas Falha Total",
+      "exercicios": [
+        {
+          "nome": "Cadeira extensora",
+          "grupo": "pernas",
+          "tipo": "isolador",
+          "series": 5,
+          "repeticoes_min": 5,
+          "repeticoes_max": 5,
+          "descanso_segundos": 150,
+          "percentual_carga_peso_corporal": 0.75,
+          "dicas": "Segure 1 segundo no topo para enfatizar o quadríceps."
+        },
+        {
+          "nome": "Mesa flexora",
+          "grupo": "pernas",
+          "tipo": "isolador",
+          "series": 5,
+          "repeticoes_min": 5,
+          "repeticoes_max": 5,
+          "descanso_segundos": 150,
+          "percentual_carga_peso_corporal": 0.75,
+          "dicas": "Controle a fase de descida protegendo os isquiotibiais."
+        },
+        {
+          "nome": "Panturrilha em pé no aparelho",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 5,
+          "repeticoes_min": 5,
+          "repeticoes_max": 5,
+          "descanso_segundos": 150,
+          "percentual_carga_peso_corporal": 0.75,
+          "dicas": "Faça extensão plantar completa subindo no ponto máximo."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia D — 5x5 Powerbuilding Carga: Ombros e Braços Falha",
+      "exercicios": [
+        {
+          "nome": "Elevação lateral com halteres",
+          "grupo": "ombro",
+          "tipo": "isolador",
+          "series": 5,
+          "repeticoes_min": 5,
+          "repeticoes_max": 5,
+          "descanso_segundos": 150,
+          "percentual_carga_peso_corporal": 0.75,
+          "dicas": "Eleve até a linha dos ombros focando no deltoide lateral."
+        },
+        {
+          "nome": "Rosca direta com barra W",
+          "grupo": "biceps",
+          "tipo": "isolador",
+          "series": 5,
+          "repeticoes_min": 5,
+          "repeticoes_max": 5,
+          "descanso_segundos": 150,
+          "percentual_carga_peso_corporal": 0.75,
+          "dicas": "Mantenha os cotovelos fixos ao lado do tronco."
+        },
+        {
+          "nome": "Tríceps corda na polia",
+          "grupo": "triceps",
+          "tipo": "isolador",
+          "series": 5,
+          "repeticoes_min": 5,
+          "repeticoes_max": 5,
+          "descanso_segundos": 150,
+          "percentual_carga_peso_corporal": 0.75,
+          "dicas": "Abra a corda no final da extensão para contração máxima."
+        }
+      ]
+    }
+  ]
+}

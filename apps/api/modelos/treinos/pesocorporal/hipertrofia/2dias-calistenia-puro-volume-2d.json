@@ -1,0 +1,107 @@
+{
+  "nome": "Calistenia Volume e Hipertrofia — 2 Dias",
+  "modalidade": "pesocorporal",
+  "objetivo": "hipertrofia",
+  "dias": 2,
+  "duracao_estimada_min": 50,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Calistenia Volume e Hipertrofia: Peito e Costas (10x10)",
+      "exercicios": [
+        {
+          "nome": "Flexão inclinada nas barras",
+          "grupo": "peito",
+          "tipo": "corporal",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Apoie as mãos em superfície elevada ajustando a intensidade."
+        },
+        {
+          "nome": "Puxada nas argolas/fita de suspensão",
+          "grupo": "costas",
+          "tipo": "corporal",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o tronco firme e puxe as argolas até o peito."
+        },
+        {
+          "nome": "Flexão pino (pike push-up)",
+          "grupo": "ombro",
+          "tipo": "corporal",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Quadril elevado em V invertido flexionando em direção à cabeça."
+        },
+        {
+          "nome": "Tríceps mergulho no banco",
+          "grupo": "triceps",
+          "tipo": "corporal",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o quadril rente ao banco e flexione os cotovelos."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — Calistenia Volume e Hipertrofia: Pernas e Bíceps (10x10)",
+      "exercicios": [
+        {
+          "nome": "Agachamento peso corporal",
+          "grupo": "pernas",
+          "tipo": "corporal",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Desça até que as coxas fiquem paralelas ao solo com o peito aberto."
+        },
+        {
+          "nome": "Agachamento búlgaro corporal",
+          "grupo": "pernas",
+          "tipo": "corporal",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Apoie um pé atrás no banco e agache com a perna da frente."
+        },
+        {
+          "nome": "Remada australiana supinada",
+          "grupo": "biceps",
+          "tipo": "corporal",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Puxe o peito até a barra com pegada supinada."
+        },
+        {
+          "nome": "Panturrilha unilateral em pé",
+          "grupo": "panturrilha",
+          "tipo": "corporal",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Suba na ponta do pé de forma lenta e controlada."
+        }
+      ]
+    }
+  ]
+}

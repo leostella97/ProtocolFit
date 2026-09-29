@@ -1,0 +1,275 @@
+{
+  "nome": "Calistenia Rest-Pause — 7 Dias",
+  "modalidade": "pesocorporal",
+  "objetivo": "hipertrofia",
+  "dias": 7,
+  "duracao_estimada_min": 45,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Calistenia Rest-Pause: Peito Foco",
+      "exercicios": [
+        {
+          "nome": "Flexão de braços tradicional",
+          "grupo": "peito",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o corpo ereto e flexione os cotovelos até 90 graus."
+        },
+        {
+          "nome": "Flexão declinada em banco",
+          "grupo": "peito",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Apoie os pés em um banco para enfatizar a porção superior do peitoral."
+        },
+        {
+          "nome": "Paralelas em barras paralelas",
+          "grupo": "triceps",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o tronco levemente ereto e desça até 90 graus."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — Calistenia Rest-Pause: Costas Foco",
+      "exercicios": [
+        {
+          "nome": "Remada australiana na barra baixa",
+          "grupo": "costas",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha os calcanhares no chão e puxe o peito até a barra."
+        },
+        {
+          "nome": "Puxada nas argolas/fita de suspensão",
+          "grupo": "costas",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o tronco firme e puxe as argolas até o peito."
+        },
+        {
+          "nome": "Barra fixa supinada (foco bíceps)",
+          "grupo": "biceps",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Concentre a puxada na flexão dos cotovelos."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia C — Calistenia Rest-Pause: Quadríceps Foco",
+      "exercicios": [
+        {
+          "nome": "Agachamento búlgaro corporal",
+          "grupo": "pernas",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Apoie um pé atrás no banco e agache com a perna da frente."
+        },
+        {
+          "nome": "Afundo alternado no solo",
+          "grupo": "pernas",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Passos largos alternados mantendo o tronco ereto."
+        },
+        {
+          "nome": "Panturrilha dupla com pausa",
+          "grupo": "panturrilha",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Segure 2 segundos no ponto mais alto da extensão plantar."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia D — Calistenia Rest-Pause: Ombros Foco",
+      "exercicios": [
+        {
+          "nome": "Flexão pino (pike push-up)",
+          "grupo": "ombro",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Quadril elevado em V invertido flexionando em direção à cabeça."
+        },
+        {
+          "nome": "Elevação Y-T-W no solo",
+          "grupo": "ombro",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Deitado de bruços, eleve os braços em formato de Y, T e W."
+        },
+        {
+          "nome": "Abdominal supra no solo",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Enrole o tronco tirando as escápulas do chão."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia E — Calistenia Rest-Pause: Isquiotibiais Foco",
+      "exercicios": [
+        {
+          "nome": "Afundo alternado no solo",
+          "grupo": "pernas",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Passos largos alternados mantendo o tronco ereto."
+        },
+        {
+          "nome": "Agachamento sumô corporal",
+          "grupo": "pernas",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Pés afastados apontando para fora ativando adutores e glúteos."
+        },
+        {
+          "nome": "Panturrilha dupla com pausa",
+          "grupo": "panturrilha",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Segure 2 segundos no ponto mais alto da extensão plantar."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia F — Calistenia Rest-Pause: Braços Foco",
+      "exercicios": [
+        {
+          "nome": "Barra fixa supinada (foco bíceps)",
+          "grupo": "biceps",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Concentre a puxada na flexão dos cotovelos."
+        },
+        {
+          "nome": "Flexão diamante para tríceps",
+          "grupo": "triceps",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Cotovelos fechados ao lado do corpo focando nos tríceps."
+        },
+        {
+          "nome": "Barra fixa supinada (foco bíceps)",
+          "grupo": "biceps",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Concentre a puxada na flexão dos cotovelos."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia G — Calistenia Rest-Pause: Core e Regenerativo",
+      "exercicios": [
+        {
+          "nome": "Abdominal infra no solo",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Eleve as pernas estendidas sem tirar a lombar do chão."
+        },
+        {
+          "nome": "Abdominal supra no solo",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Enrole o tronco tirando as escápulas do chão."
+        },
+        {
+          "nome": "Panturrilha dupla com pausa",
+          "grupo": "panturrilha",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Segure 2 segundos no ponto mais alto da extensão plantar."
+        }
+      ]
+    }
+  ]
+}

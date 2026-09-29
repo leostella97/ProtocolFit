@@ -1,0 +1,237 @@
+{
+  "nome": "Potência e Impulso de Passada — 6 Dias",
+  "modalidade": "academia",
+  "objetivo": "corrida",
+  "dias": 6,
+  "duracao_estimada_min": 50,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Potência e Impulso de Passada: Pliometria A",
+      "exercicios": [
+        {
+          "nome": "Agachamento livre com barra",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.3,
+          "dicas": "Desça até que a coxa fique paralela ao solo com o peito erguido."
+        },
+        {
+          "nome": "Salto pliométrico lateral",
+          "grupo": "pliometria",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Realize saltos laterais focando na reatividade dos tornozelos."
+        },
+        {
+          "nome": "Prancha ventral no solo",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o corpo alinhado da cabeça aos calcanhares."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — Potência e Impulso de Passada: Postura A",
+      "exercicios": [
+        {
+          "nome": "Remada articulada cavalinho",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.3,
+          "dicas": "Puxe mantendo os cotovelos colados ao tronco."
+        },
+        {
+          "nome": "Desenvolvimento militar com barra",
+          "grupo": "ombro",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.3,
+          "dicas": "Pressione a barra acima da cabeça mantendo o core contraído."
+        },
+        {
+          "nome": "Prancha ventral no solo",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o corpo alinhado da cabeça aos calcanhares."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia C — Potência e Impulso de Passada: Passada A",
+      "exercicios": [
+        {
+          "nome": "Agachamento livre com barra",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.3,
+          "dicas": "Desça até que a coxa fique paralela ao solo com o peito erguido."
+        },
+        {
+          "nome": "Panturrilha sentado no banco",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.3,
+          "dicas": "Pausa de 1 segundo embaixo para alongar bem o sóleo."
+        },
+        {
+          "nome": "Prancha ventral no solo",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o corpo alinhado da cabeça aos calcanhares."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia D — Potência e Impulso de Passada: Pliometria B",
+      "exercicios": [
+        {
+          "nome": "Agachamento com salto na caixa",
+          "grupo": "pliometria",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Aterrise suavemente com os joelhos flexionados."
+        },
+        {
+          "nome": "Stiff com halteres",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.3,
+          "dicas": "Mantenha os joelhos semi-flexionados e projete o quadril para trás."
+        },
+        {
+          "nome": "Bicicleta ergométrica tiros HIIT",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Aumente a carga e pedale na máxima velocidade nos tiros."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia E — Potência e Impulso de Passada: Postura B",
+      "exercicios": [
+        {
+          "nome": "Puxada frontal na polia",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.3,
+          "dicas": "Puxe a barra em direção ao peito expandindo a caixa torácica."
+        },
+        {
+          "nome": "Abdominal supra no cabo",
+          "grupo": "core",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.3,
+          "dicas": "Ajoelhado na polia alta, enrole o tronco puxando a corda."
+        },
+        {
+          "nome": "Panturrilha em pé no aparelho",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.3,
+          "dicas": "Faça extensão plantar completa subindo no ponto máximo."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia F — Potência e Impulso de Passada: Passada B",
+      "exercicios": [
+        {
+          "nome": "Mesa flexora",
+          "grupo": "pernas",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.3,
+          "dicas": "Controle a fase de descida protegendo os isquiotibiais."
+        },
+        {
+          "nome": "Salto pliométrico lateral",
+          "grupo": "pliometria",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Realize saltos laterais focando na reatividade dos tornozelos."
+        },
+        {
+          "nome": "Prancha ventral no solo",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o corpo alinhado da cabeça aos calcanhares."
+        }
+      ]
+    }
+  ]
+}

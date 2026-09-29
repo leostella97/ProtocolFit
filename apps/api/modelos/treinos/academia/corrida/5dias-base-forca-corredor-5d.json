@@ -1,0 +1,199 @@
+{
+  "nome": "Base de Força para Corredores — 5 Dias",
+  "modalidade": "academia",
+  "objetivo": "corrida",
+  "dias": 5,
+  "duracao_estimada_min": 50,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Base de Força para Corredores: Quadríceps e Salto Reativo",
+      "exercicios": [
+        {
+          "nome": "Agachamento livre com barra",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.3,
+          "dicas": "Desça até que a coxa fique paralela ao solo com o peito erguido."
+        },
+        {
+          "nome": "Salto pliométrico lateral",
+          "grupo": "pliometria",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Realize saltos laterais focando na reatividade dos tornozelos."
+        },
+        {
+          "nome": "Panturrilha em pé no aparelho",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.3,
+          "dicas": "Faça extensão plantar completa subindo no ponto máximo."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — Base de Força para Corredores: Cadeia Posterior e Core",
+      "exercicios": [
+        {
+          "nome": "Remada articulada cavalinho",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.3,
+          "dicas": "Puxe mantendo os cotovelos colados ao tronco."
+        },
+        {
+          "nome": "Stiff com halteres",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.3,
+          "dicas": "Mantenha os joelhos semi-flexionados e projete o quadril para trás."
+        },
+        {
+          "nome": "Prancha ventral no solo",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o corpo alinhado da cabeça aos calcanhares."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia C — Base de Força para Corredores: Pliometria de Velocidade",
+      "exercicios": [
+        {
+          "nome": "Agachamento com salto na caixa",
+          "grupo": "pliometria",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Aterrise suavemente com os joelhos flexionados."
+        },
+        {
+          "nome": "Salto pliométrico lateral",
+          "grupo": "pliometria",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Realize saltos laterais focando na reatividade dos tornozelos."
+        },
+        {
+          "nome": "Corrida em esteira - tiros de velocidade",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Alterne tiros de alta intensidade com caminhada de recuperação."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia D — Base de Força para Corredores: Estabilidade de Quadril",
+      "exercicios": [
+        {
+          "nome": "Mesa flexora",
+          "grupo": "pernas",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.3,
+          "dicas": "Controle a fase de descida protegendo os isquiotibiais."
+        },
+        {
+          "nome": "Panturrilha em pé no aparelho",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.3,
+          "dicas": "Faça extensão plantar completa subindo no ponto máximo."
+        },
+        {
+          "nome": "Prancha ventral no solo",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o corpo alinhado da cabeça aos calcanhares."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia E — Base de Força para Corredores: Postura de Corrida",
+      "exercicios": [
+        {
+          "nome": "Puxada frontal na polia",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.3,
+          "dicas": "Puxe a barra em direção ao peito expandindo a caixa torácica."
+        },
+        {
+          "nome": "Elevação lateral na polia",
+          "grupo": "ombro",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.3,
+          "dicas": "Mantenha a tensão contínua do cabo."
+        },
+        {
+          "nome": "Prancha ventral no solo",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o corpo alinhado da cabeça aos calcanhares."
+        }
+      ]
+    }
+  ]
+}

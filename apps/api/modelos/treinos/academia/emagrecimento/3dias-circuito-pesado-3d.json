@@ -1,0 +1,156 @@
+{
+  "nome": "Circuito Integrado com Pesos — 3 Dias",
+  "modalidade": "academia",
+  "objetivo": "emagrecimento",
+  "dias": 3,
+  "duracao_estimada_min": 45,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Circuito Integrado com Pesos: Circuito Push e Cardio",
+      "exercicios": [
+        {
+          "nome": "Peck deck (voador)",
+          "grupo": "peito",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.2,
+          "dicas": "Foque no aperto e contração do peitoral no centro."
+        },
+        {
+          "nome": "Elevação lateral com halteres",
+          "grupo": "ombro",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.2,
+          "dicas": "Eleve até a linha dos ombros focando no deltoide lateral."
+        },
+        {
+          "nome": "Tríceps testa com barra W",
+          "grupo": "triceps",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.2,
+          "dicas": "Desça a barra em direção à testa mantendo os cotovelos fechados."
+        },
+        {
+          "nome": "Bicicleta ergométrica tiros HIIT",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Aumente a carga e pedale na máxima velocidade nos tiros."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — Circuito Integrado com Pesos: Circuito Pull e Cardio",
+      "exercicios": [
+        {
+          "nome": "Remada curvada com barra",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.2,
+          "dicas": "Incline o tronco a 45 graus e mantenha a coluna neutra."
+        },
+        {
+          "nome": "Rosca direta com barra W",
+          "grupo": "biceps",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.2,
+          "dicas": "Mantenha os cotovelos fixos ao lado do tronco."
+        },
+        {
+          "nome": "Bicicleta ergométrica tiros HIIT",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Aumente a carga e pedale na máxima velocidade nos tiros."
+        },
+        {
+          "nome": "Abdominal supra no cabo",
+          "grupo": "core",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.2,
+          "dicas": "Ajoelhado na polia alta, enrole o tronco puxando a corda."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia C — Circuito Integrado com Pesos: Circuito Legs e Cardio",
+      "exercicios": [
+        {
+          "nome": "Stiff com halteres",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.2,
+          "dicas": "Mantenha os joelhos semi-flexionados e projete o quadril para trás."
+        },
+        {
+          "nome": "Agachamento búlgaro com halteres",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.2,
+          "dicas": "Mantenha o tronco firme e agache com controle na perna da frente."
+        },
+        {
+          "nome": "Corrida em esteira - tiros de velocidade",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Alterne tiros de alta intensidade com caminhada de recuperação."
+        },
+        {
+          "nome": "Panturrilha sentado no banco",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.2,
+          "dicas": "Pausa de 1 segundo embaixo para alongar bem o sóleo."
+        }
+      ]
+    }
+  ]
+}

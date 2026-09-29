@@ -1,0 +1,205 @@
+{
+  "nome": "Densidade Calórica Alta — 4 Dias",
+  "modalidade": "academia",
+  "objetivo": "emagrecimento",
+  "dias": 4,
+  "duracao_estimada_min": 40,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Densidade Calórica Alta: Peito/Tríceps HIIT",
+      "exercicios": [
+        {
+          "nome": "Supino reto com barra",
+          "grupo": "peito",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.2,
+          "dicas": "Mantenha as escápulas retraídas e os pés firmes no chão."
+        },
+        {
+          "nome": "Tríceps corda na polia",
+          "grupo": "triceps",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.2,
+          "dicas": "Abra a corda no final da extensão para contração máxima."
+        },
+        {
+          "nome": "Corrida em esteira - tiros de velocidade",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Alterne tiros de alta intensidade com caminhada de recuperação."
+        },
+        {
+          "nome": "Abdominal infra no banco",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Eleve as pernas e o quadril focando no abdômen inferior."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — Densidade Calórica Alta: Costas/Bíceps HIIT",
+      "exercicios": [
+        {
+          "nome": "Remada articulada cavalinho",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.2,
+          "dicas": "Puxe mantendo os cotovelos colados ao tronco."
+        },
+        {
+          "nome": "Rosca direta com barra W",
+          "grupo": "biceps",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.2,
+          "dicas": "Mantenha os cotovelos fixos ao lado do tronco."
+        },
+        {
+          "nome": "Bicicleta ergométrica tiros HIIT",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Aumente a carga e pedale na máxima velocidade nos tiros."
+        },
+        {
+          "nome": "Abdominal infra no banco",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Eleve as pernas e o quadril focando no abdômen inferior."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia C — Densidade Calórica Alta: Pernas HIIT",
+      "exercicios": [
+        {
+          "nome": "Agachamento livre com barra",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.2,
+          "dicas": "Desça até que a coxa fique paralela ao solo com o peito erguido."
+        },
+        {
+          "nome": "Leg press 45°",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.2,
+          "dicas": "Evite travar totalmente os joelhos na extensão máxima."
+        },
+        {
+          "nome": "Corrida em esteira - tiros de velocidade",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Alterne tiros de alta intensidade com caminhada de recuperação."
+        },
+        {
+          "nome": "Panturrilha sentado no banco",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.2,
+          "dicas": "Pausa de 1 segundo embaixo para alongar bem o sóleo."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia D — Densidade Calórica Alta: Ombros/Core HIIT",
+      "exercicios": [
+        {
+          "nome": "Elevação lateral na polia",
+          "grupo": "ombro",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.2,
+          "dicas": "Mantenha a tensão contínua do cabo."
+        },
+        {
+          "nome": "Abdominal supra no cabo",
+          "grupo": "core",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.2,
+          "dicas": "Ajoelhado na polia alta, enrole o tronco puxando a corda."
+        },
+        {
+          "nome": "Bicicleta ergométrica tiros HIIT",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Aumente a carga e pedale na máxima velocidade nos tiros."
+        },
+        {
+          "nome": "Panturrilha em pé no aparelho",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.2,
+          "dicas": "Faça extensão plantar completa subindo no ponto máximo."
+        }
+      ]
+    }
+  ]
+}

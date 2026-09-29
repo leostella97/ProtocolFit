@@ -1,0 +1,156 @@
+{
+  "nome": "Calistenia Alta Densidade — 3 Dias",
+  "modalidade": "pesocorporal",
+  "objetivo": "hipertrofia",
+  "dias": 3,
+  "duracao_estimada_min": 40,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Calistenia Alta Densidade: Circuito Push e Cardio",
+      "exercicios": [
+        {
+          "nome": "Flexão diamante",
+          "grupo": "peito",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Junte as mãos formando um triângulo no centro do peito."
+        },
+        {
+          "nome": "Elevação Y-T-W no solo",
+          "grupo": "ombro",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Deitado de bruços, eleve os braços em formato de Y, T e W."
+        },
+        {
+          "nome": "Flexão diamante para tríceps",
+          "grupo": "triceps",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Cotovelos fechados ao lado do corpo focando nos tríceps."
+        },
+        {
+          "nome": "Skipping alto de velocidade",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Eleve os joelhos até a linha do quadril em alta velocidade."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — Calistenia Alta Densidade: Circuito Pull e Cardio",
+      "exercicios": [
+        {
+          "nome": "Puxada nas argolas/fita de suspensão",
+          "grupo": "costas",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o tronco firme e puxe as argolas até o peito."
+        },
+        {
+          "nome": "Barra fixa supinada (foco bíceps)",
+          "grupo": "biceps",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Concentre a puxada na flexão dos cotovelos."
+        },
+        {
+          "nome": "Mountain climbers (escalador)",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Puxe os joelhos rapidamente na position de prancha."
+        },
+        {
+          "nome": "Abdominal supra no solo",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Enrole o tronco tirando as escápulas do chão."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia C — Calistenia Alta Densidade: Circuito Legs e Cardio",
+      "exercicios": [
+        {
+          "nome": "Elevação pélvica unilateral solo",
+          "grupo": "pernas",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Eleve o quadril contraindo glúteos e isquiotibiais."
+        },
+        {
+          "nome": "Agachamento peso corporal",
+          "grupo": "pernas",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Desça até que as coxas fiquem paralelas ao solo com o peito aberto."
+        },
+        {
+          "nome": "Burpees completos com salto",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Flexão, queda e salto vertical dinâmico."
+        },
+        {
+          "nome": "Panturrilha dupla com pausa",
+          "grupo": "panturrilha",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Segure 2 segundos no ponto mais alto da extensão plantar."
+        }
+      ]
+    }
+  ]
+}

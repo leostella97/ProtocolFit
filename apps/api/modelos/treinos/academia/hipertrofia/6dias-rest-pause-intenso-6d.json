@@ -1,0 +1,259 @@
+{
+  "nome": "Rest-Pause System — 6 Dias",
+  "modalidade": "academia",
+  "objetivo": "hipertrofia",
+  "dias": 6,
+  "duracao_estimada_min": 55,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Rest-Pause System: Push A",
+      "exercicios": [
+        {
+          "nome": "Supino declinado com barra",
+          "grupo": "peito",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Mantenha o apoio firme nos pés e controle a descida."
+        },
+        {
+          "nome": "Desenvolvimento militar com barra",
+          "grupo": "ombro",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Pressione a barra acima da cabeça mantendo o core contraído."
+        },
+        {
+          "nome": "Tríceps corda na polia",
+          "grupo": "triceps",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Abra a corda no final da extensão para contração máxima."
+        },
+        {
+          "nome": "Prancha ventral no solo",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o corpo alinhado da cabeça aos calcanhares."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — Rest-Pause System: Pull A",
+      "exercicios": [
+        {
+          "nome": "Remada baixa no cabo",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Projete o peito para a frente na contração das dorsais."
+        },
+        {
+          "nome": "Rosca Scott na máquina",
+          "grupo": "biceps",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Apoie os braços confortavelmente no banco Scott."
+        },
+        {
+          "nome": "Abdominal supra no cabo",
+          "grupo": "core",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Ajoelhado na polia alta, enrole o tronco puxando a corda."
+        },
+        {
+          "nome": "Panturrilha sentado no banco",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Pausa de 1 segundo embaixo para alongar bem o sóleo."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia C — Rest-Pause System: Legs A",
+      "exercicios": [
+        {
+          "nome": "Agachamento búlgaro com halteres",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Mantenha o tronco firme e agache com controle na perna da frente."
+        },
+        {
+          "nome": "Agachamento livre com barra",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Desça até que a coxa fique paralela ao solo com o peito erguido."
+        },
+        {
+          "nome": "Panturrilha sentado no banco",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Pausa de 1 segundo embaixo para alongar bem o sóleo."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia D — Rest-Pause System: Push B",
+      "exercicios": [
+        {
+          "nome": "Crucifixo reto no cabo",
+          "grupo": "peito",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Mantenha um leve cotovelo flexionado durante a abertura."
+        },
+        {
+          "nome": "Crucifixo inverso na polia",
+          "grupo": "ombro",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Projete as mãos para trás enfatizando o deltoide posterior."
+        },
+        {
+          "nome": "Tríceps corda na polia",
+          "grupo": "triceps",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Abra a corda no final da extensão para contração máxima."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia E — Rest-Pause System: Pull B",
+      "exercicios": [
+        {
+          "nome": "Levantamento terra",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Empurre o chão com as pernas e mantenha a coluna alinhada."
+        },
+        {
+          "nome": "Rosca direta com barra W",
+          "grupo": "biceps",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Mantenha os cotovelos fixos ao lado do tronco."
+        },
+        {
+          "nome": "Abdominal supra no cabo",
+          "grupo": "core",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Ajoelhado na polia alta, enrole o tronco puxando a corda."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia F — Rest-Pause System: Legs B",
+      "exercicios": [
+        {
+          "nome": "Cadeira extensora",
+          "grupo": "pernas",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Segure 1 segundo no topo para enfatizar o quadríceps."
+        },
+        {
+          "nome": "Mesa flexora",
+          "grupo": "pernas",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Controle a fase de descida protegendo os isquiotibiais."
+        },
+        {
+          "nome": "Panturrilha em pé no aparelho",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Faça extensão plantar completa subindo no ponto máximo."
+        }
+      ]
+    }
+  ]
+}

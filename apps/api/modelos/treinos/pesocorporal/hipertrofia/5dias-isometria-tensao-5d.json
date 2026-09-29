@@ -1,0 +1,199 @@
+{
+  "nome": "Isometria e Tensão Corporal — 5 Dias",
+  "modalidade": "pesocorporal",
+  "objetivo": "hipertrofia",
+  "dias": 5,
+  "duracao_estimada_min": 45,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Isometria e Tensão Corporal: Peito Alta Intensidade",
+      "exercicios": [
+        {
+          "nome": "Flexão diamante",
+          "grupo": "peito",
+          "tipo": "corporal",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Junte as mãos formando um triângulo no centro do peito."
+        },
+        {
+          "nome": "Flexão aranha com joelhada",
+          "grupo": "peito",
+          "tipo": "corporal",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Puxe o joelho lateralmente na descida da flexão."
+        },
+        {
+          "nome": "Flexão diamante para tríceps",
+          "grupo": "triceps",
+          "tipo": "corporal",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Cotovelos fechados ao lado do corpo focando nos tríceps."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — Isometria e Tensão Corporal: Costas Alta Intensidade",
+      "exercicios": [
+        {
+          "nome": "Barra fixa pronada",
+          "grupo": "costas",
+          "tipo": "corporal",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Puxe o corpo até o queixo ultrapassar a barra de forma limpa."
+        },
+        {
+          "nome": "Barra fixa supinada (chin-up)",
+          "grupo": "costas",
+          "tipo": "corporal",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Pegada invertida focando na dorsal e bíceps."
+        },
+        {
+          "nome": "Barra fixa supinada (foco bíceps)",
+          "grupo": "biceps",
+          "tipo": "corporal",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Concentre a puxada na flexão dos cotovelos."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia C — Isometria e Tensão Corporal: Pernas Alta Intensidade",
+      "exercicios": [
+        {
+          "nome": "Elevação pélvica unilateral solo",
+          "grupo": "pernas",
+          "tipo": "corporal",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Eleve o quadril contraindo glúteos e isquiotibiais."
+        },
+        {
+          "nome": "Agachamento peso corporal",
+          "grupo": "pernas",
+          "tipo": "corporal",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Desça até que as coxas fiquem paralelas ao solo com o peito aberto."
+        },
+        {
+          "nome": "Panturrilha dupla com pausa",
+          "grupo": "panturrilha",
+          "tipo": "corporal",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Segure 2 segundos no ponto mais alto da extensão plantar."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia D — Isometria e Tensão Corporal: Ombros Alta Intensidade",
+      "exercicios": [
+        {
+          "nome": "Flexão pino (pike push-up)",
+          "grupo": "ombro",
+          "tipo": "corporal",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Quadril elevado em V invertido flexionando em direção à cabeça."
+        },
+        {
+          "nome": "Elevação Y-T-W no solo",
+          "grupo": "ombro",
+          "tipo": "corporal",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Deitado de bruços, eleve os braços em formato de Y, T e W."
+        },
+        {
+          "nome": "Prancha ventral isométrica",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o corpo alinhado da cabeça aos calcanhares."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia E — Isometria e Tensão Corporal: Braços Alta Intensidade",
+      "exercicios": [
+        {
+          "nome": "Remada australiana supinada",
+          "grupo": "biceps",
+          "tipo": "corporal",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Puxe o peito até a barra com pegada supinada."
+        },
+        {
+          "nome": "Tríceps mergulho no banco",
+          "grupo": "triceps",
+          "tipo": "corporal",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o quadril rente ao banco e flexione os cotovelos."
+        },
+        {
+          "nome": "Panturrilha dupla com pausa",
+          "grupo": "panturrilha",
+          "tipo": "corporal",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Segure 2 segundos no ponto mais alto da extensão plantar."
+        }
+      ]
+    }
+  ]
+}

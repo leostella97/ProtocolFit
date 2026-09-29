@@ -1,0 +1,275 @@
+{
+  "nome": "FST-7 Fascial Stretch Training — 7 Dias",
+  "modalidade": "academia",
+  "objetivo": "hipertrofia",
+  "dias": 7,
+  "duracao_estimada_min": 65,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — FST-7 Fascial Stretch Training: Peito Foco",
+      "exercicios": [
+        {
+          "nome": "Crossover na polia alta",
+          "grupo": "peito",
+          "tipo": "isolador",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Cruze as mãos levemente no final da fase concêntrica."
+        },
+        {
+          "nome": "Peck deck (voador)",
+          "grupo": "peito",
+          "tipo": "isolador",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Foque no aperto e contração do peitoral no centro."
+        },
+        {
+          "nome": "Tríceps francês com halter",
+          "grupo": "triceps",
+          "tipo": "isolador",
+          "series": 7,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.15,
+          "dicas": "Mantenha os braços verticais e desça a carga atrás da cabeça."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — FST-7 Fascial Stretch Training: Costas Foco",
+      "exercicios": [
+        {
+          "nome": "Puxada frontal na polia",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Puxe a barra em direção ao peito expandindo a caixa torácica."
+        },
+        {
+          "nome": "Remada curvada com barra",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Incline o tronco a 45 graus e mantenha a coluna neutra."
+        },
+        {
+          "nome": "Rosca martelo no cabo",
+          "grupo": "biceps",
+          "tipo": "isolador",
+          "series": 7,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.15,
+          "dicas": "Pegada neutra focando no braquiorradial e bíceps."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia C — FST-7 Fascial Stretch Training: Quadríceps Foco",
+      "exercicios": [
+        {
+          "nome": "Mesa flexora",
+          "grupo": "pernas",
+          "tipo": "isolador",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Controle a fase de descida protegendo os isquiotibiais."
+        },
+        {
+          "nome": "Stiff com halteres",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Mantenha os joelhos semi-flexionados e projete o quadril para trás."
+        },
+        {
+          "nome": "Panturrilha sentado no banco",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 7,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.15,
+          "dicas": "Pausa de 1 segundo embaixo para alongar bem o sóleo."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia D — FST-7 Fascial Stretch Training: Ombros Foco",
+      "exercicios": [
+        {
+          "nome": "Desenvolvimento militar com barra",
+          "grupo": "ombro",
+          "tipo": "composto",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Pressione a barra acima da cabeça mantendo o core contraído."
+        },
+        {
+          "nome": "Desenvolvimento com halteres",
+          "grupo": "ombro",
+          "tipo": "composto",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Suba os halteres sem bater no topo."
+        },
+        {
+          "nome": "Prancha ventral no solo",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 7,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o corpo alinhado da cabeça aos calcanhares."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia E — FST-7 Fascial Stretch Training: Isquiotibiais Foco",
+      "exercicios": [
+        {
+          "nome": "Mesa flexora",
+          "grupo": "pernas",
+          "tipo": "isolador",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Controle a fase de descida protegendo os isquiotibiais."
+        },
+        {
+          "nome": "Stiff com halteres",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Mantenha os joelhos semi-flexionados e projete o quadril para trás."
+        },
+        {
+          "nome": "Panturrilha sentado no banco",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 7,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.15,
+          "dicas": "Pausa de 1 segundo embaixo para alongar bem o sóleo."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia F — FST-7 Fascial Stretch Training: Braços Foco",
+      "exercicios": [
+        {
+          "nome": "Rosca direta com barra W",
+          "grupo": "biceps",
+          "tipo": "isolador",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Mantenha os cotovelos fixos ao lado do tronco."
+        },
+        {
+          "nome": "Tríceps corda na polia",
+          "grupo": "triceps",
+          "tipo": "isolador",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Abra a corda no final da extensão para contração máxima."
+        },
+        {
+          "nome": "Rosca martelo no cabo",
+          "grupo": "biceps",
+          "tipo": "isolador",
+          "series": 7,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.15,
+          "dicas": "Pegada neutra focando no braquiorradial e bíceps."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia G — FST-7 Fascial Stretch Training: Core e Regenerativo",
+      "exercicios": [
+        {
+          "nome": "Abdominal infra no banco",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Eleve as pernas e o quadril focando no abdômen inferior."
+        },
+        {
+          "nome": "Abdominal supra no cabo",
+          "grupo": "core",
+          "tipo": "isolador",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Ajoelhado na polia alta, enrole o tronco puxando a corda."
+        },
+        {
+          "nome": "Panturrilha sentado no banco",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 7,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.15,
+          "dicas": "Pausa de 1 segundo embaixo para alongar bem o sóleo."
+        }
+      ]
+    }
+  ]
+}

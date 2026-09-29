@@ -1,0 +1,205 @@
+{
+  "nome": "Tabata Gym Protocol — 4 Dias",
+  "modalidade": "academia",
+  "objetivo": "emagrecimento",
+  "dias": 4,
+  "duracao_estimada_min": 35,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Tabata Gym Protocol: Peito/Tríceps HIIT",
+      "exercicios": [
+        {
+          "nome": "Peck deck (voador)",
+          "grupo": "peito",
+          "tipo": "isolador",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": 0.1,
+          "dicas": "Foque no aperto e contração do peitoral no centro."
+        },
+        {
+          "nome": "Tríceps francês com halter",
+          "grupo": "triceps",
+          "tipo": "isolador",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": 0.1,
+          "dicas": "Mantenha os braços verticais e desça a carga atrás da cabeça."
+        },
+        {
+          "nome": "Corrida em esteira - tiros de velocidade",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Alterne tiros de alta intensidade com caminhada de recuperação."
+        },
+        {
+          "nome": "Abdominal supra no cabo",
+          "grupo": "core",
+          "tipo": "isolador",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": 0.1,
+          "dicas": "Ajoelhado na polia alta, enrole o tronco puxando a corda."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — Tabata Gym Protocol: Costas/Bíceps HIIT",
+      "exercicios": [
+        {
+          "nome": "Remada curvada com barra",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": 0.1,
+          "dicas": "Incline o tronco a 45 graus e mantenha a coluna neutra."
+        },
+        {
+          "nome": "Rosca martelo no cabo",
+          "grupo": "biceps",
+          "tipo": "isolador",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": 0.1,
+          "dicas": "Pegada neutra focando no braquiorradial e bíceps."
+        },
+        {
+          "nome": "Bicicleta ergométrica tiros HIIT",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Aumente a carga e pedale na máxima velocidade nos tiros."
+        },
+        {
+          "nome": "Abdominal supra no cabo",
+          "grupo": "core",
+          "tipo": "isolador",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": 0.1,
+          "dicas": "Ajoelhado na polia alta, enrole o tronco puxando a corda."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia C — Tabata Gym Protocol: Pernas HIIT",
+      "exercicios": [
+        {
+          "nome": "Stiff com halteres",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": 0.1,
+          "dicas": "Mantenha os joelhos semi-flexionados e projete o quadril para trás."
+        },
+        {
+          "nome": "Agachamento búlgaro com halteres",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": 0.1,
+          "dicas": "Mantenha o tronco firme e agache com controle na perna da frente."
+        },
+        {
+          "nome": "Corrida em esteira - tiros de velocidade",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Alterne tiros de alta intensidade com caminhada de recuperação."
+        },
+        {
+          "nome": "Panturrilha sentado no banco",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": 0.1,
+          "dicas": "Pausa de 1 segundo embaixo para alongar bem o sóleo."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia D — Tabata Gym Protocol: Ombros/Core HIIT",
+      "exercicios": [
+        {
+          "nome": "Elevação lateral com halteres",
+          "grupo": "ombro",
+          "tipo": "isolador",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": 0.1,
+          "dicas": "Eleve até a linha dos ombros focando no deltoide lateral."
+        },
+        {
+          "nome": "Prancha ventral no solo",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o corpo alinhado da cabeça aos calcanhares."
+        },
+        {
+          "nome": "Bicicleta ergométrica tiros HIIT",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Aumente a carga e pedale na máxima velocidade nos tiros."
+        },
+        {
+          "nome": "Panturrilha em pé no aparelho",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": 0.1,
+          "dicas": "Faça extensão plantar completa subindo no ponto máximo."
+        }
+      ]
+    }
+  ]
+}

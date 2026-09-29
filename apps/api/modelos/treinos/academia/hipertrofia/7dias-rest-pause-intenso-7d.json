@@ -1,0 +1,275 @@
+{
+  "nome": "Rest-Pause System — 7 Dias",
+  "modalidade": "academia",
+  "objetivo": "hipertrofia",
+  "dias": 7,
+  "duracao_estimada_min": 55,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Rest-Pause System: Peito Foco",
+      "exercicios": [
+        {
+          "nome": "Peck deck (voador)",
+          "grupo": "peito",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Foque no aperto e contração do peitoral no centro."
+        },
+        {
+          "nome": "Supino declinado com barra",
+          "grupo": "peito",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Mantenha o apoio firme nos pés e controle a descida."
+        },
+        {
+          "nome": "Tríceps testa com barra W",
+          "grupo": "triceps",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Desça a barra em direção à testa mantendo os cotovelos fechados."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — Rest-Pause System: Costas Foco",
+      "exercicios": [
+        {
+          "nome": "Remada curvada com barra",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Incline o tronco a 45 graus e mantenha a coluna neutra."
+        },
+        {
+          "nome": "Remada baixa no cabo",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Projete o peito para a frente na contração das dorsais."
+        },
+        {
+          "nome": "Rosca alternada com halteres",
+          "grupo": "biceps",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Gire o punho na subida para maximizar a supinação."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia C — Rest-Pause System: Quadríceps Foco",
+      "exercicios": [
+        {
+          "nome": "Stiff com halteres",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Mantenha os joelhos semi-flexionados e projete o quadril para trás."
+        },
+        {
+          "nome": "Agachamento búlgaro com halteres",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Mantenha o tronco firme e agache com controle na perna da frente."
+        },
+        {
+          "nome": "Panturrilha em pé no aparelho",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Faça extensão plantar completa subindo no ponto máximo."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia D — Rest-Pause System: Ombros Foco",
+      "exercicios": [
+        {
+          "nome": "Desenvolvimento com halteres",
+          "grupo": "ombro",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Suba os halteres sem bater no topo."
+        },
+        {
+          "nome": "Elevação lateral com halteres",
+          "grupo": "ombro",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Eleve até a linha dos ombros focando no deltoide lateral."
+        },
+        {
+          "nome": "Abdominal infra no banco",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Eleve as pernas e o quadril focando no abdômen inferior."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia E — Rest-Pause System: Isquiotibiais Foco",
+      "exercicios": [
+        {
+          "nome": "Stiff com halteres",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Mantenha os joelhos semi-flexionados e projete o quadril para trás."
+        },
+        {
+          "nome": "Agachamento búlgaro com halteres",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Mantenha o tronco firme e agache com controle na perna da frente."
+        },
+        {
+          "nome": "Panturrilha em pé no aparelho",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Faça extensão plantar completa subindo no ponto máximo."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia F — Rest-Pause System: Braços Foco",
+      "exercicios": [
+        {
+          "nome": "Rosca Scott na máquina",
+          "grupo": "biceps",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Apoie os braços confortavelmente no banco Scott."
+        },
+        {
+          "nome": "Tríceps francês com halter",
+          "grupo": "triceps",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Mantenha os braços verticais e desça a carga atrás da cabeça."
+        },
+        {
+          "nome": "Rosca alternada com halteres",
+          "grupo": "biceps",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Gire o punho na subida para maximizar a supinação."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia G — Rest-Pause System: Core e Regenerativo",
+      "exercicios": [
+        {
+          "nome": "Abdominal supra no cabo",
+          "grupo": "core",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Ajoelhado na polia alta, enrole o tronco puxando a corda."
+        },
+        {
+          "nome": "Prancha ventral no solo",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o corpo alinhado da cabeça aos calcanhares."
+        },
+        {
+          "nome": "Panturrilha em pé no aparelho",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Faça extensão plantar completa subindo no ponto máximo."
+        }
+      ]
+    }
+  ]
+}

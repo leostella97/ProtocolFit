@@ -1,0 +1,107 @@
+{
+  "nome": "Resistência ao Lactato — 2 Dias",
+  "modalidade": "academia",
+  "objetivo": "corrida",
+  "dias": 2,
+  "duracao_estimada_min": 55,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Resistência ao Lactato: Agachamentos e Estabilidade de Passada",
+      "exercicios": [
+        {
+          "nome": "Mesa flexora",
+          "grupo": "pernas",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.3,
+          "dicas": "Controle a fase de descida protegendo os isquiotibiais."
+        },
+        {
+          "nome": "Stiff com halteres",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.3,
+          "dicas": "Mantenha os joelhos semi-flexionados e projete o quadril para trás."
+        },
+        {
+          "nome": "Afundo saltopliométrico",
+          "grupo": "pliometria",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Alterne as pernas no ar de forma explosiva."
+        },
+        {
+          "nome": "Abdominal infra no banco",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Eleve as pernas e o quadril focando no abdômen inferior."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — Resistência ao Lactato: Tronco, Postura e Reatividade",
+      "exercicios": [
+        {
+          "nome": "Puxada frontal na polia",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.3,
+          "dicas": "Puxe a barra em direção ao peito expandindo a caixa torácica."
+        },
+        {
+          "nome": "Desenvolvimento com halteres",
+          "grupo": "ombro",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.3,
+          "dicas": "Suba os halteres sem bater no topo."
+        },
+        {
+          "nome": "Afundo saltopliométrico",
+          "grupo": "pliometria",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Alterne as pernas no ar de forma explosiva."
+        },
+        {
+          "nome": "Abdominal infra no banco",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Eleve as pernas e o quadril focando no abdômen inferior."
+        }
+      ]
+    }
+  ]
+}

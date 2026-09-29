@@ -1,0 +1,156 @@
+{
+  "nome": "FST-7 Fascial Stretch Training — 3 Dias",
+  "modalidade": "academia",
+  "objetivo": "hipertrofia",
+  "dias": 3,
+  "duracao_estimada_min": 65,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — FST-7 Fascial Stretch Training: Peito e Tríceps",
+      "exercicios": [
+        {
+          "nome": "Supino declinado com barra",
+          "grupo": "peito",
+          "tipo": "composto",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Mantenha o apoio firme nos pés e controle a descida."
+        },
+        {
+          "nome": "Supino reto com barra",
+          "grupo": "peito",
+          "tipo": "composto",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Mantenha as escápulas retraídas e os pés firmes no chão."
+        },
+        {
+          "nome": "Tríceps corda na polia",
+          "grupo": "triceps",
+          "tipo": "isolador",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Abra a corda no final da extensão para contração máxima."
+        },
+        {
+          "nome": "Elevação lateral com halteres",
+          "grupo": "ombro",
+          "tipo": "isolador",
+          "series": 7,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.15,
+          "dicas": "Eleve até a linha dos ombros focando no deltoide lateral."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — FST-7 Fascial Stretch Training: Costas e Bíceps",
+      "exercicios": [
+        {
+          "nome": "Remada baixa no cabo",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Projete o peito para a frente na contração das dorsais."
+        },
+        {
+          "nome": "Remada articulada cavalinho",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Puxe mantendo os cotovelos colados ao tronco."
+        },
+        {
+          "nome": "Rosca direta com barra W",
+          "grupo": "biceps",
+          "tipo": "isolador",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Mantenha os cotovelos fixos ao lado do tronco."
+        },
+        {
+          "nome": "Prancha ventral no solo",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 7,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o corpo alinhado da cabeça aos calcanhares."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia C — FST-7 Fascial Stretch Training: Pernas Completo",
+      "exercicios": [
+        {
+          "nome": "Agachamento búlgaro com halteres",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Mantenha o tronco firme e agache com controle na perna da frente."
+        },
+        {
+          "nome": "Agachamento livre com barra",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Desça até que a coxa fique paralela ao solo com o peito erguido."
+        },
+        {
+          "nome": "Leg press 45°",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Evite travar totalmente os joelhos na extensão máxima."
+        },
+        {
+          "nome": "Panturrilha em pé no aparelho",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 7,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.15,
+          "dicas": "Faça extensão plantar completa subindo no ponto máximo."
+        }
+      ]
+    }
+  ]
+}

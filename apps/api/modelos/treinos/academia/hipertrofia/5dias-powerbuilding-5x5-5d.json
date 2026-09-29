@@ -1,0 +1,199 @@
+{
+  "nome": "5x5 Powerbuilding Carga — 5 Dias",
+  "modalidade": "academia",
+  "objetivo": "hipertrofia",
+  "dias": 5,
+  "duracao_estimada_min": 60,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — 5x5 Powerbuilding Carga: Peito Alta Intensidade",
+      "exercicios": [
+        {
+          "nome": "Peck deck (voador)",
+          "grupo": "peito",
+          "tipo": "isolador",
+          "series": 5,
+          "repeticoes_min": 5,
+          "repeticoes_max": 5,
+          "descanso_segundos": 150,
+          "percentual_carga_peso_corporal": 0.75,
+          "dicas": "Foque no aperto e contração do peitoral no centro."
+        },
+        {
+          "nome": "Supino declinado com barra",
+          "grupo": "peito",
+          "tipo": "composto",
+          "series": 5,
+          "repeticoes_min": 5,
+          "repeticoes_max": 5,
+          "descanso_segundos": 150,
+          "percentual_carga_peso_corporal": 0.75,
+          "dicas": "Mantenha o apoio firme nos pés e controle a descida."
+        },
+        {
+          "nome": "Tríceps testa com barra W",
+          "grupo": "triceps",
+          "tipo": "isolador",
+          "series": 5,
+          "repeticoes_min": 5,
+          "repeticoes_max": 5,
+          "descanso_segundos": 150,
+          "percentual_carga_peso_corporal": 0.75,
+          "dicas": "Desça a barra em direção à testa mantendo os cotovelos fechados."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — 5x5 Powerbuilding Carga: Costas Alta Intensidade",
+      "exercicios": [
+        {
+          "nome": "Remada curvada com barra",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 5,
+          "repeticoes_min": 5,
+          "repeticoes_max": 5,
+          "descanso_segundos": 150,
+          "percentual_carga_peso_corporal": 0.75,
+          "dicas": "Incline o tronco a 45 graus e mantenha a coluna neutra."
+        },
+        {
+          "nome": "Remada baixa no cabo",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 5,
+          "repeticoes_min": 5,
+          "repeticoes_max": 5,
+          "descanso_segundos": 150,
+          "percentual_carga_peso_corporal": 0.75,
+          "dicas": "Projete o peito para a frente na contração das dorsais."
+        },
+        {
+          "nome": "Rosca alternada com halteres",
+          "grupo": "biceps",
+          "tipo": "isolador",
+          "series": 5,
+          "repeticoes_min": 5,
+          "repeticoes_max": 5,
+          "descanso_segundos": 150,
+          "percentual_carga_peso_corporal": 0.75,
+          "dicas": "Gire o punho na subida para maximizar a supinação."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia C — 5x5 Powerbuilding Carga: Pernas Alta Intensidade",
+      "exercicios": [
+        {
+          "nome": "Stiff com halteres",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 5,
+          "repeticoes_min": 5,
+          "repeticoes_max": 5,
+          "descanso_segundos": 150,
+          "percentual_carga_peso_corporal": 0.75,
+          "dicas": "Mantenha os joelhos semi-flexionados e projete o quadril para trás."
+        },
+        {
+          "nome": "Agachamento búlgaro com halteres",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 5,
+          "repeticoes_min": 5,
+          "repeticoes_max": 5,
+          "descanso_segundos": 150,
+          "percentual_carga_peso_corporal": 0.75,
+          "dicas": "Mantenha o tronco firme e agache com controle na perna da frente."
+        },
+        {
+          "nome": "Panturrilha em pé no aparelho",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 5,
+          "repeticoes_min": 5,
+          "repeticoes_max": 5,
+          "descanso_segundos": 150,
+          "percentual_carga_peso_corporal": 0.75,
+          "dicas": "Faça extensão plantar completa subindo no ponto máximo."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia D — 5x5 Powerbuilding Carga: Ombros Alta Intensidade",
+      "exercicios": [
+        {
+          "nome": "Desenvolvimento militar com barra",
+          "grupo": "ombro",
+          "tipo": "composto",
+          "series": 5,
+          "repeticoes_min": 5,
+          "repeticoes_max": 5,
+          "descanso_segundos": 150,
+          "percentual_carga_peso_corporal": 0.75,
+          "dicas": "Pressione a barra acima da cabeça mantendo o core contraído."
+        },
+        {
+          "nome": "Desenvolvimento com halteres",
+          "grupo": "ombro",
+          "tipo": "composto",
+          "series": 5,
+          "repeticoes_min": 5,
+          "repeticoes_max": 5,
+          "descanso_segundos": 150,
+          "percentual_carga_peso_corporal": 0.75,
+          "dicas": "Suba os halteres sem bater no topo."
+        },
+        {
+          "nome": "Abdominal infra no banco",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 5,
+          "repeticoes_min": 5,
+          "repeticoes_max": 5,
+          "descanso_segundos": 150,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Eleve as pernas e o quadril focando no abdômen inferior."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia E — 5x5 Powerbuilding Carga: Braços Alta Intensidade",
+      "exercicios": [
+        {
+          "nome": "Rosca direta com barra W",
+          "grupo": "biceps",
+          "tipo": "isolador",
+          "series": 5,
+          "repeticoes_min": 5,
+          "repeticoes_max": 5,
+          "descanso_segundos": 150,
+          "percentual_carga_peso_corporal": 0.75,
+          "dicas": "Mantenha os cotovelos fixos ao lado do tronco."
+        },
+        {
+          "nome": "Tríceps francês com halter",
+          "grupo": "triceps",
+          "tipo": "isolador",
+          "series": 5,
+          "repeticoes_min": 5,
+          "repeticoes_max": 5,
+          "descanso_segundos": 150,
+          "percentual_carga_peso_corporal": 0.75,
+          "dicas": "Mantenha os braços verticais e desça a carga atrás da cabeça."
+        },
+        {
+          "nome": "Panturrilha em pé no aparelho",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 5,
+          "repeticoes_min": 5,
+          "repeticoes_max": 5,
+          "descanso_segundos": 150,
+          "percentual_carga_peso_corporal": 0.75,
+          "dicas": "Faça extensão plantar completa subindo no ponto máximo."
+        }
+      ]
+    }
+  ]
+}

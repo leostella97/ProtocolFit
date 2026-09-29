@@ -1,0 +1,107 @@
+{
+  "nome": "Tabata Corporal Intensivo — 2 Dias",
+  "modalidade": "pesocorporal",
+  "objetivo": "emagrecimento",
+  "dias": 2,
+  "duracao_estimada_min": 30,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Tabata Corporal Intensivo: Superior Queima Metabólica",
+      "exercicios": [
+        {
+          "nome": "Flexão aranha com joelhada",
+          "grupo": "peito",
+          "tipo": "corporal",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Puxe o joelho lateralmente na descida da flexão."
+        },
+        {
+          "nome": "Barra fixa pronada",
+          "grupo": "costas",
+          "tipo": "corporal",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Puxe o corpo até o queixo ultrapassar a barra de forma limpa."
+        },
+        {
+          "nome": "Mountain climbers (escalador)",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Puxe os joelhos rapidamente na position de prancha."
+        },
+        {
+          "nome": "Abdominal supra no solo",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Enrole o tronco tirando as escápulas do chão."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — Tabata Corporal Intensivo: Inferior Queima Metabólica",
+      "exercicios": [
+        {
+          "nome": "Afundo alternado no solo",
+          "grupo": "pernas",
+          "tipo": "corporal",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Passos largos alternados mantendo o tronco ereto."
+        },
+        {
+          "nome": "Agachamento sumô corporal",
+          "grupo": "pernas",
+          "tipo": "corporal",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Pés afastados apontando para fora ativando adutores e glúteos."
+        },
+        {
+          "nome": "Burpees completos com salto",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Flexão, queda e salto vertical dinâmico."
+        },
+        {
+          "nome": "Abdominal infra no solo",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Eleve as pernas estendidas sem tirar a lombar do chão."
+        }
+      ]
+    }
+  ]
+}

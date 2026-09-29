@@ -1,0 +1,303 @@
+{
+  "nome": "Calistenia Alta Densidade — 7 Dias",
+  "modalidade": "pesocorporal",
+  "objetivo": "hipertrofia",
+  "dias": 7,
+  "duracao_estimada_min": 40,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Calistenia Alta Densidade: Push A HIIT",
+      "exercicios": [
+        {
+          "nome": "Flexão aranha com joelhada",
+          "grupo": "peito",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Puxe o joelho lateralmente na descida da flexão."
+        },
+        {
+          "nome": "Elevação Y-T-W no solo",
+          "grupo": "ombro",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Deitado de bruços, eleve os braços em formato de Y, T e W."
+        },
+        {
+          "nome": "Paralelas em barras paralelas",
+          "grupo": "triceps",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o tronco levemente ereto e desça até 90 graus."
+        },
+        {
+          "nome": "Mountain climbers (escalador)",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Puxe os joelhos rapidamente na position de prancha."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — Calistenia Alta Densidade: Pull A HIIT",
+      "exercicios": [
+        {
+          "nome": "Barra fixa supinada (chin-up)",
+          "grupo": "costas",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Pegada invertida focando na dorsal e bíceps."
+        },
+        {
+          "nome": "Barra fixa supinada (foco bíceps)",
+          "grupo": "biceps",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Concentre a puxada na flexão dos cotovelos."
+        },
+        {
+          "nome": "Skipping alto de velocidade",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Eleve os joelhos até a linha do quadril em alta velocidade."
+        },
+        {
+          "nome": "Prancha ventral isométrica",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o corpo alinhado da cabeça aos calcanhares."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia C — Calistenia Alta Densidade: Legs A HIIT",
+      "exercicios": [
+        {
+          "nome": "Agachamento peso corporal",
+          "grupo": "pernas",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Desça até que as coxas fiquem paralelas ao solo com o peito aberto."
+        },
+        {
+          "nome": "Agachamento búlgaro corporal",
+          "grupo": "pernas",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Apoie um pé atrás no banco e agache com a perna da frente."
+        },
+        {
+          "nome": "Polichinelos contínuos",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o ritmo acelerado e respiração ritmada."
+        },
+        {
+          "nome": "Panturrilha dupla com pausa",
+          "grupo": "panturrilha",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Segure 2 segundos no ponto mais alto da extensão plantar."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia D — Calistenia Alta Densidade: Push B HIIT",
+      "exercicios": [
+        {
+          "nome": "Flexão diamante",
+          "grupo": "peito",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Junte as mãos formando um triângulo no centro do peito."
+        },
+        {
+          "nome": "Flexão pino (pike push-up)",
+          "grupo": "ombro",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Quadril elevado em V invertido flexionando em direção à cabeça."
+        },
+        {
+          "nome": "Paralelas em barras paralelas",
+          "grupo": "triceps",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o tronco levemente ereto e desça até 90 graus."
+        },
+        {
+          "nome": "Polichinelos contínuos",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o ritmo acelerado e respiração ritmada."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia E — Calistenia Alta Densidade: Pull B HIIT",
+      "exercicios": [
+        {
+          "nome": "Remada australiana na barra baixa",
+          "grupo": "costas",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha os calcanhares no chão e puxe o peito até a barra."
+        },
+        {
+          "nome": "Remada australiana supinada",
+          "grupo": "biceps",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Puxe o peito até a barra com pegada supinada."
+        },
+        {
+          "nome": "Burpees completos com salto",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Flexão, queda e salto vertical dinâmico."
+        },
+        {
+          "nome": "Abdominal infra no solo",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Eleve as pernas estendidas sem tirar a lombar do chão."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia F — Calistenia Alta Densidade: Legs B HIIT",
+      "exercicios": [
+        {
+          "nome": "Elevação pélvica unilateral solo",
+          "grupo": "pernas",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Eleve o quadril contraindo glúteos e isquiotibiais."
+        },
+        {
+          "nome": "Agachamento peso corporal",
+          "grupo": "pernas",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Desça até que as coxas fiquem paralelas ao solo com o peito aberto."
+        },
+        {
+          "nome": "Skipping alto de velocidade",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Eleve os joelhos até a linha do quadril em alta velocidade."
+        },
+        {
+          "nome": "Panturrilha unilateral em pé",
+          "grupo": "panturrilha",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Suba na ponta do pé de forma lenta e controlada."
+        }
+      ]
+    }
+  ]
+}

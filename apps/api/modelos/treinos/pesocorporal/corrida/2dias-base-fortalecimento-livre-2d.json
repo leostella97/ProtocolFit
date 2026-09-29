@@ -1,0 +1,107 @@
+{
+  "nome": "Fortalecimento do Corredor sem Pesos — 2 Dias",
+  "modalidade": "pesocorporal",
+  "objetivo": "corrida",
+  "dias": 2,
+  "duracao_estimada_min": 45,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Fortalecimento do Corredor sem Pesos: Agachamentos e Estabilidade de Passada",
+      "exercicios": [
+        {
+          "nome": "Agachamento sumô corporal",
+          "grupo": "pernas",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Pés afastados apontando para fora ativando adutores e glúteos."
+        },
+        {
+          "nome": "Elevação pélvica unilateral solo",
+          "grupo": "pernas",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Eleve o quadril contraindo glúteos e isquiotibiais."
+        },
+        {
+          "nome": "Agachamento com salto explosivo",
+          "grupo": "pliometria",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Salte verticalmente no topo do agachamento e amortecça."
+        },
+        {
+          "nome": "Abdominal infra no solo",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Eleve as pernas estendidas sem tirar a lombar do chão."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — Fortalecimento do Corredor sem Pesos: Tronco, Postura e Reatividade",
+      "exercicios": [
+        {
+          "nome": "Barra fixa supinada (chin-up)",
+          "grupo": "costas",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Pegada invertida focando na dorsal e bíceps."
+        },
+        {
+          "nome": "Flexão pino (pike push-up)",
+          "grupo": "ombro",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Quadril elevado em V invertido flexionando em direção à cabeça."
+        },
+        {
+          "nome": "Salto com joelhada no peito",
+          "grupo": "pliometria",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Puxe os joelhos ao peito no ápice do salto."
+        },
+        {
+          "nome": "Prancha ventral isométrica",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o corpo alinhado da cabeça aos calcanhares."
+        }
+      ]
+    }
+  ]
+}

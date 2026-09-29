@@ -1,0 +1,205 @@
+{
+  "nome": "Calistenia HIIT Queima Gordura — 4 Dias",
+  "modalidade": "pesocorporal",
+  "objetivo": "emagrecimento",
+  "dias": 4,
+  "duracao_estimada_min": 35,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Calistenia HIIT Queima Gordura: Peito/Tríceps HIIT",
+      "exercicios": [
+        {
+          "nome": "Flexão inclinada nas barras",
+          "grupo": "peito",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Apoie as mãos em superfície elevada ajustando a intensidade."
+        },
+        {
+          "nome": "Flexão diamante para tríceps",
+          "grupo": "triceps",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Cotovelos fechados ao lado do corpo focando nos tríceps."
+        },
+        {
+          "nome": "Burpees completos com salto",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Flexão, queda e salto vertical dinâmico."
+        },
+        {
+          "nome": "Abdominal infra no solo",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Eleve as pernas estendidas sem tirar a lombar do chão."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — Calistenia HIIT Queima Gordura: Costas/Bíceps HIIT",
+      "exercicios": [
+        {
+          "nome": "Barra fixa supinada (chin-up)",
+          "grupo": "costas",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Pegada invertida focando na dorsal e bíceps."
+        },
+        {
+          "nome": "Barra fixa supinada (foco bíceps)",
+          "grupo": "biceps",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Concentre a puxada na flexão dos cotovelos."
+        },
+        {
+          "nome": "Skipping alto de velocidade",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Eleve os joelhos até a linha do quadril em alta velocidade."
+        },
+        {
+          "nome": "Prancha ventral isométrica",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o corpo alinhado da cabeça aos calcanhares."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia C — Calistenia HIIT Queima Gordura: Pernas HIIT",
+      "exercicios": [
+        {
+          "nome": "Agachamento sumô corporal",
+          "grupo": "pernas",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Pés afastados apontando para fora ativando adutores e glúteos."
+        },
+        {
+          "nome": "Elevação pélvica unilateral solo",
+          "grupo": "pernas",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Eleve o quadril contraindo glúteos e isquiotibiais."
+        },
+        {
+          "nome": "Polichinelos contínuos",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o ritmo acelerado e respiração ritmada."
+        },
+        {
+          "nome": "Panturrilha dupla com pausa",
+          "grupo": "panturrilha",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Segure 2 segundos no ponto mais alto da extensão plantar."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia D — Calistenia HIIT Queima Gordura: Ombros/Core HIIT",
+      "exercicios": [
+        {
+          "nome": "Elevação Y-T-W no solo",
+          "grupo": "ombro",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Deitado de bruços, eleve os braços em formato de Y, T e W."
+        },
+        {
+          "nome": "Prancha ventral isométrica",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o corpo alinhado da cabeça aos calcanhares."
+        },
+        {
+          "nome": "Mountain climbers (escalador)",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Puxe os joelhos rapidamente na position de prancha."
+        },
+        {
+          "nome": "Panturrilha unilateral em pé",
+          "grupo": "panturrilha",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Suba na ponta do pé de forma lenta e controlada."
+        }
+      ]
+    }
+  ]
+}

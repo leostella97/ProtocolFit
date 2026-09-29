@@ -1,0 +1,156 @@
+{
+  "nome": "Desafio 300 Repetições — 3 Dias",
+  "modalidade": "pesocorporal",
+  "objetivo": "emagrecimento",
+  "dias": 3,
+  "duracao_estimada_min": 40,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Desafio 300 Repetições: Circuito Push e Cardio",
+      "exercicios": [
+        {
+          "nome": "Flexão aranha com joelhada",
+          "grupo": "peito",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Puxe o joelho lateralmente na descida da flexão."
+        },
+        {
+          "nome": "Flexão pino (pike push-up)",
+          "grupo": "ombro",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Quadril elevado em V invertido flexionando em direção à cabeça."
+        },
+        {
+          "nome": "Tríceps mergulho no banco",
+          "grupo": "triceps",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o quadril rente ao banco e flexione os cotovelos."
+        },
+        {
+          "nome": "Burpees completos com salto",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Flexão, queda e salto vertical dinâmico."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — Desafio 300 Repetições: Circuito Pull e Cardio",
+      "exercicios": [
+        {
+          "nome": "Barra fixa pronada",
+          "grupo": "costas",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Puxe o corpo até o queixo ultrapassar a barra de forma limpa."
+        },
+        {
+          "nome": "Remada australiana supinada",
+          "grupo": "biceps",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Puxe o peito até a barra com pegada supinada."
+        },
+        {
+          "nome": "Polichinelos contínuos",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o ritmo acelerado e respiração ritmada."
+        },
+        {
+          "nome": "Elevation de pernas na barra fixa",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Eleve os joelhos em direção ao peito suspenso na barra."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia C — Desafio 300 Repetições: Circuito Legs e Cardio",
+      "exercicios": [
+        {
+          "nome": "Agachamento peso corporal",
+          "grupo": "pernas",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Desça até que as coxas fiquem paralelas ao solo com o peito aberto."
+        },
+        {
+          "nome": "Agachamento búlgaro corporal",
+          "grupo": "pernas",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Apoie um pé atrás no banco e agache com a perna da frente."
+        },
+        {
+          "nome": "Mountain climbers (escalador)",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Puxe os joelhos rapidamente na position de prancha."
+        },
+        {
+          "nome": "Panturrilha unilateral em pé",
+          "grupo": "panturrilha",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 12,
+          "repeticoes_max": 15,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Suba na ponta do pé de forma lenta e controlada."
+        }
+      ]
+    }
+  ]
+}

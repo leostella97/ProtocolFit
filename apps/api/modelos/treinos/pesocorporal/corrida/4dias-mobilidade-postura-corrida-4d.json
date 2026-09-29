@@ -1,0 +1,183 @@
+{
+  "nome": "Mobilidade e Postura Dinâmica — 4 Dias",
+  "modalidade": "pesocorporal",
+  "objetivo": "corrida",
+  "dias": 4,
+  "duracao_estimada_min": 40,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Mobilidade e Postura Dinâmica: Impulso de Passada",
+      "exercicios": [
+        {
+          "nome": "Elevação pélvica unilateral solo",
+          "grupo": "pernas",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Eleve o quadril contraindo glúteos e isquiotibiais."
+        },
+        {
+          "nome": "Agachamento com salto explosivo",
+          "grupo": "pliometria",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Salte verticalmente no topo do agachamento e amortecça."
+        },
+        {
+          "nome": "Panturrilha dupla com pausa",
+          "grupo": "panturrilha",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Segure 2 segundos no ponto mais alto da extensão plantar."
+        },
+        {
+          "nome": "Abdominal supra no solo",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Enrole o tronco tirando as escápulas do chão."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — Mobilidade e Postura Dinâmica: Cadeia Posterior e Dorsal",
+      "exercicios": [
+        {
+          "nome": "Remada australiana na barra baixa",
+          "grupo": "costas",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha os calcanhares no chão e puxe o peito até a barra."
+        },
+        {
+          "nome": "Agachamento sumô corporal",
+          "grupo": "pernas",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Pés afastados apontando para fora ativando adutores e glúteos."
+        },
+        {
+          "nome": "Prancha ventral isométrica",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o corpo alinhado da cabeça aos calcanhares."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia C — Mobilidade e Postura Dinâmica: Pliometria e Reatividade",
+      "exercicios": [
+        {
+          "nome": "Afundo saltopliométrico",
+          "grupo": "pliometria",
+          "tipo": "cardio",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Alterne as pernas no ar com impulso explosivo."
+        },
+        {
+          "nome": "Agachamento búlgaro corporal",
+          "grupo": "pernas",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Apoie um pé atrás no banco e agache com a perna da frente."
+        },
+        {
+          "nome": "Panturrilha dupla com pausa",
+          "grupo": "panturrilha",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Segure 2 segundos no ponto mais alto da extensão plantar."
+        },
+        {
+          "nome": "Prancha ventral isométrica",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o corpo alinhado da cabeça aos calcanhares."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia D — Mobilidade e Postura Dinâmica: Estabilidade e Postura",
+      "exercicios": [
+        {
+          "nome": "Flexão pino (pike push-up)",
+          "grupo": "ombro",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Quadril elevado em V invertido flexionando em direção à cabeça."
+        },
+        {
+          "nome": "Barra fixa supinada (chin-up)",
+          "grupo": "costas",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Pegada invertida focando na dorsal e bíceps."
+        },
+        {
+          "nome": "Abdominal supra no solo",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 15,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Enrole o tronco tirando as escápulas do chão."
+        }
+      ]
+    }
+  ]
+}

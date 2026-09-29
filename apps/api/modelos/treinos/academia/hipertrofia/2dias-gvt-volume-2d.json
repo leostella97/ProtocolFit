@@ -1,0 +1,107 @@
+{
+  "nome": "German Volume Training 10x10 — 2 Dias",
+  "modalidade": "academia",
+  "objetivo": "hipertrofia",
+  "dias": 2,
+  "duracao_estimada_min": 65,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — German Volume Training 10x10: Peito e Costas (10x10)",
+      "exercicios": [
+        {
+          "nome": "Supino declinado com barra",
+          "grupo": "peito",
+          "tipo": "composto",
+          "series": 10,
+          "repeticoes_min": 10,
+          "repeticoes_max": 10,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.35,
+          "dicas": "Mantenha o apoio firme nos pés e controle a descida."
+        },
+        {
+          "nome": "Puxada frontal na polia",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.25,
+          "dicas": "Puxe a barra em direção ao peito expandindo a caixa torácica."
+        },
+        {
+          "nome": "Elevação lateral na polia",
+          "grupo": "ombro",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.25,
+          "dicas": "Mantenha a tensão contínua do cabo."
+        },
+        {
+          "nome": "Tríceps francês com halter",
+          "grupo": "triceps",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.25,
+          "dicas": "Mantenha os braços verticais e desça a carga atrás da cabeça."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — German Volume Training 10x10: Pernas e Bíceps (10x10)",
+      "exercicios": [
+        {
+          "nome": "Cadeira extensora",
+          "grupo": "pernas",
+          "tipo": "isolador",
+          "series": 10,
+          "repeticoes_min": 10,
+          "repeticoes_max": 10,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.35,
+          "dicas": "Segure 1 segundo no topo para enfatizar o quadríceps."
+        },
+        {
+          "nome": "Mesa flexora",
+          "grupo": "pernas",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.25,
+          "dicas": "Controle a fase de descida protegendo os isquiotibiais."
+        },
+        {
+          "nome": "Rosca martelo no cabo",
+          "grupo": "biceps",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.25,
+          "dicas": "Pegada neutra focando no braquiorradial e bíceps."
+        },
+        {
+          "nome": "Panturrilha sentado no banco",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.25,
+          "dicas": "Pausa de 1 segundo embaixo para alongar bem o sóleo."
+        }
+      ]
+    }
+  ]
+}

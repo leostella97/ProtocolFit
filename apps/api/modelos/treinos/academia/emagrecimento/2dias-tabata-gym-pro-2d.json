@@ -1,0 +1,107 @@
+{
+  "nome": "Tabata Gym Protocol — 2 Dias",
+  "modalidade": "academia",
+  "objetivo": "emagrecimento",
+  "dias": 2,
+  "duracao_estimada_min": 35,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Tabata Gym Protocol: Superior Queima Metabólica",
+      "exercicios": [
+        {
+          "nome": "Supino declinado com barra",
+          "grupo": "peito",
+          "tipo": "composto",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": 0.1,
+          "dicas": "Mantenha o apoio firme nos pés e controle a descida."
+        },
+        {
+          "nome": "Puxada frontal na polia",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": 0.1,
+          "dicas": "Puxe a barra em direção ao peito expandindo a caixa torácica."
+        },
+        {
+          "nome": "Bicicleta ergométrica tiros HIIT",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Aumente a carga e pedale na máxima velocidade nos tiros."
+        },
+        {
+          "nome": "Prancha ventral no solo",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o corpo alinhado da cabeça aos calcanhares."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — Tabata Gym Protocol: Inferior Queima Metabólica",
+      "exercicios": [
+        {
+          "nome": "Cadeira extensora",
+          "grupo": "pernas",
+          "tipo": "isolador",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": 0.1,
+          "dicas": "Segure 1 segundo no topo para enfatizar o quadríceps."
+        },
+        {
+          "nome": "Mesa flexora",
+          "grupo": "pernas",
+          "tipo": "isolador",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": 0.1,
+          "dicas": "Controle a fase de descida protegendo os isquiotibiais."
+        },
+        {
+          "nome": "Corrida em esteira - tiros de velocidade",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Alterne tiros de alta intensidade com caminhada de recuperação."
+        },
+        {
+          "nome": "Prancha ventral no solo",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o corpo alinhado da cabeça aos calcanhares."
+        }
+      ]
+    }
+  ]
+}

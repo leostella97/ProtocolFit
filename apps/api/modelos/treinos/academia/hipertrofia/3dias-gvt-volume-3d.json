@@ -1,0 +1,156 @@
+{
+  "nome": "German Volume Training 10x10 — 3 Dias",
+  "modalidade": "academia",
+  "objetivo": "hipertrofia",
+  "dias": 3,
+  "duracao_estimada_min": 65,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — German Volume Training 10x10: Peito e Tríceps",
+      "exercicios": [
+        {
+          "nome": "Peck deck (voador)",
+          "grupo": "peito",
+          "tipo": "isolador",
+          "series": 10,
+          "repeticoes_min": 10,
+          "repeticoes_max": 10,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.35,
+          "dicas": "Foque no aperto e contração do peitoral no centro."
+        },
+        {
+          "nome": "Supino declinado com barra",
+          "grupo": "peito",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.25,
+          "dicas": "Mantenha o apoio firme nos pés e controle a descida."
+        },
+        {
+          "nome": "Tríceps testa com barra W",
+          "grupo": "triceps",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.25,
+          "dicas": "Desça a barra em direção à testa mantendo os cotovelos fechados."
+        },
+        {
+          "nome": "Desenvolvimento com halteres",
+          "grupo": "ombro",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.25,
+          "dicas": "Suba os halteres sem bater no topo."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — German Volume Training 10x10: Costas e Bíceps",
+      "exercicios": [
+        {
+          "nome": "Remada curvada com barra",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 10,
+          "repeticoes_min": 10,
+          "repeticoes_max": 10,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.35,
+          "dicas": "Incline o tronco a 45 graus e mantenha a coluna neutra."
+        },
+        {
+          "nome": "Remada baixa no cabo",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.25,
+          "dicas": "Projete o peito para a frente na contração das dorsais."
+        },
+        {
+          "nome": "Rosca Scott na máquina",
+          "grupo": "biceps",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.25,
+          "dicas": "Apoie os braços confortavelmente no banco Scott."
+        },
+        {
+          "nome": "Abdominal supra no cabo",
+          "grupo": "core",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.25,
+          "dicas": "Ajoelhado na polia alta, enrole o tronco puxando a corda."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia C — German Volume Training 10x10: Pernas Completo",
+      "exercicios": [
+        {
+          "nome": "Stiff com halteres",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 10,
+          "repeticoes_min": 10,
+          "repeticoes_max": 10,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.35,
+          "dicas": "Mantenha os joelhos semi-flexionados e projete o quadril para trás."
+        },
+        {
+          "nome": "Agachamento búlgaro com halteres",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.25,
+          "dicas": "Mantenha o tronco firme e agache com controle na perna da frente."
+        },
+        {
+          "nome": "Agachamento livre com barra",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.25,
+          "dicas": "Desça até que a coxa fique paralela ao solo com o peito erguido."
+        },
+        {
+          "nome": "Panturrilha sentado no banco",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 60,
+          "percentual_carga_peso_corporal": 0.25,
+          "dicas": "Pausa de 1 segundo embaixo para alongar bem o sóleo."
+        }
+      ]
+    }
+  ]
+}

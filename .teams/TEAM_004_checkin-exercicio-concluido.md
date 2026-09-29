@@ -28,12 +28,37 @@ feito no check-in diário automaticamente. Também há um botão manual
   exercício no cartão, progresso + botão por aba, check-in automático.
 - `.teams/TEAM_004_checkin-exercicio-concluido.md` — este arquivo.
 
+## Parte 2 — Edição de "Meus dados" + seta de voltar do login
+
+Pedido: perfil com possibilidade de alterar "Meus dados"; remover a seta de
+voltar da tela de login (seta só deve existir para voltar entre telas do app).
+
+Decisões:
+- O cartão "Meus dados" do perfil ganhou modo de edição (botão "Editar"):
+  sexo, faixa etária, altura, objetivo, modalidade e dias disponíveis.
+- Salvar chama `salvarPerfilEGerarPlanos` (POST /perfil) — que já faz UPSERT
+  do perfil nos dois modos e REGENERA treino e dieta. Regenerar é inevitável:
+  objetivo/modalidade/dias mudam o plano inteiro. Aviso explícito no form.
+- Peso NÃO entra no formulário: segue pelo registro de pesagem para não
+  pular o histórico de evolução (POST /perfil não grava pesagem).
+- Se a combinação mudou e o estilo atual não existe nela, `variacao_treino`
+  volta para null (clássico) — cada variação só vale para modalidade+
+  objetivo+dias específicos; o seletor de estilo é ressincronizado.
+- Login: removida a seta "← Início" (só devolvia à landing). As setas de
+  voltar DENTRO do painel (mobile header + botão "Voltar") já são
+  hierárquicas (→ dashboard) e somem na raiz — mantidas, pois são a
+  "mudança de tela" pedida.
+
+Pontos tocados: `apps/web/src/app/painel/perfil/page.tsx`,
+`apps/web/src/app/login/page.tsx`, este arquivo.
+
 ## Estado
 - [x] Testes de base passando antes da alteração (92/92)
 - [x] Implementação
 - [x] Testes + typecheck + build:pages verdes depois
-  (tsc web+api limpo · testar:local 92/92 · build:pages 12 páginas + PWA ok)
-- [x] Commit sem co-autor de ferramenta (apenas `leostella97`) — `7db7b22`
+  (tsc web+api limpo · testar:local 92/92 · build:pages 12 páginas + PWA ok —
+  revalidados também após a Parte 2)
+- [x] Commit sem co-autor de ferramenta (apenas `leostella97`) — `d141068`
 
 ## Notas de transferência
 - A checklist NÃO é isolada por usuário no mesmo navegador — a chave usa o

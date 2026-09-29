@@ -11,7 +11,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Loader2, LogOut, Plus, RefreshCw, Sparkles, TrendingDown, TrendingUp } from 'lucide-react';
+import { Loader2, LogOut, Pencil, Plus, RefreshCw, Save, Sparkles, TrendingDown, TrendingUp } from 'lucide-react';
 import { Botao } from '@/components/ui/button';
 import { Selo } from '@/components/ui/badge';
 import {
@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/card';
 import { CampoDeEntrada } from '@/components/ui/input';
 import { Rotulo } from '@/components/ui/label';
+import { MenuDeSelecao } from '@/components/ui/select';
 import { Separador } from '@/components/ui/separator';
 import { Esqueleto } from '@/components/ui/skeleton';
 import {
@@ -33,7 +34,9 @@ import {
   listarEvolucao,
   recalcularPlanos,
   registrarPesagem,
+  salvarPerfilEGerarPlanos,
   ErroDaApi,
+  type CorpoPerfil,
 } from '@/lib/api';
 import { encerrarSessao } from '@/lib/armazenamento';
 // TEAM_001: cartão "Leve seu progresso com você" (exportar/importar backup).
@@ -46,7 +49,15 @@ import {
   rotuloDoDia,
   rotuloDoObjetivo,
 } from '@/lib/util';
-import type { OpcoesDoSistema, PlanoCompleto, RegistroEvolucao, VariacaoDeTreino } from '@/lib/tipos';
+import type {
+  Modalidade,
+  Objetivo,
+  OpcoesDoSistema,
+  PlanoCompleto,
+  RegistroEvolucao,
+  Sexo,
+  VariacaoDeTreino,
+} from '@/lib/tipos';
 
 /** Data de hoje no formato AAAA-MM-DD (fuso local do navegador). */
 function dataDeHoje(): string {
@@ -138,6 +149,18 @@ export default function PaginaDoPerfil() {
   // Mensagens de sucesso/erro da troca de estilo.
   const [mensagemDoEstilo, definirMensagemDoEstilo] = useState<string | null>(null);
   const [erroDoEstilo, definirErroDoEstilo] = useState<string | null>(null);
+  // TEAM_004: modo de edição de "Meus dados", envio e feedback.
+  const [editandoDados, definirEditandoDados] = useState(false);
+  const [salvandoDados, definirSalvandoDados] = useState(false);
+  const [mensagemDosDados, definirMensagemDosDados] = useState<string | null>(null);
+  const [erroDosDados, definirErroDosDados] = useState<string | null>(null);
+  // TEAM_004: campos do formulário de edição (espelham o perfil atual).
+  const [sexoEdicao, definirSexoEdicao] = useState<Sexo>('masculino');
+  const [faixaEdicao, definirFaixaEdicao] = useState('');
+  const [alturaEdicao, definirAlturaEdicao] = useState('');
+  const [objetivoEdicao, definirObjetivoEdicao] = useState<Objetivo>('emagrecimento');
+  const [modalidadeEdicao, definirModalidadeEdicao] = useState<Modalidade>('academia');
+  const [diasEdicao, definirDiasEdicao] = useState<string[]>([]);
 
   /** Carrega o plano atual e a evolução em paralelo (404 → onboarding; 401 → login). */
   const carregarDados = useCallback(async () => {
@@ -283,6 +306,96 @@ export default function PaginaDoPerfil() {
     }
   }
 
+  /** TEAM_004: abre a edição de "Meus dados" com os valores atuais do perfil. */
+  function iniciarEdicaoDosDados() {
+    if (!plano) {
+      return;
+    }
+    definirSexoEdicao(plano.perfil.sexo);
+    definirFaixaEdicao(plano.perfil.faixa_etaria);
+    definirAlturaEdicao(String(plano.perfil.altura_cm));
+    definirObjetivoEdicao(plano.perfil.objetivo);
+    definirModalidadeEdicao(plano.perfil.modalidade);
+    definirDiasEdicao([...plano.perfil.dias_disponiveis]);
+    definirErroDosDados(null);
+    definirEditandoDados(true);
+  }
+
+  /** TEAM_004: liga/desliga um dia da semana na edição (mesma regra do onboarding). */
+  function alternarDiaEdicao(dia: string) {
+    definirDiasEdicao((atuais) =>
+      atuais.includes(dia) ? atuais.filter((item) => item !== dia) : [...atuais, dia],
+    );
+  }
+
+  /**
+   * TEAM_004: salva os dados editados via POST /perfil — a rota faz upsert
+   * no perfil e REGENERA treino e dieta (objetivo/modalidade/dias mudam o
+   * plano inteiro, não dá para manter a versão antiga).
+   */
+  async function salvarDadosDoPerfil() {
+    if (!plano) {
+      return;
+    }
+    // Validação local da altura (limites do onboarding: 100–250 cm).
+    const alturaNumerica = Number(alturaEdicao);
+    if (!Number.isFinite(alturaNumerica) || alturaNumerica < 100 || alturaNumerica > 250) {
+      definirErroDosDados('Informe uma altura válida em cm.');
+      return;
+    }
+    if (diasEdicao.length === 0) {
+      definirErroDosDados('Selecione pelo menos um dia disponível para treinar.');
+      return;
+    }
+    definirSalvandoDados(true);
+    definirErroDosDados(null);
+    definirMensagemDosDados(null);
+    try {
+      // Se a combinação mudou e o estilo atual não existe nela, volta ao
+      // clássico — cada variação só vale para modalidade+objetivo+dias certos.
+      const estiloValidoNaNovaCombinacao = opcoes?.variacoes_de_treino.some(
+        (variacao) =>
+          variacao.id === plano.perfil.variacao_treino &&
+          variacao.modalidade === modalidadeEdicao &&
+          variacao.objetivo === objetivoEdicao &&
+          variacao.dias === diasEdicao.length,
+      );
+      const corpo: CorpoPerfil = {
+        sexo: sexoEdicao,
+        faixa_etaria: faixaEdicao,
+        // O peso NÃO é editado aqui: ele segue o registro de pesagem para
+        // não pular o histórico de evolução (POST /perfil não grava pesagem).
+        peso_kg: plano.perfil.peso_kg,
+        altura_cm: alturaNumerica,
+        objetivo: objetivoEdicao,
+        // A frequência enviada é a quantidade real de dias (mesma regra do onboarding).
+        frequencia_semanal: diasEdicao.length,
+        dias_disponiveis: diasEdicao,
+        modalidade: modalidadeEdicao,
+        nivel: plano.perfil.nivel,
+        variacao_treino: estiloValidoNaNovaCombinacao ? plano.perfil.variacao_treino : null,
+      };
+      const resultado = await salvarPerfilEGerarPlanos(corpo);
+      definirPlano({ perfil: resultado.perfil, treino: resultado.treino, dieta: resultado.dieta });
+      // Sincroniza o seletor de estilo com o que restou na nova combinação.
+      definirEstiloEscolhido(resultado.perfil.variacao_treino ?? 'padrao');
+      definirEditandoDados(false);
+      definirMensagemDosDados(`Dados atualizados! Novo plano gerado (versão ${resultado.treino.versao}).`);
+    } catch (erroCapturado: unknown) {
+      // Sessão inválida: limpa e volta ao login.
+      if (erroCapturado instanceof ErroDaApi && erroCapturado.status === 401) {
+        encerrarSessao();
+        roteador.replace('/login');
+        return;
+      }
+      definirErroDosDados(
+        erroCapturado instanceof Error ? erroCapturado.message : 'Não foi possível salvar os dados.',
+      );
+    } finally {
+      definirSalvandoDados(false);
+    }
+  }
+
   /** Encerra a sessão e redireciona para o login. */
   function sairDaConta() {
     encerrarSessao();
@@ -350,23 +463,177 @@ export default function PaginaDoPerfil() {
         {/* Seção: dados do perfil usado nos cálculos. */}
         <Cartao>
           <CartaoCabecalho>
-            <CartaoTitulo>Meus dados</CartaoTitulo>
-            <CartaoDescricao>Perfil usado no cálculo dos seus planos</CartaoDescricao>
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <CartaoTitulo>Meus dados</CartaoTitulo>
+                <CartaoDescricao>Perfil usado no cálculo dos seus planos</CartaoDescricao>
+              </div>
+              {/* TEAM_004: atalho para editar os dados sem refazer o onboarding —
+                  some enquanto as opções não chegaram ou durante a edição. */}
+              {!editandoDados && opcoes ? (
+                <Botao variante="contorno" tamanho="pequeno" onClick={iniciarEdicaoDosDados}>
+                  <Pencil /> Editar
+                </Botao>
+              ) : null}
+            </div>
           </CartaoCabecalho>
           <CartaoConteudo>
-            {/* Selo do IMC com classificação no topo. */}
-            <Selo variante="padrao" className="mb-3">
-              IMC {formatarDecimal(dieta.meta.imc)} — {dieta.meta.classificacao_imc}
-            </Selo>
-            {/* Lista de dados do perfil. */}
-            <LinhaDeDado rotulo="Sexo" valor={perfil.sexo} />
-            <LinhaDeDado rotulo="Faixa etária" valor={perfil.faixa_etaria} />
-            <LinhaDeDado rotulo="Altura" valor={`${perfil.altura_cm} cm`} />
-            <LinhaDeDado rotulo="Peso" valor={`${formatarDecimal(perfil.peso_kg)} kg`} />
-            <LinhaDeDado rotulo="Objetivo" valor={rotuloDoObjetivo(perfil.objetivo)} />
-            <LinhaDeDado rotulo="Modalidade" valor={rotuloDaModalidade(perfil.modalidade)} />
-            <LinhaDeDado rotulo="Dias" valor={perfil.dias_disponiveis.map(rotuloDoDia).join(', ')} />
-            <LinhaDeDado rotulo="Estilo do treino" valor={rotuloDoEstiloAtual} />
+            {!editandoDados ? (
+              <>
+                {/* Selo do IMC com classificação no topo. */}
+                <Selo variante="padrao" className="mb-3">
+                  IMC {formatarDecimal(dieta.meta.imc)} — {dieta.meta.classificacao_imc}
+                </Selo>
+                {/* Lista de dados do perfil. */}
+                <LinhaDeDado rotulo="Sexo" valor={perfil.sexo} />
+                <LinhaDeDado rotulo="Faixa etária" valor={perfil.faixa_etaria} />
+                <LinhaDeDado rotulo="Altura" valor={`${perfil.altura_cm} cm`} />
+                <LinhaDeDado rotulo="Peso" valor={`${formatarDecimal(perfil.peso_kg)} kg`} />
+                <LinhaDeDado rotulo="Objetivo" valor={rotuloDoObjetivo(perfil.objetivo)} />
+                <LinhaDeDado rotulo="Modalidade" valor={rotuloDaModalidade(perfil.modalidade)} />
+                <LinhaDeDado rotulo="Dias" valor={perfil.dias_disponiveis.map(rotuloDoDia).join(', ')} />
+                <LinhaDeDado rotulo="Estilo do treino" valor={rotuloDoEstiloAtual} />
+                {/* TEAM_004: confirmação exibida após salvar a edição. */}
+                {mensagemDosDados ? (
+                  <p className="pt-3 text-sm font-medium text-primary">{mensagemDosDados}</p>
+                ) : null}
+              </>
+            ) : (
+              /* TEAM_004: formulário de edição dos dados do perfil. */
+              <div className="space-y-4">
+                {/* Sexo: dois chips (mesmo padrão visual do onboarding). */}
+                <div className="space-y-1.5">
+                  <span className="text-sm font-medium">Sexo biológico</span>
+                  <div className="flex flex-wrap gap-2">
+                    {(['masculino', 'feminino'] as Sexo[]).map((valor) => (
+                      <button
+                        key={valor}
+                        type="button"
+                        aria-pressed={sexoEdicao === valor}
+                        onClick={() => definirSexoEdicao(valor)}
+                        className={combinarClasses(
+                          'rounded-full border px-4 py-2 text-sm font-semibold capitalize transition-colors',
+                          sexoEdicao === valor
+                            ? 'border-primary bg-primary text-primary-foreground'
+                            : 'border-border bg-card text-foreground hover:bg-secondary',
+                        )}
+                      >
+                        {valor}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                {/* Faixa etária e altura lado a lado. */}
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-1.5">
+                    <Rotulo htmlFor="edicao-faixa">Faixa etária</Rotulo>
+                    <MenuDeSelecao
+                      id="edicao-faixa"
+                      value={faixaEdicao}
+                      onChange={(evento) => definirFaixaEdicao(evento.target.value)}
+                    >
+                      {opcoes?.faixas_etarias.map((faixa) => (
+                        <option key={faixa.valor} value={faixa.valor}>
+                          {faixa.rotulo}
+                        </option>
+                      ))}
+                    </MenuDeSelecao>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Rotulo htmlFor="edicao-altura">Altura (cm)</Rotulo>
+                    <CampoDeEntrada
+                      id="edicao-altura"
+                      type="number"
+                      min={100}
+                      max={250}
+                      step={1}
+                      value={alturaEdicao}
+                      onChange={(evento) => definirAlturaEdicao(evento.target.value)}
+                    />
+                  </div>
+                </div>
+                {/* Objetivo e modalidade lado a lado. */}
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-1.5">
+                    <Rotulo htmlFor="edicao-objetivo">Objetivo</Rotulo>
+                    <MenuDeSelecao
+                      id="edicao-objetivo"
+                      value={objetivoEdicao}
+                      onChange={(evento) => definirObjetivoEdicao(evento.target.value as Objetivo)}
+                    >
+                      {opcoes?.objetivos.map((objetivo) => (
+                        <option key={objetivo.valor} value={objetivo.valor}>
+                          {objetivo.rotulo}
+                        </option>
+                      ))}
+                    </MenuDeSelecao>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Rotulo htmlFor="edicao-modalidade">Modalidade</Rotulo>
+                    <MenuDeSelecao
+                      id="edicao-modalidade"
+                      value={modalidadeEdicao}
+                      onChange={(evento) => definirModalidadeEdicao(evento.target.value as Modalidade)}
+                    >
+                      {opcoes?.modalidades.map((modalidade) => (
+                        <option key={modalidade.valor} value={modalidade.valor}>
+                          {modalidade.rotulo}
+                        </option>
+                      ))}
+                    </MenuDeSelecao>
+                  </div>
+                </div>
+                {/* Dias disponíveis: chips de seleção múltipla. */}
+                <div className="space-y-1.5">
+                  <span className="text-sm font-medium">Dias disponíveis</span>
+                  <div className="flex flex-wrap gap-2">
+                    {opcoes?.dias_semana.map((dia) => {
+                      const selecionado = diasEdicao.includes(dia.valor);
+                      return (
+                        <button
+                          key={dia.valor}
+                          type="button"
+                          onClick={() => alternarDiaEdicao(dia.valor)}
+                          aria-pressed={selecionado}
+                          className={combinarClasses(
+                            'rounded-full border px-4 py-2 text-sm font-semibold transition-colors',
+                            selecionado
+                              ? 'border-primary bg-primary text-primary-foreground'
+                              : 'border-border bg-card text-foreground hover:bg-secondary',
+                          )}
+                        >
+                          {rotuloDoDia(dia.valor)}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+                {/* Aviso: salvar regenera os planos; o peso segue pela pesagem. */}
+                <p className="text-xs text-muted-foreground">
+                  Salvar gera um treino e uma dieta novos com esses dados — edições feitas nos
+                  exercícios são substituídas. O peso continua sendo atualizado pelo registro de
+                  pesagem.
+                </p>
+                {/* Ações: salvar (gera plano novo) ou cancelar a edição. */}
+                <div className="flex flex-wrap items-center gap-3">
+                  <Botao tamanho="pequeno" onClick={() => void salvarDadosDoPerfil()} disabled={salvandoDados}>
+                    {salvandoDados ? <Loader2 className="animate-spin" /> : <Save />}
+                    {salvandoDados ? ' Gerando novo plano...' : ' Salvar e gerar novo plano'}
+                  </Botao>
+                  <Botao
+                    variante="fantasma"
+                    tamanho="pequeno"
+                    disabled={salvandoDados}
+                    onClick={() => definirEditandoDados(false)}
+                  >
+                    Cancelar
+                  </Botao>
+                  {erroDosDados ? (
+                    <span className="text-sm font-medium text-destructive">{erroDosDados}</span>
+                  ) : null}
+                </div>
+              </div>
+            )}
           </CartaoConteudo>
         </Cartao>
 

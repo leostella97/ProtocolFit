@@ -1,0 +1,107 @@
+{
+  "nome": "FST-7 Fascial Stretch Training — 2 Dias",
+  "modalidade": "academia",
+  "objetivo": "hipertrofia",
+  "dias": 2,
+  "duracao_estimada_min": 65,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — FST-7 Fascial Stretch Training: Peito e Costas (10x10)",
+      "exercicios": [
+        {
+          "nome": "Crossover na polia alta",
+          "grupo": "peito",
+          "tipo": "isolador",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Cruze as mãos levemente no final da fase concêntrica."
+        },
+        {
+          "nome": "Pulldown na polia alta",
+          "grupo": "costas",
+          "tipo": "isolador",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Mantenha os braços semi-estendidos sentindo a dorsal alongar."
+        },
+        {
+          "nome": "Desenvolvimento com halteres",
+          "grupo": "ombro",
+          "tipo": "composto",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Suba os halteres sem bater no topo."
+        },
+        {
+          "nome": "Tríceps testa com barra W",
+          "grupo": "triceps",
+          "tipo": "isolador",
+          "series": 7,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.15,
+          "dicas": "Desça a barra em direção à testa mantendo os cotovelos fechados."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — FST-7 Fascial Stretch Training: Pernas e Bíceps (10x10)",
+      "exercicios": [
+        {
+          "nome": "Agachamento livre com barra",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Desça até que a coxa fique paralela ao solo com o peito erguido."
+        },
+        {
+          "nome": "Leg press 45°",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Evite travar totalmente os joelhos na extensão máxima."
+        },
+        {
+          "nome": "Rosca martelo no cabo",
+          "grupo": "biceps",
+          "tipo": "isolador",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Pegada neutra focando no braquiorradial e bíceps."
+        },
+        {
+          "nome": "Panturrilha sentado no banco",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 7,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.15,
+          "dicas": "Pausa de 1 segundo embaixo para alongar bem o sóleo."
+        }
+      ]
+    }
+  ]
+}

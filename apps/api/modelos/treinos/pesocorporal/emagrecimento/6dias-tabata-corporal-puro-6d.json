@@ -1,0 +1,303 @@
+{
+  "nome": "Tabata Corporal Intensivo — 6 Dias",
+  "modalidade": "pesocorporal",
+  "objetivo": "emagrecimento",
+  "dias": 6,
+  "duracao_estimada_min": 30,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Tabata Corporal Intensivo: Push A HIIT",
+      "exercicios": [
+        {
+          "nome": "Flexão declinada em banco",
+          "grupo": "peito",
+          "tipo": "corporal",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Apoie os pés em um banco para enfatizar a porção superior do peitoral."
+        },
+        {
+          "nome": "Flexão pino (pike push-up)",
+          "grupo": "ombro",
+          "tipo": "corporal",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Quadril elevado em V invertido flexionando em direção à cabeça."
+        },
+        {
+          "nome": "Flexão diamante para tríceps",
+          "grupo": "triceps",
+          "tipo": "corporal",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Cotovelos fechados ao lado do corpo focando nos tríceps."
+        },
+        {
+          "nome": "Burpees completos com salto",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Flexão, queda e salto vertical dinâmico."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — Tabata Corporal Intensivo: Pull A HIIT",
+      "exercicios": [
+        {
+          "nome": "Barra fixa pronada",
+          "grupo": "costas",
+          "tipo": "corporal",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Puxe o corpo até o queixo ultrapassar a barra de forma limpa."
+        },
+        {
+          "nome": "Remada australiana supinada",
+          "grupo": "biceps",
+          "tipo": "corporal",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Puxe o peito até a barra com pegada supinada."
+        },
+        {
+          "nome": "Polichinelos contínuos",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o ritmo acelerado e respiração ritmada."
+        },
+        {
+          "nome": "Elevation de pernas na barra fixa",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Eleve os joelhos em direção ao peito suspenso na barra."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia C — Tabata Corporal Intensivo: Legs A HIIT",
+      "exercicios": [
+        {
+          "nome": "Afundo alternado no solo",
+          "grupo": "pernas",
+          "tipo": "corporal",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Passos largos alternados mantendo o tronco ereto."
+        },
+        {
+          "nome": "Agachamento sumô corporal",
+          "grupo": "pernas",
+          "tipo": "corporal",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Pés afastados apontando para fora ativando adutores e glúteos."
+        },
+        {
+          "nome": "Mountain climbers (escalador)",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Puxe os joelhos rapidamente na position de prancha."
+        },
+        {
+          "nome": "Panturrilha unilateral em pé",
+          "grupo": "panturrilha",
+          "tipo": "corporal",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Suba na ponta do pé de forma lenta e controlada."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia D — Tabata Corporal Intensivo: Push B HIIT",
+      "exercicios": [
+        {
+          "nome": "Flexão de braços tradicional",
+          "grupo": "peito",
+          "tipo": "corporal",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o corpo ereto e flexione os cotovelos até 90 graus."
+        },
+        {
+          "nome": "Elevação Y-T-W no solo",
+          "grupo": "ombro",
+          "tipo": "corporal",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Deitado de bruços, eleve os braços em formato de Y, T e W."
+        },
+        {
+          "nome": "Flexão diamante para tríceps",
+          "grupo": "triceps",
+          "tipo": "corporal",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Cotovelos fechados ao lado do corpo focando nos tríceps."
+        },
+        {
+          "nome": "Mountain climbers (escalador)",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Puxe os joelhos rapidamente na position de prancha."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia E — Tabata Corporal Intensivo: Pull B HIIT",
+      "exercicios": [
+        {
+          "nome": "Barra fixa supinada (chin-up)",
+          "grupo": "costas",
+          "tipo": "corporal",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Pegada invertida focando na dorsal e bíceps."
+        },
+        {
+          "nome": "Barra fixa supinada (foco bíceps)",
+          "grupo": "biceps",
+          "tipo": "corporal",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Concentre a puxada na flexão dos cotovelos."
+        },
+        {
+          "nome": "Skipping alto de velocidade",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Eleve os joelhos até a linha do quadril em alta velocidade."
+        },
+        {
+          "nome": "Prancha ventral isométrica",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o corpo alinhado da cabeça aos calcanhares."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia F — Tabata Corporal Intensivo: Legs B HIIT",
+      "exercicios": [
+        {
+          "nome": "Agachamento búlgaro corporal",
+          "grupo": "pernas",
+          "tipo": "corporal",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Apoie um pé atrás no banco e agache com a perna da frente."
+        },
+        {
+          "nome": "Afundo alternado no solo",
+          "grupo": "pernas",
+          "tipo": "corporal",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Passos largos alternados mantendo o tronco ereto."
+        },
+        {
+          "nome": "Polichinelos contínuos",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o ritmo acelerado e respiração ritmada."
+        },
+        {
+          "nome": "Panturrilha dupla com pausa",
+          "grupo": "panturrilha",
+          "tipo": "corporal",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Segure 2 segundos no ponto mais alto da extensão plantar."
+        }
+      ]
+    }
+  ]
+}

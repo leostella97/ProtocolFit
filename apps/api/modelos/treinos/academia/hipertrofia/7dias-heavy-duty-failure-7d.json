@@ -1,0 +1,275 @@
+{
+  "nome": "Heavy Duty Mike Mentzer — 7 Dias",
+  "modalidade": "academia",
+  "objetivo": "hipertrofia",
+  "dias": 7,
+  "duracao_estimada_min": 50,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Heavy Duty Mike Mentzer: Peitoral Falha",
+      "exercicios": [
+        {
+          "nome": "Supino inclinado com halteres",
+          "grupo": "peito",
+          "tipo": "composto",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": 0.65,
+          "dicas": "Desça os halteres de forma controlada até a linha do peito."
+        },
+        {
+          "nome": "Crucifixo reto no cabo",
+          "grupo": "peito",
+          "tipo": "isolador",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": 0.65,
+          "dicas": "Mantenha um leve cotovelo flexionado durante a abertura."
+        },
+        {
+          "nome": "Tríceps testa com barra W",
+          "grupo": "triceps",
+          "tipo": "isolador",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": 0.65,
+          "dicas": "Desça a barra em direção à testa mantendo os cotovelos fechados."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — Heavy Duty Mike Mentzer: Costas Falha",
+      "exercicios": [
+        {
+          "nome": "Pulldown na polia alta",
+          "grupo": "costas",
+          "tipo": "isolador",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": 0.65,
+          "dicas": "Mantenha os braços semi-estendidos sentindo a dorsal alongar."
+        },
+        {
+          "nome": "Levantamento terra",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": 0.65,
+          "dicas": "Empurre o chão com as pernas e mantenha a coluna alinhada."
+        },
+        {
+          "nome": "Rosca martelo no cabo",
+          "grupo": "biceps",
+          "tipo": "isolador",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": 0.65,
+          "dicas": "Pegada neutra focando no braquiorradial e bíceps."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia C — Heavy Duty Mike Mentzer: Quadríceps Falha",
+      "exercicios": [
+        {
+          "nome": "Leg press 45°",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": 0.65,
+          "dicas": "Evite travar totalmente os joelhos na extensão máxima."
+        },
+        {
+          "nome": "Cadeira extensora",
+          "grupo": "pernas",
+          "tipo": "isolador",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": 0.65,
+          "dicas": "Segure 1 segundo no topo para enfatizar o quadríceps."
+        },
+        {
+          "nome": "Panturrilha sentado no banco",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": 0.65,
+          "dicas": "Pausa de 1 segundo embaixo para alongar bem o sóleo."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia D — Heavy Duty Mike Mentzer: Deltoides Falha",
+      "exercicios": [
+        {
+          "nome": "Desenvolvimento militar com barra",
+          "grupo": "ombro",
+          "tipo": "composto",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": 0.65,
+          "dicas": "Pressione a barra acima da cabeça mantendo o core contraído."
+        },
+        {
+          "nome": "Desenvolvimento com halteres",
+          "grupo": "ombro",
+          "tipo": "composto",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": 0.65,
+          "dicas": "Suba os halteres sem bater no topo."
+        },
+        {
+          "nome": "Abdominal infra no banco",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Eleve as pernas e o quadril focando no abdômen inferior."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia E — Heavy Duty Mike Mentzer: Posterior Falha",
+      "exercicios": [
+        {
+          "nome": "Leg press 45°",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": 0.65,
+          "dicas": "Evite travar totalmente os joelhos na extensão máxima."
+        },
+        {
+          "nome": "Cadeira extensora",
+          "grupo": "pernas",
+          "tipo": "isolador",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": 0.65,
+          "dicas": "Segure 1 segundo no topo para enfatizar o quadríceps."
+        },
+        {
+          "nome": "Panturrilha sentado no banco",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": 0.65,
+          "dicas": "Pausa de 1 segundo embaixo para alongar bem o sóleo."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia F — Heavy Duty Mike Mentzer: Tríceps e Bíceps Falha",
+      "exercicios": [
+        {
+          "nome": "Rosca direta com barra W",
+          "grupo": "biceps",
+          "tipo": "isolador",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": 0.65,
+          "dicas": "Mantenha os cotovelos fixos ao lado do tronco."
+        },
+        {
+          "nome": "Tríceps francês com halter",
+          "grupo": "triceps",
+          "tipo": "isolador",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": 0.65,
+          "dicas": "Mantenha os braços verticais e desça a carga atrás da cabeça."
+        },
+        {
+          "nome": "Abdominal infra no banco",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Eleve as pernas e o quadril focando no abdômen inferior."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia G — Heavy Duty Mike Mentzer: Core Falha",
+      "exercicios": [
+        {
+          "nome": "Abdominal supra no cabo",
+          "grupo": "core",
+          "tipo": "isolador",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": 0.65,
+          "dicas": "Ajoelhado na polia alta, enrole o tronco puxando a corda."
+        },
+        {
+          "nome": "Prancha ventral no solo",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o corpo alinhado da cabeça aos calcanhares."
+        },
+        {
+          "nome": "Panturrilha sentado no banco",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": 0.65,
+          "dicas": "Pausa de 1 segundo embaixo para alongar bem o sóleo."
+        }
+      ]
+    }
+  ]
+}

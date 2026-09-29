@@ -1,0 +1,183 @@
+{
+  "nome": "Rest-Pause System — 4 Dias",
+  "modalidade": "academia",
+  "objetivo": "hipertrofia",
+  "dias": 4,
+  "duracao_estimada_min": 55,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Rest-Pause System: Peito e Ombro",
+      "exercicios": [
+        {
+          "nome": "Supino inclinado com halteres",
+          "grupo": "peito",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Desça os halteres de forma controlada até a linha do peito."
+        },
+        {
+          "nome": "Crucifixo reto no cabo",
+          "grupo": "peito",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Mantenha um leve cotovelo flexionado durante a abertura."
+        },
+        {
+          "nome": "Elevação lateral na polia",
+          "grupo": "ombro",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Mantenha a tensão contínua do cabo."
+        },
+        {
+          "nome": "Tríceps corda na polia",
+          "grupo": "triceps",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Abra a corda no final da extensão para contração máxima."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — Rest-Pause System: Costas e Bíceps",
+      "exercicios": [
+        {
+          "nome": "Pulldown na polia alta",
+          "grupo": "costas",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Mantenha os braços semi-estendidos sentindo a dorsal alongar."
+        },
+        {
+          "nome": "Levantamento terra",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Empurre o chão com as pernas e mantenha a coluna alinhada."
+        },
+        {
+          "nome": "Rosca martelo no cabo",
+          "grupo": "biceps",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Pegada neutra focando no braquiorradial e bíceps."
+        },
+        {
+          "nome": "Abdominal supra no cabo",
+          "grupo": "core",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Ajoelhado na polia alta, enrole o tronco puxando a corda."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia C — Rest-Pause System: Pernas Quadríceps",
+      "exercicios": [
+        {
+          "nome": "Leg press 45°",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Evite travar totalmente os joelhos na extensão máxima."
+        },
+        {
+          "nome": "Cadeira extensora",
+          "grupo": "pernas",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Segure 1 segundo no topo para enfatizar o quadríceps."
+        },
+        {
+          "nome": "Panturrilha sentado no banco",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Pausa de 1 segundo embaixo para alongar bem o sóleo."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia D — Rest-Pause System: Isquiotibiais e Braços",
+      "exercicios": [
+        {
+          "nome": "Stiff com halteres",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Mantenha os joelhos semi-flexionados e projete o quadril para trás."
+        },
+        {
+          "nome": "Rosca Scott na máquina",
+          "grupo": "biceps",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Apoie os braços confortavelmente no banco Scott."
+        },
+        {
+          "nome": "Tríceps testa com barra W",
+          "grupo": "triceps",
+          "tipo": "isolador",
+          "series": 3,
+          "repeticoes_min": 8,
+          "repeticoes_max": 10,
+          "descanso_segundos": 20,
+          "percentual_carga_peso_corporal": 0.45,
+          "dicas": "Desça a barra em direção à testa mantendo os cotovelos fechados."
+        }
+      ]
+    }
+  ]
+}

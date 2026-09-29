@@ -1,0 +1,156 @@
+{
+  "nome": "Tabata Gym Protocol — 3 Dias",
+  "modalidade": "academia",
+  "objetivo": "emagrecimento",
+  "dias": 3,
+  "duracao_estimada_min": 35,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Tabata Gym Protocol: Circuito Push e Cardio",
+      "exercicios": [
+        {
+          "nome": "Supino declinado com barra",
+          "grupo": "peito",
+          "tipo": "composto",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": 0.1,
+          "dicas": "Mantenha o apoio firme nos pés e controle a descida."
+        },
+        {
+          "nome": "Desenvolvimento com halteres",
+          "grupo": "ombro",
+          "tipo": "composto",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": 0.1,
+          "dicas": "Suba os halteres sem bater no topo."
+        },
+        {
+          "nome": "Tríceps corda na polia",
+          "grupo": "triceps",
+          "tipo": "isolador",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": 0.1,
+          "dicas": "Abra a corda no final da extensão para contração máxima."
+        },
+        {
+          "nome": "Corrida em esteira - tiros de velocidade",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Alterne tiros de alta intensidade com caminhada de recuperação."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — Tabata Gym Protocol: Circuito Pull e Cardio",
+      "exercicios": [
+        {
+          "nome": "Remada baixa no cabo",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": 0.1,
+          "dicas": "Projete o peito para a frente na contração das dorsais."
+        },
+        {
+          "nome": "Rosca Scott na máquina",
+          "grupo": "biceps",
+          "tipo": "isolador",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": 0.1,
+          "dicas": "Apoie os braços confortavelmente no banco Scott."
+        },
+        {
+          "nome": "Corrida em esteira - tiros de velocidade",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Alterne tiros de alta intensidade com caminhada de recuperação."
+        },
+        {
+          "nome": "Prancha ventral no solo",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Mantenha o corpo alinhado da cabeça aos calcanhares."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia C — Tabata Gym Protocol: Circuito Legs e Cardio",
+      "exercicios": [
+        {
+          "nome": "Agachamento búlgaro com halteres",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": 0.1,
+          "dicas": "Mantenha o tronco firme e agache com controle na perna da frente."
+        },
+        {
+          "nome": "Agachamento livre com barra",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": 0.1,
+          "dicas": "Desça até que a coxa fique paralela ao solo com o peito erguido."
+        },
+        {
+          "nome": "Bicicleta ergométrica tiros HIIT",
+          "grupo": "cardio",
+          "tipo": "cardio",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Aumente a carga e pedale na máxima velocidade nos tiros."
+        },
+        {
+          "nome": "Panturrilha em pé no aparelho",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 8,
+          "repeticoes_min": 15,
+          "repeticoes_max": 20,
+          "descanso_segundos": 10,
+          "percentual_carga_peso_corporal": 0.1,
+          "dicas": "Faça extensão plantar completa subindo no ponto máximo."
+        }
+      ]
+    }
+  ]
+}

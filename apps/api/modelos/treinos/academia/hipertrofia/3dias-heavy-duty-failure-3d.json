@@ -1,0 +1,145 @@
+{
+  "nome": "Heavy Duty Mike Mentzer — 3 Dias",
+  "modalidade": "academia",
+  "objetivo": "hipertrofia",
+  "dias": 3,
+  "duracao_estimada_min": 50,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — Heavy Duty Mike Mentzer: Empurrar Carga Máxima",
+      "exercicios": [
+        {
+          "nome": "Crossover na polia alta",
+          "grupo": "peito",
+          "tipo": "isolador",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": 0.65,
+          "dicas": "Cruze as mãos levemente no final da fase concêntrica."
+        },
+        {
+          "nome": "Elevação lateral na polia",
+          "grupo": "ombro",
+          "tipo": "isolador",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": 0.65,
+          "dicas": "Mantenha a tensão contínua do cabo."
+        },
+        {
+          "nome": "Tríceps francês com halter",
+          "grupo": "triceps",
+          "tipo": "isolador",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": 0.65,
+          "dicas": "Mantenha os braços verticais e desça a carga atrás da cabeça."
+        },
+        {
+          "nome": "Abdominal infra no banco",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Eleve as pernas e o quadril focando no abdômen inferior."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — Heavy Duty Mike Mentzer: Puxar Carga Máxima",
+      "exercicios": [
+        {
+          "nome": "Puxada frontal na polia",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": 0.65,
+          "dicas": "Puxe a barra em direção ao peito expandindo a caixa torácica."
+        },
+        {
+          "nome": "Remada curvada com barra",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": 0.65,
+          "dicas": "Incline o tronco a 45 graus e mantenha a coluna neutra."
+        },
+        {
+          "nome": "Rosca direta com barra W",
+          "grupo": "biceps",
+          "tipo": "isolador",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": 0.65,
+          "dicas": "Mantenha os cotovelos fixos ao lado do tronco."
+        },
+        {
+          "nome": "Abdominal infra no banco",
+          "grupo": "core",
+          "tipo": "corporal",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": null,
+          "dicas": "Eleve as pernas e o quadril focando no abdômen inferior."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia C — Heavy Duty Mike Mentzer: Pernas Carga Máxima",
+      "exercicios": [
+        {
+          "nome": "Mesa flexora",
+          "grupo": "pernas",
+          "tipo": "isolador",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": 0.65,
+          "dicas": "Controle a fase de descida protegendo os isquiotibiais."
+        },
+        {
+          "nome": "Stiff com halteres",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": 0.65,
+          "dicas": "Mantenha os joelhos semi-flexionados e projete o quadril para trás."
+        },
+        {
+          "nome": "Panturrilha sentado no banco",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 2,
+          "repeticoes_min": 6,
+          "repeticoes_max": 8,
+          "descanso_segundos": 120,
+          "percentual_carga_peso_corporal": 0.65,
+          "dicas": "Pausa de 1 segundo embaixo para alongar bem o sóleo."
+        }
+      ]
+    }
+  ]
+}

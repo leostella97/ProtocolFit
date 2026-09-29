@@ -1,0 +1,232 @@
+{
+  "nome": "FST-7 Fascial Stretch Training — 5 Dias",
+  "modalidade": "academia",
+  "objetivo": "hipertrofia",
+  "dias": 5,
+  "duracao_estimada_min": 65,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia A — FST-7 Fascial Stretch Training: Peitoral Dominante",
+      "exercicios": [
+        {
+          "nome": "Peck deck (voador)",
+          "grupo": "peito",
+          "tipo": "isolador",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Foque no aperto e contração do peitoral no centro."
+        },
+        {
+          "nome": "Supino declinado com barra",
+          "grupo": "peito",
+          "tipo": "composto",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Mantenha o apoio firme nos pés e controle a descida."
+        },
+        {
+          "nome": "Tríceps testa com barra W",
+          "grupo": "triceps",
+          "tipo": "isolador",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Desça a barra em direção à testa mantendo os cotovelos fechados."
+        },
+        {
+          "nome": "Elevação lateral na polia",
+          "grupo": "ombro",
+          "tipo": "isolador",
+          "series": 7,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.15,
+          "dicas": "Mantenha a tensão contínua do cabo."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia B — FST-7 Fascial Stretch Training: Dorsal Dominante",
+      "exercicios": [
+        {
+          "nome": "Remada curvada com barra",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Incline o tronco a 45 graus e mantenha a coluna neutra."
+        },
+        {
+          "nome": "Remada baixa no cabo",
+          "grupo": "costas",
+          "tipo": "composto",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Projete o peito para a frente na contração das dorsais."
+        },
+        {
+          "nome": "Rosca Scott na máquina",
+          "grupo": "biceps",
+          "tipo": "isolador",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Apoie os braços confortavelmente no banco Scott."
+        },
+        {
+          "nome": "Abdominal supra no cabo",
+          "grupo": "core",
+          "tipo": "isolador",
+          "series": 7,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.15,
+          "dicas": "Ajoelhado na polia alta, enrole o tronco puxando a corda."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia C — FST-7 Fascial Stretch Training: Coxas Dominantes",
+      "exercicios": [
+        {
+          "nome": "Stiff com halteres",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Mantenha os joelhos semi-flexionados e projete o quadril para trás."
+        },
+        {
+          "nome": "Agachamento búlgaro com halteres",
+          "grupo": "pernas",
+          "tipo": "composto",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Mantenha o tronco firme e agache com controle na perna da frente."
+        },
+        {
+          "nome": "Panturrilha em pé no aparelho",
+          "grupo": "panturrilha",
+          "tipo": "isolador",
+          "series": 7,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.15,
+          "dicas": "Faça extensão plantar completa subindo no ponto máximo."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia D — FST-7 Fascial Stretch Training: Deltoides e Trapézio",
+      "exercicios": [
+        {
+          "nome": "Crucifixo inverso na polia",
+          "grupo": "ombro",
+          "tipo": "isolador",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Projete as mãos para trás enfatizando o deltoide posterior."
+        },
+        {
+          "nome": "Desenvolvimento militar com barra",
+          "grupo": "ombro",
+          "tipo": "composto",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Pressione a barra acima da cabeça mantendo o core contraído."
+        },
+        {
+          "nome": "Tríceps testa com barra W",
+          "grupo": "triceps",
+          "tipo": "isolador",
+          "series": 7,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.15,
+          "dicas": "Desça a barra em direção à testa mantendo os cotovelos fechados."
+        }
+      ]
+    },
+    {
+      "titulo": "Dia E — FST-7 Fascial Stretch Training: Braços e Core",
+      "exercicios": [
+        {
+          "nome": "Rosca martelo no cabo",
+          "grupo": "biceps",
+          "tipo": "isolador",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Pegada neutra focando no braquiorradial e bíceps."
+        },
+        {
+          "nome": "Rosca Scott na máquina",
+          "grupo": "biceps",
+          "tipo": "isolador",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Apoie os braços confortavelmente no banco Scott."
+        },
+        {
+          "nome": "Tríceps testa com barra W",
+          "grupo": "triceps",
+          "tipo": "isolador",
+          "series": 4,
+          "repeticoes_min": 8,
+          "repeticoes_max": 12,
+          "descanso_segundos": 90,
+          "percentual_carga_peso_corporal": 0.4,
+          "dicas": "Desça a barra em direção à testa mantendo os cotovelos fechados."
+        },
+        {
+          "nome": "Abdominal supra no cabo",
+          "grupo": "core",
+          "tipo": "isolador",
+          "series": 7,
+          "repeticoes_min": 10,
+          "repeticoes_max": 12,
+          "descanso_segundos": 30,
+          "percentual_carga_peso_corporal": 0.15,
+          "dicas": "Ajoelhado na polia alta, enrole o tronco puxando a corda."
+        }
+      ]
+    }
+  ]
+}

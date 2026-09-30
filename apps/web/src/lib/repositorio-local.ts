@@ -431,8 +431,8 @@ async function gerarPlanos(banco: BancoLocal, usuarioId: number, perfil: Perfil)
     perfil.dias_disponiveis.length,
     perfil.variacao_treino,
   );
-  // 2) Localiza o modelo mestre de dieta do objetivo.
-  const { modelo: modeloDieta, caminhoDoModelo: caminhoDieta } = await buscarModeloDieta(perfil.objetivo);
+  // 2) Localiza o modelo mestre de dieta do objetivo (alinhado ao estilo do usuário se disponível).
+  const { modelo: modeloDieta, caminhoDoModelo: caminhoDieta } = await buscarModeloDieta(perfil.objetivo, perfil.variacao_treino);
   // 3) Calcula o plano nutricional determinístico no navegador.
   const metas = calcularPlanoNutricional(perfil);
   // 4) Monta os planos injetando séries, cargas e gramas.

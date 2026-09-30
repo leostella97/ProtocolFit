@@ -102,19 +102,21 @@ for (const modalidade of MODALIDADES) {
   }
 }
 
-// ---- 2) Dietas: copia os arquivos por objetivo -----------------------------
+// ---- 2) Dietas: copia todos os arquivos de dietas ---------------------------
 const pastaDietasOrigem = join(ORIGEM, 'dietas');
 const pastaDietasDestino = join(DESTINO, 'dietas');
 mkdirSync(pastaDietasDestino, { recursive: true });
-for (const objetivo of OBJETIVOS) {
-  const arquivo = `${objetivo}.json`;
-  if (!existsSync(join(pastaDietasOrigem, arquivo))) {
-    console.warn(`[modelos] dieta ausente: ${arquivo}`);
-    continue;
+if (existsSync(pastaDietasOrigem)) {
+  const arquivosDietas = readdirSync(pastaDietasOrigem).filter((nome) => nome.endsWith('.json'));
+  for (const arquivo of arquivosDietas) {
+    copyFileSync(join(pastaDietasOrigem, arquivo), join(pastaDietasDestino, arquivo));
   }
-  copyFileSync(join(pastaDietasOrigem, arquivo), join(pastaDietasDestino, arquivo));
-  indice.dietas.push(objetivo);
-  console.log(`[modelos] dietas/${arquivo} copiado`);
+  for (const objetivo of OBJETIVOS) {
+    if (existsSync(join(pastaDietasOrigem, `${objetivo}.json`))) {
+      indice.dietas.push(objetivo);
+    }
+  }
+  console.log(`[modelos] ${arquivosDietas.length} arquivo(s) de dieta copiado(s)`);
 }
 
 // ---- 3) Grava o índice usado pelo carregador no navegador -----------------

@@ -19,9 +19,10 @@
 'use client';
 
 import { useEffect, useState, type ReactNode } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Bug, HeartPulse, LogOut } from 'lucide-react';
+import { Bug, HeartPulse, LogOut } from 'lucide-react';
 import { BarraInferiorMobile } from '@/components/painel/barra-inferior-mobile';
 import { BarraLateral } from '@/components/painel/barra-lateral';
 import { Botao } from '@/components/ui/button';
@@ -33,9 +34,6 @@ import { ANIMACAO_DE_ENTRADA, TRANSICAO_SUAVE, URL_DE_REPORTE_DE_BUG } from '@/l
 /** Componente cliente com a guarda de sessão e o shell do painel. */
 function LayoutClienteDoPainel({ children }: { children: ReactNode }) {
   const roteador = useRouter();
-  // Rota atual — decide se a seta "voltar" faz sentido (na raiz do painel não).
-  const caminhoAtual = usePathname();
-  const naRaizDoPainel = caminhoAtual === '/painel';
   // Verificação inicial de sessão em andamento.
   const [verificando, definirVerificando] = useState(true);
   // Nome do usuário logado (exibido na barra lateral).
@@ -84,16 +82,6 @@ function LayoutClienteDoPainel({ children }: { children: ReactNode }) {
     roteador.replace('/login');
   }
 
-  /**
-   * Volta para a página anterior. TEAM_001: dentro do painel a volta é
-   * HIERÁRQUICA (sobe para o dashboard) — usar o histórico do navegador
-   * poderia levar o usuário de volta ao login/onboarding, o que não faz
-   * sentido para quem já está logado.
-   */
-  function voltarPagina() {
-    roteador.push('/painel');
-  }
-
   // Enquanto verifica a sessão, exibe esqueletos centralizados.
   if (verificando) {
     return (
@@ -112,19 +100,15 @@ function LayoutClienteDoPainel({ children }: { children: ReactNode }) {
       {/* Barra lateral fixa (oculta em telas pequenas). */}
       <BarraLateral nomeDoUsuario={nomeDoUsuario} aoSair={sairDaConta} />
 
-      {/* Cabeçalho mobile: seta de voltar + logo + botão de sair. */}
+      {/* Cabeçalho mobile: logo + botões de ação. TEAM_005: a seta de voltar
+          saiu de vez — a navegação entre telas já existe na barra inferior, e
+          o logo assume o papel de atalho para o dashboard (mesmo papel do
+          logo na barra lateral do desktop). */}
       <header className="sticky top-0 z-20 flex items-center justify-between border-b bg-card px-4 py-3 md:hidden">
-        <div className="flex items-center gap-2">
-          {/* Seta de voltar: só fora da raiz do painel (no dashboard ela
-              voltaria ao login, o que não faz sentido logado). */}
-          {!naRaizDoPainel ? (
-            <Botao variante="fantasma" tamanho="icone" onClick={voltarPagina} aria-label="Voltar para o dashboard">
-              <ArrowLeft />
-            </Botao>
-          ) : null}
+        <Link href="/painel" className="flex items-center gap-2" aria-label="Ir para o dashboard">
           <HeartPulse className="size-5 shrink-0 text-primary" />
           <span className="font-display text-base font-bold text-foreground">ProtocolFit</span>
-        </div>
+        </Link>
         <div className="flex items-center gap-1">
           {/* TEAM_003: reporte de bug sempre à mão no mobile — abre uma issue
               do GitHub em nova aba. */}
@@ -146,14 +130,9 @@ function LayoutClienteDoPainel({ children }: { children: ReactNode }) {
           inferior do mobile (pb-24) para o conteúdo não ficar por baixo. */}
       <main className="md:pl-64">
         <div className="p-6 pb-24 lg:p-10 md:pb-10">
-          {/* Seta de voltar: some na raiz do painel (voltar dali sairia do app). */}
-          {!naRaizDoPainel ? (
-            <div className="mb-4">
-              <Botao variante="fantasma" tamanho="pequeno" onClick={voltarPagina} className="text-muted-foreground">
-                <ArrowLeft /> Voltar
-              </Botao>
-            </div>
-          ) : null}
+          {/* TEAM_005: o botão "Voltar" saiu — no desktop a navegação é a
+              barra lateral (logo incluso), no mobile a barra inferior e o
+              logo do cabeçalho. */}
           {/* Conteúdo da rota com animação de entrada suave. */}
           <motion.div
             initial={ANIMACAO_DE_ENTRADA.escondido}

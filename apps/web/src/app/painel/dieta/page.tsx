@@ -10,7 +10,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Clock, Droplets, Flame, Lightbulb, Wheat } from 'lucide-react';
+import { Check, CheckCircle2, Clock, Droplets, Flame, Lightbulb, Wheat } from 'lucide-react';
 import { Botao } from '@/components/ui/button';
 import { Selo } from '@/components/ui/badge';
 import { CartaoTempoDoPlano } from '@/components/painel/cartao-tempo-do-plano';
@@ -24,9 +24,43 @@ import {
 import { BarraDeProgresso } from '@/components/ui/progress';
 import { MenuDeSelecao } from '@/components/ui/select';
 import { Esqueleto } from '@/components/ui/skeleton';
-import { buscarPlanoAtual, recalcularPlanos, substituirAlimento, ErroDaApi, type CorpoSubstituicao } from '@/lib/api';
+import { buscarCheckins, buscarPlanoAtual, recalcularPlanos, salvarCheckin, substituirAlimento, ErroDaApi, type CorpoSubstituicao } from '@/lib/api';
 import { encerrarSessao } from '@/lib/armazenamento';
+import { hojeLocal } from '@/lib/checkin-util';
+import { combinarClasses } from '@/lib/util';
 import type { ItemDaDieta, PlanoCompleto, PlanoDieta } from '@/lib/tipos';
+
+/* ===========================================================================
+ * Progresso da sessão de hoje (checklist de refeições da dieta).
+ * Estado efêmero por plano+dia civil: zera sozinho a cada dia (a data está na
+ * chave) e não vai ao banco — o registro durável é o check-in.
+ * ======================================================================== */
+
+/** Monta a chave do localStorage para a checklist de refeições do dia. */
+function chaveDoProgresso(dietaId: number): string {
+  return `protocolfit_dieta_concluida:${dietaId}:${hojeLocal()}`;
+}
+
+/** Lê os índices das refeições concluídas hoje na dieta. */
+function lerConcluidas(dietaId: number): number[] {
+  try {
+    const bruto = localStorage.getItem(chaveDoProgresso(dietaId));
+    const lista: unknown = JSON.parse(bruto ?? '[]');
+    // Descarta entradas corrompidas — só inteiros (índices) são válidos.
+    return Array.isArray(lista) ? lista.filter((item): item is number => Number.isInteger(item)) : [];
+  } catch {
+    return [];
+  }
+}
+
+/** Grava os índices das refeições concluídas hoje na dieta. */
+function gravarConcluidas(dietaId: number, concluidas: number[]) {
+  try {
+    localStorage.setItem(chaveDoProgresso(dietaId), JSON.stringify(concluidas));
+  } catch {
+    // Armazenamento bloqueado/cheio: a checklist segue só na memória da sessão.
+  }
+}
 
 /** Linha de macro com barra de progresso no resumo do topo. */
 interface LinhaDeMacro {
@@ -147,14 +181,24 @@ export default function PaginaDaDieta() {
   const [carregando, definirCarregando] = useState(true);
   const [erro, definirErro] = useState<string | null>(null);
   const [plano, definirPlano] = useState<PlanoCompleto | null>(null);
+  // Refeições concluídas no dia (índices).
+  const [refeicoesConcluidas, definirRefeicoesConcluidas] = useState<number[]>([]);
+  // Estado do check-in de hoje e do salvamento dele.
+  const [dietaSeguidaHoje, definirDietaSeguidaHoje] = useState(false);
+  const [salvandoCheckin, definirSalvandoCheckin] = useState(false);
+  const [erroCheckin, definirErroCheckin] = useState<string | null>(null);
 
   /** Carrega o plano atual (404 → onboarding; 401 → login). */
   const carregarDados = useCallback(async () => {
     definirCarregando(true);
     definirErro(null);
     try {
-      const planoAtual = await buscarPlanoAtual();
+      const [planoAtual, resumo] = await Promise.all([
+        buscarPlanoAtual(),
+        buscarCheckins().catch(() => null),
+      ]);
       definirPlano(planoAtual);
+      definirDietaSeguidaHoje(resumo?.hoje?.dieta_seguida ?? false);
     } catch (erroCapturado: unknown) {
       // Erro da API com status conhecido.
       if (erroCapturado instanceof ErroDaApi) {
@@ -182,6 +226,55 @@ export default function PaginaDaDieta() {
   useEffect(() => {
     void carregarDados();
   }, [carregarDados]);
+
+  // Restaura a checklist de refeições concluídas do dia quando o plano chega.
+  const dietaId = plano?.dieta.id ?? null;
+  useEffect(() => {
+    if (dietaId === null) {
+      return;
+    }
+    definirRefeicoesConcluidas(lerConcluidas(dietaId));
+  }, [dietaId]);
+
+  /** Marca a dieta de hoje como seguida no check-in diário. */
+  async function concluirDietaDoDia() {
+    definirSalvandoCheckin(true);
+    definirErroCheckin(null);
+    try {
+      const resumo = await salvarCheckin({ dieta_seguida: true });
+      definirDietaSeguidaHoje(resumo.hoje?.dieta_seguida ?? true);
+    } catch (erroCapturado: unknown) {
+      definirErroCheckin(
+        erroCapturado instanceof Error ? erroCapturado.message : 'Não foi possível registrar o check-in.',
+      );
+    } finally {
+      definirSalvandoCheckin(false);
+    }
+  }
+
+  /** Alterna refeição concluída; TODAS concluídas → check-in automático. */
+  function alternarConcluido(refeicaoIndice: number) {
+    if (!plano) {
+      return;
+    }
+    const atuais = new Set(refeicoesConcluidas);
+    if (atuais.has(refeicaoIndice)) {
+      atuais.delete(refeicaoIndice);
+    } else {
+      atuais.add(refeicaoIndice);
+    }
+    const lista = [...atuais].sort((a, b) => a - b);
+    definirRefeicoesConcluidas(lista);
+    gravarConcluidas(plano.dieta.id, lista);
+    // Concluiu todas as refeições do dia → a dieta conta como seguida no check-in.
+    if (
+      lista.length === plano.dieta.refeicoes.length &&
+      !dietaSeguidaHoje &&
+      !salvandoCheckin
+    ) {
+      void concluirDietaDoDia();
+    }
+  }
 
   /** Atualiza a dieta no estado local com a resposta da substituição. */
   function atualizarDieta(novaDieta: PlanoDieta) {
@@ -311,37 +404,99 @@ export default function PaginaDaDieta() {
 
       {/* Seção das refeições do dia. */}
       <section className="space-y-4">
-        <h2 className="font-display text-lg font-bold text-foreground">Refeições do dia</h2>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 className="font-display text-lg font-bold text-foreground">Refeições do dia</h2>
+        </div>
+
+        {/* Progresso da dieta de hoje + atalho que marca a dieta como seguida no check-in. */}
+        <div className="space-y-2 rounded-lg border border-border bg-card p-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <p className="text-sm font-medium text-foreground">
+              Progresso de hoje: {refeicoesConcluidas.length}/{dieta.refeicoes.length} refeições
+            </p>
+            {dietaSeguidaHoje ? (
+              <span className="flex items-center gap-1 text-sm font-medium text-primary">
+                <CheckCircle2 className="size-4" /> Dieta registrada no check-in
+              </span>
+            ) : (
+              <Botao
+                variante="contorno"
+                tamanho="pequeno"
+                disabled={salvandoCheckin}
+                onClick={() => void concluirDietaDoDia()}
+              >
+                <Check /> {salvandoCheckin ? 'Registrando...' : 'Concluir dieta de hoje'}
+              </Botao>
+            )}
+          </div>
+          {/* Barra de progresso da checklist do dia (0–100%). */}
+          <BarraDeProgresso
+            valor={dieta.refeicoes.length > 0 ? (refeicoesConcluidas.length / dieta.refeicoes.length) * 100 : 0}
+          />
+          {/* Erro do check-in automático/manual aparece aqui. */}
+          {erroCheckin ? (
+            <p className="text-sm font-medium text-destructive">{erroCheckin}</p>
+          ) : null}
+        </div>
+
         {/* Um cartão por refeição do plano. */}
-        {dieta.refeicoes.map((refeicao, refeicaoIndice) => (
-          <Cartao key={refeicaoIndice} className="gap-4">
-            {/* Cabeçalho da refeição: tipo, horário e calorias. */}
-            <CartaoCabecalho className="flex flex-row items-center justify-between gap-2">
-              <div>
-                <CartaoTitulo className="text-base">{refeicao.tipo}</CartaoTitulo>
-                <CartaoDescricao className="flex items-center gap-1.5">
-                  <Clock className="size-3.5 shrink-0" /> {refeicao.horario_sugerido}
-                </CartaoDescricao>
-              </div>
-              <Selo variante="contorno">
-                {refeicao.totais.calorias} / {refeicao.calorias_alvo} kcal
-              </Selo>
-            </CartaoCabecalho>
-            {/* Itens da refeição com seletor de substituição. */}
-            <CartaoConteudo className="space-y-3">
-              {refeicao.itens.map((item, itemIndice) => (
-                <LinhaDoItem
-                  key={itemIndice}
-                  item={item}
-                  dieta={dieta}
-                  refeicaoIndice={refeicaoIndice}
-                  itemIndice={itemIndice}
-                  aoAtualizarDieta={atualizarDieta}
-                />
-              ))}
-            </CartaoConteudo>
-          </Cartao>
-        ))}
+        {dieta.refeicoes.map((refeicao, refeicaoIndice) => {
+          const concluido = refeicoesConcluidas.includes(refeicaoIndice);
+          return (
+            <Cartao
+              key={refeicaoIndice}
+              className={combinarClasses('gap-4 transition-colors', concluido && 'border-primary/40 bg-primary/5')}
+            >
+              {/* Cabeçalho da refeição: botão de concluído, tipo, horário e calorias. */}
+              <CartaoCabecalho className="flex flex-row items-center justify-between gap-2">
+                <div className="flex min-w-0 items-center gap-3">
+                  {/* Botão circular de concluído — alimenta a checklist do dia. */}
+                  <button
+                    type="button"
+                    onClick={() => alternarConcluido(refeicaoIndice)}
+                    aria-pressed={concluido}
+                    aria-label={`${concluido ? 'Desmarcar' : 'Marcar'} ${refeicao.tipo} como concluída`}
+                    title={concluido ? 'Desmarcar concluída' : 'Marcar como concluída'}
+                    className={combinarClasses(
+                      'flex size-7 shrink-0 items-center justify-center rounded-full border transition-colors',
+                      concluido
+                        ? 'border-primary bg-primary text-primary-foreground'
+                        : 'border-border bg-card text-transparent hover:border-primary/60 hover:text-primary/40',
+                    )}
+                  >
+                    <Check className="size-4" />
+                  </button>
+                  <div>
+                    <CartaoTitulo
+                      className={combinarClasses('text-base', concluido && 'text-muted-foreground line-through')}
+                    >
+                      {refeicao.tipo}
+                    </CartaoTitulo>
+                    <CartaoDescricao className="flex items-center gap-1.5">
+                      <Clock className="size-3.5 shrink-0" /> {refeicao.horario_sugerido}
+                    </CartaoDescricao>
+                  </div>
+                </div>
+                <Selo variante="contorno">
+                  {refeicao.totais.calorias} / {refeicao.calorias_alvo} kcal
+                </Selo>
+              </CartaoCabecalho>
+              {/* Itens da refeição com seletor de substituição. */}
+              <CartaoConteudo className="space-y-3">
+                {refeicao.itens.map((item, itemIndice) => (
+                  <LinhaDoItem
+                    key={itemIndice}
+                    item={item}
+                    dieta={dieta}
+                    refeicaoIndice={refeicaoIndice}
+                    itemIndice={itemIndice}
+                    aoAtualizarDieta={atualizarDieta}
+                  />
+                ))}
+              </CartaoConteudo>
+            </Cartao>
+          );
+        })}
       </section>
 
       {/* Dicas do objetivo no rodapé da página. */}

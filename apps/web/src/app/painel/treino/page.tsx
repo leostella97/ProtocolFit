@@ -7,16 +7,19 @@
  * TEAM_004: cada exercício pode ser marcado como concluído na sessão de hoje;
  * ao concluir TODOS os exercícios do dia, o check-in recebe treino_feito
  * automaticamente — ou pelo botão "Concluir treino de hoje" da aba.
+ * TEAM_006: cada exercício tem um timer de descanso com atalhos de 1/2/3 min
+ * ou tempo personalizado (CronometroDeDescanso).
  * ---------------------------------------------------------------------------
  */
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeftRight, Check, CheckCircle2, Clock, Lightbulb, Pencil, Save, Timer, Youtube } from 'lucide-react';
+import { ArrowLeftRight, Check, CheckCircle2, Clock, Lightbulb, Pencil, Save, Youtube } from 'lucide-react';
 import { Botao } from '@/components/ui/button';
 import { Selo } from '@/components/ui/badge';
 import { CartaoTempoDoPlano } from '@/components/painel/cartao-tempo-do-plano';
+import { CronometroDeDescanso } from '@/components/painel/cronometro-descanso';
 import {
   Cartao,
   CartaoCabecalho,
@@ -363,12 +366,12 @@ function CartaoDeExercicio({
           </div>
         ) : null}
 
-        {/* Rodapé do exercício: descanso e dica de execução. */}
+        {/* Rodapé do exercício: timer de descanso e dica de execução. */}
         <Separador />
         <div className="flex flex-col gap-2 text-sm text-muted-foreground">
-          <p className="flex items-center gap-1.5">
-            <Timer className="size-4 shrink-0 text-primary" /> Descanso: {exercicio.descanso_segundos}s
-          </p>
+          {/* TEAM_006: timer de descanso por exercício — atalhos de 1/2/3 min,
+              atalho do descanso sugerido pelo plano ou tempo personalizado. */}
+          <CronometroDeDescanso descansoSugerido={exercicio.descanso_segundos} />
           <p className="flex items-start gap-1.5">
             <Lightbulb className="mt-0.5 size-4 shrink-0 text-primary" /> {exercicio.dicas}
           </p>

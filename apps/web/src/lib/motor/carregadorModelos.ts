@@ -145,7 +145,16 @@ export async function buscarModeloTreino(
 /** Localiza o modelo de dieta do objetivo informado. */
 export async function buscarModeloDieta(
   objetivo: Objetivo,
+  variacao?: string | null,
 ): Promise<{ modelo: ModeloDieta; caminhoDoModelo: string }> {
+  const identificador = (variacao ?? '').trim();
+  if (identificador && identificador !== 'padrao') {
+    const caminhoVariacao = `dietas/${objetivo}-${identificador}.json`;
+    const modeloVariacao = await buscarJson<ModeloDieta>(caminhoVariacao);
+    if (modeloVariacao) {
+      return { modelo: modeloVariacao, caminhoDoModelo: caminhoVariacao };
+    }
+  }
   const caminho = `dietas/${objetivo}.json`;
   const modelo = await buscarJson<ModeloDieta>(caminho);
   if (!modelo) {

@@ -17,8 +17,9 @@ import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { join, dirname } from 'node:path';
 
-// Caminho da pasta de treinos (resolvido a partir deste arquivo).
+// Caminhos das pastas de treinos e dietas (resolvidos a partir deste arquivo).
 const PASTA_TREINOS = fileURLToPath(new URL('../apps/api/modelos/treinos', import.meta.url));
+const PASTA_DIETAS = fileURLToPath(new URL('../apps/api/modelos/dietas', import.meta.url));
 
 // Matriz completa esperada pelo site.
 const MODALIDADES = ['academia', 'pesocorporal'];
@@ -169,6 +170,96 @@ for (const modalidade of MODALIDADES) {
         dias: Number(reconhecido[1]),
       });
     }
+  }
+}
+
+/**
+ * Valida um único arquivo de dieta.
+ */
+function validarArquivoDieta(nomeArquivo) {
+  totalArquivos += 1;
+  const caminhoCompleto = join(PASTA_DIETAS, nomeArquivo);
+
+  let modelo;
+  try {
+    modelo = JSON.parse(readFileSync(caminhoCompleto, 'utf-8'));
+  } catch (erro) {
+    registrarErro(`dietas/${nomeArquivo}`, `JSON invalido: ${erro.message}`);
+    return;
+  }
+
+  if (typeof modelo.nome !== 'string' || modelo.nome.length === 0) {
+    registrarErro(`dietas/${nomeArquivo}`, 'campo "nome" ausente ou vazio');
+  }
+  if (!OBJETIVOS.includes(modelo.objetivo)) {
+    registrarErro(`dietas/${nomeArquivo}`, `objetivo invalido: ${modelo.objetivo}`);
+  }
+  if (!Array.isArray(modelo.refeicoes) || modelo.refeicoes.length === 0) {
+    registrarErro(`dietas/${nomeArquivo}`, 'campo "refeicoes" ausente ou vazio');
+    return;
+  }
+
+  let somaCaloriasRefeicoes = 0;
+  modelo.refeicoes.forEach((refeicao, idxRef) => {
+    const rotuloRef = `dietas/${nomeArquivo} [refeicao ${idxRef + 1} - ${refeicao.tipo ?? 'sem tipo'}]`;
+    if (typeof refeicao.tipo !== 'string' || typeof refeicao.horario_sugerido !== 'string') {
+      registrarErro(rotuloRef, 'tipo ou horario_sugerido invalidos');
+    }
+    if (typeof refeicao.percentual_calorias !== 'number' || refeicao.percentual_calorias <= 0) {
+      registrarErro(rotuloRef, 'percentual_calorias invalido');
+    } else {
+      somaCaloriasRefeicoes += refeicao.percentual_calorias;
+    }
+    if (!Array.isArray(refeicao.itens) || refeicao.itens.length === 0) {
+      registrarErro(rotuloRef, 'itens ausentes ou vazios');
+      return;
+    }
+
+    let somaPercentualItens = 0;
+    refeicao.itens.forEach((item, idxItem) => {
+      const rotuloItem = `${rotuloRef} [item ${idxItem + 1} - ${item.nome ?? 'sem nome'}]`;
+      if (typeof item.nome !== 'string' || typeof item.categoria !== 'string') {
+        registrarErro(rotuloItem, 'nome ou categoria ausentes');
+      }
+      if (item.unidade !== 'g' && item.unidade !== 'ml') {
+        registrarErro(rotuloItem, `unidade invalida: ${item.unidade}`);
+      }
+      if (typeof item.percentual_da_refeicao !== 'number' || item.percentual_da_refeicao <= 0) {
+        registrarErro(rotuloItem, 'percentual_da_refeicao invalido');
+      } else {
+        somaPercentualItens += item.percentual_da_refeicao;
+      }
+      for (const campo of ['calorias_por_100g', 'proteinas_por_100g', 'carboidratos_por_100g', 'gorduras_por_100g']) {
+        if (typeof item[campo] !== 'number' || item[campo] < 0) {
+          registrarErro(rotuloItem, `campo "${campo}" invalido`);
+        }
+      }
+      if (!Array.isArray(item.alternativas)) {
+        registrarErro(rotuloItem, 'campo "alternativas" ausente');
+      } else {
+        item.alternativas.forEach((alt, idxAlt) => {
+          if (typeof alt.nome !== 'string') {
+            registrarErro(`${rotuloItem} [alternativa ${idxAlt + 1}]`, 'nome ausente');
+          }
+        });
+      }
+    });
+
+    if (Math.abs(somaPercentualItens - 1.0) > 0.02) {
+      registrarErro(rotuloRef, `soma dos percentuais dos itens (${somaPercentualItens}) difere de 1.0`);
+    }
+  });
+
+  if (Math.abs(somaCaloriasRefeicoes - 1.0) > 0.02) {
+    registrarErro(`dietas/${nomeArquivo}`, `soma dos percentuais das refeicoes (${somaCaloriasRefeicoes}) difere de 1.0`);
+  }
+}
+
+// Valida todos os arquivos de dietas.
+if (existsSync(PASTA_DIETAS)) {
+  const arquivosDietas = readdirSync(PASTA_DIETAS).filter((f) => f.endsWith('.json'));
+  for (const arquivo of arquivosDietas) {
+    validarArquivoDieta(arquivo);
   }
 }
 

@@ -32,8 +32,8 @@ export function gerarPlanosParaPerfil(usuarioId: number, perfil: Perfil): { trei
     perfil.variacao_treino,
   );
 
-  // 2) Localiza o modelo mestre de dieta do objetivo.
-  const modeloDieta = buscarModeloDieta(perfil.objetivo);
+  // 2) Localiza o modelo mestre de dieta do objetivo (alinhado ao estilo do usuário se disponível).
+  const modeloDieta = buscarModeloDieta(perfil.objetivo, perfil.variacao_treino);
 
   // 3) Calcula o plano nutricional determinístico (TMB → gasto → meta → macros).
   const planoNutricional = calcularPlanoNutricional(perfil);
@@ -51,7 +51,11 @@ export function gerarPlanosParaPerfil(usuarioId: number, perfil: Perfil): { trei
 
   // 7) Grava as novas cópias montadas no SQLite (isolamento por usuário).
   const modeloOrigemTreino = `treinos/${perfil.modalidade}/${perfil.objetivo}`;
-  const modeloOrigemDieta = `dietas/${perfil.objetivo}`;
+  const idVarDieta = (perfil.variacao_treino ?? '').trim();
+  const modeloOrigemDieta =
+    idVarDieta && idVarDieta !== 'padrao'
+      ? `dietas/${perfil.objetivo}-${idVarDieta}.json`
+      : `dietas/${perfil.objetivo}.json`;
   const idTreino = inserirPlano(
     usuarioId,
     'treino',

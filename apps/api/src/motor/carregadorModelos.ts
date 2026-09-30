@@ -171,7 +171,14 @@ export function buscarModeloTreino(
 }
 
 /** Localiza o modelo JSON mestre de dieta do objetivo informado. */
-export function buscarModeloDieta(objetivo: Objetivo): ModeloDieta {
+export function buscarModeloDieta(objetivo: Objetivo, variacao?: string | null): ModeloDieta {
+  const identificador = (variacao ?? '').trim();
+  if (identificador && identificador !== 'padrao') {
+    const caminhoVariacao = `${CAMINHO_MODELOS}/dietas/${objetivo}-${identificador}.json`;
+    if (existsSync(caminhoVariacao)) {
+      return lerJson<ModeloDieta>(caminhoVariacao);
+    }
+  }
   // Caminho do arquivo: /modelos/dietas/emagrecimento.json
   const caminhoArquivo = `${CAMINHO_MODELOS}/dietas/${objetivo}.json`;
   if (!existsSync(caminhoArquivo)) {

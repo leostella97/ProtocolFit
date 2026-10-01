@@ -9,8 +9,12 @@
  * ---------------------------------------------------------------------------
  */
 
-/** Versão do texto do termo — trocar a versão invalida aceites anteriores. */
-export const VERSAO_DO_TERMO = 1;
+/**
+ * Versão do texto do termo — trocar a versão invalida aceites anteriores.
+ * TEAM_007: v2 — a seção de privacidade passou a refletir o modo de execução
+ * (navegador × servidor), então todos precisam aceitar novamente.
+ */
+export const VERSAO_DO_TERMO = 2;
 
 /** Chave do aceite no armazenamento do navegador. */
 export const CHAVE_DO_ACEITE = 'protocolfit_termo_aceito';

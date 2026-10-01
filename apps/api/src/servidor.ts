@@ -17,6 +17,11 @@ import Fastify from 'fastify';
 // Permite que o frontend Next.js (outra porta) chame a API.
 import cors from '@fastify/cors';
 
+// TEAM_007: limita requisições por IP nas rotas de autenticação — cada login
+// custa ~100ms de CPU (bcrypt), então sem limite um atacante podia forçar
+// força bruta em massa ou derrubar o servidor por consumo de CPU.
+import rateLimit from '@fastify/rate-limit';
+
 // Plugin de autenticação JWT.
 import { configurarAutenticacao } from './plugins/autenticacaoJwt.js';
 
@@ -32,8 +37,12 @@ import { rotasPlanos } from './rotas/planos.js';
 /** Porta do servidor (variável PORTA ou 3333 como padrão). */
 const PORTA = Number(process.env.PORTA ?? 3333);
 
-/** Instância principal do Fastify com logs de desenvolvimento. */
-const app = Fastify({ logger: true });
+/**
+ * Instância principal do Fastify com logs de desenvolvimento.
+ * TEAM_007: trustProxy honra X-Forwarded-For do proxy reverso (Caddy/Nginx) —
+ * sem ele, o rate limit enxergaria todos os usuários como um único IP.
+ */
+const app = Fastify({ logger: true, trustProxy: true });
 
 // Habilita CORS para a origem do frontend (evita bloqueios no navegador).
 await app.register(cors, {
@@ -63,11 +72,40 @@ app.addContentTypeParser('application/json', { parseAs: 'string' }, (requisicao,
 // para que os decorators (app.jwt, request.jwtVerify) fiquem globais.
 await configurarAutenticacao(app);
 
+// TEAM_007: respostas de erro padronizadas — o frontend lê sempre `mensagem`.
+// Erros de JWT (token expirado/ausente) viram 401 amigável; os demais erros
+// inesperados viram 500 genérico sem vazar detalhes internos.
+app.setErrorHandler((erro: unknown, _requisicao, resposta) => {
+  // Extrai status e mensagem de forma segura (o Fastify entrega FastifyError).
+  const falha = erro as { statusCode?: number; message?: string };
+  // Erros com statusCode próprio (JWT, rate limit, validação do Fastify).
+  const status = falha.statusCode && falha.statusCode >= 400 ? falha.statusCode : 500;
+  if (status >= 500) {
+    app.log.error(erro);
+  }
+  if (status === 401) {
+    return resposta.code(401).send({ mensagem: 'Sessão expirada ou inválida. Entre novamente.' });
+  }
+  if (status === 429) {
+    return resposta.code(429).send({ mensagem: 'Muitas tentativas. Aguarde um instante e tente de novo.' });
+  }
+  if (status >= 500) {
+    return resposta.code(500).send({ mensagem: 'Erro interno do servidor. Tente novamente em instantes.' });
+  }
+  return resposta.code(status).send({ mensagem: falha.message ?? 'Requisição inválida.' });
+});
+
 // Registra as rotas com seus prefixos de API.
 await app.register(rotasOpcoes, { prefix: '/api' }); // GET  /api/opcoes
-await app.register(rotasAutenticacao, { prefix: '/api/auth' }); // POST /api/auth/cadastro | /api/auth/login
+
+// TEAM_007: as rotas de autenticação recebem rate limit próprio — 30
+// requisições/minuto por IP é folga para uso humano e barreira para bots.
+await app.register(async (rotasProtegidas) => {
+  await rotasProtegidas.register(rateLimit, { max: 30, timeWindow: '1 minute' });
+  await rotasProtegidas.register(rotasAutenticacao);
+}, { prefix: '/api/auth' }); // POST /api/auth/cadastro | /api/auth/login
 await app.register(rotasConta, { prefix: '/api' }); // GET  /api/eu
-await app.register(rotasPerfil, { prefix: '/api/perfil' }); // POST /api/perfil | GET /api/perfil | POST /api/perfil/recalcular
+await app.register(rotasPerfil, { prefix: '/api/perfil' }); // POST /api/perfil | PATCH /api/perfil/corpo | PATCH /api/perfil/treino | POST /api/perfil/recalcular
 await app.register(rotasPlanos, { prefix: '/api/plano' }); // GET /api/plano/atual | PATCH /api/plano/treino/:id | PATCH /api/plano/dieta/:id/substituir
 await app.register(rotasEvolucao, { prefix: '/api/evolucao' }); // POST /api/evolucao | GET /api/evolucao
 await app.register(rotasCheckin, { prefix: '/api/checkin' }); // GET /api/checkin | POST /api/checkin (check-in diário)

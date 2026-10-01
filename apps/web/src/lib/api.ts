@@ -25,7 +25,7 @@ import type {
   ResumoDeCheckins,
   Usuario,
 } from './tipos';
-import { obterToken } from './armazenamento';
+import { guardarToken, guardarUsuario, obterToken } from './armazenamento';
 import { hojeLocal } from './checkin-util';
 import { ErroDaApi } from './erro-api';
 import * as local from './repositorio-local';
@@ -88,16 +88,28 @@ export interface CorpoPerfil {
   variacao_treino?: string | null;
 }
 
-/** Cria a conta do usuário e devolve token + dados públicos. */
+/**
+ * TEAM_007: persiste a sessão (token + usuário) — ponto ÚNICO de gravação.
+ * Antes as páginas de login/cadastro gravavam de novo por fora, e no modo
+ * navegador a escrita acontecia duas vezes (repositório local + página).
+ */
+function persistirSessao(resposta: RespostaDeAutenticacao): RespostaDeAutenticacao {
+  guardarToken(resposta.token);
+  guardarUsuario(resposta.usuario);
+  return resposta;
+}
+
+/** Cria a conta do usuário, devolve token + dados públicos e abre a sessão. */
 export async function cadastrarUsuario(corpo: CorpoCadastro): Promise<RespostaDeAutenticacao> {
   // Modo navegador: cria a conta no armazenamento local.
   if (MODO_LOCAL) {
     return local.cadastrarLocal(corpo);
   }
-  return chamarApi<RespostaDeAutenticacao>('/auth/cadastro', {
+  const resposta = await chamarApi<RespostaDeAutenticacao>('/auth/cadastro', {
     method: 'POST',
     body: JSON.stringify(corpo),
   });
+  return persistirSessao(resposta);
 }
 
 /** Autentica o usuário (com bloqueio de 3 tentativas por 5 horas). */
@@ -106,10 +118,11 @@ export async function entrarUsuario(corpo: CorpoLogin): Promise<RespostaDeAutent
   if (MODO_LOCAL) {
     return local.entrarLocal(corpo);
   }
-  return chamarApi<RespostaDeAutenticacao>('/auth/login', {
+  const resposta = await chamarApi<RespostaDeAutenticacao>('/auth/login', {
     method: 'POST',
     body: JSON.stringify(corpo),
   });
+  return persistirSessao(resposta);
 }
 
 /** Busca a conta logada e o estado do onboarding. */
@@ -192,19 +205,22 @@ export interface CorpoTrocaExercicio {
   exercicio_nome: string;
 }
 
-/** TEAM_003: lista as alternativas do mesmo grupo para a posição do plano. */
-export async function listarAlternativasDeExercicio(
+/**
+ * TEAM_007: lista as alternativas de TODOS os exercícios de um dia em uma
+ * única chamada — antes era uma requisição por exercício (N+1 na tela).
+ * A posição i da resposta corresponde ao exercício de índice i do dia.
+ */
+export async function listarAlternativasDoDia(
   planoId: number,
   diaIndice: number,
-  exercicioIndice: number,
-): Promise<AlternativaDeExercicio[]> {
+): Promise<AlternativaDeExercicio[][]> {
   if (MODO_LOCAL) {
-    return local.listarAlternativasDeExercicioLocal(planoId, diaIndice, exercicioIndice);
+    return local.listarAlternativasDoDiaLocal(planoId, diaIndice);
   }
-  const resposta = await chamarApi<{ alternativas: AlternativaDeExercicio[] }>(
-    `/plano/treino/${planoId}/alternativas?dia_indice=${diaIndice}&exercicio_indice=${exercicioIndice}`,
+  const resposta = await chamarApi<{ alternativasPorExercicio: AlternativaDeExercicio[][] }>(
+    `/plano/treino/${planoId}/alternativas?dia_indice=${diaIndice}`,
   );
-  return resposta.alternativas;
+  return resposta.alternativasPorExercicio;
 }
 
 /** TEAM_003: troca o exercício por uma alternativa do mesmo grupo muscular. */
@@ -268,6 +284,11 @@ export async function atualizarCorpo(corpo: CorpoAtualizacaoDoCorpo): Promise<{ 
 export interface CorpoCheckin {
   /** Dia do check-in (padrão: hoje). */
   data?: string;
+  /**
+   * TEAM_007: dia civil do usuário usado como referência do resumo —
+   * enviado sempre pelo cliente (o servidor não conhece o fuso).
+   */
+  hoje?: string;
   /** Treino concluído no dia. */
   treino_feito?: boolean;
   /** Dieta seguida no dia. */
@@ -294,8 +315,13 @@ export async function salvarCheckin(corpo: CorpoCheckin): Promise<ResumoDeChecki
   if (MODO_LOCAL) {
     return local.salvarCheckinLocal(corpo);
   }
-  // TEAM_001: informa o dia civil do usuário (o padrão do servidor é UTC).
-  return chamarApi('/checkin', { method: 'POST', body: JSON.stringify({ data: hojeLocal(), ...corpo }) });
+  // TEAM_001+TEAM_007: informa o dia civil do usuário DUAS vezes — `data` é o
+  // dia do check-in (pode ser retroativo) e `hoje` é a referência do resumo
+  // (o padrão do servidor é UTC, que diverge do fuso do cliente).
+  return chamarApi('/checkin', {
+    method: 'POST',
+    body: JSON.stringify({ data: hojeLocal(), hoje: hojeLocal(), ...corpo }),
+  });
 }
 
 /* ===========================================================================

@@ -34,7 +34,7 @@ import type { CorpoPerfil } from '@/lib/api';
 // Verificação de sessão ativa no navegador.
 import { possuiSessao } from '@/lib/armazenamento';
 // Tipos do contrato de dados do frontend.
-import type { Modalidade, Objetivo, OpcoesDoSistema, Sexo, VariacaoDeTreino } from '@/lib/tipos';
+import type { Modalidade, Objetivo, OpcoesDoSistema, Sexo } from '@/lib/tipos';
 // Utilitários de classes e rótulos amigáveis.
 import {
   combinarClasses,
@@ -42,7 +42,10 @@ import {
   rotuloDaModalidade,
   rotuloDoDia,
   rotuloDoObjetivo,
+  variacoesDaCombinacao,
 } from '@/lib/util';
+// TEAM_007: limites corporais compartilhados (mesmos valores da API).
+import { LIMITES_CORPO } from '@/lib/motor/constantes';
 // Constantes de animação do design system.
 import { ANIMACAO_DE_ENTRADA, TRANSICAO_SUAVE } from '@/lib/constantes';
 // Componentes de interface prontos do projeto.
@@ -61,7 +64,8 @@ interface FormularioDoOnboarding {
   alturaCm: string;
   pesoKg: string;
   objetivo: Objetivo | null;
-  frequenciaSemanal: number | null;
+  // TEAM_007: a frequência semanal é derivada da quantidade de dias
+  // selecionados — não existe campo separado (o chip era ignorado no envio).
   diasSelecionados: string[];
   modalidade: Modalidade | null;
   /** Estilo de treino escolhido ("padrao" = modelo clássico). */
@@ -75,7 +79,6 @@ const FORMULARIO_INICIAL: FormularioDoOnboarding = {
   alturaCm: '',
   pesoKg: '',
   objetivo: null,
-  frequenciaSemanal: null,
   diasSelecionados: [],
   modalidade: null,
   variacaoTreino: 'padrao',
@@ -91,7 +94,7 @@ const TITULOS_DOS_PASSOS = ['Seu corpo', 'Seu objetivo', 'Sua rotina', 'Seu loca
 const DESCRICOES_DOS_PASSOS = [
   'Esses dados alimentam a fórmula Mifflin-St Jeor.',
   'O plano inteiro é montado em torno do seu objetivo.',
-  'Quantas vezes por semana e em quais dias você vai treinar?',
+  'Em quais dias da semana você vai treinar?',
   'Onde o treino vai acontecer e em qual estilo?',
   'Confira tudo antes de gerar o seu plano.',
 ];
@@ -108,37 +111,6 @@ const ICONES_DAS_MODALIDADES: Record<Modalidade, LucideIcon> = {
   academia: Building2,
   pesocorporal: PersonStanding,
 };
-
-/**
- * Estilos (variações) de treino disponíveis para a combinação escolhida.
- * O estilo padrão vem sempre primeiro; os demais em ordem alfabética.
- */
-function estilosDaCombinacao(
-  opcoes: OpcoesDoSistema | null,
-  modalidade: Modalidade | null,
-  objetivo: Objetivo | null,
-  dias: number,
-): VariacaoDeTreino[] {
-  // Sem combinação completa não há estilos para listar.
-  if (!opcoes || !modalidade || !objetivo || dias <= 0) {
-    return [];
-  }
-  return opcoes.variacoes_de_treino
-    .filter(
-      (estilo) =>
-        estilo.modalidade === modalidade && estilo.objetivo === objetivo && estilo.dias === dias,
-    )
-    .sort((primeiro, segundo) => {
-      // O estilo padrão é sempre a primeira opção da lista.
-      if (primeiro.id === 'padrao') {
-        return -1;
-      }
-      if (segundo.id === 'padrao') {
-        return 1;
-      }
-      return primeiro.nome.localeCompare(segundo.nome, 'pt-BR');
-    });
-}
 
 /** Variantes da transição entre passos (deslize direcional). */const VARIANTES_DO_PASSO = {
   // Entra deslizando a partir do lado indicado pela direção.
@@ -282,14 +254,24 @@ export default function PaginaDeOnboarding() {
       if (!formulario.faixaEtaria) {
         return 'Escolha a sua faixa etária.';
       }
-      // Converte a altura para número e confere o intervalo aceito.
+      // Converte a altura para número e confere o MESMO intervalo da API.
       const altura = Number(formulario.alturaCm);
-      if (!formulario.alturaCm || Number.isNaN(altura) || altura < 100 || altura > 250) {
+      if (
+        !formulario.alturaCm ||
+        Number.isNaN(altura) ||
+        altura < LIMITES_CORPO.altura_minima_cm ||
+        altura > LIMITES_CORPO.altura_maxima_cm
+      ) {
         return 'Informe uma altura válida em centímetros (ex.: 175).';
       }
-      // Converte o peso para número e confere o intervalo aceito.
+      // Converte o peso para número e confere o MESMO intervalo da API.
       const peso = Number(formulario.pesoKg);
-      if (!formulario.pesoKg || Number.isNaN(peso) || peso < 30 || peso > 350) {
+      if (
+        !formulario.pesoKg ||
+        Number.isNaN(peso) ||
+        peso < LIMITES_CORPO.peso_minimo_kg ||
+        peso > LIMITES_CORPO.peso_maximo_kg
+      ) {
         return 'Informe um peso válido em quilogramas (ex.: 72,5).';
       }
       return null;
@@ -298,11 +280,8 @@ export default function PaginaDeOnboarding() {
     if (passo === 2) {
       return formulario.objetivo ? null : 'Escolha o objetivo principal do seu plano.';
     }
-    // Passo 3 — frequência semanal e dias disponíveis.
+    // Passo 3 — dias disponíveis (a frequência é a contagem deles).
     if (passo === 3) {
-      if (formulario.frequenciaSemanal === null) {
-        return 'Selecione quantas vezes por semana você pretende treinar.';
-      }
       if (formulario.diasSelecionados.length === 0) {
         return 'Marque pelo menos 1 dia disponível na semana.';
       }
@@ -510,32 +489,8 @@ export default function PaginaDeOnboarding() {
       return (
         <div className="flex flex-col gap-6">
           {cabecalhoDoPasso}
-          {/* Chips com as frequências oficiais da API. */}
-          <div className="flex flex-col gap-3">
-            <span className="text-sm font-medium">Frequência semanal</span>
-            <div className="flex flex-wrap gap-2">
-              {opcoes.frequencias_semanais.map((frequencia) => {
-                const selecionada = formulario.frequenciaSemanal === frequencia;
-                return (
-                  <button
-                    key={frequencia}
-                    type="button"
-                    onClick={() => atualizarCampo('frequenciaSemanal', frequencia)}
-                    aria-pressed={selecionada}
-                    className={combinarClasses(
-                      'rounded-full border px-4 py-2 text-sm font-semibold transition-colors',
-                      selecionada
-                        ? 'gradiente-marca border-transparent text-white'
-                        : 'border-border bg-card text-foreground hover:bg-secondary',
-                    )}
-                  >
-                    {frequencia}x/semana
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-          {/* Chips de dias da semana com seleção múltipla (toggle). */}
+          {/* Chips de dias da semana com seleção múltipla (toggle) — a
+              frequência semanal é a quantidade de dias marcados. */}
           <div className="flex flex-col gap-3">
             <span className="text-sm font-medium">Dias disponíveis</span>
             <div className="flex flex-wrap gap-2">
@@ -569,12 +524,15 @@ export default function PaginaDeOnboarding() {
     if (passo === 4 && opcoes) {
       // Estilos disponíveis para a combinação já escolhida (modalidade do passo
       // atual + objetivo + quantidade de dias marcados).
-      const estilosDisponiveis = estilosDaCombinacao(
-        opcoes,
-        formulario.modalidade,
-        formulario.objetivo,
-        formulario.diasSelecionados.length,
-      );
+      const estilosDisponiveis =
+        formulario.modalidade && formulario.objetivo && formulario.diasSelecionados.length > 0
+          ? variacoesDaCombinacao(
+              opcoes.variacoes_de_treino,
+              formulario.modalidade,
+              formulario.objetivo,
+              formulario.diasSelecionados.length,
+            )
+          : [];
       // Estilo em vigor: cai no padrão quando a combinação mudou e o estilo
       // escolhido antes não existe mais.
       const estiloSelecionado = estilosDisponiveis.some(
@@ -641,12 +599,15 @@ export default function PaginaDeOnboarding() {
       opcoes?.faixas_etarias.find((faixa) => faixa.valor === formulario.faixaEtaria)?.rotulo ??
       formulario.faixaEtaria;
     // Estilos disponíveis para a combinação final (monta o rótulo do resumo).
-    const estilosFinais = estilosDaCombinacao(
-      opcoes,
-      formulario.modalidade,
-      formulario.objetivo,
-      formulario.diasSelecionados.length,
-    );
+    const estilosFinais =
+      opcoes && formulario.modalidade && formulario.objetivo && formulario.diasSelecionados.length > 0
+        ? variacoesDaCombinacao(
+            opcoes.variacoes_de_treino,
+            formulario.modalidade,
+            formulario.objetivo,
+            formulario.diasSelecionados.length,
+          )
+        : [];
     // Estilo em vigor no resumo (padrão quando a lista está vazia).
     const estiloFinal = estilosFinais.find((estilo) => estilo.id === formulario.variacaoTreino);
     // Monta a lista de linhas do resumo final.

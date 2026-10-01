@@ -45,6 +45,16 @@ const LIMITES_EDICAO = {
   carga_max_kg: 400,
 } as const;
 
+/**
+ * TEAM_007: converte o parâmetro de rota para o id do plano — devolve null
+ * para valores que não são inteiro positivo ("abc", "1.5", "0", "-3"), que
+ * antes chegavam ao SQLite como NaN e explodiam em erro 500.
+ */
+function interpretarPlanoId(bruto: string): number | null {
+  const planoId = Number(bruto);
+  return Number.isInteger(planoId) && planoId > 0 ? planoId : null;
+}
+
 /** Registra as rotas de planos (prefixo /api/plano). */
 export async function rotasPlanos(app: FastifyInstance): Promise<void> {
   /** GET /api/plano/atual — plano vigente completo do usuário. */
@@ -89,8 +99,11 @@ export async function rotasPlanos(app: FastifyInstance): Promise<void> {
     // Recupera o id do usuário autenticado.
     const usuarioId = usuarioIdDaRequisicao(requisicao);
 
-    // Converte o parâmetro da rota para número.
-    const planoId = Number(requisicao.params.planoId);
+    // TEAM_007: valida o id da rota antes de tocar no banco (NaN → 403).
+    const planoId = interpretarPlanoId(requisicao.params.planoId);
+    if (planoId === null) {
+      return enviarErro(resposta, 403, 'Você só pode editar o seu próprio plano de treino.');
+    }
 
     // Busca a cópia do plano no banco.
     const linha = buscarPlanoPorId(planoId);
@@ -102,22 +115,46 @@ export async function rotasPlanos(app: FastifyInstance): Promise<void> {
 
     // Interpreta a cópia e valida os campos de edição recebidos.
     const edicao = (requisicao.body ?? {}) as EdicaoDeExercicio;
-    if (!Number.isInteger(edicao.dia_indice) || !Number.isInteger(edicao.exercicio_indice)) {
+    // TEAM_007: os índices precisam ser inteiros NÃO negativos — "-1" passava
+    // no isInteger e estourava num erro 500 dentro do motor.
+    if (
+      !Number.isInteger(edicao.dia_indice) || (edicao.dia_indice as number) < 0 ||
+      !Number.isInteger(edicao.exercicio_indice) || (edicao.exercicio_indice as number) < 0
+    ) {
       return enviarErro(resposta, 400, 'Informe o dia e o exercício que deseja editar.');
     }
-    if (edicao.series !== undefined && (edicao.series < LIMITES_EDICAO.series_min || edicao.series > LIMITES_EDICAO.series_max)) {
+    // TEAM_007: séries/repetições exigem INTEIRO e a carga exige NÚMERO —
+    // antes "abc"/NaN escapavam das comparações de intervalo (NaN < x é falso)
+    // e eram gravados direto na cópia do usuário.
+    if (
+      edicao.series !== undefined &&
+      (!Number.isInteger(edicao.series) || edicao.series < LIMITES_EDICAO.series_min || edicao.series > LIMITES_EDICAO.series_max)
+    ) {
       return enviarErro(resposta, 400, `As séries devem ficar entre ${LIMITES_EDICAO.series_min} e ${LIMITES_EDICAO.series_max}.`);
     }
-    if (edicao.repeticoes !== undefined && (edicao.repeticoes < LIMITES_EDICAO.repeticoes_min || edicao.repeticoes > LIMITES_EDICAO.repeticoes_max)) {
+    if (
+      edicao.repeticoes !== undefined &&
+      (!Number.isInteger(edicao.repeticoes) || edicao.repeticoes < LIMITES_EDICAO.repeticoes_min || edicao.repeticoes > LIMITES_EDICAO.repeticoes_max)
+    ) {
       return enviarErro(resposta, 400, `As repetições devem ficar entre ${LIMITES_EDICAO.repeticoes_min} e ${LIMITES_EDICAO.repeticoes_max}.`);
     }
-    if (edicao.carga_kg !== undefined && edicao.carga_kg !== null && (edicao.carga_kg < LIMITES_EDICAO.carga_min_kg || edicao.carga_kg > LIMITES_EDICAO.carga_max_kg)) {
+    if (
+      edicao.carga_kg !== undefined &&
+      edicao.carga_kg !== null &&
+      (typeof edicao.carga_kg !== 'number' || !Number.isFinite(edicao.carga_kg) ||
+        edicao.carga_kg < LIMITES_EDICAO.carga_min_kg || edicao.carga_kg > LIMITES_EDICAO.carga_max_kg)
+    ) {
       return enviarErro(resposta, 400, `A carga deve ficar entre ${LIMITES_EDICAO.carga_min_kg} e ${LIMITES_EDICAO.carga_max_kg} kg.`);
     }
 
     // Aplica a edição na cópia do usuário (o mestre permanece intacto).
     const plano = interpretarConteudo<Omit<PlanoTreino, 'id' | 'versao' | 'modelo_origem' | 'criado_em'>>(linha);
-    aplicarEdicaoTreino(plano, edicao);
+    try {
+      aplicarEdicaoTreino(plano, edicao);
+    } catch (erro) {
+      // Índice fora da grade do plano (ex.: dia 9 num plano de 3 dias).
+      return enviarErro(resposta, 400, erro instanceof Error ? erro.message : 'Não foi possível editar o exercício.');
+    }
 
     // Persiste a cópia atualizada no SQLite.
     atualizarConteudoDoPlano(planoId, JSON.stringify(plano));
@@ -126,16 +163,23 @@ export async function rotasPlanos(app: FastifyInstance): Promise<void> {
     return resposta.send({ ...plano, id: planoId, versao: linha.versao, modelo_origem: linha.modelo_origem, criado_em: linha.criado_em });
   });
 
-  /** GET /api/plano/treino/:planoId/alternativas — exercícios do mesmo grupo para a posição. */
+  /**
+   * GET /api/plano/treino/:planoId/alternativas?dia_indice=N
+   * TEAM_007: devolve as alternativas de TODOS os exercícios do dia em uma
+   * única chamada — antes a página fazia uma requisição por exercício (N+1).
+   */
   app.get<{
     Params: { planoId: string };
-    Querystring: { dia_indice?: string; exercicio_indice?: string };
+    Querystring: { dia_indice?: string };
   }>('/treino/:planoId/alternativas', { onRequest: [exigirAutenticacao] }, async (requisicao, resposta) => {
     // Recupera o id do usuário autenticado.
     const usuarioId = usuarioIdDaRequisicao(requisicao);
 
-    // Converte o parâmetro da rota para número.
-    const planoId = Number(requisicao.params.planoId);
+    // TEAM_007: valida o id da rota antes de tocar no banco (NaN → 403).
+    const planoId = interpretarPlanoId(requisicao.params.planoId);
+    if (planoId === null) {
+      return enviarErro(resposta, 403, 'Você só pode consultar o seu próprio plano de treino.');
+    }
 
     // Busca a cópia do plano no banco.
     const linha = buscarPlanoPorId(planoId);
@@ -145,28 +189,29 @@ export async function rotasPlanos(app: FastifyInstance): Promise<void> {
       return enviarErro(resposta, 403, 'Você só pode consultar o seu próprio plano de treino.');
     }
 
-    // Valida os índices recebidos na query.
+    // Valida o índice do dia recebido na query (inteiro não negativo).
     const diaIndice = Number(requisicao.query.dia_indice);
-    const exercicioIndice = Number(requisicao.query.exercicio_indice);
-    if (!Number.isInteger(diaIndice) || !Number.isInteger(exercicioIndice)) {
-      return enviarErro(resposta, 400, 'Informe o dia e o exercício que deseja consultar.');
+    if (!Number.isInteger(diaIndice) || diaIndice < 0) {
+      return enviarErro(resposta, 400, 'Informe o dia que deseja consultar.');
     }
 
-    // Localiza o exercício na cópia para descobrir o grupo muscular dele.
+    // Localiza o dia na cópia do plano do usuário.
     const plano = interpretarConteudo<Omit<PlanoTreino, 'id' | 'versao' | 'modelo_origem' | 'criado_em'>>(linha);
     const dia = plano.dias_da_semana[diaIndice];
-    const exercicio = dia?.exercicios[exercicioIndice];
-    if (!dia || !exercicio) {
-      return enviarErro(resposta, 404, 'Exercício não encontrado no plano.');
+    if (!dia) {
+      return enviarErro(resposta, 404, 'Dia de treino não encontrado no plano.');
     }
 
     // TEAM_003: alternativas do mesmo grupo na modalidade do plano; os nomes
     // já usados no dia ficam fora para não repetir exercício na sessão.
+    // TEAM_007: uma lista por posição do dia, na mesma ordem dos exercícios.
     const nomesDoDia = dia.exercicios.map((item) => item.nome);
-    const alternativas = listarAlternativasDeExercicio(plano.modalidade, exercicio.grupo, nomesDoDia).map(
-      (alternativa) => ({ nome: alternativa.nome, tipo: alternativa.tipo }),
+    const alternativasPorExercicio = dia.exercicios.map((exercicio) =>
+      listarAlternativasDeExercicio(plano.modalidade, exercicio.grupo, nomesDoDia).map(
+        (alternativa) => ({ nome: alternativa.nome, tipo: alternativa.tipo }),
+      ),
     );
-    return resposta.send({ alternativas });
+    return resposta.send({ alternativasPorExercicio });
   });
 
   /** PATCH /api/plano/treino/:planoId/trocar — troca um exercício por outro do mesmo grupo. */
@@ -174,8 +219,11 @@ export async function rotasPlanos(app: FastifyInstance): Promise<void> {
     // Recupera o id do usuário autenticado.
     const usuarioId = usuarioIdDaRequisicao(requisicao);
 
-    // Converte o parâmetro da rota para número.
-    const planoId = Number(requisicao.params.planoId);
+    // TEAM_007: valida o id da rota antes de tocar no banco (NaN → 403).
+    const planoId = interpretarPlanoId(requisicao.params.planoId);
+    if (planoId === null) {
+      return enviarErro(resposta, 403, 'Você só pode editar o seu próprio plano de treino.');
+    }
 
     // Busca a cópia do plano no banco.
     const linha = buscarPlanoPorId(planoId);
@@ -187,7 +235,12 @@ export async function rotasPlanos(app: FastifyInstance): Promise<void> {
 
     // Valida os índices e o nome da alternativa recebidos.
     const corpo = (requisicao.body ?? {}) as TrocaDeExercicio;
-    if (!Number.isInteger(corpo.dia_indice) || !Number.isInteger(corpo.exercicio_indice) || !corpo.exercicio_nome) {
+    // TEAM_007: índices precisam ser inteiros não negativos.
+    if (
+      !Number.isInteger(corpo.dia_indice) || (corpo.dia_indice as number) < 0 ||
+      !Number.isInteger(corpo.exercicio_indice) || (corpo.exercicio_indice as number) < 0 ||
+      !corpo.exercicio_nome
+    ) {
       return enviarErro(resposta, 400, 'Informe o dia, o exercício e a alternativa desejada.');
     }
 
@@ -218,8 +271,11 @@ export async function rotasPlanos(app: FastifyInstance): Promise<void> {
     // Recupera o id do usuário autenticado.
     const usuarioId = usuarioIdDaRequisicao(requisicao);
 
-    // Converte o parâmetro da rota para número.
-    const planoId = Number(requisicao.params.planoId);
+    // TEAM_007: valida o id da rota antes de tocar no banco (NaN → 403).
+    const planoId = interpretarPlanoId(requisicao.params.planoId);
+    if (planoId === null) {
+      return enviarErro(resposta, 403, 'Você só pode editar o seu próprio plano de dieta.');
+    }
 
     // Busca a cópia do plano no banco.
     const linha = buscarPlanoPorId(planoId);
@@ -231,13 +287,23 @@ export async function rotasPlanos(app: FastifyInstance): Promise<void> {
 
     // Valida os índices e o nome do substituto recebidos.
     const corpo = (requisicao.body ?? {}) as { refeicao_indice?: number; item_indice?: number; alternativa_nome?: string };
-    if (!Number.isInteger(corpo.refeicao_indice) || !Number.isInteger(corpo.item_indice) || !corpo.alternativa_nome) {
+    // TEAM_007: índices precisam ser inteiros não negativos.
+    if (
+      !Number.isInteger(corpo.refeicao_indice) || (corpo.refeicao_indice as number) < 0 ||
+      !Number.isInteger(corpo.item_indice) || (corpo.item_indice as number) < 0 ||
+      !corpo.alternativa_nome
+    ) {
       return enviarErro(resposta, 400, 'Informe a refeição, o alimento e o substituto desejado.');
     }
 
     // Aplica a substituição na cópia do usuário com recálculo da porção.
     const plano = interpretarConteudo<Omit<PlanoDieta, 'id' | 'versao' | 'modelo_origem' | 'criado_em'>>(linha);
-    aplicarSubstituicao(plano, corpo.refeicao_indice as number, corpo.item_indice as number, corpo.alternativa_nome);
+    try {
+      aplicarSubstituicao(plano, corpo.refeicao_indice as number, corpo.item_indice as number, corpo.alternativa_nome);
+    } catch (erro) {
+      // Índice fora da grade do plano ou substituto inexistente.
+      return enviarErro(resposta, 400, erro instanceof Error ? erro.message : 'Não foi possível substituir o alimento.');
+    }
 
     // Persiste a cópia atualizada no SQLite.
     atualizarConteudoDoPlano(planoId, JSON.stringify(plano));

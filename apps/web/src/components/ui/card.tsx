@@ -55,17 +55,6 @@ function CartaoDescricao({ className, ...propriedades }: React.ComponentProps<'d
   );
 }
 
-/** Ação do cabeçalho (ex.: botão no canto superior direito). */
-function CartaoAcao({ className, ...propriedades }: React.ComponentProps<'div'>) {
-  return (
-    <div
-      data-slot="card-action"
-      className={combinarClasses('col-start-2 row-span-2 row-start-1 self-start justify-self-end', className)}
-      {...propriedades}
-    />
-  );
-}
-
 /** Conteúdo do cartão. */
 function CartaoConteudo({ className, ...propriedades }: React.ComponentProps<'div'>) {
   return (
@@ -84,4 +73,4 @@ function CartaoRodape({ className, ...propriedades }: React.ComponentProps<'div'
   );
 }
 
-export { Cartao, CartaoCabecalho, CartaoRodape, CartaoTitulo, CartaoAcao, CartaoDescricao, CartaoConteudo };
+export { Cartao, CartaoCabecalho, CartaoRodape, CartaoTitulo, CartaoDescricao, CartaoConteudo };

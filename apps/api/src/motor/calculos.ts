@@ -68,7 +68,7 @@ const AGUA_ML_POR_KG: Record<Objetivo, number> = {
 };
 
 /** Converte uma faixa etária canônica (ex.: "19-23") na idade representativa. */
-export function idadeRepresentativaDaFaixa(valorFaixa: string): number {
+function idadeRepresentativaDaFaixa(valorFaixa: string): number {
   const faixa = FAIXAS_ETARIAS.find((f) => f.valor === valorFaixa);
   if (!faixa) {
     throw new Error(`Faixa etária desconhecida: ${valorFaixa}`);
@@ -78,7 +78,7 @@ export function idadeRepresentativaDaFaixa(valorFaixa: string): number {
 }
 
 /** Calcula a Taxa Metabólica Basal pela fórmula de Mifflin-St Jeor. */
-export function calcularTMB(sexo: Sexo, pesoKg: number, alturaCm: number, idade: number): number {
+function calcularTMB(sexo: Sexo, pesoKg: number, alturaCm: number, idade: number): number {
   // Base comum da fórmula: 10 x peso + 6,25 x altura - 5 x idade.
   const base = 10 * pesoKg + 6.25 * alturaCm - 5 * idade;
   // Homens somam +5 e mulheres subtraem -161.
@@ -87,14 +87,15 @@ export function calcularTMB(sexo: Sexo, pesoKg: number, alturaCm: number, idade:
 }
 
 /** Devolve o fator de atividade pela frequência semanal de treino. */
-export function fatorDeAtividade(frequenciaSemanal: number): number {
-  // Limita a frequência entre 1 e 7 antes de consultar a tabela.
+function fatorDeAtividade(frequenciaSemanal: number): number {
+  // Limita a frequência entre 1 e 7 antes de consultar a tabela — o
+  // intervalo garantido torna desnecessário o fallback que existia aqui.
   const frequenciaLimitada = Math.min(Math.max(frequenciaSemanal, 1), 7);
-  return FATORES_DE_ATIVIDADE[frequenciaLimitada] ?? 1.375;
+  return FATORES_DE_ATIVIDADE[frequenciaLimitada];
 }
 
 /** Calcula a meta calórica diária aplicando déficit/superávit sobre o gasto. */
-export function calcularMetaCalorica(
+function calcularMetaCalorica(
   tmb: number,
   fator: number,
   objetivo: Objetivo,
@@ -109,7 +110,7 @@ export function calcularMetaCalorica(
 }
 
 /** Distribui as calorias da meta em gramas exatas de macronutrientes. */
-export function distribuirMacros(
+function distribuirMacros(
   metaKcal: number,
   pesoKg: number,
   objetivo: Objetivo,
@@ -139,7 +140,7 @@ export function distribuirMacros(
 }
 
 /** Calcula o Índice de Massa Corporal (IMC) com uma casa decimal. */
-export function calcularIMC(pesoKg: number, alturaCm: number): number {
+function calcularIMC(pesoKg: number, alturaCm: number): number {
   // Converte a altura de centímetros para metros.
   const alturaMetros = alturaCm / 100;
   // IMC = peso / altura².
@@ -147,7 +148,7 @@ export function calcularIMC(pesoKg: number, alturaCm: number): number {
 }
 
 /** Classifica o IMC conforme os pontos de corte da OMS. */
-export function classificarIMC(imc: number): string {
+function classificarIMC(imc: number): string {
   if (imc < 18.5) {
     return 'Abaixo do peso';
   }

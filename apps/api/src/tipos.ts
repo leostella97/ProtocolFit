@@ -395,6 +395,4 @@ export interface OpcoesDoSistema {
   dias_semana: { valor: string; rotulo: string }[];
   /** Estilos de treino disponíveis (padrão + variações nomeadas). */
   variacoes_de_treino: VariacaoDeTreino[];
-  /** Parâmetros de segurança do login. */
-  seguranca: { tentativas_limite: number; horas_bloqueio: number };
 }

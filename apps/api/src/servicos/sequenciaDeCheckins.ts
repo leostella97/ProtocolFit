@@ -12,9 +12,14 @@
  * ---------------------------------------------------------------------------
  */
 import type { CheckinDiario, ResumoDeCheckins } from '../tipos.js';
+// TEAM_007: hojeEmTexto mora em util/datas.ts — fonte única das datas civis.
+import { hojeEmTexto } from '../util/datas.js';
 
 /** Milissegundos de um dia (usado para percorrer datas). */
 const UM_DIA_MS = 24 * 60 * 60 * 1000;
+
+/** TEAM_007: quantidade máxima de registros devolvidos no resumo ao cliente. */
+const LIMITE_DE_REGISTROS = 60;
 
 /** Converte uma data AAAA-MM-DD para um número (dias desde 1970). */
 function paraNumeroDeDias(data: string): number {
@@ -26,13 +31,8 @@ function paraData(numeroDeDias: number): string {
   return new Date(numeroDeDias * UM_DIA_MS).toISOString().slice(0, 10);
 }
 
-/** Data de hoje no formato AAAA-MM-DD. */
-export function hojeEmTexto(): string {
-  return new Date().toISOString().slice(0, 10);
-}
-
 /** Verifica se um check-in conta como "dia cumprido". */
-export function diaCumprido(checkin: CheckinDiario): boolean {
+function diaCumprido(checkin: CheckinDiario): boolean {
   return checkin.treino_feito || checkin.dieta_seguida;
 }
 
@@ -42,6 +42,11 @@ export function diaCumprido(checkin: CheckinDiario): boolean {
  * TEAM_001: "hoje" é o DIA CIVIL DO CLIENTE — o servidor não sabe o fuso do
  * usuário, então a rota aceita ?hoje=AAAA-MM-DD. Sem o parâmetro, cai no
  * fallback `hojeEmTexto()` (UTC do servidor).
+ *
+ * TEAM_007: as métricas (sequência atual/máxima e total) são calculadas sobre
+ * o histórico COMPLETO — a rota não limita mais a leitura a 60 linhas, porque
+ * um streak de 90 dias era contado errado. Só o campo `registros` é fatiado
+ * para não inflar a resposta (mesma regra do repositório local do navegador).
  */
 export function montarResumoDeCheckins(registros: CheckinDiario[], referenciaDeHoje?: string): ResumoDeCheckins {
   // Dia civil usado para "hoje" e para a sequência atual.
@@ -74,8 +79,9 @@ export function montarResumoDeCheckins(registros: CheckinDiario[], referenciaDeH
 
   return {
     hoje: registros.find((registro) => registro.data === hojeTexto) ?? null,
-    // Os registros já chegam ordenados do mais recente para o mais antigo.
-    registros,
+    // Os registros já chegam ordenados do mais recente para o mais antigo;
+    // só os mais recentes viajam na resposta (as métricas usam a lista cheia).
+    registros: registros.slice(0, LIMITE_DE_REGISTROS),
     sequencia_atual: sequenciaAtual,
     sequencia_maxima: sequenciaMaxima,
     total: registros.length,

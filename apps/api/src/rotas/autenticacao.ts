@@ -13,6 +13,7 @@ import bcrypt from 'bcryptjs';
 import type { FastifyInstance } from 'fastify';
 import {
   buscarUsuarioPorEmail,
+  buscarUsuarioPorId,
   criarUsuario,
   limparTentativasFalhas,
   registrarTentativaFalha,
@@ -23,6 +24,13 @@ import { enviarErro } from '../util/respostas.js';
 
 /** Custo do hash bcrypt (12 rounds = equilíbrio entre segurança e latência). */
 const CUSTO_HASH = 12;
+
+/**
+ * TEAM_007: hash bcrypt de referência usado para "gastar" o mesmo tempo de
+ * comparação quando o e-mail NÃO existe — sem isso, a resposta rápida do 401
+ * revelava que a conta não está cadastrada (oráculo de enumeração por tempo).
+ */
+const HASH_DE_REFERENCIA = '$2b$12$nhrE5Q.sOZ.2gsFLMM8wvugGEXqE3Per3cqPv/5kzUqSgWOYLj1qW';
 
 /** Corpo esperado na rota de cadastro. */
 interface CorpoCadastro {
@@ -77,17 +85,27 @@ export async function rotasAutenticacao(app: FastifyInstance): Promise<void> {
     // Gera o hash bcrypt da senha — a senha pura nunca toca o disco.
     const senhaHash = await bcrypt.hash(senha, CUSTO_HASH);
 
-    // Cria o usuário no SQLite e obtém o id gerado.
-    const idUsuario = criarUsuario(nome.trim(), emailLimpo, senhaHash);
+    // TEAM_007: cria o usuário — se DUAS requisições chegarem juntas com o
+    // mesmo e-mail, a UNIQUE do SQLite pega a segunda (antes virava erro 500).
+    let idUsuario: number;
+    try {
+      idUsuario = criarUsuario(nome.trim(), emailLimpo, senhaHash);
+    } catch (erro) {
+      if (erro instanceof Error && erro.message.includes('UNIQUE')) {
+        return enviarErro(resposta, 409, 'Este e-mail já está cadastrado. Faça login para continuar.');
+      }
+      throw erro;
+    }
 
     // Emite o token JWT de acesso (7 dias) com o id do usuário no `sub`.
     const token = app.jwt.sign({ sub: String(idUsuario), email: emailLimpo });
 
+    // TEAM_007: lê a linha gravada para devolver o usuário completo (com
+    // criado_em) — mesma forma pública da resposta de login.
+    const usuario = buscarUsuarioPorId(idUsuario) as LinhaUsuario;
+
     // Responde com o token e os dados públicos do usuário.
-    return resposta.code(201).send({
-      token,
-      usuario: { id: idUsuario, nome: nome.trim(), email: emailLimpo },
-    });
+    return resposta.code(201).send({ token, usuario: usuarioPublico(usuario) });
   });
 
   /** POST /api/auth/login — autentica com bloqueio após 3 falhas. */
@@ -105,6 +123,9 @@ export async function rotasAutenticacao(app: FastifyInstance): Promise<void> {
 
     // Não revela se o e-mail existe: resposta genérica evita enumeração.
     if (!usuario) {
+      // TEAM_007: compara contra um hash de referência para igualar o tempo
+      // de resposta — sem isso, o 401 instantâneo vaza que a conta não existe.
+      await bcrypt.compare(senha, HASH_DE_REFERENCIA);
       return enviarErro(resposta, 401, 'Credenciais inválidas.');
     }
 
@@ -139,7 +160,8 @@ export async function rotasAutenticacao(app: FastifyInstance): Promise<void> {
       }
 
       // Ainda há tentativas restantes: apenas incrementa o contador.
-      registrarTentativaFalha(usuario.id, novasTentativas, usuario.bloqueado_ate);
+      // TEAM_007: limpa um bloqueio VENCIDO em vez de regravar o timestamp velho.
+      registrarTentativaFalha(usuario.id, novasTentativas, null);
       const restantes = LIMITE_TENTATIVAS_LOGIN - novasTentativas;
       return enviarErro(resposta, 401, `Senha incorreta. Tentativas restantes: ${restantes}.`);
     }

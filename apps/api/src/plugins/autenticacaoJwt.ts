@@ -13,12 +13,23 @@
 import fastifyJwt from '@fastify/jwt';
 import type { FastifyInstance } from 'fastify';
 
+/** Segredo de assinatura dos tokens (configurável por variável de ambiente). */
+const SEGREDO_JWT = process.env.PROTOCOLFIT_JWT_SECRET;
+
+// TEAM_007: em produção o segredo é OBRIGATÓRIO — um fallback fixo permitiria
+// a qualquer pessoa que leu o código assinar tokens JWT válidos.
+if (!SEGREDO_JWT && process.env.NODE_ENV === 'production') {
+  throw new Error(
+    'PROTOCOLFIT_JWT_SECRET não configurado: defina um segredo forte na variável de ambiente antes de subir em produção.',
+  );
+}
+
 /** Configura o JWT na instância raiz do servidor Fastify. */
 export async function configurarAutenticacao(app: FastifyInstance): Promise<void> {
   // Registra o plugin JWT diretamente na instância raiz (decorators globais).
   await app.register(fastifyJwt, {
-    // Segredo de assinatura (use a variável de ambiente em produção!).
-    secret: process.env.PROTOCOLFIT_JWT_SECRET ?? 'protocolfit-segredo-apenas-desenvolvimento',
+    // Segredo de assinatura (em desenvolvimento usa um valor só local).
+    secret: SEGREDO_JWT ?? 'protocolfit-segredo-apenas-desenvolvimento',
     // Validade padrão dos tokens emitidos.
     sign: { expiresIn: '7d' },
   });

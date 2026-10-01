@@ -24,14 +24,23 @@ const CAMINHO_DADOS = fileURLToPath(new URL('../../dados', import.meta.url));
 /** Cria a pasta de dados caso ainda não exista (primeira execução). */
 mkdirSync(CAMINHO_DADOS, { recursive: true });
 
-/** Conexão única e síncrona com o arquivo do banco SQLite. */
-export const banco = new Database(`${CAMINHO_DADOS}/protocolfit.db`);
+/** Conexão única e síncrona com o arquivo do banco SQLite (uso interno). */
+const banco = new Database(`${CAMINHO_DADOS}/protocolfit.db`);
 
 /** WAL permite leituras concorrentes e escritas rápidas. */
 banco.pragma('journal_mode = WAL');
 
 /** Garante integridade referencial entre as tabelas. */
 banco.pragma('foreign_keys = ON');
+
+/**
+ * TEAM_007: executa uma sequência de escritas como TRANSAÇÃO atômica — se
+ * qualquer passo falhar, tudo é desfeito (nada fica gravado pela metade).
+ * Chamadas aninhadas viram savepoints automaticamente (better-sqlite3).
+ */
+export function executarEmTransacao<T>(operacao: () => T): T {
+  return banco.transaction(operacao)();
+}
 
 /** Linha da tabela `usuarios`. */
 export interface LinhaUsuario {
@@ -124,7 +133,10 @@ function criarTabelas(): void {
       senha_hash        TEXT    NOT NULL,                  -- hash bcrypt da senha
       tentativas_falhas INTEGER NOT NULL DEFAULT 0,        -- tentativas de login erradas
       bloqueado_ate     INTEGER,                           -- ms até liberar a conta
-      criado_em         TEXT    NOT NULL DEFAULT (datetime('now')) -- data de criação
+      -- TEAM_007: ISO 8601 com "Z" — o datetime('now') do SQLite ("AAAA-MM-DD
+      -- HH:MM:SS") era interpretado pelo navegador como hora LOCAL, deslocando
+      -- "há quanto tempo" em até 3h para quem usa o app no Brasil.
+      criado_em         TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')) -- data de criação
     );
 
     -- Tabela de perfil físico e nutricional do usuário ------------------------
@@ -141,7 +153,7 @@ function criarTabelas(): void {
       modalidade         TEXT    NOT NULL,                  -- academia | pesocorporal
       nivel              TEXT    NOT NULL DEFAULT 'iniciante', -- nível de experiência
       variacao_treino    TEXT,                              -- estilo de treino (null = padrão)
-      atualizado_em      TEXT    NOT NULL DEFAULT (datetime('now')) -- última atualização
+      atualizado_em      TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')) -- última atualização
     );
 
     -- Tabela de planos CLONADOS por usuário -----------------------------------
@@ -153,7 +165,7 @@ function criarTabelas(): void {
       ativo          INTEGER NOT NULL DEFAULT 1,        -- 1 = vigente, 0 = antigo
       modelo_origem  TEXT    NOT NULL,                  -- caminho do modelo JSON mestre
       conteudo       TEXT    NOT NULL,                  -- JSON do plano montado (cópia individual)
-      criado_em      TEXT    NOT NULL DEFAULT (datetime('now')) -- data da clonagem
+      criado_em      TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')) -- data da clonagem
     );
 
     -- Índice para buscar o plano vigente de um usuário em milissegundos -------
@@ -165,7 +177,7 @@ function criarTabelas(): void {
       usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE, -- dono do registro
       data       TEXT    NOT NULL,                  -- data da pesagem (AAAA-MM-DD)
       peso_kg    REAL    NOT NULL,                  -- peso registrado em kg
-      criado_em  TEXT    NOT NULL DEFAULT (datetime('now')) -- data de criação
+      criado_em  TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')) -- data de criação
     );
 
     -- Índice para listar a evolução em ordem cronológica rapidamente ----------
@@ -183,12 +195,11 @@ function criarTabelas(): void {
       agua_ml        INTEGER NOT NULL DEFAULT 0,        -- água bebida no dia (ml)
       peso_kg        REAL,                              -- peso do dia (opcional)
       observacao     TEXT,                              -- anotação livre do usuário
-      criado_em      TEXT    NOT NULL DEFAULT (datetime('now')), -- criação
+      criado_em      TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')), -- criação
       UNIQUE (usuario_id, data)                         -- um check-in por dia
+      -- TEAM_007: a restrição UNIQUE (usuario_id, data) já cria o índice que
+      -- as consultas usam — o antigo idx_checkins_usuario era redundante.
     );
-
-    -- Índice para montar a sequência (streak) rapidamente ---------------------
-    CREATE INDEX IF NOT EXISTS idx_checkins_usuario ON checkins (usuario_id, data);
   `);
 }
 
@@ -286,7 +297,7 @@ export function salvarPerfil(
          modalidade = excluded.modalidade,
          nivel = excluded.nivel,
          variacao_treino = excluded.variacao_treino,
-         atualizado_em = datetime('now')`,
+         atualizado_em = strftime('%Y-%m-%dT%H:%M:%fZ','now')`,
     )
     .run(
       usuarioId,
@@ -375,28 +386,35 @@ export function buscarUltimaEvolucao(usuarioId: number): RegistroEvolucao | unde
 /**
  * Grava a pesagem de um dia mantendo APENAS UM registro por data
  * (se já existir pesagem no dia, ela é atualizada em vez de duplicada).
+ * TEAM_007: devolve o registro gravado e roda em transação — a pesagem e a
+ * atualização do peso no perfil nunca ficam gravadas pela metade.
  */
-export function salvarPesagemDoDia(usuarioId: number, data: string, pesoKg: number): void {
-  // Procura uma pesagem já existente no mesmo dia.
-  const existente = banco
-    .prepare('SELECT id FROM registros_evolucao WHERE usuario_id = ? AND data = ? LIMIT 1')
-    .get(usuarioId, data) as { id: number } | undefined;
-  if (existente) {
-    // Atualiza o valor do dia (evita pontos duplicados no gráfico).
-    banco.prepare('UPDATE registros_evolucao SET peso_kg = ? WHERE id = ?').run(pesoKg, existente.id);
-  } else {
-    // Primeiro registro do dia: insere normalmente.
-    registrarEvolucao(usuarioId, data, pesoKg);
-  }
-  // TEAM_001: a pesagem mais recente (maior data) passa a ser o "peso atual"
-  // do perfil — evolução e resumo do painel nunca divergem (mesma regra do
-  // modo navegador em repositorio-local.ts).
-  const ultima = buscarUltimaEvolucao(usuarioId);
-  if (ultima) {
-    banco
-      .prepare("UPDATE perfis SET peso_kg = ?, atualizado_em = datetime('now') WHERE usuario_id = ?")
-      .run(ultima.peso_kg, usuarioId);
-  }
+export function salvarPesagemDoDia(usuarioId: number, data: string, pesoKg: number): RegistroEvolucao {
+  return executarEmTransacao(() => {
+    // Procura uma pesagem já existente no mesmo dia.
+    const existente = banco
+      .prepare('SELECT id FROM registros_evolucao WHERE usuario_id = ? AND data = ? LIMIT 1')
+      .get(usuarioId, data) as { id: number } | undefined;
+    let idDoRegistro: number;
+    if (existente) {
+      // Atualiza o valor do dia (evita pontos duplicados no gráfico).
+      banco.prepare('UPDATE registros_evolucao SET peso_kg = ? WHERE id = ?').run(pesoKg, existente.id);
+      idDoRegistro = existente.id;
+    } else {
+      // Primeiro registro do dia: insere normalmente.
+      idDoRegistro = registrarEvolucao(usuarioId, data, pesoKg);
+    }
+    // TEAM_001: a pesagem mais recente (maior data) passa a ser o "peso atual"
+    // do perfil — evolução e resumo do painel nunca divergem (mesma regra do
+    // modo navegador em repositorio-local.ts).
+    const ultima = buscarUltimaEvolucao(usuarioId);
+    if (ultima) {
+      banco
+        .prepare("UPDATE perfis SET peso_kg = ?, atualizado_em = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE usuario_id = ?")
+        .run(ultima.peso_kg, usuarioId);
+    }
+    return { id: idDoRegistro, data, peso_kg: pesoKg };
+  });
 }
 
 /**
@@ -407,12 +425,22 @@ export function atualizarCorpoDoPerfil(
   usuarioId: number,
   dados: { peso_kg?: number; altura_cm?: number },
 ): Perfil | undefined {
-  // Atualiza apenas o que foi informado (edição parcial).
+  // TEAM_007: um único UPDATE com os campos informados (antes eram duas
+  // escritas separadas, sem garantia atômica entre elas).
+  const atualizacoes: string[] = [];
+  const valores: number[] = [];
   if (dados.peso_kg !== undefined) {
-    banco.prepare('UPDATE perfis SET peso_kg = ?, atualizado_em = datetime(\'now\') WHERE usuario_id = ?').run(dados.peso_kg, usuarioId);
+    atualizacoes.push('peso_kg = ?');
+    valores.push(dados.peso_kg);
   }
   if (dados.altura_cm !== undefined) {
-    banco.prepare('UPDATE perfis SET altura_cm = ?, atualizado_em = datetime(\'now\') WHERE usuario_id = ?').run(dados.altura_cm, usuarioId);
+    atualizacoes.push('altura_cm = ?');
+    valores.push(dados.altura_cm);
+  }
+  if (atualizacoes.length > 0) {
+    banco
+      .prepare(`UPDATE perfis SET ${atualizacoes.join(', ')}, atualizado_em = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE usuario_id = ?`)
+      .run(...valores, usuarioId);
   }
   return buscarPerfilPorUsuario(usuarioId);
 }
@@ -457,6 +485,8 @@ function converterCheckin(linha: LinhaCheckin): CheckinDiario {
 /**
  * Salva (ou atualiza) o check-in de um dia — um registro por data.
  * Devolve o check-in gravado.
+ * TEAM_007: o upsert e a pesagem associada rodam em UMA transação — antes, uma
+ * falha na segunda escrita deixava o check-in gravado sem a evolução do peso.
  */
 export function salvarCheckin(
   usuarioId: number,
@@ -469,32 +499,34 @@ export function salvarCheckin(
     observacao: string | null;
   },
 ): CheckinDiario {
-  // UPSERT garantido pela chave única (usuario_id, data).
-  banco
-    .prepare(
-      `INSERT INTO checkins (usuario_id, data, treino_feito, dieta_seguida, agua_ml, peso_kg, observacao)
-       VALUES (?, ?, ?, ?, ?, ?, ?)
-       ON CONFLICT (usuario_id, data) DO UPDATE SET
-         treino_feito = excluded.treino_feito,
-         dieta_seguida = excluded.dieta_seguida,
-         agua_ml = excluded.agua_ml,
-         peso_kg = excluded.peso_kg,
-         observacao = excluded.observacao`,
-    )
-    .run(
-      usuarioId,
-      dados.data,
-      dados.treino_feito ? 1 : 0,
-      dados.dieta_seguida ? 1 : 0,
-      dados.agua_ml,
-      dados.peso_kg,
-      dados.observacao,
-    );
-  // Se o usuário informou o peso, ele também entra na evolução corporal.
-  if (dados.peso_kg !== null) {
-    salvarPesagemDoDia(usuarioId, dados.data, dados.peso_kg);
-  }
-  return buscarCheckinDoDia(usuarioId, dados.data) as CheckinDiario;
+  return executarEmTransacao(() => {
+    // UPSERT garantido pela chave única (usuario_id, data).
+    banco
+      .prepare(
+        `INSERT INTO checkins (usuario_id, data, treino_feito, dieta_seguida, agua_ml, peso_kg, observacao)
+         VALUES (?, ?, ?, ?, ?, ?, ?)
+         ON CONFLICT (usuario_id, data) DO UPDATE SET
+           treino_feito = excluded.treino_feito,
+           dieta_seguida = excluded.dieta_seguida,
+           agua_ml = excluded.agua_ml,
+           peso_kg = excluded.peso_kg,
+           observacao = excluded.observacao`,
+      )
+      .run(
+        usuarioId,
+        dados.data,
+        dados.treino_feito ? 1 : 0,
+        dados.dieta_seguida ? 1 : 0,
+        dados.agua_ml,
+        dados.peso_kg,
+        dados.observacao,
+      );
+    // Se o usuário informou o peso, ele também entra na evolução corporal.
+    if (dados.peso_kg !== null) {
+      salvarPesagemDoDia(usuarioId, dados.data, dados.peso_kg);
+    }
+    return buscarCheckinDoDia(usuarioId, dados.data) as CheckinDiario;
+  });
 }
 
 /** Busca o check-in de um dia específico (ou undefined). */
@@ -505,10 +537,16 @@ export function buscarCheckinDoDia(usuarioId: number, data: string): CheckinDiar
   return linha ? converterCheckin(linha) : undefined;
 }
 
-/** Lista os check-ins do usuário (mais recentes primeiro). */
-export function listarCheckins(usuarioId: number, limite = 60): CheckinDiario[] {
-  const linhas = banco
-    .prepare('SELECT * FROM checkins WHERE usuario_id = ? ORDER BY data DESC LIMIT ?')
-    .all(usuarioId, limite) as LinhaCheckin[];
+/**
+ * Lista os check-ins do usuário (mais recentes primeiro).
+ * TEAM_007: sem `limite` devolve o histórico COMPLETO — necessário para
+ * calcular a sequência máxima e o total sem cortar dias antigos.
+ */
+export function listarCheckins(usuarioId: number, limite?: number): CheckinDiario[] {
+  const linhas = (
+    limite === undefined
+      ? banco.prepare('SELECT * FROM checkins WHERE usuario_id = ? ORDER BY data DESC').all(usuarioId)
+      : banco.prepare('SELECT * FROM checkins WHERE usuario_id = ? ORDER BY data DESC LIMIT ?').all(usuarioId, limite)
+  ) as LinhaCheckin[];
   return linhas.map(converterCheckin);
 }

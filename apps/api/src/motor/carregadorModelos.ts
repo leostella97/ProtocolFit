@@ -38,7 +38,7 @@ function clonarProfundo<T>(valor: T): T {
  * Sem estilo (ou com "padrao") usa o clássico "{dias}dias.json"; com estilo
  * nomeado usa "{dias}dias-{slug}.json" (ex.: "3dias-forca-maxima.json").
  */
-export function nomeDoArquivoDoTreino(dias: number, variacao?: string | null): string {
+function nomeDoArquivoDoTreino(dias: number, variacao?: string | null): string {
   // Normaliza o identificador recebido do perfil.
   const identificador = (variacao ?? '').trim();
   if (!identificador || identificador === 'padrao') {
@@ -68,11 +68,22 @@ function rotuloDaVariacao(nomeDoModelo: string, id: string): string {
 }
 
 /**
+ * TEAM_007: cache das variações de treino — a varredura anterior lia ~190
+ * arquivos JSON do disco a CADA chamada (GET /opcoes é público e frequente).
+ * Os modelos são somente leitura, então o resultado nunca muda em runtime.
+ */
+let cacheDasVariacoes: VariacaoDeTreino[] | null = null;
+
+/**
  * Lista TODOS os estilos de treino disponíveis no disco (padrão + variações),
  * varrendo modalidades e objetivos existentes em /modelos/treinos.
  * É a fonte do seletor de estilo do onboarding e da tela de perfil.
  */
 export function listarVariacoesDeTreino(): VariacaoDeTreino[] {
+  // Reaproveita o índice já montado (os mestres nunca mudam em runtime).
+  if (cacheDasVariacoes) {
+    return cacheDasVariacoes;
+  }
   const raizDosTreinos = `${CAMINHO_MODELOS}/treinos`;
   if (!existsSync(raizDosTreinos)) {
     return [];
@@ -114,11 +125,13 @@ export function listarVariacoesDeTreino(): VariacaoDeTreino[] {
       }
     }
   }
+  // Grava no cache para as próximas chamadas não varrerem o disco de novo.
+  cacheDasVariacoes = variacoes;
   return variacoes;
 }
 
 /** Ajusta o número de dias do modelo para a meta (corta ou completa repetindo). */
-export function ajustarDiasDoModelo(modelo: ModeloTreino, diasAlvo: number): ModeloTreino {
+function ajustarDiasDoModelo(modelo: ModeloTreino, diasAlvo: number): ModeloTreino {
   // Já está no tamanho certo: devolve o próprio modelo (clonado, por segurança).
   if (modelo.dias_da_semana.length === diasAlvo) {
     return clonarProfundo(modelo);

@@ -63,6 +63,34 @@ export function hojeLocal(): string {
   return new Date(agora.getTime() - deslocamento).toISOString().slice(0, 10);
 }
 
+/** Padrão do formato de data civil aceito pelo sistema (AAAA-MM-DD). */
+const PADRAO_DATA = /^\d{4}-\d{2}-\d{2}$/;
+
+/**
+ * TEAM_007: verifica se o valor é uma data civil REAL no formato AAAA-MM-DD
+ * (rejeita "2025-02-30"). Mesma regra de apps/api/src/util/datas.ts.
+ */
+export function dataValida(data: unknown): data is string {
+  return typeof data === 'string' && PADRAO_DATA.test(data) && !Number.isNaN(Date.parse(`${data}T00:00:00Z`));
+}
+
+/** Devolve a data de AMANHÃ no formato AAAA-MM-DD (fuso local). */
+export function amanhaLocal(): string {
+  // Um dia a frente do relógio do usuário, medido no fuso local.
+  const amanha = new Date(Date.now() + 24 * 60 * 60 * 1000);
+  const deslocamento = amanha.getTimezoneOffset() * 60 * 1000;
+  return new Date(amanha.getTime() - deslocamento).toISOString().slice(0, 10);
+}
+
+/**
+ * TEAM_007: indica se a data civil está no futuro — check-in e pesagem
+ * futuros não fazem sentido no domínio. Tolerância de um dia para fusos
+ * (alinhada à regra do servidor, que aceita até "amanhã" em UTC).
+ */
+export function dataNoFuturo(data: string): boolean {
+  return data > amanhaLocal();
+}
+
 /**
  * Monta a lista dos últimos N dias (do mais antigo para o mais recente),
  * marcando quais foram cumpridos — é o mini histórico exibido no painel.

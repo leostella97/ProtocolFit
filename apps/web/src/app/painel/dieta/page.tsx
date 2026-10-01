@@ -57,6 +57,17 @@ function lerConcluidas(dietaId: number): number[] {
 function gravarConcluidas(dietaId: number, concluidas: number[]) {
   try {
     localStorage.setItem(chaveDoProgresso(dietaId), JSON.stringify(concluidas));
+    // TEAM_007: aproveita a gravação para PODAR as chaves de dias anteriores —
+    // sem isso o localStorage acumulava uma chave por dia para sempre.
+    const hoje = hojeLocal();
+    const antigas: string[] = [];
+    for (let indice = 0; indice < localStorage.length; indice += 1) {
+      const chave = localStorage.key(indice);
+      if (chave?.startsWith('protocolfit_dieta_concluida:') && chave.split(':')[2] !== hoje) {
+        antigas.push(chave);
+      }
+    }
+    antigas.forEach((chave) => localStorage.removeItem(chave));
   } catch {
     // Armazenamento bloqueado/cheio: a checklist segue só na memória da sessão.
   }

@@ -13,7 +13,7 @@
  */
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { CalendarClock, Check, Clock3, Loader2, RefreshCw } from 'lucide-react';
 import { Botao } from '@/components/ui/button';
 import { Cartao, CartaoCabecalho, CartaoConteudo, CartaoDescricao, CartaoTitulo } from '@/components/ui/card';
@@ -40,9 +40,22 @@ interface PropriedadesDoCartaoTempo {
 
 /** Cartão de tempo com o plano e renovação recomendada. */
 export function CartaoTempoDoPlano({ tipo, criadoEm, versao, aoAtualizar }: PropriedadesDoCartaoTempo) {
-  // Controle do botão atualizar e feedback de sucesso.
+  // Controle do botão atualizar, feedback de sucesso e erro amigável.
   const [atualizando, definirAtualizando] = useState(false);
   const [sucesso, definirSucesso] = useState(false);
+  // TEAM_007: erro da atualização exibido no cartão (antes a falha era
+  // silenciosa — a promise rejeitada não tinha tratamento).
+  const [erro, definirErro] = useState<string | null>(null);
+  // Referência do timeout do "Plano atualizado ✓" — cancelado no desmonte.
+  const temporizadorSucesso = useRef<number | null>(null);
+  useEffect(
+    () => () => {
+      if (temporizadorSucesso.current !== null) {
+        window.clearTimeout(temporizadorSucesso.current);
+      }
+    },
+    [],
+  );
 
   /** Rótulos conforme o tipo de plano (treino ou dieta). */
   const rotulos = tipo === 'treino' ? { titulo: 'Tempo com o treino', frase: 'este treino' } : { titulo: 'Tempo com a dieta', frase: 'esta dieta' };
@@ -66,11 +79,20 @@ export function CartaoTempoDoPlano({ tipo, criadoEm, versao, aoAtualizar }: Prop
   async function atualizar() {
     definirAtualizando(true);
     definirSucesso(false);
+    definirErro(null);
     try {
       // A página recalcula e troca o criadoEm/versão do plano (reseta o cartão).
       await aoAtualizar();
       definirSucesso(true);
-      window.setTimeout(() => definirSucesso(false), 3000);
+      if (temporizadorSucesso.current !== null) {
+        window.clearTimeout(temporizadorSucesso.current);
+      }
+      temporizadorSucesso.current = window.setTimeout(() => definirSucesso(false), 3000);
+    } catch (erroCapturado: unknown) {
+      // TEAM_007: a falha vira mensagem amigável em vez de rejection solta.
+      definirErro(
+        erroCapturado instanceof Error ? erroCapturado.message : 'Não foi possível atualizar o plano.',
+      );
     } finally {
       definirAtualizando(false);
     }
@@ -123,6 +145,7 @@ export function CartaoTempoDoPlano({ tipo, criadoEm, versao, aoAtualizar }: Prop
               <Check className="size-4" /> Plano atualizado ✓
             </span>
           ) : null}
+          {erro ? <span className="text-sm font-medium text-destructive">{erro}</span> : null}
         </div>
       </CartaoConteudo>
     </Cartao>

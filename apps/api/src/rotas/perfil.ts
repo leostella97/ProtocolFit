@@ -3,7 +3,6 @@
  * ---------------------------------------------------------------------------
  * Rotas de perfil do usuário:
  *  - POST   /            → salva o perfil (onboarding) e GERA os planos
- *  - GET    /            → devolve o perfil salvo
  *  - PATCH  /corpo       → altera peso/altura (sem regenerar)
  *  - PATCH  /treino      → troca o estilo de treino e regenera os planos
  *  - POST   /recalcular  → regenera os planos com base na evolução física
@@ -17,6 +16,7 @@ import {
   atualizarCorpoDoPerfil,
   buscarPerfilPorUsuario,
   buscarUltimaEvolucao,
+  executarEmTransacao,
   salvarPerfil,
   salvarPesagemDoDia,
 } from '../bd/banco.js';
@@ -31,6 +31,8 @@ import {
   NIVEIS,
   OBJETIVOS,
 } from '../util/constantes.js';
+// TEAM_007: validação de datas civis centralizada (formato + regra de futuro).
+import { dataNoFuturo, dataValida, hojeEmTexto } from '../util/datas.js';
 import { enviarErro, exigirAutenticacao, usuarioIdDaRequisicao } from '../util/respostas.js';
 
 /** Corpo enviado pelo onboarding para criar/atualizar o perfil. */
@@ -109,6 +111,11 @@ function validarCorpoPerfil(corpo: CorpoPerfil): string | null {
   if (!Array.isArray(corpo.dias_disponiveis) || corpo.dias_disponiveis.length === 0) {
     return 'Selecione pelo menos um dia disponível para treinar.';
   }
+  // TEAM_007: dias repetidos inflariam a contagem — o plano usaria mais dias
+  // de treino do que o usuário realmente escolheu.
+  if (new Set(corpo.dias_disponiveis).size !== corpo.dias_disponiveis.length) {
+    return 'Há dias repetidos na seleção.';
+  }
   // Valida cada dia contra a lista oficial da semana.
   const valoresValidos = new Set(DIAS_DA_SEMANA.map((dia) => dia.valor));
   if (corpo.dias_disponiveis.some((dia) => !valoresValidos.has(dia))) {
@@ -144,39 +151,31 @@ export async function rotasPerfil(app: FastifyInstance): Promise<void> {
       return enviarErro(resposta, 400, erroDeValidacao);
     }
 
-    // Grava (ou atualiza) o perfil no SQLite.
-    const perfil: Perfil = salvarPerfil(usuarioId, {
-      sexo: corpo.sexo as Sexo,
-      faixa_etaria: corpo.faixa_etaria as string,
-      peso_kg: corpo.peso_kg as number,
-      altura_cm: corpo.altura_cm as number,
-      objetivo: corpo.objetivo as Objetivo,
-      frequencia_semanal: corpo.frequencia_semanal as number,
-      dias_disponiveis: corpo.dias_disponiveis as string[],
-      modalidade: corpo.modalidade as Modalidade,
-      nivel: (corpo.nivel as Nivel | undefined) ?? 'iniciante',
-      // Estilo clássico quando o onboarding não escolhe um estilo nomeado.
-      variacao_treino: corpo.variacao_treino ?? null,
-    });
+    // TEAM_007: gravação do perfil + geração dos planos em UMA transação —
+    // antes, uma falha na geração deixava o perfil salvo sem plano ativo.
+    const { perfil, treino, dieta } = executarEmTransacao(() => {
+      // Grava (ou atualiza) o perfil no SQLite.
+      const perfilSalvo: Perfil = salvarPerfil(usuarioId, {
+        sexo: corpo.sexo as Sexo,
+        faixa_etaria: corpo.faixa_etaria as string,
+        peso_kg: corpo.peso_kg as number,
+        altura_cm: corpo.altura_cm as number,
+        objetivo: corpo.objetivo as Objetivo,
+        frequencia_semanal: corpo.frequencia_semanal as number,
+        dias_disponiveis: corpo.dias_disponiveis as string[],
+        modalidade: corpo.modalidade as Modalidade,
+        nivel: (corpo.nivel as Nivel | undefined) ?? 'iniciante',
+        // Estilo clássico quando o onboarding não escolhe um estilo nomeado.
+        variacao_treino: corpo.variacao_treino ?? null,
+      });
 
-    // Gera e clona os planos (treino + dieta) para a tabela do usuário.
-    const { treino, dieta } = gerarPlanosParaPerfil(usuarioId, perfil);
+      // Gera e clona os planos (treino + dieta) para a tabela do usuário.
+      const planos = gerarPlanosParaPerfil(usuarioId, perfilSalvo);
+      return { perfil: perfilSalvo, ...planos };
+    });
 
     // Responde com perfil e planos recém-gerados.
     return resposta.code(201).send({ perfil, treino, dieta });
-  });
-
-  /** GET /api/perfil — devolve o perfil salvo do usuário. */
-  app.get('/', { onRequest: [exigirAutenticacao] }, async (requisicao, resposta) => {
-    // Recupera o id do usuário autenticado.
-    const usuarioId = usuarioIdDaRequisicao(requisicao);
-
-    // Busca o perfil no banco.
-    const perfil = buscarPerfilPorUsuario(usuarioId);
-    if (!perfil) {
-      return enviarErro(resposta, 404, 'Perfil não encontrado. Complete o onboarding primeiro.');
-    }
-    return resposta.send(perfil);
   });
 
   /**
@@ -224,20 +223,31 @@ export async function rotasPerfil(app: FastifyInstance): Promise<void> {
       }
     }
 
-    // Atualiza somente os campos enviados no perfil.
-    const perfilAtualizado = atualizarCorpoDoPerfil(usuarioId, {
-      ...(corpo.peso_kg !== undefined ? { peso_kg: corpo.peso_kg } : {}),
-      ...(corpo.altura_cm !== undefined ? { altura_cm: corpo.altura_cm } : {}),
-    });
-
-    // Quando o peso muda, registra a pesagem do dia (alimenta o gráfico).
-    if (corpo.peso_kg !== undefined) {
-      const dataDaPesagem =
-        corpo.data && /^\d{4}-\d{2}-\d{2}$/.test(corpo.data) && !Number.isNaN(Date.parse(corpo.data))
-          ? corpo.data
-          : new Date().toISOString().slice(0, 10);
-      salvarPesagemDoDia(usuarioId, dataDaPesagem, corpo.peso_kg);
+    // TEAM_007: `data` informada com formato inválido agora gera 400 — antes
+    // era ignorada em silêncio e a pesagem ia para "hoje" sem aviso.
+    if (corpo.data !== undefined) {
+      if (!dataValida(corpo.data)) {
+        return enviarErro(resposta, 400, 'Informe uma data válida no formato AAAA-MM-DD.');
+      }
+      if (dataNoFuturo(corpo.data)) {
+        return enviarErro(resposta, 400, 'Não é possível registrar pesagem em uma data futura.');
+      }
     }
+
+    // TEAM_007: atualização do perfil + pesagem do dia em UMA transação.
+    const perfilAtualizado = executarEmTransacao(() => {
+      // Atualiza somente os campos enviados no perfil.
+      const atualizado = atualizarCorpoDoPerfil(usuarioId, {
+        ...(corpo.peso_kg !== undefined ? { peso_kg: corpo.peso_kg } : {}),
+        ...(corpo.altura_cm !== undefined ? { altura_cm: corpo.altura_cm } : {}),
+      });
+
+      // Quando o peso muda, registra a pesagem do dia (alimenta o gráfico).
+      if (corpo.peso_kg !== undefined) {
+        salvarPesagemDoDia(usuarioId, corpo.data ?? hojeEmTexto(), corpo.peso_kg);
+      }
+      return atualizado;
+    });
 
     // Responde com o perfil já atualizado.
     return resposta.send({ perfil: perfilAtualizado, mensagem: 'Dados atualizados. Use "Recalcular" para renovar o plano.' });
@@ -270,18 +280,22 @@ export async function rotasPerfil(app: FastifyInstance): Promise<void> {
       return enviarErro(resposta, 400, erroDoEstilo);
     }
 
-    // Grava o novo estilo no perfil (mantendo todos os outros dados).
-    const estiloNormalizado =
-      corpo.variacao_treino === undefined || corpo.variacao_treino === 'padrao'
-        ? null
-        : corpo.variacao_treino;
-    const perfilAtualizado = salvarPerfil(usuarioId, {
-      ...perfilAtual,
-      variacao_treino: estiloNormalizado,
-    });
+    // TEAM_007: troca do estilo + regeneração dos planos em UMA transação.
+    const { perfilAtualizado, treino, dieta } = executarEmTransacao(() => {
+      // Grava o novo estilo no perfil (mantendo todos os outros dados).
+      const estiloNormalizado =
+        corpo.variacao_treino === undefined || corpo.variacao_treino === 'padrao'
+          ? null
+          : corpo.variacao_treino;
+      const perfilComEstilo = salvarPerfil(usuarioId, {
+        ...perfilAtual,
+        variacao_treino: estiloNormalizado,
+      });
 
-    // Regenera os planos já com o novo estilo (nova versão, antigas inativas).
-    const { treino, dieta } = gerarPlanosParaPerfil(usuarioId, perfilAtualizado);
+      // Regenera os planos já com o novo estilo (nova versão, antigas inativas).
+      const planos = gerarPlanosParaPerfil(usuarioId, perfilComEstilo);
+      return { perfilAtualizado: perfilComEstilo, ...planos };
+    });
 
     // Responde com o perfil e os planos atualizados.
     return resposta.send({ perfil: perfilAtualizado, treino, dieta });
@@ -298,15 +312,19 @@ export async function rotasPerfil(app: FastifyInstance): Promise<void> {
       return enviarErro(resposta, 404, 'Perfil não encontrado. Complete o onboarding primeiro.');
     }
 
-    // Usa o peso mais recente da evolução (base da renovação periódica).
-    const ultimaPesagem = buscarUltimaEvolucao(usuarioId);
-    const pesoAtualizado = ultimaPesagem ? ultimaPesagem.peso_kg : perfil.peso_kg;
+    // TEAM_007: atualização do peso + regeneração dos planos em UMA transação.
+    const { perfilAtualizado, treino, dieta } = executarEmTransacao(() => {
+      // Usa o peso mais recente da evolução (base da renovação periódica).
+      const ultimaPesagem = buscarUltimaEvolucao(usuarioId);
+      const pesoAtualizado = ultimaPesagem ? ultimaPesagem.peso_kg : perfil.peso_kg;
 
-    // Atualiza o peso do perfil com o valor mais recente antes de recalcular.
-    const perfilAtualizado = salvarPerfil(usuarioId, { ...perfil, peso_kg: pesoAtualizado });
+      // Atualiza o peso do perfil com o valor mais recente antes de recalcular.
+      const perfilComPeso = salvarPerfil(usuarioId, { ...perfil, peso_kg: pesoAtualizado });
 
-    // Regenera os planos com a nova versão (cópias antigas ficam inativas).
-    const { treino, dieta } = gerarPlanosParaPerfil(usuarioId, perfilAtualizado);
+      // Regenera os planos com a nova versão (cópias antigas ficam inativas).
+      const planos = gerarPlanosParaPerfil(usuarioId, perfilComPeso);
+      return { perfilAtualizado: perfilComPeso, ...planos };
+    });
 
     // Responde com o perfil atualizado e os novos planos.
     return resposta.send({ perfil: perfilAtualizado, treino, dieta });

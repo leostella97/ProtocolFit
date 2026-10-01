@@ -17,10 +17,14 @@
     "build:web": "npm run build --workspace @protocolfit/web",
     "build:pages": "npm run build:pages --workspace @protocolfit/web",
     "build": "npm run build:api && npm run build:web",
-    "typecheck": "npm run typecheck --workspaces --if-present"
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "node --import=tsx node_modules/jasmine/bin/jasmine.js"
   },
   "allowScripts": {
     "better-sqlite3@12.11.1": true,
     "esbuild@0.28.2": true
+  },
+  "devDependencies": {
+    "jasmine": "^7.0.0"
   }
 }

@@ -54,7 +54,11 @@ foreach ($modalidade in @("academia", "pesocorporal")) {
             $okDias = $resposta.treino.dias -eq $quantidade
             # 3) Vinculo com o modelo mestre escolhido.
             $okOrigemTreino = $resposta.treino.modelo_origem -eq ("treinos/" + $modalidade + "/" + $objetivo)
-            $okOrigemDieta = $resposta.dieta.modelo_origem -eq ("dietas/" + $objetivo)
+            # TEAM_007: a origem da dieta inclui o nome do arquivo (ex.:
+            # "dietas/hipertrofia.json") desde que os modelos de dieta foram
+            # vinculados ao perfil de treino — o teste acompanhava o formato
+            # antigo sem extensão e marcava falha em todas as combinações.
+            $okOrigemDieta = $resposta.dieta.modelo_origem -eq ("dietas/" + $objetivo + ".json")
             # 4) Vinculo com o usuario: a copia tem id proprio no SQLite.
             $okVinculoUsuario = $resposta.treino.id -gt 0 -and $resposta.dieta.id -gt 0
 

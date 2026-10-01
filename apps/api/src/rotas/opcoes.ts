@@ -2,9 +2,8 @@
  * opcoes.ts
  * ---------------------------------------------------------------------------
  * Rota pública que entrega ao frontend todas as opções estáticas do
- * onboarding (faixas etárias, objetivos, modalidades, frequências, dias da
- * semana e parâmetros de segurança do login). Assim o servidor permanece a
- * fonte única de verdade das regras do sistema.
+ * onboarding (faixas etárias, objetivos, modalidades, frequências e dias da
+ * semana). Assim o servidor permanece a fonte única de verdade das regras.
  * ---------------------------------------------------------------------------
  */
 import type { FastifyInstance } from 'fastify';
@@ -14,8 +13,6 @@ import {
   DIAS_DA_SEMANA,
   FAIXAS_ETARIAS,
   FREQUENCIAS_SEMANAIS,
-  HORAS_DE_BLOQUEIO,
-  LIMITE_TENTATIVAS_LOGIN,
   MODALIDADES,
   OBJETIVOS,
 } from '../util/constantes.js';
@@ -30,9 +27,8 @@ export async function rotasOpcoes(app: FastifyInstance): Promise<void> {
       modalidades: MODALIDADES,
       frequencias_semanais: FREQUENCIAS_SEMANAIS,
       dias_semana: DIAS_DA_SEMANA,
-      // Estilos de treino lidos direto da pasta de modelos mestres.
+      // Estilos de treino lidos direto da pasta de modelos mestres (em cache).
       variacoes_de_treino: listarVariacoesDeTreino(),
-      seguranca: { tentativas_limite: LIMITE_TENTATIVAS_LOGIN, horas_bloqueio: HORAS_DE_BLOQUEIO },
     };
     return opcoes;
   });

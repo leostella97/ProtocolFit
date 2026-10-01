@@ -80,7 +80,7 @@ async function principal(): Promise<void> {
   // Importa o repositório APÓS simular o navegador (localStorage, crypto, fetch).
   const repositorio = await import('../src/lib/repositorio-local');
   // Utilitários do termo de uso (aceite do aviso de responsabilidade).
-  const { registrarAceiteDoTermo, termoFoiAceito } = await import('../src/lib/termo-de-uso');
+  const { registrarAceiteDoTermo, termoFoiAceito, VERSAO_DO_TERMO } = await import('../src/lib/termo-de-uso');
 
   // ---- 1) Cadastro ---------------------------------------------------------
   const cadastro = await repositorio.cadastrarLocal({ nome: 'Maria Teste', email: 'maria@teste.com', senha: 'senhaSegura123' });
@@ -145,8 +145,9 @@ async function principal(): Promise<void> {
   conferir('Séries editadas', 5, treinoEditado.dias_da_semana[0].exercicios[0].series);
 
   // ---- 4.1) Troca de exercício pelo MESMO grupo muscular (TEAM_003) ------
-  // Lista as alternativas de "peito" para o exercício 0 do dia 0.
-  const alternativas = await repositorio.listarAlternativasDeExercicioLocal(plano.treino.id, 0, 0);
+  // TEAM_007: a consulta agora é por DIA — devolve uma lista por exercício.
+  const alternativasDoDia = await repositorio.listarAlternativasDoDiaLocal(plano.treino.id, 0);
+  const alternativas = alternativasDoDia[0];
   conferir('Alternativas do mesmo grupo existem', true, alternativas.length > 0);
   // O exercício atual e os demais do dia NÃO aparecem como alternativa.
   conferir(
@@ -194,7 +195,7 @@ async function principal(): Promise<void> {
     conferir('Troca de grupo diferente recusada', 400, (erro as { status: number }).status);
   }
   // Após a troca, o exercício anterior volta a aparecer como alternativa.
-  const alternativasAposTroca = await repositorio.listarAlternativasDeExercicioLocal(plano.treino.id, 0, 0);
+  const alternativasAposTroca = (await repositorio.listarAlternativasDoDiaLocal(plano.treino.id, 0))[0];
   conferir(
     'Exercício anterior volta às alternativas',
     true,
@@ -211,7 +212,18 @@ async function principal(): Promise<void> {
   conferir('Porção recalculada (g)', 525, dietaEditada.refeicoes[0].itens[0].quantidade);
 
   // ---- 6) Pesagem ---------------------------------------------------------
-  await repositorio.registrarPesagemLocal(80, '2026-09-01');
+  // TEAM_001: "hoje" é o DIA CIVIL do usuário (hojeLocal), não a data UTC.
+  const { hojeLocal, montarCalendarioDoMes } = await import('../src/lib/checkin-util');
+  const hoje = hojeLocal();
+  /** Desloca uma data AAAA-MM-DD em N dias (sem depender de fuso). */
+  const deslocarDias = (dataIso: string, dias: number): string => {
+    const numero = Math.floor(new Date(`${dataIso}T00:00:00Z`).getTime() / 86400000) + dias;
+    return new Date(numero * 86400000).toISOString().slice(0, 10);
+  };
+  // TEAM_007: a pesagem usa ONTEM — datas futuras agora são recusadas (400),
+  // então o teste não pode mais inventar um dia futuro; ontem ainda é a
+  // pesagem mais recente até a atualização do dia, preservando o cenário.
+  await repositorio.registrarPesagemLocal(80, deslocarDias(hoje, -1));
   const evolucao = await repositorio.listarEvolucaoLocal();
   conferir('Pesagem registrada', 1, evolucao.length);
   conferir('Peso da pesagem', 80, evolucao[0].peso_kg);
@@ -231,14 +243,6 @@ async function principal(): Promise<void> {
   conferir('Peso alterado no painel (kg)', 79.5, corpoAtualizado.perfil.peso_kg);
   // O peso alterado entra na evolução do dia (um único ponto por data).
   const evolucaoApos = await repositorio.listarEvolucaoLocal();
-  // TEAM_001: "hoje" é o DIA CIVIL do usuário (hojeLocal), não a data UTC.
-  const { hojeLocal, montarCalendarioDoMes } = await import('../src/lib/checkin-util');
-  const hoje = hojeLocal();
-  /** Desloca uma data AAAA-MM-DD em N dias (sem depender de fuso). */
-  const deslocarDias = (dataIso: string, dias: number): string => {
-    const numero = Math.floor(new Date(`${dataIso}T00:00:00Z`).getTime() / 86400000) + dias;
-    return new Date(numero * 86400000).toISOString().slice(0, 10);
-  };
   const pesagensDeHoje = evolucaoApos.filter((registro) => registro.data === hoje);
   conferir('Pesagem do dia sem duplicar', 1, pesagensDeHoje.length);
 
@@ -394,7 +398,7 @@ async function principal(): Promise<void> {
   conferir('Backup carrega os 8 planos', 8, pacote.planos?.length);
   conferir('Backup carrega as pesagens', 3, pacote.evolucao?.length);
   conferir('Backup carrega os check-ins', 4, pacote.checkins?.length);
-  conferir('Aceite do termo viaja no backup', 1, pacote.aceite_do_termo?.versao);
+  conferir('Aceite do termo viaja no backup', VERSAO_DO_TERMO, pacote.aceite_do_termo?.versao);
   conferir(
     'Backup não vaza ids internos',
     true,

@@ -15,7 +15,7 @@
  *   6) Insere as novas cópias       → tabela `planos` do SQLite
  * ---------------------------------------------------------------------------
  */
-import { buscarPlanoPorId, desativarPlanosDoUsuario, inserirPlano, proximaVersaoDoPlano } from '../bd/banco.js';
+import { buscarPlanoPorId, desativarPlanosDoUsuario, executarEmTransacao, inserirPlano, proximaVersaoDoPlano } from '../bd/banco.js';
 import { calcularPlanoNutricional } from '../motor/calculos.js';
 import { buscarModeloDieta, buscarModeloTreino } from '../motor/carregadorModelos.js';
 import { montarPlanoDieta, montarPlanoTreino } from '../motor/montadorPlano.js';
@@ -42,43 +42,47 @@ export function gerarPlanosParaPerfil(usuarioId: number, perfil: Perfil): { trei
   const treinoMontado = montarPlanoTreino(modeloTreino, perfil);
   const dietaMontada = montarPlanoDieta(modeloDieta, perfil, planoNutricional);
 
-  // 5) Desativa as cópias antigas do usuário (ficam no histórico, inativas).
-  desativarPlanosDoUsuario(usuarioId);
+  // TEAM_007: os passos 5–8 rodam em UMA transação — antes, uma falha entre a
+  // desativação e as inserções deixava o usuário sem nenhum plano ativo.
+  return executarEmTransacao(() => {
+    // 5) Desativa as cópias antigas do usuário (ficam no histórico, inativas).
+    desativarPlanosDoUsuario(usuarioId);
 
-  // 6) Calcula a nova versão de cada tipo de plano.
-  const versaoTreino = proximaVersaoDoPlano(usuarioId, 'treino');
-  const versaoDieta = proximaVersaoDoPlano(usuarioId, 'dieta');
+    // 6) Calcula a nova versão de cada tipo de plano.
+    const versaoTreino = proximaVersaoDoPlano(usuarioId, 'treino');
+    const versaoDieta = proximaVersaoDoPlano(usuarioId, 'dieta');
 
-  // 7) Grava as novas cópias montadas no SQLite (isolamento por usuário).
-  const modeloOrigemTreino = `treinos/${perfil.modalidade}/${perfil.objetivo}`;
-  const idVarDieta = (perfil.variacao_treino ?? '').trim();
-  const modeloOrigemDieta =
-    idVarDieta && idVarDieta !== 'padrao'
-      ? `dietas/${perfil.objetivo}-${idVarDieta}.json`
-      : `dietas/${perfil.objetivo}.json`;
-  const idTreino = inserirPlano(
-    usuarioId,
-    'treino',
-    versaoTreino,
-    modeloOrigemTreino,
-    JSON.stringify(treinoMontado),
-  );
-  const idDieta = inserirPlano(
-    usuarioId,
-    'dieta',
-    versaoDieta,
-    modeloOrigemDieta,
-    JSON.stringify(dietaMontada),
-  );
+    // 7) Grava as novas cópias montadas no SQLite (isolamento por usuário).
+    const modeloOrigemTreino = `treinos/${perfil.modalidade}/${perfil.objetivo}`;
+    const idVarDieta = (perfil.variacao_treino ?? '').trim();
+    const modeloOrigemDieta =
+      idVarDieta && idVarDieta !== 'padrao'
+        ? `dietas/${perfil.objetivo}-${idVarDieta}.json`
+        : `dietas/${perfil.objetivo}.json`;
+    const idTreino = inserirPlano(
+      usuarioId,
+      'treino',
+      versaoTreino,
+      modeloOrigemTreino,
+      JSON.stringify(treinoMontado),
+    );
+    const idDieta = inserirPlano(
+      usuarioId,
+      'dieta',
+      versaoDieta,
+      modeloOrigemDieta,
+      JSON.stringify(dietaMontada),
+    );
 
-  // 8) Recupera a data de criação gravada de cada cópia (para exibir há
-  // quanto tempo o usuário está com o plano atual).
-  const linhaTreino = buscarPlanoPorId(idTreino);
-  const linhaDieta = buscarPlanoPorId(idDieta);
+    // 8) Recupera a data de criação gravada de cada cópia (para exibir há
+    // quanto tempo o usuário está com o plano atual).
+    const linhaTreino = buscarPlanoPorId(idTreino);
+    const linhaDieta = buscarPlanoPorId(idDieta);
 
-  // 9) Devolve os planos prontos (com id, versão, vínculo e data de criação).
-  return {
-    treino: { id: idTreino, versao: versaoTreino, modelo_origem: modeloOrigemTreino, criado_em: linhaTreino?.criado_em ?? new Date().toISOString(), ...treinoMontado },
-    dieta: { id: idDieta, versao: versaoDieta, modelo_origem: modeloOrigemDieta, criado_em: linhaDieta?.criado_em ?? new Date().toISOString(), ...dietaMontada },
-  };
+    // 9) Devolve os planos prontos (com id, versão, vínculo e data de criação).
+    return {
+      treino: { id: idTreino, versao: versaoTreino, modelo_origem: modeloOrigemTreino, criado_em: linhaTreino?.criado_em ?? new Date().toISOString(), ...treinoMontado },
+      dieta: { id: idDieta, versao: versaoDieta, modelo_origem: modeloOrigemDieta, criado_em: linhaDieta?.criado_em ?? new Date().toISOString(), ...dietaMontada },
+    };
+  });
 }

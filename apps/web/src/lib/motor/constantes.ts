@@ -123,6 +123,5 @@ export function opcoesDoSistema() {
     // Os estilos de treino são preenchidos pelo repositório local, que lê o
     // indice.json gerado no build (os modelos são arquivos estáticos).
     variacoes_de_treino: [] as VariacaoDeTreino[],
-    seguranca: { tentativas_limite: LIMITE_TENTATIVAS_LOGIN, horas_bloqueio: HORAS_DE_BLOQUEIO },
   };
 }

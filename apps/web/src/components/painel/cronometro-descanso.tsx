@@ -20,7 +20,7 @@ import { useEffect, useRef, useState } from 'react';
 import { CheckCircle2, Pause, Play, RotateCcw, Timer } from 'lucide-react';
 import { Botao } from '@/components/ui/button';
 import { CampoDeEntrada } from '@/components/ui/input';
-import { combinarClasses } from '@/lib/util';
+import { combinarClasses, formatarMinutosSegundos } from '@/lib/util';
 
 /** Atalhos rápidos do timer, em segundos (1, 2 e 3 minutos). */
 const ATALHOS_DE_DESCANSO = [60, 120, 180];
@@ -47,13 +47,6 @@ type FaseDoCronometro = 'parado' | 'rodando' | 'pausado';
 interface PropriedadesDoCronometro {
   /** Descanso sugerido do exercício (segundos) — vira atalho extra. */
   descansoSugerido: number;
-}
-
-/** Formata segundos como "mm:ss" para o visor e para os atalhos. */
-function formatarMinutosSegundos(totalSegundos: number): string {
-  const minutos = Math.floor(totalSegundos / 60);
-  const segundos = totalSegundos % 60;
-  return `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
 }
 
 /** Cronômetro de descanso por exercício (client component — usa timers e áudio). */

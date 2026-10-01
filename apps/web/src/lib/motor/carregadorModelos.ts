@@ -87,19 +87,6 @@ export async function listarVariacoesDeTreino(): Promise<VariacaoDeTreino[]> {
   return indice?.variacoes ?? [];
 }
 
-/** Filtra os estilos de uma combinação exata de modalidade + objetivo + dias. */
-export async function variacoesDaCombinacao(
-  modalidade: Modalidade,
-  objetivo: Objetivo,
-  dias: number,
-): Promise<VariacaoDeTreino[]> {
-  const todas = await listarVariacoesDeTreino();
-  return todas.filter(
-    (variacao) =>
-      variacao.modalidade === modalidade && variacao.objetivo === objetivo && variacao.dias === dias,
-  );
-}
-
 /**
  * Localiza o modelo de treino cruzando modalidade + objetivo + dias + estilo.
  * Usa o arquivo exato quando existe; caso contrário, aplica o fallback.

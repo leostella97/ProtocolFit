@@ -19,8 +19,6 @@
 import type {
   AlternativaDeExercicio,
   CheckinDiario,
-  DiaDeTreino,
-  ItemDaDieta,
   OpcoesDoSistema,
   Perfil,
   PlanoCompleto,
@@ -36,7 +34,8 @@ import type {
   Usuario,
 } from './tipos';
 import { guardarToken, guardarUsuario, obterToken } from './armazenamento';
-import { hojeLocal } from './checkin-util';
+// TEAM_007: dataValida/dataNoFuturo espelham util/datas.ts do servidor.
+import { dataNoFuturo, dataValida, hojeLocal } from './checkin-util';
 import { CHAVE_DO_ACEITE, termoFoiAceito, VERSAO_DO_TERMO } from './termo-de-uso';
 import { ErroDaApi } from './erro-api';
 import { calcularPlanoNutricional } from './motor/calculos';
@@ -641,51 +640,98 @@ function exigirPlano(banco: BancoLocal, planoId: number, tipo: 'treino' | 'dieta
   return plano;
 }
 
+/** Limites de edição de um exercício — MESMOS valores de apps/api/rotas/planos.ts. */
+const LIMITES_EDICAO = {
+  series_min: 1,
+  series_max: 10,
+  repeticoes_min: 1,
+  repeticoes_max: 50,
+  carga_min_kg: 0,
+  carga_max_kg: 400,
+} as const;
+
 /** Edita séries/repetições/carga de um exercício (espelha PATCH /plano/treino/:id). */
 export async function editarExercicioLocal(planoId: number, corpo: EdicaoDeExercicio): Promise<PlanoTreino> {
   const banco = lerBanco();
   const plano = exigirPlano(banco, planoId, 'treino');
-  // Valida os índices recebidos.
-  if (!Number.isInteger(corpo.dia_indice) || !Number.isInteger(corpo.exercicio_indice)) {
+  // TEAM_007: mesma validação do servidor — inteiros não negativos, séries e
+  // repetições inteiros no intervalo e carga como número finito (ou null).
+  if (
+    !Number.isInteger(corpo.dia_indice) || corpo.dia_indice < 0 ||
+    !Number.isInteger(corpo.exercicio_indice) || corpo.exercicio_indice < 0
+  ) {
     throw new ErroDaApi(400, 'Informe o dia e o exercício que deseja editar.');
+  }
+  if (
+    corpo.series !== undefined &&
+    (!Number.isInteger(corpo.series) || corpo.series < LIMITES_EDICAO.series_min || corpo.series > LIMITES_EDICAO.series_max)
+  ) {
+    throw new ErroDaApi(400, `As séries devem ficar entre ${LIMITES_EDICAO.series_min} e ${LIMITES_EDICAO.series_max}.`);
+  }
+  if (
+    corpo.repeticoes !== undefined &&
+    (!Number.isInteger(corpo.repeticoes) || corpo.repeticoes < LIMITES_EDICAO.repeticoes_min || corpo.repeticoes > LIMITES_EDICAO.repeticoes_max)
+  ) {
+    throw new ErroDaApi(400, `As repetições devem ficar entre ${LIMITES_EDICAO.repeticoes_min} e ${LIMITES_EDICAO.repeticoes_max}.`);
+  }
+  if (
+    corpo.carga_kg !== undefined &&
+    corpo.carga_kg !== null &&
+    (typeof corpo.carga_kg !== 'number' || !Number.isFinite(corpo.carga_kg) ||
+      corpo.carga_kg < LIMITES_EDICAO.carga_min_kg || corpo.carga_kg > LIMITES_EDICAO.carga_max_kg)
+  ) {
+    throw new ErroDaApi(400, `A carga deve ficar entre ${LIMITES_EDICAO.carga_min_kg} e ${LIMITES_EDICAO.carga_max_kg} kg.`);
   }
   // Aplica a edição na cópia (o modelo mestre permanece intacto).
   const conteudo = JSON.parse(plano.conteudo) as Omit<PlanoTreino, 'id' | 'versao' | 'modelo_origem' | 'criado_em'>;
-  aplicarEdicaoTreino(conteudo, corpo);
+  try {
+    aplicarEdicaoTreino(conteudo, corpo);
+  } catch (erro) {
+    // Índice fora da grade do plano (ex.: dia 9 num plano de 3 dias).
+    throw new ErroDaApi(400, erro instanceof Error ? erro.message : 'Não foi possível editar o exercício.');
+  }
   plano.conteudo = JSON.stringify(conteudo);
   salvarBanco(banco);
   return { id: plano.id, versao: plano.versao, modelo_origem: plano.modelo_origem, criado_em: plano.criado_em, ...conteudo };
 }
 
 /**
- * TEAM_003: lista as alternativas do MESMO grupo muscular para a posição
- * indicada do plano (espelha GET /plano/treino/:id/alternativas).
- * Exclui os exercícios que o dia já usa — inclusive o atual.
+ * TEAM_007: lista as alternativas de TODOS os exercícios de um dia em uma
+ * única chamada (espelha GET /plano/treino/:id/alternativas?dia_indice=N).
+ * TEAM_003: cada posição recebe alternativas do MESMO grupo muscular, sem os
+ * exercícios que o dia já usa — não dá para repetir exercício na sessão.
  */
-export async function listarAlternativasDeExercicioLocal(
+export async function listarAlternativasDoDiaLocal(
   planoId: number,
   diaIndice: number,
-  exercicioIndice: number,
-): Promise<AlternativaDeExercicio[]> {
+): Promise<AlternativaDeExercicio[][]> {
   const banco = lerBanco();
   const plano = exigirPlano(banco, planoId, 'treino');
   const conteudo = JSON.parse(plano.conteudo) as Omit<PlanoTreino, 'id' | 'versao' | 'modelo_origem' | 'criado_em'>;
   const dia = conteudo.dias_da_semana[diaIndice];
-  const exercicio = dia?.exercicios[exercicioIndice];
-  if (!dia || !exercicio) {
-    throw new ErroDaApi(404, 'Exercício não encontrado no plano.');
+  if (!dia) {
+    throw new ErroDaApi(404, 'Dia de treino não encontrado no plano.');
   }
   // Nomes já usados no dia ficam fora — não dá para repetir exercício na sessão.
   const nomesDoDia = dia.exercicios.map((item) => item.nome);
-  const alternativas = await listarAlternativasDeExercicio(conteudo.modalidade, exercicio.grupo, nomesDoDia);
-  return alternativas.map((alternativa) => ({ nome: alternativa.nome, tipo: alternativa.tipo }));
+  const alternativasPorExercicio: AlternativaDeExercicio[][] = [];
+  for (const exercicio of dia.exercicios) {
+    const alternativas = await listarAlternativasDeExercicio(conteudo.modalidade, exercicio.grupo, nomesDoDia);
+    alternativasPorExercicio.push(alternativas.map((alternativa) => ({ nome: alternativa.nome, tipo: alternativa.tipo })));
+  }
+  return alternativasPorExercicio;
 }
 
 /** TEAM_003: troca um exercício por outro do mesmo grupo (espelha PATCH /plano/treino/:id/trocar). */
 export async function trocarExercicioLocal(planoId: number, corpo: TrocaDeExercicio): Promise<PlanoTreino> {
   const banco = lerBanco();
   const plano = exigirPlano(banco, planoId, 'treino');
-  if (!Number.isInteger(corpo.dia_indice) || !Number.isInteger(corpo.exercicio_indice) || !corpo.exercicio_nome) {
+  // TEAM_007: índices precisam ser inteiros não negativos (mesma regra da API).
+  if (
+    !Number.isInteger(corpo.dia_indice) || corpo.dia_indice < 0 ||
+    !Number.isInteger(corpo.exercicio_indice) || corpo.exercicio_indice < 0 ||
+    !corpo.exercicio_nome
+  ) {
     throw new ErroDaApi(400, 'Informe o dia, o exercício e a alternativa desejada.');
   }
   // O peso do perfil recalcula a carga sugerida do novo exercício.
@@ -713,12 +759,22 @@ export async function substituirAlimentoLocal(
 ): Promise<PlanoDieta> {
   const banco = lerBanco();
   const plano = exigirPlano(banco, planoId, 'dieta');
-  if (!Number.isInteger(corpo.refeicao_indice) || !Number.isInteger(corpo.item_indice) || !corpo.alternativa_nome) {
+  // TEAM_007: índices precisam ser inteiros não negativos (mesma regra da API).
+  if (
+    !Number.isInteger(corpo.refeicao_indice) || corpo.refeicao_indice < 0 ||
+    !Number.isInteger(corpo.item_indice) || corpo.item_indice < 0 ||
+    !corpo.alternativa_nome
+  ) {
     throw new ErroDaApi(400, 'Informe a refeição, o alimento e o substituto desejado.');
   }
   // Aplica a substituição recalculando a porção.
   const conteudo = JSON.parse(plano.conteudo) as Omit<PlanoDieta, 'id' | 'versao' | 'modelo_origem' | 'criado_em'>;
-  aplicarSubstituicao(conteudo, corpo.refeicao_indice, corpo.item_indice, corpo.alternativa_nome);
+  try {
+    aplicarSubstituicao(conteudo, corpo.refeicao_indice, corpo.item_indice, corpo.alternativa_nome);
+  } catch (erro) {
+    // Índice fora da grade do plano ou substituto inexistente.
+    throw new ErroDaApi(400, erro instanceof Error ? erro.message : 'Não foi possível substituir o alimento.');
+  }
   plano.conteudo = JSON.stringify(conteudo);
   salvarBanco(banco);
   return { id: plano.id, versao: plano.versao, modelo_origem: plano.modelo_origem, criado_em: plano.criado_em, ...conteudo };
@@ -735,7 +791,15 @@ export async function registrarPesagemLocal(pesoKg: number, data?: string): Prom
   if (typeof pesoKg !== 'number' || pesoKg < LIMITES_CORPO.peso_minimo_kg || pesoKg > LIMITES_CORPO.peso_maximo_kg) {
     throw new ErroDaApi(400, `Informe um peso válido entre ${LIMITES_CORPO.peso_minimo_kg} e ${LIMITES_CORPO.peso_maximo_kg} kg.`);
   }
-  const dataDoRegistro = data && /^\d{4}-\d{2}-\d{2}$/.test(data) ? data : dataDeHoje();
+  // TEAM_007: mesma regra do servidor — data informada inválida ou futura
+  // gera erro 400 em vez de ser ignorada em silêncio.
+  if (data !== undefined && !dataValida(data)) {
+    throw new ErroDaApi(400, 'Informe uma data válida no formato AAAA-MM-DD.');
+  }
+  if (data !== undefined && dataNoFuturo(data)) {
+    throw new ErroDaApi(400, 'Não é possível registrar pesagem em uma data futura.');
+  }
+  const dataDoRegistro = data ?? dataDeHoje();
   // TEAM_001: um registro por data (mesma regra do servidor) — e a pesagem
   // mais recente passa a ser o "peso atual" do perfil (sincronizarPesoAtual).
   const registro = salvarPesagemDoDiaNoBanco(banco, conta.id, dataDoRegistro, pesoKg);
@@ -752,9 +816,6 @@ export async function listarEvolucaoLocal(): Promise<RegistroEvolucao[]> {
     .sort((a, b) => a.data.localeCompare(b.data) || a.id - b.id)
     .map((registro) => ({ id: registro.id, data: registro.data, peso_kg: registro.peso_kg }));
 }
-
-/** Tipos auxiliares reexportados para uso interno das telas (opcional). */
-export type { DiaDeTreino, ItemDaDieta };
 
 /* ===========================================================================
  * CORPO (peso e altura) — espelha PATCH /api/perfil/corpo
@@ -859,8 +920,12 @@ function deDataParaNumero(data: string): number {
   return Math.floor(new Date(`${data}T00:00:00Z`).getTime() / (24 * 60 * 60 * 1000));
 }
 
-/** Calcula o resumo dos check-ins (sequências e histórico) — igual ao servidor. */
-function montarResumo(registrosDoUsuario: CheckinDiarioInterno[]): ResumoDeCheckins {
+/**
+ * Calcula o resumo dos check-ins (sequências e histórico) — igual ao servidor.
+ * TEAM_007: `referenciaDeHoje` permite que o POST use a MESMA data civil do
+ * check-in gravado — alinhado ao que a rota faz com a data recebida.
+ */
+function montarResumo(registrosDoUsuario: CheckinDiarioInterno[], referenciaDeHoje = dataDeHoje()): ResumoDeCheckins {
   // Ordena do mais recente para o mais antigo.
   const ordenados = [...registrosDoUsuario].sort((a, b) => b.data.localeCompare(a.data));
   // Datas cumpridas em ordem crescente.
@@ -878,8 +943,8 @@ function montarResumo(registrosDoUsuario: CheckinDiarioInterno[]): ResumoDeCheck
     anterior = numero;
   }
 
-  // Sequência atual: conta de trás para frente a partir de hoje (ou ontem).
-  const hoje = deDataParaNumero(dataDeHoje());
+  // Sequência atual: conta de trás para frente a partir da referência (ou ontem).
+  const hoje = deDataParaNumero(referenciaDeHoje);
   let cursor = conjunto.has(deNumeroParaData(hoje)) ? hoje : hoje - 1;
   let sequenciaAtual = 0;
   while (conjunto.has(deNumeroParaData(cursor))) {
@@ -888,7 +953,7 @@ function montarResumo(registrosDoUsuario: CheckinDiarioInterno[]): ResumoDeCheck
   }
 
   return {
-    hoje: ordenados.find((registro) => registro.data === dataDeHoje()) ?? null,
+    hoje: ordenados.find((registro) => registro.data === referenciaDeHoje) ?? null,
     registros: ordenados.slice(0, 60).map((registro) => ({
       id: registro.id,
       data: registro.data,
@@ -917,6 +982,8 @@ export async function buscarCheckinsLocal(): Promise<ResumoDeCheckins> {
 /** Salva (ou atualiza) o check-in do dia e devolve o resumo atualizado. */
 export async function salvarCheckinLocal(corpo: {
   data?: string;
+  /** TEAM_007: dia civil de referência do resumo (mesmo papel do `hoje` da API). */
+  hoje?: string;
   treino_feito?: boolean;
   dieta_seguida?: boolean;
   agua_ml?: number;
@@ -929,12 +996,39 @@ export async function salvarCheckinLocal(corpo: {
   if (!banco.checkins) {
     banco.checkins = [];
   }
-  const data = corpo.data && /^\d{4}-\d{2}-\d{2}$/.test(corpo.data) ? corpo.data : dataDeHoje();
+  // TEAM_007: mesma validação do servidor — data informada inválida ou
+  // futura gera erro 400 (antes era ignorada e gravava no dia de hoje).
+  if (corpo.data !== undefined && !dataValida(corpo.data)) {
+    throw new ErroDaApi(400, 'Informe uma data válida no formato AAAA-MM-DD.');
+  }
+  if (corpo.data !== undefined && dataNoFuturo(corpo.data)) {
+    throw new ErroDaApi(400, 'Não é possível registrar check-in em uma data futura.');
+  }
+  const data = corpo.data ?? dataDeHoje();
+  // A referência "hoje" do resumo também precisa ser uma data válida.
+  if (corpo.hoje !== undefined && !dataValida(corpo.hoje)) {
+    throw new ErroDaApi(400, 'Informe uma data de referência válida no formato AAAA-MM-DD.');
+  }
 
-  // Valida a água informada.
+  // TEAM_007: os campos booleanos precisam ser booleanos de verdade.
+  if (corpo.treino_feito !== undefined && typeof corpo.treino_feito !== 'boolean') {
+    throw new ErroDaApi(400, 'O campo treino_feito precisa ser verdadeiro ou falso.');
+  }
+  if (corpo.dieta_seguida !== undefined && typeof corpo.dieta_seguida !== 'boolean') {
+    throw new ErroDaApi(400, 'O campo dieta_seguida precisa ser verdadeiro ou falso.');
+  }
+
+  // Valida a água informada (tipo errado → erro, não mais coerção para 0).
+  if (corpo.agua_ml !== undefined && (typeof corpo.agua_ml !== 'number' || !Number.isFinite(corpo.agua_ml))) {
+    throw new ErroDaApi(400, 'Informe a quantidade de água em mililitros.');
+  }
   const aguaMl = typeof corpo.agua_ml === 'number' ? Math.round(corpo.agua_ml) : 0;
   if (aguaMl < 0 || aguaMl > 10000) {
     throw new ErroDaApi(400, 'Informe a água entre 0 e 10000 ml.');
+  }
+  // A observação é texto livre com tamanho limitado (mesma regra da API).
+  if (corpo.observacao !== undefined && corpo.observacao !== null && typeof corpo.observacao !== 'string') {
+    throw new ErroDaApi(400, 'A observação precisa ser um texto.');
   }
   // Valida o peso quando informado.
   if (corpo.peso_kg !== undefined && corpo.peso_kg !== null) {
@@ -959,7 +1053,10 @@ export async function salvarCheckinLocal(corpo: {
   checkin.dieta_seguida = corpo.dieta_seguida ?? checkin.dieta_seguida;
   checkin.agua_ml = corpo.agua_ml !== undefined ? aguaMl : checkin.agua_ml;
   checkin.peso_kg = corpo.peso_kg !== undefined ? corpo.peso_kg : checkin.peso_kg;
-  checkin.observacao = corpo.observacao !== undefined ? corpo.observacao : checkin.observacao;
+  checkin.observacao =
+    corpo.observacao !== undefined
+      ? corpo.observacao?.trim().slice(0, 1000) || null
+      : checkin.observacao;
   if (!existente) {
     banco.checkins.push(checkin);
   }
@@ -981,7 +1078,10 @@ export async function salvarCheckinLocal(corpo: {
       peso_kg: checkin.peso_kg,
       observacao: checkin.observacao,
     },
-    ...montarResumo(registros),
+    // TEAM_007: o resumo usa o dia civil do usuário (paridade com a API que
+    // recebe `hoje` no corpo) — NÃO a data do check-in: um registro retroativo
+    // não pode mudar o marco da sequência atual.
+    ...montarResumo(registros, corpo.hoje ?? dataDeHoje()),
   };
 }
 

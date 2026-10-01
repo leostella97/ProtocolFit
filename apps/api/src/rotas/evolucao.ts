@@ -12,6 +12,8 @@
 import type { FastifyInstance } from 'fastify';
 import { listarEvolucao, salvarPesagemDoDia } from '../bd/banco.js';
 import { LIMITES_CORPO } from '../util/constantes.js';
+// TEAM_007: validação de datas civis centralizada (formato + regra de futuro).
+import { dataNoFuturo, dataValida, hojeEmTexto } from '../util/datas.js';
 import { enviarErro, exigirAutenticacao, usuarioIdDaRequisicao } from '../util/respostas.js';
 
 /** Corpo esperado na rota de registro de pesagem. */
@@ -19,11 +21,6 @@ interface CorpoPesagem {
   peso_kg?: number;
   /** Data opcional no formato AAAA-MM-DD (padrão: data de hoje). */
   data?: string;
-}
-
-/** Verifica se uma data está no formato AAAA-MM-DD. */
-function dataValida(data: string): boolean {
-  return /^\d{4}-\d{2}-\d{2}$/.test(data) && !Number.isNaN(Date.parse(data));
 }
 
 /** Registra as rotas de evolução (prefixo /api/evolucao). */
@@ -39,17 +36,19 @@ export async function rotasEvolucao(app: FastifyInstance): Promise<void> {
       return enviarErro(resposta, 400, `Informe um peso válido entre ${LIMITES_CORPO.peso_minimo_kg} e ${LIMITES_CORPO.peso_maximo_kg} kg.`);
     }
     // Usa a data informada ou a data de hoje no fuso local.
-    const data = corpo.data ?? new Date().toISOString().slice(0, 10);
+    const data = corpo.data ?? hojeEmTexto();
     if (!dataValida(data)) {
       return enviarErro(resposta, 400, 'Informe uma data válida no formato AAAA-MM-DD.');
     }
+    // TEAM_007: pesagem no futuro não faz sentido — rejeita com tolerância de
+    // fuso (aceita até "amanhã" em UTC).
+    if (dataNoFuturo(data)) {
+      return enviarErro(resposta, 400, 'Não é possível registrar pesagem em uma data futura.');
+    }
 
-    // Grava a pesagem do dia (atualiza o registro do dia, se já existir).
-    salvarPesagemDoDia(usuarioId, data, corpo.peso_kg);
-
-    // Busca o registro gravado para responder com o id correto.
-    const registros = listarEvolucao(usuarioId);
-    const registro = registros.find((item) => item.data === data) ?? registros[registros.length - 1];
+    // Grava a pesagem do dia (atualiza o registro do dia, se já existir) e
+    // devolve o registro gravado — sem a consulta extra que existia antes.
+    const registro = salvarPesagemDoDia(usuarioId, data, corpo.peso_kg);
 
     // Responde com o registro criado/atualizado.
     return resposta.code(201).send(registro);

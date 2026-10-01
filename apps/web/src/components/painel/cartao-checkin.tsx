@@ -14,7 +14,7 @@
  */
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { CalendarDays, Check, Droplets, Flame, Loader2, NotebookPen, Trophy, Dumbbell, Salad } from 'lucide-react';
 import { Botao } from '@/components/ui/button';
 import { Cartao, CartaoCabecalho, CartaoConteudo, CartaoDescricao, CartaoTitulo } from '@/components/ui/card';
@@ -25,6 +25,8 @@ import { Selo } from '@/components/ui/badge';
 import { CalendarioDeCheckins } from '@/components/painel/calendario-checkins';
 import { separadorDeDatas } from '@/lib/checkin-util';
 import { salvarCheckin } from '@/lib/api';
+import { AGUA_ML_POR_KG } from '@/lib/motor/calculos';
+import { LIMITES_CORPO } from '@/lib/motor/constantes';
 import type { Perfil, ResumoDeCheckins } from '@/lib/tipos';
 import { combinarClasses } from '@/lib/util';
 
@@ -54,6 +56,16 @@ export function CartaoCheckin({ resumo, perfil, aoSalvar }: PropriedadesDoCartao
   const [erro, definirErro] = useState<string | null>(null);
   // Calendário de check-ins aberto/fechado (botão "Ver calendário").
   const [calendarioAberto, definirCalendarioAberto] = useState(false);
+  // TEAM_007: referência do timeout do "salvo ✓" — cancelado no desmonte.
+  const temporizadorSucesso = useRef<number | null>(null);
+  useEffect(
+    () => () => {
+      if (temporizadorSucesso.current !== null) {
+        window.clearTimeout(temporizadorSucesso.current);
+      }
+    },
+    [],
+  );
 
   // Últimos 7 dias (do mais antigo para o mais recente) para o mini histórico.
   const ultimosSeteDias = useMemo(() => separadorDeDatas(resumo.dias_cumpridos, 7), [resumo.dias_cumpridos]);
@@ -70,8 +82,15 @@ export function CartaoCheckin({ resumo, perfil, aoSalvar }: PropriedadesDoCartao
       definirErro('Informe a água entre 0 e 10000 ml.');
       return;
     }
-    if (pesoNumerico !== null && (!Number.isFinite(pesoNumerico) || pesoNumerico < 30 || pesoNumerico > 300)) {
-      definirErro('Informe o peso entre 30 e 300 kg (ou deixe em branco).');
+    if (
+      pesoNumerico !== null &&
+      (!Number.isFinite(pesoNumerico) ||
+        pesoNumerico < LIMITES_CORPO.peso_minimo_kg ||
+        pesoNumerico > LIMITES_CORPO.peso_maximo_kg)
+    ) {
+      definirErro(
+        `Informe o peso entre ${LIMITES_CORPO.peso_minimo_kg} e ${LIMITES_CORPO.peso_maximo_kg} kg (ou deixe em branco).`,
+      );
       return;
     }
 
@@ -86,7 +105,10 @@ export function CartaoCheckin({ resumo, perfil, aoSalvar }: PropriedadesDoCartao
         observacao: observacao.trim() === '' ? null : observacao.trim(),
       });
       definirSucesso(true);
-      window.setTimeout(() => definirSucesso(false), 2500);
+      if (temporizadorSucesso.current !== null) {
+        window.clearTimeout(temporizadorSucesso.current);
+      }
+      temporizadorSucesso.current = window.setTimeout(() => definirSucesso(false), 2500);
       // Avisa o painel (atualiza a sequência e, se houver peso, a evolução).
       aoSalvar?.(resposta);
     } catch (erroCapturado: unknown) {
@@ -182,7 +204,10 @@ export function CartaoCheckin({ resumo, perfil, aoSalvar }: PropriedadesDoCartao
               >
                 +500
               </Botao>
-              <span className="text-xs text-muted-foreground">meta: {perfil.peso_kg ? `${Math.round(perfil.peso_kg * 35)} ml` : '—'}</span>
+              {/* TEAM_007: meta por objetivo (corrida = 40 ml/kg, não 35). */}
+              <span className="text-xs text-muted-foreground">
+                meta: {perfil.peso_kg ? `${Math.round(perfil.peso_kg * AGUA_ML_POR_KG[perfil.objetivo])} ml` : '—'}
+              </span>
             </div>
           </div>
 

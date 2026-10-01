@@ -56,7 +56,7 @@ const GORDURA_PERCENTUAL: Record<Objetivo, number> = {
 const KCAL_POR_GRAMAS = { proteina: 4, carboidrato: 4, gordura: 9 } as const;
 
 /** Mililitros de água por quilo de peso corporal, por objetivo. */
-const AGUA_ML_POR_KG: Record<Objetivo, number> = {
+export const AGUA_ML_POR_KG: Record<Objetivo, number> = {
   emagrecimento: 35,
   hipertrofia: 35,
   corrida: 40,

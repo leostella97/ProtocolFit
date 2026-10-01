@@ -28,6 +28,7 @@ import {
   registrarAceiteDoTermo,
   termoFoiAceito,
 } from '@/lib/termo-de-uso';
+import { MODO_LOCAL } from '@/lib/api';
 
 // Reexporta os utilitários do termo para quem já importava deste arquivo.
 export { VERSAO_DO_TERMO, abrirTermoDeUso, termoFoiAceito } from '@/lib/termo-de-uso';
@@ -47,8 +48,12 @@ const SECOES_DO_TERMO: SecaoDoTermo[] = [
   {
     icone: Lock,
     titulo: 'Sua privacidade em 1º lugar',
-    texto:
-      'O ProtocolFit não possui servidor nem banco de dados. Todos os seus dados de peso, idade e treinos ficam armazenados exclusivamente no seu próprio navegador e celular.',
+    // TEAM_007: o texto reflete o modo de execução — sem servidor (GitHub
+    // Pages) os dados ficam no navegador; com a API eles são gravados no
+    // banco do servidor sob a sua conta protegida por senha.
+    texto: MODO_LOCAL
+      ? 'O ProtocolFit não possui servidor nem banco de dados. Todos os seus dados de peso, idade e treinos ficam armazenados exclusivamente no seu próprio navegador e celular.'
+      : 'Seus dados de peso, idade e treinos são armazenados no servidor do ProtocolFit, vinculados à sua conta e protegidos pela sua senha. Não compartilhamos seus dados com terceiros.',
   },
   {
     icone: BookOpenText,

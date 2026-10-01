@@ -13,7 +13,7 @@
  */
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeftRight, Check, CheckCircle2, Clock, Lightbulb, Pencil, Save, Youtube } from 'lucide-react';
 import { Botao } from '@/components/ui/button';
@@ -38,7 +38,7 @@ import {
   buscarCheckins,
   buscarPlanoAtual,
   editarExercicio,
-  listarAlternativasDeExercicio,
+  listarAlternativasDoDia,
   recalcularPlanos,
   salvarCheckin,
   trocarExercicio,
@@ -77,6 +77,17 @@ function lerConcluidos(planoId: number, diaIndice: number): number[] {
 function gravarConcluidos(planoId: number, diaIndice: number, concluidos: number[]) {
   try {
     localStorage.setItem(chaveDoProgresso(planoId, diaIndice), JSON.stringify(concluidos));
+    // TEAM_007: aproveita a gravação para PODAR as chaves de dias anteriores —
+    // sem isso o localStorage acumulava uma chave por dia para sempre.
+    const hoje = hojeLocal();
+    const antigas: string[] = [];
+    for (let indice = 0; indice < localStorage.length; indice += 1) {
+      const chave = localStorage.key(indice);
+      if (chave?.startsWith('protocolfit_treino_concluido:') && chave.split(':')[2] !== hoje) {
+        antigas.push(chave);
+      }
+    }
+    antigas.forEach((chave) => localStorage.removeItem(chave));
   } catch {
     // Armazenamento bloqueado/cheio: a checklist segue só na memória da sessão.
   }
@@ -98,6 +109,10 @@ interface PropriedadesDoCartaoDeExercicio {
   concluido: boolean;
   /** TEAM_004: alterna a marcação de concluído do exercício. */
   aoAlternarConcluido: () => void;
+  /** TEAM_007: alternativas de troca já buscadas pela página (sem N+1). */
+  alternativas: AlternativaDeExercicio[];
+  /** TEAM_007: avisa a página que a troca aconteceu (ela recarrega o dia). */
+  aoTrocarExercicio: (novoTreino: PlanoTreino) => void;
 }
 
 /** Cartão de um exercício com campos editáveis e feedback de salvamento. */
@@ -109,6 +124,8 @@ function CartaoDeExercicio({
   aoAtualizarTreino,
   concluido,
   aoAlternarConcluido,
+  alternativas,
+  aoTrocarExercicio,
 }: PropriedadesDoCartaoDeExercicio) {
   // Campos editados localmente (strings para inputs numéricos).
   const [series, definirSeries] = useState(String(exercicio.series));
@@ -121,32 +138,22 @@ function CartaoDeExercicio({
   );
   // Salvamento em andamento (desabilita o botão).
   const [salvando, definirSalvando] = useState(false);
-  // Feedback temporário "Salvo ✓".
+  // Feedback temporário "Salvo ✓" — TEAM_007: o timer é limpo ao desmontar.
   const [mensagemDeSucesso, definirMensagemDeSucesso] = useState(false);
+  // Referência do timeout do "Salvo ✓" para cancelamento no desmonte.
+  const temporizadorSucesso = useRef<number | null>(null);
+  useEffect(
+    () => () => {
+      if (temporizadorSucesso.current !== null) {
+        window.clearTimeout(temporizadorSucesso.current);
+      }
+    },
+    [],
+  );
   // Mensagem de erro amigável.
   const [mensagemDeErro, definirMensagemDeErro] = useState<string | null>(null);
-  // TEAM_003: alternativas do mesmo grupo muscular + estado da troca.
-  const [alternativas, definirAlternativas] = useState<AlternativaDeExercicio[]>([]);
+  // TEAM_003: estado da troca (as alternativas chegam prontas pela página).
   const [trocando, definirTrocando] = useState(false);
-
-  // TEAM_003: busca as alternativas do mesmo grupo ao montar o cartão —
-  // o seletor só aparece quando existe pelo menos uma opção.
-  useEffect(() => {
-    // Evita atualizar estado após o desmonte do cartão.
-    let ativo = true;
-    listarAlternativasDeExercicio(treino.id, diaIndice, exercicioIndice)
-      .then((lista) => {
-        if (ativo) {
-          definirAlternativas(lista);
-        }
-      })
-      .catch(() => {
-        // Catálogo indisponível: o seletor simplesmente não é exibido.
-      });
-    return () => {
-      ativo = false;
-    };
-  }, [treino.id, diaIndice, exercicioIndice]);
 
   /** TEAM_003: troca o exercício pela alternativa escolhida (mesmo grupo). */
   async function trocarExercicioAtual(nomeDaAlternativa: string) {
@@ -163,8 +170,9 @@ function CartaoDeExercicio({
         exercicio_indice: exercicioIndice,
         exercicio_nome: nomeDaAlternativa,
       });
-      // O cartão remonta (o key inclui o nome) com os dados do novo exercício.
-      aoAtualizarTreino(novoTreino);
+      // O cartão remonta (o key inclui o nome) e a página recarrega as
+      // alternativas do dia — o nome trocado sai/entra da lista de excluídos.
+      aoTrocarExercicio(novoTreino);
     } catch (erroCapturado: unknown) {
       definirMensagemDeErro(
         erroCapturado instanceof Error ? erroCapturado.message : 'Não foi possível trocar o exercício.',
@@ -214,9 +222,12 @@ function CartaoDeExercicio({
       // Salva na cópia do usuário e recebe o plano atualizado.
       const novoTreino = await editarExercicio(treino.id, corpo);
       aoAtualizarTreino(novoTreino);
-      // Exibe "Salvo ✓" por 2 segundos.
+      // Exibe "Salvo ✓" por 2 segundos (timeout cancelado no desmonte).
       definirMensagemDeSucesso(true);
-      window.setTimeout(() => definirMensagemDeSucesso(false), 2000);
+      if (temporizadorSucesso.current !== null) {
+        window.clearTimeout(temporizadorSucesso.current);
+      }
+      temporizadorSucesso.current = window.setTimeout(() => definirMensagemDeSucesso(false), 2000);
     } catch (erroCapturado: unknown) {
       definirMensagemDeErro(
         erroCapturado instanceof Error ? erroCapturado.message : 'Não foi possível salvar. Tente novamente.',
@@ -404,6 +415,19 @@ export default function PaginaDoTreino() {
   const [treinoFeitoHoje, definirTreinoFeitoHoje] = useState(false);
   const [salvandoCheckin, definirSalvandoCheckin] = useState(false);
   const [erroCheckin, definirErroCheckin] = useState<string | null>(null);
+  // TEAM_007: alternativas de troca por dia e por exercício (buscadas em
+  // UMA chamada por dia — antes era uma requisição por exercício, N+1).
+  const [alternativasPorDia, definirAlternativasPorDia] = useState<Record<number, AlternativaDeExercicio[][]>>({});
+
+  /** TEAM_007: busca (ou rebusca) as alternativas de um dia inteiro de uma vez. */
+  const carregarAlternativasDoDia = useCallback(async (treinoId: number, diaIndice: number) => {
+    try {
+      const listas = await listarAlternativasDoDia(treinoId, diaIndice);
+      definirAlternativasPorDia((atual) => ({ ...atual, [diaIndice]: listas }));
+    } catch {
+      // Catálogo indisponível: os seletores simplesmente não são exibidos.
+    }
+  }, []);
 
   /** Carrega o plano atual (404 → onboarding; 401 → login). */
   const carregarDados = useCallback(async () => {
@@ -418,6 +442,13 @@ export default function PaginaDoTreino() {
       ]);
       definirPlano(planoAtual);
       definirTreinoFeitoHoje(resumo?.hoje?.treino_feito ?? false);
+      // TEAM_007: pré-busca as alternativas de TODOS os dias em paralelo —
+      // uma requisição por dia em vez de uma por exercício.
+      void Promise.all(
+        planoAtual.treino.dias_da_semana.map((_, indice) =>
+          carregarAlternativasDoDia(planoAtual.treino.id, indice),
+        ),
+      );
     } catch (erroCapturado: unknown) {
       // Erro da API com status conhecido.
       if (erroCapturado instanceof ErroDaApi) {
@@ -439,7 +470,7 @@ export default function PaginaDoTreino() {
     } finally {
       definirCarregando(false);
     }
-  }, [roteador]);
+  }, [roteador, carregarAlternativasDoDia]);
 
   // Dispara o carregamento ao montar a página.
   useEffect(() => {
@@ -507,6 +538,12 @@ export default function PaginaDoTreino() {
   /** Atualiza o treino no estado local com a resposta da edição. */
   function atualizarTreino(novoTreino: PlanoTreino) {
     definirPlano((planoAtual) => (planoAtual ? { ...planoAtual, treino: novoTreino } : planoAtual));
+  }
+
+  /** TEAM_007: após a troca, atualiza o treino E recarrega as alternativas do dia. */
+  function registrarTroca(diaIndice: number, novoTreino: PlanoTreino) {
+    atualizarTreino(novoTreino);
+    void carregarAlternativasDoDia(novoTreino.id, diaIndice);
   }
 
   /**
@@ -645,6 +682,8 @@ export default function PaginaDoTreino() {
                     aoAtualizarTreino={atualizarTreino}
                     concluido={(concluidosPorDia[indice] ?? []).includes(exercicioIndice)}
                     aoAlternarConcluido={() => alternarConcluido(indice, exercicioIndice)}
+                    alternativas={alternativasPorDia[indice]?.[exercicioIndice] ?? []}
+                    aoTrocarExercicio={(novoTreino) => registrarTroca(indice, novoTreino)}
                   />
                 ))}
               </div>

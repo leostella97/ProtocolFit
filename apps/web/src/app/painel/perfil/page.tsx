@@ -48,7 +48,9 @@ import {
   rotuloDaModalidade,
   rotuloDoDia,
   rotuloDoObjetivo,
+  variacoesDaCombinacao,
 } from '@/lib/util';
+import { hojeLocal } from '@/lib/checkin-util';
 import type {
   Modalidade,
   Objetivo,
@@ -56,17 +58,7 @@ import type {
   PlanoCompleto,
   RegistroEvolucao,
   Sexo,
-  VariacaoDeTreino,
 } from '@/lib/tipos';
-
-/** Data de hoje no formato AAAA-MM-DD (fuso local do navegador). */
-function dataDeHoje(): string {
-  const hoje = new Date();
-  const ano = hoje.getFullYear();
-  const mes = String(hoje.getMonth() + 1).padStart(2, '0');
-  const dia = String(hoje.getDate()).padStart(2, '0');
-  return `${ano}-${mes}-${dia}`;
-}
 
 /** Mensagem de feedback (sucesso ou erro) da pesagem. */
 interface MensagemDaPesagem {
@@ -74,38 +66,6 @@ interface MensagemDaPesagem {
   tipo: 'sucesso' | 'erro';
   /** Texto amigável da mensagem. */
   texto: string;
-}
-
-/**
- * Estilos (variações) de treino disponíveis para a combinação do usuário.
- * O estilo padrão vem sempre primeiro; os demais em ordem alfabética.
- */
-function estilosDaCombinacao(
-  opcoes: OpcoesDoSistema | null,
-  plano: PlanoCompleto | null,
-): VariacaoDeTreino[] {
-  // Sem opções ou sem perfil não há estilos para listar.
-  if (!opcoes || !plano) {
-    return [];
-  }
-  const { modalidade, objetivo, dias_disponiveis } = plano.perfil;
-  return opcoes.variacoes_de_treino
-    .filter(
-      (estilo) =>
-        estilo.modalidade === modalidade &&
-        estilo.objetivo === objetivo &&
-        estilo.dias === dias_disponiveis.length,
-    )
-    .sort((primeiro, segundo) => {
-      // O estilo padrão é sempre a primeira opção da lista.
-      if (primeiro.id === 'padrao') {
-        return -1;
-      }
-      if (segundo.id === 'padrao') {
-        return 1;
-      }
-      return primeiro.nome.localeCompare(segundo.nome, 'pt-BR');
-    });
 }
 
 /** Linha de um dado do perfil (rótulo + valor). */
@@ -128,7 +88,7 @@ export default function PaginaDoPerfil() {
   const [evolucao, definirEvolucao] = useState<RegistroEvolucao[]>([]);
   // Formulário da pesagem: peso digitado e data (padrão hoje).
   const [pesoDigitado, definirPesoDigitado] = useState('');
-  const [dataDaPesagem, definirDataDaPesagem] = useState(dataDeHoje);
+  const [dataDaPesagem, definirDataDaPesagem] = useState(hojeLocal);
   // Salvamento da pesagem em andamento.
   const [salvandoPesagem, definirSalvandoPesagem] = useState(false);
   // Feedback de sucesso/erro da pesagem.
@@ -443,7 +403,15 @@ export default function PaginaDoPerfil() {
   const ultimasPesagens = [...evolucao].reverse().slice(0, 5);
 
   // Estilos de treino disponíveis para a combinação atual do usuário.
-  const estilosDisponiveis = estilosDaCombinacao(opcoes, plano);
+  const estilosDisponiveis =
+    opcoes && plano
+      ? variacoesDaCombinacao(
+          opcoes.variacoes_de_treino,
+          perfil.modalidade,
+          perfil.objetivo,
+          perfil.dias_disponiveis.length,
+        )
+      : [];
   // Estilo vigente no perfil (null = clássico) e o rótulo exibido.
   const estiloAtual = perfil.variacao_treino ?? 'padrao';
   const rotuloDoEstiloAtual =

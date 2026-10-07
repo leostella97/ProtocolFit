@@ -25,6 +25,7 @@
     "esbuild@0.28.2": true
   },
   "devDependencies": {
+    "@types/jasmine": "^7.0.0",
     "jasmine": "^7.0.0"
   }
 }

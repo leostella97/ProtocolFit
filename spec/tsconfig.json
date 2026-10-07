@@ -1,0 +1,17 @@
+{
+  // TEAM_008: tsconfig só para as specs Jasmine — os workspaces não cobrem
+  // esta pasta, então a IDE/este arquivo fornecem os tipos de describe/it/
+  // expect (@types/jasmine) e o módulo "bundler" aceita os imports sem
+  // extensão que o tsx resolve em runtime.
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "types": ["jasmine"],
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["**/*.spec.ts"]
+}

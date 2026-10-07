@@ -1,0 +1,39 @@
+{
+  "nome": "Força do Corredor - 3 Dias (pesado + pliometria)",
+  "modalidade": "academia",
+  "objetivo": "corrida",
+  "dias": 3,
+  "duracao_estimada_min": 50,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia 1 - Força máxima de pernas",
+      "exercicios": [
+        { "nome": "Agachamento livre", "grupo": "pernas", "tipo": "composto", "series": 4, "repeticoes_min": 4, "repeticoes_max": 6, "descanso_segundos": 180, "percentual_carga_peso_corporal": 0.6, "prescricao_fixa": true, "dicas": "Força pesada é o que melhora a economia de corrida: reps baixas, carga alta, descanso completo. Não é dia de volume — é dia de qualidade." },
+        { "nome": "Leg press unilateral", "grupo": "pernas", "tipo": "composto", "series": 3, "repeticoes_min": 6, "repeticoes_max": 8, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.35, "prescricao_fixa": true, "dicas": "Uma perna de cada vez — a corrida é 100% unipodal. Equilibre os lados para distribuir o impacto da passada." },
+        { "nome": "Levantamento terra romeno", "grupo": "posterior", "tipo": "composto", "series": 3, "repeticoes_min": 6, "repeticoes_max": 8, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.45, "prescricao_fixa": true, "dicas": "Posterior forte é proteção contra lesão e motor da passada. Sinta o alongamento, mantenha a coluna neutra." },
+        { "nome": "Panturrilha em pé", "grupo": "panturrilha", "tipo": "isolador", "series": 4, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.4, "prescricao_fixa": true, "dicas": "A unidade de absorção do corredor: amplitude completa com pausa no topo e descida lenta — o tendão de Aquiles agradece na quilometragem." },
+        { "nome": "Prancha isométrica", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Sustente 30–45 s por série. Core firme impede o tronco de 'vazar' energia quando a fadiga chega no km final." }
+      ]
+    },
+    {
+      "titulo": "Dia 2 - Pliometria e elasticidade",
+      "exercicios": [
+        { "nome": "Salto em caixa", "grupo": "pliometria", "tipo": "corporal", "series": 4, "repeticoes_min": 5, "repeticoes_max": 8, "descanso_segundos": 120, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Pliometria melhora a rigidez elástica do tornozelo — retorno de energia grátis a cada passada. Salte alto, aterrisse macio, descanse bem entre séries." },
+        { "nome": "Skipping alto", "grupo": "pliometria", "tipo": "corporal", "series": 4, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Joelhos na linha do quadril, contato curto com o solo. É técnica de passada treinada como exercício." },
+        { "nome": "Afundo búlgaro", "grupo": "pernas", "tipo": "composto", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.15, "prescricao_fixa": true, "dicas": "Pé de trás no banco, desça controlado. O unipodal mais eficiente para força de corredor — reps por perna." },
+        { "nome": "Panturrilha unipodal", "grupo": "panturrilha", "tipo": "isolador", "series": 3, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Um pé só, segurando apoio se precisar. Força unipodal da panturrilha = amortecimento por passada." },
+        { "nome": "Caminhada inclinada", "grupo": "cardio", "tipo": "cardio", "series": 1, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 0, "percentual_carga_peso_corporal": null, "dicas": "15–20 min em inclinação moderada: volume aeróbico de baixo impacto que não compete com o estímulo de potência do dia." }
+      ]
+    },
+    {
+      "titulo": "Dia 3 - Cadeia posterior e tronco",
+      "exercicios": [
+        { "nome": "Levantamento terra", "grupo": "posterior", "tipo": "composto", "series": 4, "repeticoes_min": 4, "repeticoes_max": 6, "descanso_segundos": 180, "percentual_carga_peso_corporal": 0.65, "prescricao_fixa": true, "dicas": "A força da cadeia posterior decide a resistência à fadiga no fim da corrida. Pesado, poucas reps, técnica absoluta." },
+        { "nome": "Elevação pélvica unipodal", "grupo": "gluteos", "tipo": "isolador", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Glúteo é o motor da passada: uma perna por vez, pause no topo. Reps por lado." },
+        { "nome": "Remada curvada", "grupo": "costas", "tipo": "composto", "series": 3, "repeticoes_min": 6, "repeticoes_max": 8, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.3, "prescricao_fixa": true, "dicas": "Postura de corredor se sustenta nas costas: trapézio e lombar fortes mantêm o tronco erguido nos km finais." },
+        { "nome": "Prancha lateral", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "30 s por lado. Estabilidade lateral reduz a oscilação do quadril — passada mais reta e econômica." },
+        { "nome": "Corrida leve", "grupo": "cardio", "tipo": "cardio", "series": 1, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 0, "percentual_carga_peso_corporal": null, "dicas": "Trote regenerativo de 15–20 min depois da força: separar a intensidade (força agora, corrida leve depois) minimiza a interferência entre os estímulos." }
+      ]
+    }
+  ]
+}

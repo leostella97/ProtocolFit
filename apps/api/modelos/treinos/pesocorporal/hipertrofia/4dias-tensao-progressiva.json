@@ -1,0 +1,50 @@
+{
+  "nome": "Calistenia Tensão Progressiva - 4 Dias",
+  "modalidade": "pesocorporal",
+  "objetivo": "hipertrofia",
+  "dias": 4,
+  "duracao_estimada_min": 45,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia 1 - Superiores A (empurrar e puxar)",
+      "exercicios": [
+        { "nome": "Flexão arqueira (archer)", "grupo": "peito", "tipo": "corporal", "series": 4, "repeticoes_min": 6, "repeticoes_max": 10, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Progressão calistênica: um braço carrega quase tudo, o outro só apoia. Sem peso livre, a alavanca é a sua carga — ajuste o apoio para chegar perto da falha." },
+        { "nome": "Flexão diamante", "grupo": "triceps", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 75, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Mãos juntas em losango sob o peito. Se ficar fácil, eleve os pés — o ângulo é a progressão." },
+        { "nome": "Remada invertida (mesa ou barra baixa)", "grupo": "costas", "tipo": "corporal", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Corpo em linha reta debaixo da barra/mesa, puxe o peito até tocar. Quanto mais horizontal o corpo, mais pesado." },
+        { "nome": "Pike push-up", "grupo": "ombro", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Quadril lá em cima formando um V invertido — é o 'desenvolvimento de ombros' da calistenia. Progressão futura: pés elevados." },
+        { "nome": "Prancha isométrica", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Sustente 30–45 s por série com o corpo em linha reta. Base sólida para todas as alavancas." }
+      ]
+    },
+    {
+      "titulo": "Dia 2 - Inferiores A (unilateral)",
+      "exercicios": [
+        { "nome": "Pistol squat progressão (ao apoio)", "grupo": "pernas", "tipo": "corporal", "series": 4, "repeticoes_min": 5, "repeticoes_max": 8, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Agachamento unipodal até um apoio (caixa/banco) no limite da amplitude. Reps por perna — é o agachamento da calistenia." },
+        { "nome": "Nordic curl assistido", "grupo": "posterior", "tipo": "corporal", "series": 3, "repeticoes_min": 4, "repeticoes_max": 6, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Joelhos no chão, pés presos, desça o tronco o mais lento possível e use as mãos para voltar. Excêntrica brutal para o posterior — tensão mecânica pura." },
+        { "nome": "Elevação pélvica unipodal", "grupo": "gluteos", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Uma perna estendida, suba o quadril até alinhar o corpo e aperte o glúteo 1 s. Reps por lado." },
+        { "nome": "Panturrilha unipodal em degrau", "grupo": "panturrilha", "tipo": "corporal", "series": 4, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "No degrau para amplitude máxima: alonga embaixo, contrai em cima. Uma perna por vez — muito mais tensão que com as duas." },
+        { "nome": "Abdominal infra", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Deitado, traga os joelhos ao peito enrolando o quadril — sem embalo. Core fecha todo o dia." }
+      ]
+    },
+    {
+      "titulo": "Dia 3 - Superiores B (tensão contínua)",
+      "exercicios": [
+        { "nome": "Pseudo-planche push-up", "grupo": "peito", "tipo": "corporal", "series": 4, "repeticoes_min": 6, "repeticoes_max": 10, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Mãos na altura do quadril e tronco inclinado à frente: desloca o peso para as mãos e vira 'supino' de calistenia. Quanto mais à frente inclinar, mais pesado." },
+        { "nome": "Flexão excêntrica lenta (4 s descendo)", "grupo": "peito", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "A fase excêntrica lenta multiplica o tempo sob tensão — é onde boa parte do estímulo de crescimento mora." },
+        { "nome": "Remada invertida excêntrica", "grupo": "costas", "tipo": "corporal", "series": 4, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 75, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Suba rápido, desça em 3–4 s controlando. O retorno lento compensa a falta de carga externa." },
+        { "nome": "Mergulho entre cadeiras/bancos", "grupo": "triceps", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 75, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Tronco vertical pega mais tríceps; incline à frente para pegar peito. Desça até ~90° de cotovelo." },
+        { "nome": "Elevação lateral com garrafas", "grupo": "ombro", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Garrafas d'água ou mochila leve. Reps altas com controle — o deltoide lateral responde ao acúmulo." },
+        { "nome": "Hollow body hold", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Deitado, ombros e pernas fora do chão, lombar colada no solo por 20–30 s. É a posição fundamental da calistenia." }
+      ]
+    },
+    {
+      "titulo": "Dia 4 - Inferiores B + finalizador",
+      "exercicios": [
+        { "nome": "Afundo búlgaro", "grupo": "pernas", "tipo": "corporal", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Pé de trás elevado num banco/sofá: tensão unilateral alta sem carga externa. Quando 12 reps ficarem fáceis, segure uma mochila." },
+        { "nome": "Agachamento isométrico na parede", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Costas na parede, coxa paralela ao chão por 30–45 s por série. Isometria em amplitude cria tensão sem reps — ótimo para acumular volume." },
+        { "nome": "Ponte de glúteo lenta", "grupo": "gluteos", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Suba em 1 s, desça em 3 s, aperte 2 s no topo. Cadência lenta = tensão acumulada no glúteo e posterior." },
+        { "nome": "Polichinelo com agachamento", "grupo": "cardio", "tipo": "cardio", "series": 4, "repeticoes_min": 30, "repeticoes_max": 30, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Finalizador metabólico: 4 tiros de 30 s (polichinelo + agachamento no retorno). Eleva o gasto da sessão sem atrapalhar a recuperação." },
+        { "nome": "Abdominal bicicleta", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Rotação real: ombro vai ao joelho, não o cotovelo. Core forte estabiliza as alavancas dos dias A." }
+      ]
+    }
+  ]
+}

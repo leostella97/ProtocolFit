@@ -1,0 +1,53 @@
+{
+  "nome": "MRT Metabólico - 4 Dias (circuito de compostos)",
+  "modalidade": "academia",
+  "objetivo": "emagrecimento",
+  "dias": 4,
+  "duracao_estimada_min": 50,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia 1 - Circuito A (corpo inteiro)",
+      "exercicios": [
+        { "nome": "Agachamento goblet", "grupo": "pernas", "tipo": "composto", "series": 4, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 30, "percentual_carga_peso_corporal": 0.2, "prescricao_fixa": true, "dicas": "Circuito metabólico: passe direto para o próximo exercício, descanse os 30 s só no fim do ciclo. Grandes grupos musculares juntos = mais gasto." },
+        { "nome": "Flexão de braço", "grupo": "peito", "tipo": "corporal", "series": 4, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Sem pausa entre reps. Se faltar força, apoie os joelhos no chão — manter o ritmo do circuito importa mais que a carga." },
+        { "nome": "Remada curvada com halteres", "grupo": "costas", "tipo": "composto", "series": 4, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 30, "percentual_carga_peso_corporal": 0.2, "prescricao_fixa": true, "dicas": "Tronco inclinado, puxe os halteres à altura do quadril. Costas grandes trabalhando mantêm o coração acelerado." },
+        { "nome": "Desenvolvimento com halteres", "grupo": "ombro", "tipo": "composto", "series": 4, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 30, "percentual_carga_peso_corporal": 0.18, "prescricao_fixa": true, "dicas": "Empurrar acima da cabeça logo depois de remada mantém a densidade do circuito — o fôlego curto é proposital." },
+        { "nome": "Levantamento terra romeno com halteres", "grupo": "posterior", "tipo": "composto", "series": 4, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 30, "percentual_carga_peso_corporal": 0.25, "prescricao_fixa": true, "dicas": "Quadril para trás, halteres colados nas pernas. Posterior trabalha muito e gasta muito — perfeito para o circuito." },
+        { "nome": "Mountain climbers (escalador)", "grupo": "cardio", "tipo": "cardio", "series": 4, "repeticoes_min": 30, "repeticoes_max": 40, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Final do ciclo: 30–40 s de joelhos rápidos ao peito. O descanso de 45 s aqui é o único longo — respire fundo e recomece o circuito." }
+      ]
+    },
+    {
+      "titulo": "Dia 2 - Circuito B (ênfase em pernas e core)",
+      "exercicios": [
+        { "nome": "Afundo alternado", "grupo": "pernas", "tipo": "composto", "series": 4, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 30, "percentual_carga_peso_corporal": 0.1, "prescricao_fixa": true, "dicas": "Reps por perna. Unilateral gasta mais energia e equilibra os dois lados — passo firme, tronco alto." },
+        { "nome": "Supino reto com halteres", "grupo": "peito", "tipo": "composto", "series": 4, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 30, "percentual_carga_peso_corporal": 0.3, "prescricao_fixa": true, "dicas": "Carga moderada, ritmo constante. No MRT o objetivo é densidade de trabalho, não força máxima." },
+        { "nome": "Puxada frontal na polia", "grupo": "costas", "tipo": "composto", "series": 4, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 30, "percentual_carga_peso_corporal": 0.3, "prescricao_fixa": true, "dicas": "Puxadas mantêm o volume das costas alto. Solte os ombros no topo, aperte no peito." },
+        { "nome": "Elevação pélvica", "grupo": "gluteos", "tipo": "isolador", "series": 4, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 30, "percentual_carga_peso_corporal": 0.3, "prescricao_fixa": true, "dicas": "Barra ou anilha no quadril, aperte o glúteo 1 s no topo. Glúteo forte acelera o metabolismo — é músculo grande." },
+        { "nome": "Prancha com toque no ombro", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 16, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Alterne o toque sem balançar o quadril. Core anti-rotação em circuito cansa muito — mantenha a linha reta." },
+        { "nome": "Bicicleta ergométrica (tiros)", "grupo": "cardio", "tipo": "cardio", "series": 6, "repeticoes_min": 30, "repeticoes_max": 30, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "6 tiros de 30 s pedalando forte, 60 s leve entre eles. Intervalado de baixo impacto poupa as articulações e rende queima alta." }
+      ]
+    },
+    {
+      "titulo": "Dia 3 - Circuito C (empurrar e puxar pesado)",
+      "exercicios": [
+        { "nome": "Agachamento livre", "grupo": "pernas", "tipo": "composto", "series": 4, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 40, "percentual_carga_peso_corporal": 0.4, "prescricao_fixa": true, "dicas": "O exercício que mais gasta energia da sessão. Mantenha técnica mesmo cansado — descer rápido e solto não vale." },
+        { "nome": "Supino inclinado com barra", "grupo": "peito", "tipo": "composto", "series": 4, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 40, "percentual_carga_peso_corporal": 0.35, "prescricao_fixa": true, "dicas": "Alterne dias entre halteres e barra para variar o estímulo. Ritmo: 2 s descendo, suba firme." },
+        { "nome": "Remada unilateral com halter (serrote)", "grupo": "costas", "tipo": "composto", "series": 4, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 40, "percentual_carga_peso_corporal": 0.25, "prescricao_fixa": true, "dicas": "Reps por braço, sem descanso entre os lados — o outro braço descansa enquanto um trabalha." },
+        { "nome": "Desenvolvimento Arnold", "grupo": "ombro", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 40, "percentual_carga_peso_corporal": 0.2, "prescricao_fixa": true, "dicas": "Gire os punhos subindo: começa com eles para você, termina para frente. Recruta mais o ombro que o desenvolvimento comum." },
+        { "nome": "Rosca direta com halteres", "grupo": "biceps", "tipo": "isolador", "series": 3, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 30, "percentual_carga_peso_corporal": 0.12, "prescricao_fixa": true, "dicas": "Bíceps no fim do circuito: mantém a densidade sem comprometer os grandes grupos." },
+        { "nome": "Pular corda (ou simular)", "grupo": "cardio", "tipo": "cardio", "series": 6, "repeticoes_min": 40, "repeticoes_max": 40, "descanso_segundos": 50, "percentual_carga_peso_corporal": null, "dicas": "6 blocos de 40 s de corda com 50 s de pausa. Aterrissagem macia na ponta dos pés; se cansar, simule o giro sem corda." }
+      ]
+    },
+    {
+      "titulo": "Dia 4 - Circuito D (densidade máxima)",
+      "exercicios": [
+        { "nome": "Agachamento com salto", "grupo": "pliometria", "tipo": "corporal", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 40, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Pliometria abre o circuito mais intenso: salte alto, aterrisse macio. Se doer no joelho, troque por agachamento rápido sem salto." },
+        { "nome": "Flexão de braço (ritmo)", "grupo": "peito", "tipo": "corporal", "series": 4, "repeticoes_min": 12, "repeticoes_max": 20, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Tente mais reps a cada rodada — no MRT a melhoria aparece como MAIS trabalho no MESMO tempo." },
+        { "nome": "Remada curvada com barra", "grupo": "costas", "tipo": "composto", "series": 4, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 30, "percentual_carga_peso_corporal": 0.3, "prescricao_fixa": true, "dicas": "Costas grandes = grande queima. Não deixe o descanso passar — a regra do circuito manda mais que a preguiça." },
+        { "nome": "Avanço com halteres", "grupo": "pernas", "tipo": "composto", "series": 4, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 30, "percentual_carga_peso_corporal": 0.15, "prescricao_fixa": true, "dicas": "Reps por perna, halteres ao lado do corpo. Unilateral depois de pliometria é pesado — passo firme." },
+        { "nome": "Abdominal supra", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Enrole o tronco, expire subindo. Core no meio do circuito dá uma 'pausa ativa' para os membros." },
+        { "nome": "HIIT na esteira (tiros)", "grupo": "cardio", "tipo": "cardio", "series": 8, "repeticoes_min": 30, "repeticoes_max": 30, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Fechamento: 8 tiros de 30 s correndo forte com 60 s leve. Intervalado ao final potencializa o EPOC — o corpo segue queimando depois do treino." }
+      ]
+    }
+  ]
+}

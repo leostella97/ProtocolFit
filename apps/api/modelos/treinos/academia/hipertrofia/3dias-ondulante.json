@@ -1,0 +1,44 @@
+{
+  "nome": "Periodização Ondulante (DUP) - 3 Dias",
+  "modalidade": "academia",
+  "objetivo": "hipertrofia",
+  "dias": 3,
+  "duracao_estimada_min": 65,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia 1 - Força (cargas pesadas, reps baixas)",
+      "exercicios": [
+        { "nome": "Agachamento livre", "grupo": "pernas", "tipo": "composto", "series": 5, "repeticoes_min": 4, "repeticoes_max": 6, "descanso_segundos": 180, "percentual_carga_peso_corporal": 0.7, "prescricao_fixa": true, "dicas": "Dia de força: carga pesada de verdade (~85% do máximo). A tensão mecânica alta é o principal sinal de hipertrofia — descanse os 3 min completos." },
+        { "nome": "Supino reto com barra", "grupo": "peito", "tipo": "composto", "series": 5, "repeticoes_min": 4, "repeticoes_max": 6, "descanso_segundos": 180, "percentual_carga_peso_corporal": 0.6, "prescricao_fixa": true, "dicas": "Escápulas retraídas, pés firmes. Se a sexta repetição sair fácil, suba 2,5 kg na próxima sessão — progressão é o motor." },
+        { "nome": "Barra fixa com lastro", "grupo": "costas", "tipo": "corporal", "series": 4, "repeticoes_min": 4, "repeticoes_max": 6, "descanso_segundos": 150, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Use cinto de lastro ou caneleira; se não tiver, faça reps lentas (3 s descendo). Controle total no topo." },
+        { "nome": "Desenvolvimento militar com barra", "grupo": "ombro", "tipo": "composto", "series": 4, "repeticoes_min": 4, "repeticoes_max": 6, "descanso_segundos": 150, "percentual_carga_peso_corporal": 0.35, "prescricao_fixa": true, "dicas": "Em pé, abdômen firme, barra passando perto do rosto. Empurre vertical, sem arquear a lombar." },
+        { "nome": "Levantamento terra romeno", "grupo": "posterior", "tipo": "composto", "series": 4, "repeticoes_min": 6, "repeticoes_max": 8, "descanso_segundos": 150, "percentual_carga_peso_corporal": 0.5, "prescricao_fixa": true, "dicas": "Quadril para trás, joelhos semiflexos, barra colada nas pernas. Sinta o posterior esticar, não a lombar." },
+        { "nome": "Abdominal na polia alta", "grupo": "core", "tipo": "isolador", "series": 3, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.1, "prescricao_fixa": true, "dicas": "De joelhos, enrole o tronco trazendo as costelas ao quadril. Core forte protege nos básicos pesados." }
+      ]
+    },
+    {
+      "titulo": "Dia 2 - Hipertrofia (volume clássico)",
+      "exercicios": [
+        { "nome": "Leg press 45°", "grupo": "pernas", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.8, "prescricao_fixa": true, "dicas": "Faixa 8–12 é o ponto ótimo de tensão + volume para crescer. Desça controlado, sem travar os joelhos no topo." },
+        { "nome": "Supino inclinado com halteres", "grupo": "peito", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.4, "prescricao_fixa": true, "dicas": "Halteres permitem amplitude maior que a barra — desça até sentir o peito esticar (estímulo em posição alongada)."},
+        { "nome": "Remada curvada com barra", "grupo": "costas", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.4, "prescricao_fixa": true, "dicas": "Tronco a 45°, puxe a barra na direção do umbigo. Aperte as escápulas 1 s no topo de cada repetição." },
+        { "nome": "Elevação lateral", "grupo": "ombro", "tipo": "isolador", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": 0.06, "prescricao_fixa": true, "dicas": "Cotovelos levemente flexionados, suba até a linha dos ombros. Deltoide lateral responde bem a reps altas com carga moderada." },
+        { "nome": "Rosca direta com barra", "grupo": "biceps", "tipo": "isolador", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 45, "percentual_carga_peso_corporal": 0.15, "prescricao_fixa": true, "dicas": "Sem balanço de tronco — a tensão tem que ficar no bíceps. Desça em 2 s controlando a fase excêntrica." },
+        { "nome": "Tríceps na polia com corda", "grupo": "triceps", "tipo": "isolador", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 45, "percentual_carga_peso_corporal": 0.15, "prescricao_fixa": true, "dicas": "Cotovelos colados ao corpo, abra a corda no fim do movimento. Tríceps é ~2/3 do volume do braço." },
+        { "nome": "Panturrilha em pé", "grupo": "panturrilha", "tipo": "isolador", "series": 4, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": 0.4, "prescricao_fixa": true, "dicas": "Amplitude completa: estique embaixo, pause 1 s no topo. Panturrilha precisa de tensão real, não de repetições rápidas." }
+      ]
+    },
+    {
+      "titulo": "Dia 3 - Potência e densidade (reps altas, ritmo forte)",
+      "exercicios": [
+        { "nome": "Agachamento goblet", "grupo": "pernas", "tipo": "composto", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.25, "prescricao_fixa": true, "dicas": "Dia metabólico: movimento explosivo na subida, controlado na descida. O estresse metabólico complementa a tensão dos outros dias." },
+        { "nome": "Flexão de braço explosiva", "grupo": "peito", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Suba rápido (pode descolar as mãos do chão se conseguir). Velocidade alta recruta as fibras rápidas — as que mais crescem." },
+        { "nome": "Puxada frontal na polia", "grupo": "costas", "tipo": "composto", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.35, "prescricao_fixa": true, "dicas": "Puxe até o peito com os cotovelos apontando para baixo. Ritmo vivo, sem trapaça com o tronco." },
+        { "nome": "Desenvolvimento com halteres", "grupo": "ombro", "tipo": "composto", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.25, "prescricao_fixa": true, "dicas": "Série densa: sem pausa no topo nem embaixo. A queima no ombro é o acúmulo de metabólitos trabalhando a seu favor." },
+        { "nome": "Afundo andando", "grupo": "pernas", "tipo": "composto", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.15, "prescricao_fixa": true, "dicas": "Passos largos, tronco erguido, joelho de trás quase toca o chão. As reps contam POR PERNA." },
+        { "nome": "HIIT na esteira (tiros)", "grupo": "cardio", "tipo": "cardio", "series": 8, "repeticoes_min": 30, "repeticoes_max": 30, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Finalizador: 8 tiros de 30 s no máximo com 60 s de caminhada entre eles. HIIT curto preserva a massa magra e melhora o condicionamento." },
+        { "nome": "Abdominal bicicleta", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Cotovelo ao joelho oposto, ritmo controlado. Sem puxar o pescoço — as mãos só apoiam a cabeça." }
+      ]
+    }
+  ]
+}

@@ -31,47 +31,52 @@ const REGRAS_POR_OBJETIVO: Record<Objetivo, { series: number; repeticoes_min: nu
 /** Orientações gerais de treino exibidas no painel, por objetivo. */
 const DICAS_DE_TREINO_POR_OBJETIVO: Record<Objetivo, string[]> = {
   emagrecimento: [
-    'Priorize a execução correta: o descanso curto entre séries mantém seu coração acelerado e acelera a queima.',
-    'O cardio do fim do treino é obrigatório — ele é o "segundo tempo" da sessão de emagrecimento.',
-    'Aumente o ritmo do circuito a cada semana: menos pausa = mais gasto calórico.',
-    'Não pule o treino de força por causa do cardio: músculo ativo queima mais calorias em repouso.',
+    // TEAM_009: dicas revisadas com base na literatura (ver README → Referências).
+    'Músculo é o seu aliado silencioso: o treino de força preserva a massa magra e o metabolismo durante o déficit — não é só o cardio que emagrece.',
+    'Descanso curto (30–60 s) entre exercícios compostos eleva o gasto da sessão e o consumo de oxigênio pós-treino (EPOC).',
+    'O déficit calórico é o motor; o treino é o seguro. Perder peso sem treinar força também perde músculo.',
+    'Falhe seguro: termine as séries com 1–2 repetições na reserva — fadiga extrema em déficit atrapalha a recuperação.',
+    'Sono ruim aumenta a fome e atrapalha a queima de gordura: priorize 7–9 horas por noite.',
   ],
   hipertrofia: [
-    'Anote suas cargas: a progressão semanal (mais peso ou mais repetições) é o que constrói músculo.',
-    'Respeite o descanso indicado — ele é parte do estímulo, não preguiça.',
-    'A última repetição de cada série deve ser desafiadora, mas com a técnica intacta.',
-    'Consistência vence: 4 treinos por semana, toda semana, batem qualquer treino perfeito feito às vezes.',
+    'Progressão de carga é o principal motor: anote pesos e reps e tente superar a semana anterior, mesmo que seja 1 repetição ou 1 kg.',
+    'Volume semanal importa: cada grupo muscular responde melhor com ~10 ou mais séries difíceis por semana, distribuídas em vários dias.',
+    'Descanse o suficiente para repetir a performance (2–3 min nos compostos pesados) — descanso é parte do estímulo, não preguiça.',
+    'A última repetição deve ser desafiadora com a técnica intacta — treinar perto da falha conta, passar dela toda hora cobra caro.',
+    'Músculo se constrói na recuperação: durma 7–9 h e dê ~48 h para o mesmo grupo descansar entre estímulos pesados.',
   ],
   corrida: [
-    'O fortalecimento previne lesões: pernas, glúteos e core fortes protegem seus joelhos nos quilômetros.',
-    'Treine a força longe das corridas mais intensas (ideal: no mesmo dia ou dia seguinte ao trote leve).',
-    'Capriche na aterrissagem macia dos saltos e educativos — é técnica de passada disfarçada de exercício.',
-    'Progressão gradual: adicione séries ou minutos por semana, nunca tudo de uma vez.',
+    'Força pesada e pliometria melhoram a economia de corrida — você gasta menos energia na mesma velocidade. Encare a musculação como parte do plano, não como extra.',
+    'Para não deixar um treino atrapalhar o outro (efeito de interferência), separe a musculação das corridas intensas por ~6+ horas — ou treine força depois do trote leve.',
+    'Pliometria é técnica de passada disfarçada: capriche na aterrissagem macia, rápida e elástica.',
+    'Panturrilha e tibial fortes são o "sistema de amortecimento" do corredor — não pule esses exercícios.',
+    'Progressão gradual protege: aumente carga, séries ou quilometragem aos poucos, nunca tudo de uma vez.',
   ],
 };
 
 /** Orientações nutricionais exibidas no plano de dieta de cada objetivo. */
 const DICAS_POR_OBJETIVO: Record<Objetivo, string[]> = {
   emagrecimento: [
-    'Mantenha o déficit calórico: prefira alimentos integrais e ricos em fibras para aumentar a saciedade.',
-    'Beba a meta diária de água — ela ajuda no controle do apetite e na queima de gordura.',
-    'Pese-se no máximo 1 vez por semana, sempre em jejum, e registre a evolução no painel.',
+    // TEAM_009: dicas revisadas com base na literatura (ver README → Referências).
+    'Em déficit, a proteína vira prioridade: manter ~1,6–2,2 g/kg/dia protege a massa magra e aumenta a saciedade.',
+    'Fome se gerencia com volume, não só com força de vontade: vegetais, fibras e proteína em todas as refeições enchem o prato com poucas calorias.',
+    'Beba a meta diária de água — sede disfarça fome e a hidratação sustenta o gasto de energia.',
     'Coma devagar e sem distrações: a saciedade leva cerca de 20 minutos para chegar ao cérebro.',
-    'Monte o prato na ordem: metade vegetais, um quarto proteína e um quarto carboidrato.',
+    'Consistência vence perfeição: um déficit moderado seguido toda semana emagrece mais que cortes radicais que não duram.',
   ],
   hipertrofia: [
-    'Para ganhar massa magra, respeite o superávit calórico e não pule refeições.',
-    'Distribua a proteína ao longo do dia — todas as refeições contêm fontes proteicas.',
-    'Priorize carboidratos complexos ao redor do treino para energia e recuperação.',
-    'A ceia com proteína (queijo cottage) alimenta a recuperação muscular durante o sono.',
-    'Se o peso não subir em 2 semanas, aumente 10% da porção de carboidrato das refeições principais.',
+    'A meta de proteína para hipertrofia é ~1,6–2,2 g/kg/dia — a sua distribuição diária já cobre isso; não pule refeições.',
+    'Divida a proteína em 3–5 refeições com ~0,4 g/kg cada: o músculo aproveita melhor doses distribuídas do que uma bomba única.',
+    'Carboidrato ao redor do treino (antes e depois) melhora a performance da sessão e a reposição de glicogênio.',
+    'A ceia proteica (cottage, iogurte) alimenta a recuperação muscular durante o sono.',
+    'Superávit moderado ganha: ~10–15% acima do gasto constrói músculo com o mínimo de gordura — comer "o dobro" só acelera a pança.',
   ],
   corrida: [
-    'Carboidrato é o combustível do corredor: mantenha as porções indicadas para sustentar os treinos.',
+    'Carboidrato é o combustível do corredor: ajuste a porção ao trabalho do dia — mais nos dias de treino longo ou forte, menos nos leves.',
+    'Não faça treinos longos ou intensos em jejum: uma fonte de carbo (banana, mel, tapioca) até ~1 h antes sustenta o ritmo.',
+    'Recuperação se compra no prato: após treinos longos, combine carboidrato + proteína (~3:1) para repor glicogênio e reparar o músculo.',
     'Hidrate-se bem: sua meta de água é maior por causa da transpiração nas corridas.',
-    'Evite treinar em jejum nos dias de treinos longos ou intensos.',
-    'Coma uma fonte de carbo (banana, mel, tapioca) até 1 hora antes das corridas mais fortes.',
-    'Após treinos longos, combine proteína com carboidrato para acelerar a recuperação muscular.',
+    'O intestino também treina: antes de provas, evite fibras e gorduras em excesso na refeição pré-corrida.',
   ],
 };
 
@@ -120,15 +125,18 @@ function montarDia(dia: ModeloDiaTreino, perfil: Perfil): DiaDeTreino {
       // TEAM_008: no grupo "cardio" os campos do modelo já são TEMPO/DISTÂNCIA
       // (1 série = minutos contínuos; várias = tiros de X–Y segundos) — a regra
       // do objetivo, feita para reps de musculação, destruía essa semântica.
-      const ehCardio = exercicio.grupo === 'cardio';
+      // TEAM_009: "prescricao_fixa" vale o mesmo para estilos periodizados —
+      // um modelo ondulante/DUP existe justamente porque cada dia tem um
+      // esquema de reps diferente; achatar na regra apagaria o método.
+      const mantemPrescricao = exercicio.grupo === 'cardio' || exercicio.prescricao_fixa === true;
       return {
         nome: exercicio.nome,
         grupo: exercicio.grupo,
         tipo: exercicio.tipo,
-        series: ehCardio ? exercicio.series : regra.series,
-        repeticoes_min: ehCardio ? exercicio.repeticoes_min : regra.repeticoes_min,
-        repeticoes_max: ehCardio ? exercicio.repeticoes_max : regra.repeticoes_max,
-        descanso_segundos: ehCardio ? exercicio.descanso_segundos : regra.descanso_segundos,
+        series: mantemPrescricao ? exercicio.series : regra.series,
+        repeticoes_min: mantemPrescricao ? exercicio.repeticoes_min : regra.repeticoes_min,
+        repeticoes_max: mantemPrescricao ? exercicio.repeticoes_max : regra.repeticoes_max,
+        descanso_segundos: mantemPrescricao ? exercicio.descanso_segundos : regra.descanso_segundos,
         // Carga inicial sugerida = fração do peso corporal do exercício.
         carga_sugerida_kg:
           exercicio.percentual_carga_peso_corporal === null

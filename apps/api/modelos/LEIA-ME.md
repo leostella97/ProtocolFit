@@ -19,10 +19,18 @@ modelos/
 │       ├── emagrecimento/         # 2dias.json ... 7dias.json (6 arquivos)
 │       └── corrida/               # 2dias.json ... 7dias.json (6 arquivos)
 └── dietas/
-    ├── emagrecimento.json
+    ├── emagrecimento.json            # dieta padrão do objetivo
     ├── hipertrofia.json
-    └── corrida.json
+    ├── corrida.json
+    └── {objetivo}-{slug}.json        # variações pareadas com estilos de treino
 ```
+
+> **Variações nomeadas de treino** (`{dias}dias-{slug}.json`, ex.:
+> `3dias-ondulante.json`) convivem com o arquivo padrão na mesma pasta. O
+> usuário escolhe o estilo no cadastro/perfil. Quando existe uma dieta com o
+> mesmo slug (`dietas/{objetivo}-{slug}.json`, ex.:
+> `hipertrofia-ondulante.json`), ela é usada no lugar da dieta padrão do
+> objetivo — treino e dieta ficam tematicamente pareados.
 
 > **Matriz completa (36 treinos):** toda combinação selecionável no site
 > (2 modalidades × 3 objetivos × 6 quantidades de dias, de 2 a 7) tem seu
@@ -56,6 +64,8 @@ modelos/
           "repeticoes_max": 12,
           "descanso_segundos": 90,        // descanso de referência
           "percentual_carga_peso_corporal": 0.5, // fração do peso corporal sugerida como carga (null = sem carga)
+          "prescricao_fixa": true,        // OPCIONAL: preserva series/reps/descanso do modelo (ver abaixo)
+          "distancia_km": 0.4,            // OPCIONAL: só no grupo "cardio"; alvo de distância
           "dicas": "Dica de execução."
         }
       ]
@@ -74,6 +84,21 @@ modelos/
 
 A carga inicial sugerida é `peso_kg × percentual_carga_peso_corporal`,
 arredondada para múltiplos de 2,5 kg.
+
+**`prescricao_fixa` (opcional, padrão `false`):** quando `true`, o motor
+preserva `series`, `repeticoes_min/max` e `descanso_segundos` do modelo e
+NÃO aplica a regra de objetivo da tabela. Use em estilos onde a prescrição
+é a essência do método — periodização ondulante (DUP), blocos de força
+pesada, MRT, força de corredor — para que o plano gerado não seja achatado
+numa faixa genérica. O grupo `cardio` é sempre preservado
+independentemente da flag.
+
+**Semântica do grupo `cardio`:** `repeticoes_min/max` representam TEMPO,
+não repetições — com `series: 1` são minutos de trabalho contínuo
+(ex.: 20–30 = correr 20 a 30 min); com `series > 1` são segundos por tiro
+intervalado (ex.: 8 tiros de 30 s). `distancia_km` define um alvo de
+distância exibido junto ao tempo. O usuário pode registrar o tempo
+realizado em segundos (contínuo) ou minutos (conforme a UI).
 
 ## Esquema do modelo de dieta (`dietas/*.json`)
 
@@ -119,7 +144,16 @@ Ao substituir um alimento, o motor recalcula os gramas mantendo o mesmo
 
 ## Como adicionar um novo modelo
 
-1. Crie o arquivo JSON na pasta correspondente (`{modalidade}/{objetivo}/{dias}dias.json`).
+1. Crie o arquivo JSON na pasta correspondente (`{modalidade}/{objetivo}/{dias}dias.json`
+   para o modelo padrão ou `{dias}dias-{slug}.json` para uma variação
+   nomeada de estilo).
 2. Siga exatamente o esquema acima (o backend valida os campos em runtime).
-3. Reinicie a API — o modelo passa a ser selecionável automaticamente pelo
+   Se a prescrição específica for a essência do método, marque os
+   exercícios com `"prescricao_fixa": true`.
+3. (Opcional) Crie a dieta pareada em `dietas/{objetivo}-{slug}.json`
+   usando o MESMO slug do nome do arquivo de treino.
+4. Rode `node scripts/validar-modelos.mjs` — o validador cobre a matriz
+   completa (padrão 2–7 dias), nomes de variações, campos de exercício,
+   `distancia_km`, `prescricao_fixa` e os percentuais das dietas.
+5. Reinicie a API — o modelo passa a ser selecionável automaticamente pelo
    cruzamento de filtros, sem nenhuma mudança de código.

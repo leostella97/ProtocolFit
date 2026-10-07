@@ -1,0 +1,303 @@
+{
+  "nome": "Dieta Tensão Progressiva - Comida de Verdade",
+  "objetivo": "hipertrofia",
+  "refeicoes": [
+    {
+      "tipo": "Café da manhã",
+      "horario_sugerido": "07:00",
+      "percentual_calorias": 0.22,
+      "itens": [
+        {
+          "nome": "Ovos inteiros mexidos",
+          "categoria": "proteina",
+          "percentual_da_refeicao": 0.35,
+          "calorias_por_100g": 155,
+          "proteinas_por_100g": 13.0,
+          "carboidratos_por_100g": 1.1,
+          "gorduras_por_100g": 11.0,
+          "unidade": "g",
+          "alternativas": [
+            { "nome": "Claras de ovo", "calorias_por_100g": 52, "proteinas_por_100g": 11.0, "carboidratos_por_100g": 0.7, "gorduras_por_100g": 0.2 },
+            { "nome": "Queijo minas frescal", "calorias_por_100g": 240, "proteinas_por_100g": 17.0, "carboidratos_por_100g": 3.0, "gorduras_por_100g": 17.0 }
+          ]
+        },
+        {
+          "nome": "Cuscuz de milho cozido",
+          "categoria": "carboidrato",
+          "percentual_da_refeicao": 0.35,
+          "calorias_por_100g": 112,
+          "proteinas_por_100g": 3.8,
+          "carboidratos_por_100g": 23.2,
+          "gorduras_por_100g": 0.2,
+          "unidade": "g",
+          "alternativas": [
+            { "nome": "Tapioca", "calorias_por_100g": 240, "proteinas_por_100g": 0.3, "carboidratos_por_100g": 57.5, "gorduras_por_100g": 0.1 },
+            { "nome": "Pão integral", "calorias_por_100g": 247, "proteinas_por_100g": 13.0, "carboidratos_por_100g": 41.3, "gorduras_por_100g": 3.4 }
+          ]
+        },
+        {
+          "nome": "Leite integral",
+          "categoria": "proteina",
+          "percentual_da_refeicao": 0.2,
+          "calorias_por_100g": 61,
+          "proteinas_por_100g": 3.2,
+          "carboidratos_por_100g": 4.8,
+          "gorduras_por_100g": 3.3,
+          "unidade": "ml",
+          "alternativas": [
+            { "nome": "Iogurte natural integral", "calorias_por_100g": 61, "proteinas_por_100g": 3.5, "carboidratos_por_100g": 4.7, "gorduras_por_100g": 3.3 }
+          ]
+        },
+        {
+          "nome": "Mamão",
+          "categoria": "fruta",
+          "percentual_da_refeicao": 0.1,
+          "calorias_por_100g": 43,
+          "proteinas_por_100g": 0.5,
+          "carboidratos_por_100g": 10.8,
+          "gorduras_por_100g": 0.3,
+          "unidade": "g",
+          "alternativas": [
+            { "nome": "Banana", "calorias_por_100g": 89, "proteinas_por_100g": 1.1, "carboidratos_por_100g": 22.8, "gorduras_por_100g": 0.3 }
+          ]
+        }
+      ]
+    },
+    {
+      "tipo": "Lanche da manhã",
+      "horario_sugerido": "10:00",
+      "percentual_calorias": 0.12,
+      "itens": [
+        {
+          "nome": "Vitamina de banana com aveia e pasta de amendoim",
+          "categoria": "mistura",
+          "percentual_da_refeicao": 0.7,
+          "calorias_por_100g": 150,
+          "proteinas_por_100g": 5.0,
+          "carboidratos_por_100g": 20.0,
+          "gorduras_por_100g": 6.0,
+          "unidade": "ml",
+          "alternativas": [
+            { "nome": "Iogurte grego com granola", "calorias_por_100g": 130, "proteinas_por_100g": 7.0, "carboidratos_por_100g": 15.0, "gorduras_por_100g": 5.0 }
+          ]
+        },
+        {
+          "nome": "Castanhas mistas",
+          "categoria": "gordura",
+          "percentual_da_refeicao": 0.3,
+          "calorias_por_100g": 650,
+          "proteinas_por_100g": 14.0,
+          "carboidratos_por_100g": 12.0,
+          "gorduras_por_100g": 65.0,
+          "unidade": "g",
+          "alternativas": [
+            { "nome": "Pasta de amendoim", "calorias_por_100g": 598, "proteinas_por_100g": 25.0, "carboidratos_por_100g": 20.0, "gorduras_por_100g": 50.0 }
+          ]
+        }
+      ]
+    },
+    {
+      "tipo": "Almoço",
+      "horario_sugerido": "12:30",
+      "percentual_calorias": 0.3,
+      "itens": [
+        {
+          "nome": "Carne magra (patinho)",
+          "categoria": "proteina",
+          "percentual_da_refeicao": 0.3,
+          "calorias_por_100g": 170,
+          "proteinas_por_100g": 29.0,
+          "carboidratos_por_100g": 0.0,
+          "gorduras_por_100g": 6.0,
+          "unidade": "g",
+          "alternativas": [
+            { "nome": "Peito de frango grelhado", "calorias_por_100g": 165, "proteinas_por_100g": 31.0, "carboidratos_por_100g": 0.0, "gorduras_por_100g": 3.6 },
+            { "nome": "Ovos inteiros", "calorias_por_100g": 155, "proteinas_por_100g": 13.0, "carboidratos_por_100g": 1.1, "gorduras_por_100g": 11.0 }
+          ]
+        },
+        {
+          "nome": "Arroz branco cozido",
+          "categoria": "carboidrato",
+          "percentual_da_refeicao": 0.3,
+          "calorias_por_100g": 128,
+          "proteinas_por_100g": 2.5,
+          "carboidratos_por_100g": 28.1,
+          "gorduras_por_100g": 0.2,
+          "unidade": "g",
+          "alternativas": [
+            { "nome": "Arroz integral cozido", "calorias_por_100g": 124, "proteinas_por_100g": 2.6, "carboidratos_por_100g": 25.8, "gorduras_por_100g": 1.0 },
+            { "nome": "Macarrão cozido", "calorias_por_100g": 160, "proteinas_por_100g": 6.0, "carboidratos_por_100g": 31.0, "gorduras_por_100g": 1.0 }
+          ]
+        },
+        {
+          "nome": "Feijão carioca",
+          "categoria": "carboidrato",
+          "percentual_da_refeicao": 0.2,
+          "calorias_por_100g": 76,
+          "proteinas_por_100g": 4.8,
+          "carboidratos_por_100g": 13.6,
+          "gorduras_por_100g": 0.5,
+          "unidade": "g",
+          "alternativas": [
+            { "nome": "Lentilha cozida", "calorias_por_100g": 116, "proteinas_por_100g": 9.0, "carboidratos_por_100g": 20.1, "gorduras_por_100g": 0.4 },
+            { "nome": "Grão de bico cozido", "calorias_por_100g": 164, "proteinas_por_100g": 9.0, "carboidratos_por_100g": 27.4, "gorduras_por_100g": 2.6 }
+          ]
+        },
+        {
+          "nome": "Mix de legumes cozidos",
+          "categoria": "vegetal",
+          "percentual_da_refeicao": 0.12,
+          "calorias_por_100g": 35,
+          "proteinas_por_100g": 1.8,
+          "carboidratos_por_100g": 7.0,
+          "gorduras_por_100g": 0.3,
+          "unidade": "g",
+          "alternativas": [
+            { "nome": "Mix de folhas verdes", "calorias_por_100g": 25, "proteinas_por_100g": 1.5, "carboidratos_por_100g": 4.0, "gorduras_por_100g": 0.3 }
+          ]
+        },
+        {
+          "nome": "Azeite extra virgem",
+          "categoria": "gordura",
+          "percentual_da_refeicao": 0.08,
+          "calorias_por_100g": 884,
+          "proteinas_por_100g": 0.0,
+          "carboidratos_por_100g": 0.0,
+          "gorduras_por_100g": 100.0,
+          "unidade": "ml",
+          "alternativas": [
+            { "nome": "Abacate", "calorias_por_100g": 160, "proteinas_por_100g": 2.0, "carboidratos_por_100g": 8.5, "gorduras_por_100g": 14.7 }
+          ]
+        }
+      ]
+    },
+    {
+      "tipo": "Lanche da tarde (pré-treino)",
+      "horario_sugerido": "16:00",
+      "percentual_calorias": 0.15,
+      "itens": [
+        {
+          "nome": "Sanduíche de frango com pão integral",
+          "categoria": "mistura",
+          "percentual_da_refeicao": 0.55,
+          "calorias_por_100g": 200,
+          "proteinas_por_100g": 15.0,
+          "carboidratos_por_100g": 22.0,
+          "gorduras_por_100g": 5.5,
+          "unidade": "g",
+          "alternativas": [
+            { "nome": "Tapioca com queijo minas", "calorias_por_100g": 220, "proteinas_por_100g": 8.0, "carboidratos_por_100g": 28.0, "gorduras_por_100g": 8.0 }
+          ]
+        },
+        {
+          "nome": "Banana",
+          "categoria": "fruta",
+          "percentual_da_refeicao": 0.25,
+          "calorias_por_100g": 89,
+          "proteinas_por_100g": 1.1,
+          "carboidratos_por_100g": 22.8,
+          "gorduras_por_100g": 0.3,
+          "unidade": "g",
+          "alternativas": [
+            { "nome": "Mel de abelha", "calorias_por_100g": 304, "proteinas_por_100g": 0.3, "carboidratos_por_100g": 82.4, "gorduras_por_100g": 0.0 }
+          ]
+        },
+        {
+          "nome": "Iogurte natural integral",
+          "categoria": "proteina",
+          "percentual_da_refeicao": 0.2,
+          "calorias_por_100g": 61,
+          "proteinas_por_100g": 3.5,
+          "carboidratos_por_100g": 4.7,
+          "gorduras_por_100g": 3.3,
+          "unidade": "g",
+          "alternativas": [
+            { "nome": "Leite integral", "calorias_por_100g": 61, "proteinas_por_100g": 3.2, "carboidratos_por_100g": 4.8, "gorduras_por_100g": 3.3 }
+          ]
+        }
+      ]
+    },
+    {
+      "tipo": "Jantar (pós-treino)",
+      "horario_sugerido": "19:30",
+      "percentual_calorias": 0.17,
+      "itens": [
+        {
+          "nome": "Omelete de 3 ovos",
+          "categoria": "proteina",
+          "percentual_da_refeicao": 0.4,
+          "calorias_por_100g": 160,
+          "proteinas_por_100g": 13.5,
+          "carboidratos_por_100g": 1.2,
+          "gorduras_por_100g": 11.0,
+          "unidade": "g",
+          "alternativas": [
+            { "nome": "Peito de frango grelhado", "calorias_por_100g": 165, "proteinas_por_100g": 31.0, "carboidratos_por_100g": 0.0, "gorduras_por_100g": 3.6 },
+            { "nome": "Sardinha em conserva", "calorias_por_100g": 208, "proteinas_por_100g": 24.0, "carboidratos_por_100g": 0.0, "gorduras_por_100g": 12.0 }
+          ]
+        },
+        {
+          "nome": "Batata doce cozida",
+          "categoria": "carboidrato",
+          "percentual_da_refeicao": 0.35,
+          "calorias_por_100g": 86,
+          "proteinas_por_100g": 1.6,
+          "carboidratos_por_100g": 20.1,
+          "gorduras_por_100g": 0.1,
+          "unidade": "g",
+          "alternativas": [
+            { "nome": "Batata inglesa cozida", "calorias_por_100g": 77, "proteinas_por_100g": 2.0, "carboidratos_por_100g": 17.5, "gorduras_por_100g": 0.1 },
+            { "nome": "Mandioca cozida", "calorias_por_100g": 125, "proteinas_por_100g": 0.6, "carboidratos_por_100g": 30.1, "gorduras_por_100g": 0.3 }
+          ]
+        },
+        {
+          "nome": "Mix de folhas verdes",
+          "categoria": "vegetal",
+          "percentual_da_refeicao": 0.15,
+          "calorias_por_100g": 25,
+          "proteinas_por_100g": 1.5,
+          "carboidratos_por_100g": 4.0,
+          "gorduras_por_100g": 0.3,
+          "unidade": "g",
+          "alternativas": [
+            { "nome": "Mix de legumes cozidos", "calorias_por_100g": 35, "proteinas_por_100g": 1.8, "carboidratos_por_100g": 7.0, "gorduras_por_100g": 0.3 }
+          ]
+        },
+        {
+          "nome": "Azeite extra virgem",
+          "categoria": "gordura",
+          "percentual_da_refeicao": 0.1,
+          "calorias_por_100g": 884,
+          "proteinas_por_100g": 0.0,
+          "carboidratos_por_100g": 0.0,
+          "gorduras_por_100g": 100.0,
+          "unidade": "ml",
+          "alternativas": [
+            { "nome": "Abacate", "calorias_por_100g": 160, "proteinas_por_100g": 2.0, "carboidratos_por_100g": 8.5, "gorduras_por_100g": 14.7 }
+          ]
+        }
+      ]
+    },
+    {
+      "tipo": "Ceia",
+      "horario_sugerido": "22:00",
+      "percentual_calorias": 0.04,
+      "itens": [
+        {
+          "nome": "Leite integral morno",
+          "categoria": "proteina",
+          "percentual_da_refeicao": 1.0,
+          "calorias_por_100g": 61,
+          "proteinas_por_100g": 3.2,
+          "carboidratos_por_100g": 4.8,
+          "gorduras_por_100g": 3.3,
+          "unidade": "ml",
+          "alternativas": [
+            { "nome": "Queijo cottage", "calorias_por_100g": 98, "proteinas_por_100g": 11.1, "carboidratos_por_100g": 3.4, "gorduras_por_100g": 4.3 },
+            { "nome": "Iogurte grego natural", "calorias_por_100g": 97, "proteinas_por_100g": 10.0, "carboidratos_por_100g": 3.8, "gorduras_por_100g": 3.8 }
+          ]
+        }
+      ]
+    }
+  ]
+}

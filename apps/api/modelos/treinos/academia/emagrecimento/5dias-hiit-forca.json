@@ -1,0 +1,57 @@
+{
+  "nome": "Força + HIIT Separados - 5 Dias",
+  "modalidade": "academia",
+  "objetivo": "emagrecimento",
+  "dias": 5,
+  "duracao_estimada_min": 55,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia 1 - Força Superiores",
+      "exercicios": [
+        { "nome": "Supino reto com barra", "grupo": "peito", "tipo": "composto", "series": 4, "repeticoes_min": 6, "repeticoes_max": 8, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.5, "prescricao_fixa": true, "dicas": "Força de verdade mesmo em déficit: manter sinal de tensão alta é o que segura a massa magra enquanto o peso cai." },
+        { "nome": "Remada curvada com barra", "grupo": "costas", "tipo": "composto", "series": 4, "repeticoes_min": 6, "repeticoes_max": 8, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.4, "prescricao_fixa": true, "dicas": "Puxe com as escápulas, não com os braços. Força preservada em déficit = metabolismo protegido." },
+        { "nome": "Desenvolvimento militar", "grupo": "ombro", "tipo": "composto", "series": 4, "repeticoes_min": 6, "repeticoes_max": 8, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.3, "prescricao_fixa": true, "dicas": "Em pé para recrutar o core. Descanso longo aqui é regra: o objetivo é performance, não queima cardiovascular." },
+        { "nome": "Rosca direta com barra", "grupo": "biceps", "tipo": "isolador", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.15, "prescricao_fixa": true, "dicas": "Fecha o empurrar/puxar com trabalho direto de braço. Carga honesta, sem balanço." },
+        { "nome": "Tríceps na polia com corda", "grupo": "triceps", "tipo": "isolador", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.15, "prescricao_fixa": true, "dicas": "Cotovelos fixos, extensão completa. Volume moderado preserva o braço sem drenar a recuperação." }
+      ]
+    },
+    {
+      "titulo": "Dia 2 - HIIT + Core (dia metabólico)",
+      "exercicios": [
+        { "nome": "Corrida em esteira - tiros de velocidade", "grupo": "cardio", "tipo": "cardio", "series": 8, "repeticoes_min": 30, "repeticoes_max": 30, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "8 tiros de 30 s rápidos com 90 s de caminhada. HIIT em dia SEPARADO da força evita o efeito de interferência — cada estímulo rende completo." },
+        { "nome": "Pular corda (ou simular)", "grupo": "cardio", "tipo": "cardio", "series": 4, "repeticoes_min": 45, "repeticoes_max": 45, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "4 blocos de 45 s. HIIT curto e intenso queima mais gordura preservando músculo do que cardio longo e monótono." },
+        { "nome": "Prancha isométrica", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Sustente 30–45 s por série (cada repetição aqui = a série de prancha). Corpo em linha reta, respire." },
+        { "nome": "Abdominal bicicleta", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Rotação controlada, cotovelo ao joelho oposto. Core trabalhado junto do cardio sem competir com o dia de força." }
+      ]
+    },
+    {
+      "titulo": "Dia 3 - Força Inferiores",
+      "exercicios": [
+        { "nome": "Agachamento livre", "grupo": "pernas", "tipo": "composto", "series": 5, "repeticoes_min": 6, "repeticoes_max": 8, "descanso_segundos": 150, "percentual_carga_peso_corporal": 0.6, "prescricao_fixa": true, "dicas": "Pernas guardam o maior volume de músculo do corpo — preservá-lo em déficit mantém o gasto basal alto." },
+        { "nome": "Leg press 45°", "grupo": "pernas", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.7, "prescricao_fixa": true, "dicas": "Complemento do agachamento sem exigir da lombar. Amplitude completa, sem travar os joelhos." },
+        { "nome": "Levantamento terra romeno", "grupo": "posterior", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.45, "prescricao_fixa": true, "dicas": "Posterior e lombar fortes sustentam a postura e o agachamento. Desça sentindo alongar, não curvando." },
+        { "nome": "Mesa flexora", "grupo": "posterior", "tipo": "isolador", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.2, "prescricao_fixa": true, "dicas": "Excêntrica lenta: 2–3 s na descida. Posterior saudável protege joelho nas corridas e no dia a dia." },
+        { "nome": "Panturrilha em pé", "grupo": "panturrilha", "tipo": "isolador", "series": 4, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": 0.4, "prescricao_fixa": true, "dicas": "Amplitude total, pausa no topo. Não deixe a panturrilha de fora — ela também é massa magra." }
+      ]
+    },
+    {
+      "titulo": "Dia 4 - HIIT + Core (segundo dia metabólico)",
+      "exercicios": [
+        { "nome": "Bicicleta ergométrica tiros HIIT", "grupo": "cardio", "tipo": "cardio", "series": 10, "repeticoes_min": 20, "repeticoes_max": 20, "descanso_segundos": 100, "percentual_carga_peso_corporal": null, "dicas": "10 tiros de 20 s na máxima cadência com 100 s leve. Pedalar poupa os joelhos e permite intensidade real mesmo cansado." },
+        { "nome": "Corrida no Lugar", "grupo": "cardio", "tipo": "cardio", "series": 4, "repeticoes_min": 40, "repeticoes_max": 40, "descanso_segundos": 50, "percentual_carga_peso_corporal": null, "dicas": "4 blocos de 40 s com joelhos altos. Alterne o HIIT entre esteira, bike e peso do corpo para variar o estímulo." },
+        { "nome": "Prancha lateral", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "30 s por lado (contagem da série). Oblíquos firmes sustentam a cintura nas corridas e no dia a dia." },
+        { "nome": "Abdominal infra", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Eleve o quadril, não só as pernas. Devagar na descida — controlar é o exercício." }
+      ]
+    },
+    {
+      "titulo": "Dia 5 - Força Corpo Inteiro",
+      "exercicios": [
+        { "nome": "Levantamento terra", "grupo": "posterior", "tipo": "composto", "series": 4, "repeticoes_min": 5, "repeticoes_max": 6, "descanso_segundos": 150, "percentual_carga_peso_corporal": 0.7, "prescricao_fixa": true, "dicas": "O grande composteiro da semana. Carga alta, reps baixas, coluna neutra — força total protege massa magra." },
+        { "nome": "Supino inclinado com halteres", "grupo": "peito", "tipo": "composto", "series": 4, "repeticoes_min": 6, "repeticoes_max": 8, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.35, "prescricao_fixa": true, "dicas": "Segundo empurrar pesado da semana. Peito alto também trabalha ombro anterior." },
+        { "nome": "Barra fixa", "grupo": "costas", "tipo": "corporal", "series": 4, "repeticoes_min": 5, "repeticoes_max": 8, "descanso_segundos": 120, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Não fecha a faixa? Elástico de apoio ou excêntrica de 4 s. Força relativa (peso do próprio corpo) melhora junto com a perda de peso." },
+        { "nome": "Afundo com halteres", "grupo": "pernas", "tipo": "composto", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.15, "prescricao_fixa": true, "dicas": "Reps por perna. Trabalho unilateral no fim da semana equilibra força e ainda queima bastante." },
+        { "nome": "Desenvolvimento com halteres", "grupo": "ombro", "tipo": "composto", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.2, "prescricao_fixa": true, "dicas": "Último empurrar da semana — finalize com técnica perfeita para entrar no descanso do fim de semana inteiro." }
+      ]
+    }
+  ]
+}

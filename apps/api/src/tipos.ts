@@ -107,6 +107,13 @@ export interface ModeloExercicio {
    * arquivos do modelo.
    */
   distancia_km?: number | null;
+  /**
+   * TEAM_009: quando true, o motor NÃO sobrescreve series/reps/descanso com
+   * a regra do objetivo — usado por estilos periodizados (ex.: ondulante/
+   * DUP, força pesada p/ corredor, MRT) em que a prescrição do modelo é a
+   * própria essência do método. Ausente = comportamento padrão (regra).
+   */
+  prescricao_fixa?: boolean;
   /** Dica de execução exibida ao usuário. */
   dicas: string;
 }

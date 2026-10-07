@@ -1,8 +1,19 @@
 # ProtocolFit
 
-> **Seu treino e sua dieta em segundos — calculados com ciência, não com achismo.**
+> **Treino e dieta montados por regras claras — a mesma conta, todo santo dia, sem caixa-preta.**
 
-O ProtocolFit é um SaaS web **100% gratuito** (sem assinatura e sem cartão de crédito) focado na **geração e gestão automatizada de treinos e dietas personalizadas**, projetado para **alta velocidade, baixo custo de infraestrutura e respostas instantâneas** — **zero dependência de APIs de IA**.
+O ProtocolFit é um aplicativo web **gratuito** que monta um plano de treino e um
+plano alimentar a partir das suas informações (sexo, idade, peso, altura,
+objetivo, dias disponíveis e modalidade). Não há inteligência artificial nem
+nada "mágico": é um motor determinístico — as mesmas entradas sempre produzem a
+mesma saída, e você consegue ver exatamente de onde cada número saiu.
+
+Ele existe porque montar treino e dieta do zero dá trabalho. A gente lê a
+literatura de treinamento e nutrição esportiva (as fontes estão listadas no fim
+deste arquivo), traduz o que ela sustenta em regras concretas e deixa o resto —
+sua execução, sua constância — com você. **O app não substitui médico,
+nutricionista nem educador físico**; é um ponto de partida organizado, não uma
+prescrição.
 
 ---
 
@@ -18,6 +29,7 @@ O ProtocolFit é um SaaS web **100% gratuito** (sem assinatura e sem cartão de 
 | Banco de dados | **SQLite** (WAL) — leituras/escritas em milissegundos |
 | Autenticação | Bcrypt + JWT — **3 tentativas erradas bloqueiam a conta por 5 horas** |
 | Motor de cálculo | **Determinístico** (Mifflin-St Jeor) — sem LLMs |
+| Testes | **Jasmine** (specs do motor e utilitários) + scripts de integração |
 
 ## 📁 Arquitetura de diretórios
 
@@ -25,6 +37,7 @@ O ProtocolFit é um SaaS web **100% gratuito** (sem assinatura e sem cartão de 
 ProtocolFit/
 ├── package.json                     # monorepo npm workspaces (apps/api + apps/web)
 ├── tsconfig.base.json               # configuração TypeScript compartilhada
+├── spec/                            # specs Jasmine (motor, utilitários, regressões)
 ├── docs/
 │   └── ESPECIFICACAO-DO-FRONTEND.md # contrato de implementação do frontend
 └── apps/
@@ -34,15 +47,18 @@ ProtocolFit/
     │   ├── .env.example             # PORTA, JWT secret, CORS
     │   ├── dados/                   # SQLite (protocolfit.db, criado em runtime)
     │   ├── modelos/                 # ── MODELOS JSON MESTRES (somente leitura)
-    │   │   ├── LEIA-ME.md           # esquema dos modelos
-    │   │   ├── treinos/             # MATRIZ COMPLETA: 36 arquivos padrão + 14 estilos
-    │   │   │   │                    # (2 modalidades x 3 objetivos x 2..7 dias = academia e peso corporal)
-    │   │   │   ├── academia/        # hipertrofia, emagrecimento, corrida (2dias..7dias cada)
-    │   │   │   └── pesocorporal/    # hipertrofia, emagrecimento, corrida (2dias..7dias cada)
-    │   │   │                        # + estilos extras: "{dias}dias-{slug}.json"
-    │   │   │                        # (forca-maxima, powerlifting, funcional, crossfit,
-    │   │   │                        #  hiit, circuito, upper-lower, push-pull-legs...)
-    │   │   └── dietas/              # emagrecimento.json, hipertrofia.json, corrida.json
+    │   │   ├── LEIA-ME.md           # esquema dos modelos (inclui prescricao_fixa e cardio)
+    │   │   ├── treinos/             # 208 modelos: 36 padrão da matriz
+    │   │   │   │                    # (2 modalidades x 3 objetivos x 2..7 dias)
+    │   │   │   ├── academia/        # hipertrofia, emagrecimento, corrida
+    │   │   │   └── pesocorporal/    # hipertrofia, emagrecimento, corrida
+    │   │   │                        # + variações de estilo "{dias}dias-{slug}.json":
+    │   │   │                        # forca-maxima, powerlifting, funcional, crossfit,
+    │   │   │                        # hiit, circuito, upper-lower, push-pull-legs,
+    │   │   │                        # ondulante (DUP), mrt, hiit-forca,
+    │   │   │                        # forca-corredor, tensao-progressiva...
+    │   │   └── dietas/              # 3 padrão por objetivo + variações
+    │   │                            # pareadas por slug ({objetivo}-{slug}.json)
     │   └── src/
     │       ├── servidor.ts          # bootstrap do Fastify (porta 3333)
     │       ├── tipos.ts             # contrato de tipos do domínio
@@ -50,14 +66,15 @@ ProtocolFit/
     │       │   └── banco.ts         # conexão SQLite + esquema + repositório
     │       ├── motor/
     │       │   ├── calculos.ts      # Mifflin-St Jeor, macros, IMC, água (determinístico)
-    │       │   ├── carregadorModelos.ts # leitura/fallback dos JSON mestres
+    │       │   ├── carregadorModelos.ts # leitura/fallback dos JSON mestres (com cache)
     │       │   └── montadorPlano.ts # injeção de cargas/séries/gramas + edições
     │       ├── servicos/
-    │       │   └── geradorDePlanos.ts  # clonagem do plano p/ o SQLite do usuário
-    │       ├── rotas/               # opcoes, autenticacao, conta, perfil, planos, evolucao
+    │       │   ├── geradorDePlanos.ts    # clonagem do plano p/ o SQLite do usuário
+    │       │   └── sequenciaDeCheckins.ts # sequência/recorde do check-in diário
+    │       ├── rotas/               # opcoes, autenticacao, conta, perfil, planos, evolucao, checkin
     │       ├── plugins/
     │       │   └── autenticacaoJwt.ts  # JWT (@fastify/jwt)
-    │       └── util/                # constantes de domínio + respostas
+    │       └── util/                # constantes de domínio + respostas + datas
     └── web/                         # ── FRONTEND (Next.js) ────────────────────
         ├── package.json
         ├── next.config.ts
@@ -66,50 +83,193 @@ ProtocolFit/
             ├── app/
             │   ├── layout.tsx       # fontes (Inter + Plus Jakarta Sans) e metadados
             │   ├── globals.css      # design system (tokens de cor da saúde)
-            │   ├── page.tsx         # landing page persuasiva
+            │   ├── page.tsx         # landing page
             │   ├── login/           # login (bloqueio 3x/5h)
             │   ├── cadastro/        # criação de conta
             │   ├── onboarding/      # wizard de coleta em 5 passos
-            │   └── painel/          # dashboard, treino, dieta, perfil
+            │   └── painel/          # dashboard, treino, dieta, perfil, evolução
             ├── components/
             │   ├── ui/              # shadcn/ui (botao, cartao, input, abas...)
-            │   └── painel/          # barra lateral, gráficos recharts, resumos
-            └── lib/                 # api.ts, tipos.ts, armazenamento.ts, util.ts
+            │   └── painel/          # barra lateral, gráficos, cronômetro de descanso...
+            └── lib/                 # api.ts, tipos.ts, armazenamento.ts, util.ts,
+                                     # motor/ (espelho do motor do servidor),
+                                     # progresso-treino.ts (checklist persistente)
 ```
 
 ## 🔄 O fluxo do usuário
 
-1. **Onboarding** — o usuário cadastra-se e informa sexo, faixa etária (17 opções, de "18-19" a "79-83"), altura, peso (decimal), objetivo (emagrecimento | hipertrofia | corrida), frequência semanal, dias disponíveis e modalidade (academia | peso do corpo).
-2. **Geração** — o backend cruza os filtros, localiza o modelo JSON mestre e injeta os valores calculados.
-3. **Painel** — o usuário visualiza treino e dieta, **edita cargas e substitui alimentos na própria cópia**, **altera peso e altura direto no painel** (a altura aparece acima do peso), faz o **check-in diário** (treino, dieta, água, peso e observação, com sequência/recorde de dias) e solicita **recálculos** baseados na sua evolução física. As páginas de **Treino** e **Dieta** mostram **há quanto tempo o usuário está com o plano** e **quando é bom renovar** (recomendado a cada 30 dias), com botão **Atualizar plano**.
+1. **Onboarding** — você cadastra-se e informa sexo, faixa etária, altura, peso,
+   objetivo (emagrecimento | hipertrofia | corrida), dias disponíveis por
+   semana e modalidade (academia | peso do corpo). Nesse passo também escolhe o
+   **estilo de treino**, quando a combinação oferece variações.
+2. **Geração** — o motor cruza os filtros, localiza o modelo JSON mestre e
+   injeta os valores calculados: cargas iniciais, séries, calorias, macros e
+   gramas de cada alimento.
+3. **Painel** — você visualiza treino e dieta, **edita cargas e substitui
+   alimentos na própria cópia**, **altera peso e altura direto no painel**,
+   faz o **check-in diário** e solicita **recálculos** conforme seu corpo
+   muda. As páginas de Treino e Dieta mostram há quanto tempo você está com
+   o plano e sugerem renovação (recomendado a cada 30 dias).
+
+### ⏱️ Timer de descanso em todo exercício
+
+Cada cartão de exercício tem um **cronômetro de descanso** com atalhos de
+**1, 2 e 3 minutos**, um atalho "Sugerido" com o descanso do plano e um
+**campo livre em segundos**. Ao zerar, o app **vibra o aparelho** (padrão
+longo, pensado para o celular no bolso), toca três bipes e mostra o aviso
+visual — se a tela estava bloqueada ou a aba oculta, o aviso é repetido
+quando você volta a olhar. A contagem usa timestamp de término, então
+continua certa mesmo com a aba em segundo plano.
+
+### ✅ Checklist do treino que sobrevive ao dia
+
+Cada exercício tem uma caixa de "feito". As marcas ficam salvas por plano e
+dia da semana: se a sessão ficou **incompleta**, você retoma de onde parou
+na próxima visita; se foi **concluída**, o dia seguinte começa zerado —
+como um checklist de verdade se comporta.
+
+### 🏃 Cardio medido como cardio
+
+Exercícios do grupo cardio não usam "séries × repetições": usam **tempo
+(minutos, no contínuo; segundos por tiro, no intervalado)** e **distância
+(km)** quando o modelo define — ex.: "Corrida 400m" mostra 0,4 km. Na
+edição, os campos viram Tiros / Tempo / Distância, sem carga.
 
 ### ✅ Check-in diário
 
-O painel tem o cartão **"Check-in de hoje"**: o usuário marca *treino feito*, *dieta seguida*, a água do dia (com atalhos de +250/+500 ml), o peso do dia (opcional, entra no gráfico) e uma observação. O sistema calcula automaticamente:
+O painel tem o cartão **"Check-in de hoje"**: treino feito, dieta seguida,
+água do dia (atalhos de +250/+500 ml), peso do dia (opcional, entra no
+gráfico) e observação. O sistema calcula:
 
-- **Sequência atual** (dias consecutivos cumpridos — treino **ou** dieta no dia);
+- **Sequência atual** (dias consecutivos cumpridos — treino **ou** dieta);
 - **Recorde** de sequência e **total** de check-ins;
 - **Mini histórico** dos últimos 7 dias.
 
-Regras: um check-in por dia por usuário (atualizar o mesmo dia não duplica) e a sequência só quebra quando um dia inteiro passa sem nenhuma marcação. No modo navegador (GitHub Pages) o check-in fica no `localStorage`; no modo servidor vai para a tabela `checkins` do SQLite.
+Regras: um check-in por dia por usuário (atualizar o mesmo dia não
+duplica) e a sequência só quebra quando um dia inteiro passa sem marcação.
+No modo navegador o check-in fica no `localStorage`; no modo servidor vai
+para a tabela `checkins` do SQLite.
 
 ### 🧳 Portabilidade do progresso
 
-No modo navegador os dados moram só no `localStorage` — não existe nuvem. Em **Perfil → Leve seu progresso com você** o usuário pode **Exportar progresso** (baixa um `protocolfit-progresso-AAAA-MM-DD.json` com conta, perfil, todas as versões dos planos, pesagens e check-ins) e **Importar progresso** (com prévia do conteúdo e confirmação em duas etapas). A importação recria a conta com ids novos — sem colidir com o que já existe no navegador — restaura o aceite do termo e abre a sessão: a mesma senha funciona no novo dispositivo, pois o hash viaja no arquivo. Reimportar no mesmo navegador **substitui** o snapshot daquela conta, sem duplicar. A entrada de importação também fica na tela de login ("Trocou de dispositivo?"). O recurso só aparece no modo navegador; no modo servidor basta entrar na conta pelo outro dispositivo.
+No modo navegador os dados moram só no `localStorage` — não existe nuvem.
+Em **Perfil → Leve seu progresso com você** é possível **Exportar
+progresso** (um `protocolfit-progresso-AAAA-MM-DD.json` com conta, perfil,
+todas as versões dos planos, pesagens e check-ins) e **Importar progresso**
+(com prévia e confirmação em duas etapas). A importação recria a conta com
+ids novos — sem colidir com o que já existe — restaura o aceite do termo e
+abre a sessão: a mesma senha funciona no novo dispositivo, pois o hash
+viaja no arquivo. Reimportar no mesmo navegador **substitui** o snapshot
+daquela conta. O recurso só aparece no modo navegador; no modo servidor
+basta entrar na conta pelo outro dispositivo.
 
-## 🧮 A lógica de processamento no backend
+## 🧮 Como os planos são montados
 
-- **Matriz de seleção por templates JSON** — `/modelos/treinos/{modalidade}/{objetivo}/{dias}dias.json` contém apenas a estrutura de exercícios; `/modelos/dietas/{objetivo}.json` contém os tipos de refeição. Sem arquivo exato de dias, o carregador escolhe o modelo mais próximo e ajusta (corte/repetição cíclica) de forma determinística.
-- **Estilos de treino (variações)** — a mesma combinação pode oferecer mais de um formato de treino: o padrão é `{dias}dias.json` e cada alternativa é `{dias}dias-{slug}.json` (ex.: `3dias-forca-maxima.json`, `5dias-crossfit.json`). A lista de estilos vai no `GET /opcoes` (`variacoes_de_treino`) e o usuário escolhe no onboarding (passo 4) ou depois em **Perfil → Estilo de treino** (`PATCH /perfil/treino`, que regenera os planos na hora). O estilo fica gravado no perfil (`variacao_treino`) e os recálculos continuam usando o mesmo formato. Hoje são 36 modelos padrão + 14 estilos extras.
-- **Motor de cálculo determinístico** — `TMB (Mifflin-St Jeor) → fator de atividade → gasto total → déficit/superávit por objetivo → macros exatos em gramas`, com piso calórico de segurança (1500 kcal ♂ / 1200 kcal ♀), fibras (14 g/1000 kcal) e água (35–40 ml/kg). Cargas iniciais = fração do peso corporal (arredondada a 2,5 kg).
-- **Clonagem para a conta do usuário** — o plano montado é gravado na tabela `planos` do SQLite com o id do usuário; recálculos criam nova versão e desativam a anterior.
-- **Isolamento de dados** — o usuário lê e edita **unicamente** a cópia no SQLite; os JSON mestres ficam protegidos e intactos.
+### Seleção por templates JSON
+
+`/modelos/treinos/{modalidade}/{objetivo}/{dias}dias.json` descreve a
+estrutura dos dias e exercícios; `/modelos/dietas/{objetivo}.json`
+descreve as refeições. Sem arquivo exato de dias, o carregador escolhe o
+modelo mais próximo e ajusta (corte/repetição cíclica) de forma
+determinística.
+
+### Estilos de treino (variações nomeadas)
+
+A mesma combinação pode oferecer mais de um formato: o padrão é
+`{dias}dias.json` e cada alternativa é `{dias}dias-{slug}.json` (ex.:
+`3dias-forca-maxima.json`, `3dias-ondulante.json`, `5dias-crossfit.json`).
+A lista vai no `GET /opcoes` (`variacoes_de_treino`), o usuário escolhe no
+onboarding ou depois em **Perfil → Estilo de treino** (`PATCH
+/perfil/treino`), e o estilo fica gravado no perfil (`variacao_treino`).
+Hoje são **36 modelos padrão + 172 variações de estilo = 208 treinos** e
+**158 modelos de dieta**.
+
+Quando a dieta tem o mesmo slug do estilo (`dietas/{objetivo}-{slug}.json`,
+ex.: `hipertrofia-ondulante.json`), ela é usada automaticamente — treino e
+dieta ficam tematicamente pareados.
+
+### `prescricao_fixa`: quando a prescrição é o método
+
+Regras por objetivo ajustam séries/repetições/descanso dos exercícios de
+força (ex.: hipertrofia → 4×8–12, 90 s). Isso serve aos modelos padrão, mas
+destruiria a essência de métodos periodizados — um "DUP" em que todo dia
+vira 4×8–12 deixaria de ser DUP. Modelos assim marcam os exercícios com
+`"prescricao_fixa": true`, e o motor **preserva a prescrição do modelo**
+(em ambos os lados, API e navegador). É o que permite existir de verdade:
+
+- **Periodização ondulante (DUP)** — dia pesado (4–6 reps), dia de
+  hipertrofia clássica (8–12) e dia metabólico/denso (12–20) na mesma
+  semana;
+- **MRT** (*metabolic resistance training*) — circuitos de compostos com
+  descanso curto, priorizando densidade de trabalho;
+- **Força + HIIT** — dias separados para reduzir a interferência do
+  treinamento concorrente;
+- **Força do corredor** — cargas altas, reps baixas e pliometria, sem
+  volume que atrapalhe a corrida;
+- **Tensão progressiva** — calistenia com progressão por alavanca e
+  tempo sob tensão, não só por carga.
+
+### Motor de cálculo determinístico
+
+`TMB (Mifflin-St Jeor) → fator de atividade → gasto total →
+déficit/superávit por objetivo → macros em gramas`, com piso calórico de
+segurança (1500 kcal ♂ / 1200 kcal ♀), fibras (14 g/1000 kcal) e água
+(35–40 ml/kg — o objetivo corrida usa a faixa maior). Cargas iniciais =
+fração do peso corporal, arredondadas a 2,5 kg. As quantidades dos
+alimentos saem das calorias da refeição (`% do dia → % da refeição →
+gramas por densidade calórica`), mantendo o equilíbrio calórico ao trocar
+alimentos.
+
+### Clonagem e isolamento
+
+O plano montado é gravado na tabela `planos` do SQLite **como cópia do
+usuário**; recálculos criam nova versão e desativam a anterior. Os JSON
+mestres ficam intactos — você edita apenas a sua cópia.
+
+## 🔬 O que a ciência sustenta (e o que ela não promete)
+
+As regras do motor e os estilos de treino foram escritos a partir de
+livros-texto de treinamento e de meta-análises revisadas por pares — todas
+listadas em **Referências** no fim deste arquivo. Em resumo honesto:
+
+- **Tensão mecânica progressiva** é o principal motor da hipertrofia;
+  volume semanal importa, com dose-resposta e ponto de saturação
+  (Schoenfeld, 2010; Schoenfeld et al., 2017).
+- **Proximidade da falha** e amplitudes variadas funcionam, mas a
+  periodização alterna estímulos — por isso existem dias pesados e dias
+  densos (Bompa & Buzzichelli; Zatsiorsky & Kraemer).
+- **Descansos mais longos** em compostos preservam carga e volume total
+  (Schoenfeld et al., 2016); descanso curto tem papel metabólico, não
+  milagre de emagrecimento.
+- **Proteína**: as revisões apontam ~1,6–2,2 g/kg/dia e ~0,4 g/kg por
+  refeição como faixas razoáveis — as dietas foram montadas nessa lógica
+  (Morton et al., 2018; Schoenfeld & Aragon, 2018; Jäger et al., 2017).
+- **Treinamento concorrente**: cardio e força juntos podem se atrapalhar
+  — a ordem, o intervalo entre sessões e a modalidade do cardio mudam o
+  efeito (Wilson et al., 2012; Sabag et al., 2018). Por isso o estilo
+  "força do corredor" separa os estímulos.
+- **Corredor forte corre melhor**: força pesada + pliometria melhora a
+  economia de corrida (Blagrove et al., 2018; Rønnestad & Mujika, 2014).
+- **Energia**: o gasto é estimado por Mifflin-St Jeor (1990), a equação
+  recomendada pela Academy of Nutrition and Dietetics para adultos
+  saudáveis — ainda assim é **estimativa**, com erro individual real.
+
+O que o app **não** promete: que descanso curto "derrete gordura", que
+cardio é obrigatório para emagrecer, que existe horário mágico para
+nutriente, ou que suplemento é necessário. Onde a evidência é incerta, o
+texto diz que é incerta.
 
 ## 🔐 Segurança
 
 - Senhas com hash **bcrypt** (12 rounds) — nunca em texto puro.
-- Tokens **JWT** com validade de 7 dias.
-- **3 tentativas de login falhas → conta bloqueada por 5 horas** (HTTP 423 com horas restantes).
+- Tokens **JWT** com validade de 7 dias; `PROTOCOLFIT_JWT_SECRET` é
+  **obrigatório em produção**.
+- **3 tentativas de login falhas → conta bloqueada por 5 horas** (HTTP 423
+  com horas restantes); um hash bcrypt de referência equaliza o tempo de
+  resposta quando o e-mail não existe.
+- Rate limit nas rotas de autenticação; escritas multi-etapas dentro de
+  **transações SQLite**; validação estrita de tipos e datas em todas as
+  rotas.
 - E-mails únicos (case-insensitive) e validação de perfil 100% no servidor.
 
 ## 🌱 Psicologia de cores (saúde)
@@ -137,17 +297,20 @@ npm run dev:api
 # 3. Terminal 2 — subir o frontend (http://localhost:3000)
 npm run dev:web
 
-# 4. (Opcional) Validar a API ponta a ponta
-powershell -File scripts/teste-da-api.ps1           # fluxo completo (11 cenários, inclui troca de estilo)
-powershell -File scripts/teste-da-matriz.ps1        # 36 combinações de treino vinculadas ao usuário
-powershell -File scripts/teste-dos-dados-possiveis.ps1  # 212 perfis possíveis gerados (treino + dieta)
-powershell -File scripts/teste-do-checkin.ps1       # check-in diário + alteração de peso e altura
-node scripts/validar-modelos.mjs                    # 50 modelos JSON (36 padrão + 14 estilos) válidos
+# 4. (Opcional) Validar tudo
+npm test                                            # Jasmine: specs do motor e utilitários
+node scripts/validar-modelos.mjs                    # valida os 366 modelos JSON
+powershell -File scripts/teste-da-api.ps1           # fluxo completo da API (inclui troca de estilo)
+powershell -File scripts/teste-da-matriz.ps1        # 36 combinações de treino vinculadas
+powershell -File scripts/teste-dos-dados-possiveis.ps1  # 212 perfis possíveis (treino + dieta)
+powershell -File scripts/teste-do-checkin.ps1       # check-in diário + alteração de peso/altura
 ```
 
-Configurações opcionais em `apps/api/.env` (copie de `.env.example`): `PORTA`, `PROTOCOLFIT_JWT_SECRET`, `PROTOCOLFIT_ORIGEM_WEB`.
+Configurações opcionais em `apps/api/.env` (copie de `.env.example`):
+`PORTA`, `PROTOCOLFIT_JWT_SECRET`, `PROTOCOLFIT_ORIGEM_WEB`.
 
-Build de produção: `npm run build` (compila API com `tsc` e frontend com `next build`).
+Build de produção: `npm run build` (compila API com `tsc` e frontend com
+`next build`).
 
 ## 🌍 Como hospedar no GitHub e colocar online
 
@@ -167,19 +330,20 @@ minúsculas no caminho do projeto.
 
 Nesse modo (ativado por `NEXT_PUBLIC_MODO_LOCAL=true`):
 
-- O **motor de cálculo determinístico** (TMB, macros, montagem dos planos) roda no
-  próprio navegador, a partir dos **50 modelos JSON** publicados como arquivos
-  estáticos em `/modelos` (36 padrão + 14 estilos alternativos, indexados no
-  `indice.json` gerado no build).
+- O **motor de cálculo determinístico** (TMB, macros, montagem dos planos) roda
+  no próprio navegador, a partir dos **modelos JSON** publicados como arquivos
+  estáticos em `/modelos` (indexados no `indice.json` gerado no build).
 - As **contas, perfis, planos e pesagens** ficam no `localStorage` do visitante
-  (mesmas validações, mesmas mensagens e mesmos códigos de erro da API: 401, 409, 423).
-- O **mesmo motor** do backend é usado: os números são **idênticos** aos do servidor
-  (há teste automatizado comprovando — veja abaixo).
-- **Nada é enviado a servidores**: cada visitante tem o seu próprio "banco" local.
+  (mesmas validações, mesmas mensagens e mesmos códigos de erro da API: 401,
+  409, 423).
+- O **mesmo motor** do backend é usado: os números são **idênticos** aos do
+  servidor (há teste automatizado comprovando — veja abaixo).
+- **Nada é enviado a servidores**: cada visitante tem o seu próprio "banco"
+  local.
 
 A publicação é automática pelo workflow `.github/workflows/deploy-pages.yml`:
-a cada push na `main`, o GitHub compila o site estático (`npm run build:pages`) e o
-publica no Pages. Para publicar manualmente:
+a cada push na `main`, o GitHub compila o site estático (`npm run build:pages`)
+e o publica no Pages. Para publicar manualmente:
 
 ```bash
 MODO_PAGES=true NEXT_PUBLIC_MODO_LOCAL=true NEXT_PUBLIC_BASE_PATH=/ProtocolFit npm run build:pages
@@ -189,36 +353,40 @@ MODO_PAGES=true NEXT_PUBLIC_MODO_LOCAL=true NEXT_PUBLIC_BASE_PATH=/ProtocolFit n
 **Verificações do modo navegador** (executadas também localmente):
 
 ```bash
-npm run testar:motor --workspace @protocolfit/web   # motor do navegador == motor do servidor (20 verificações)
-npm run testar:local --workspace @protocolfit/web   # fluxo completo: cadastro → plano → edições → recálculo (47 verificações)
+npm run testar:motor --workspace @protocolfit/web   # motor do navegador == motor do servidor
+npm run testar:local --workspace @protocolfit/web   # fluxo completo: cadastro → plano → edições → recálculo
 ```
 
 ### 0.1 Anúncios (Google AdSense)
 
 O código do AdSense (`ca-pub-2430276497312227`) é inserido no **layout raiz**
-(`apps/web/src/app/layout.tsx`): o React eleva o `<script async>` para o `<head>`
-de **todas** as páginas geradas e o `build:pages` reprova o build se alguma
-página ficar sem o script (ver `apps/web/scripts/verificar-pwa.mjs`).
+(`apps/web/src/app/layout.tsx`): o React eleva o `<script async>` para o
+`<head>` de **todas** as páginas geradas e o `build:pages` reprova o build se
+alguma página ficar sem o script (ver `apps/web/scripts/verificar-pwa.mjs`).
 O `ads.txt` com a linha `google.com, pub-2430276497312227, DIRECT, f08c47fec0942fa0`
 é publicado em **dois lugares**, para atender às duas leituras do Google:
 `apps/web/public/ads.txt` (raiz deste site → `/ProtocolFit/ads.txt`) e no
-repositório `leostella97.github.io` (raiz do domínio → `leostella97.github.io/ads.txt`).
+repositório `leostella97.github.io` (raiz do domínio →
+`leostella97.github.io/ads.txt`).
 
 ### 1. Subir o código para o GitHub
 
 ```bash
-# (já feito localmente: git init + commit inicial)
 # 1) Crie o repositório em https://github.com/new (ex.: protocolfit)
 # 2) Conecte e envie:
 git remote add origin https://github.com/SEU-USUARIO/protocolfit.git
 git push -u origin main
 ```
 
-O repositório já inclui **CI no GitHub Actions** (`.github/workflows/ci.yml`): a cada push, o GitHub valida tipos e compila API + frontend automaticamente.
+O repositório já inclui **CI no GitHub Actions** (`.github/workflows/ci.yml`):
+a cada push, o GitHub valida tipos e compila API + frontend automaticamente.
 
 ### 2. Colocar o sistema NO AR
 
-O ProtocolFit usa **SQLite em disco** (pasta `apps/api/dados`), então precisa de um servidor com **disco persistente**. O GitHub guarda o código; as opções abaixo publicam o site. Tudo já está pronto nos arquivos `Dockerfile`, `docker-compose.yml` e `Caddyfile`.
+O ProtocolFit usa **SQLite em disco** (pasta `apps/api/dados`), então precisa
+de um servidor com **disco persistente**. O GitHub guarda o código; as opções
+abaixo publicam o site. Tudo já está pronto nos arquivos `Dockerfile`,
+`docker-compose.yml` e `Caddyfile`.
 
 **Opção A — VPS (recomendada; ex.: Hostinger, Hetzner, DigitalOcean):**
 ```bash
@@ -229,16 +397,25 @@ git clone https://github.com/SEU-USUARIO/protocolfit.git && cd protocolfit
 #   PROTOCOLFIT_JWT_SECRET=um-segredo-forte-aleatorio
 docker compose up -d --build
 ```
-Resultado: `https://seusite.com` (site) e `https://seusite.com/api` (API), com HTTPS automático, banco persistente em volume Docker e reinício automático. Após cada atualização: `git pull && docker compose up -d --build`.
+Resultado: `https://seusite.com` (site) e `https://seusite.com/api` (API), com
+HTTPS automático, banco persistente em volume Docker e reinício automático.
+Após cada atualização: `git pull && docker compose up -d --build`.
 
 **Opção B — Render.com** (2 serviços Docker):
-1. *Web Service* `protocolfit-api` → Dockerfile `apps/api/Dockerfile`, root `apps/api`, **disco persistente montado em `/app/dados`**, env `PROTOCOLFIT_JWT_SECRET` e `PROTOCOLFIT_ORIGEM_WEB=https://SEU-APP-WEB.onrender.com`.
-2. *Web Service* `protocolfit-web` → Dockerfile `apps/web/Dockerfile`, root `apps/web`, env de build `NEXT_PUBLIC_URL_API=https://protocolfit-api.onrender.com/api`.
+1. *Web Service* `protocolfit-api` → Dockerfile `apps/api/Dockerfile`, root
+   `apps/api`, **disco persistente montado em `/app/dados`**, env
+   `PROTOCOLFIT_JWT_SECRET` e `PROTOCOLFIT_ORIGEM_WEB=https://SEU-APP-WEB.onrender.com`.
+2. *Web Service* `protocolfit-web` → Dockerfile `apps/web/Dockerfile`, root
+   `apps/web`, env de build `NEXT_PUBLIC_URL_API=https://protocolfit-api.onrender.com/api`.
 3. Acesse `https://protocolfit-web.onrender.com`.
 
-**Opção C — Railway.app**: mesmo esquema — dois serviços com os Dockerfiles + volume em `/app/dados` + `NEXT_PUBLIC_URL_API` apontando para a URL pública da API.
+**Opção C — Railway.app**: mesmo esquema — dois serviços com os Dockerfiles +
+volume em `/app/dados` + `NEXT_PUBLIC_URL_API` apontando para a URL pública da
+API.
 
-> ⚠️ GitHub Pages **não** serve o sistema completo (só arquivos estáticos): o ProtocolFit precisa da API Fastify + SQLite rodando em servidor.
+> ⚠️ GitHub Pages **não** serve o sistema completo (só arquivos estáticos):
+> o modo navegador roda tudo localmente. Para o modo com servidor, o
+> ProtocolFit precisa da API Fastify + SQLite rodando.
 
 ## 🛡️ Aviso de responsabilidade (obrigatório)
 
@@ -249,20 +426,28 @@ sem fechar pelo clique fora e sem fechar com Esc: a única saída é o botão
 
 O aviso contém os cinco pontos exigidos:
 
-1. **Sua privacidade em 1º lugar** — sem servidor nem banco de dados; os dados ficam só no navegador/celular do usuário;
-2. **Caráter exclusivamente informativo e educativo** — ferramenta automatizada, de código aberto e sem fins lucrativos, baseada em estimativas gerais;
-3. **Consulte um profissional** — médico, nutricionista e profissional de educação física habilitado;
-4. **Ausência de responsabilidade** — criador e mantenedores não se responsabilizam por danos, lesões ou prejuízos;
-5. **Aptidão física** — o usuário declara estar em plenas condições de saúde e assume total responsabilidade.
+1. **Sua privacidade em 1º lugar** — no modo navegador não há servidor nem
+   banco de dados: os dados ficam só no navegador/celular do usuário;
+2. **Caráter exclusivamente informativo e educativo** — ferramenta
+   automatizada, de código aberto e sem fins lucrativos, baseada em
+   estimativas gerais;
+3. **Consulte um profissional** — médico, nutricionista e profissional de
+   educação física habilitado;
+4. **Ausência de responsabilidade** — criador e mantenedores não se
+   responsabilizam por danos, lesões ou prejuízos;
+5. **Aptidão física** — o usuário declara estar em plenas condições de saúde
+   e assume total responsabilidade.
 
 Detalhes técnicos:
 
-- O aceite fica gravado **apenas no navegador do usuário** (`protocolfit_termo_aceito`),
-  com a **versão do texto**: se o aviso mudar, todos precisam aceitar de novo.
+- O aceite fica gravado **apenas no navegador do usuário**
+  (`protocolfit_termo_aceito`), com a **versão do texto**: se o aviso mudar,
+  todos precisam aceitar de novo.
 - **Impedimento real da geração**: além de bloquear a interface, o motor do
   navegador recusa gerar planos sem o aceite (erro 403) — coberto por teste
   automatizado (`testar:local`).
-- O botão **"Termo de uso"** na barra lateral reabre o aviso a qualquer momento.
+- O botão **"Termo de uso"** na barra lateral reabre o aviso a qualquer
+  momento.
 
 ## 📱 Aplicativo instalável (PWA) com aviso de instalação
 
@@ -277,34 +462,140 @@ computador e funciona **offline**.
 | **Modo offline** | `public/sw.js` (service worker): navegação com estratégia *rede primeiro* e cache como reserva; JS/CSS/imagens/modelos JSON com *cache primeiro* e atualização em segundo plano. Depois da primeira visita, o sistema abre e **gera planos sem internet** |
 | **Verificação automática** | `npm run verificar:pwa --workspace @protocolfit/web` roda no fim de `build:pages`: confere manifesto, ícones, service worker e metadados — se o app deixar de ser instalável, o build quebra |
 
-Para testar no seu aparelho: abra **https://leostella97.github.io/ProtocolFit/** no
-celular e toque em **"Instalar agora"** no aviso (ou use o menu do navegador →
-*Instalar aplicativo*).
+Para testar no seu aparelho: abra
+**https://leostella97.github.io/ProtocolFit/** no celular e toque em
+**"Instalar agora"** no aviso (ou use o menu do navegador → *Instalar
+aplicativo*).
 
 ## 🔌 Endpoints da API
 
 | Método | Rota | Descrição |
 | --- | --- | --- |
 | GET | `/api/saude` | Health check |
-| GET | `/api/opcoes` | Opções do onboarding (faixas, objetivos, modalidades...) |
+| GET | `/api/opcoes` | Opções do onboarding (faixas, objetivos, modalidades, variações de treino) |
 | POST | `/api/auth/cadastro` | Cria conta (retorna JWT) |
 | POST | `/api/auth/login` | Login com bloqueio de segurança |
 | GET | `/api/eu` | Conta logada + estado do onboarding |
 | POST | `/api/perfil` | Salva perfil e **gera os planos** |
-| GET | `/api/perfil` | Perfil salvo |
+| PATCH | `/api/perfil/corpo` | Atualiza peso/altura (regera metas) |
+| PATCH | `/api/perfil/treino` | Troca o **estilo de treino** e regenera os planos |
 | POST | `/api/perfil/recalcular` | **Renova planos** pela evolução física |
 | GET | `/api/plano/atual` | Plano vigente (perfil + treino + dieta) |
-| PATCH | `/api/plano/treino/:id` | Edita carga/séries/repetições (cópia do usuário) |
-| GET | `/api/plano/treino/:id/alternativas` | Alternativas do mesmo grupo muscular para um exercício |
+| PATCH | `/api/plano/treino/:id` | Edita carga/séries/repetições/tempo/distância (cópia do usuário) |
+| GET | `/api/plano/treino/:id/alternativas` | Alternativas do mesmo grupo muscular (em lote por dia, via `?dia_indice=`) |
 | PATCH | `/api/plano/treino/:id/trocar` | Troca o exercício por outro do mesmo grupo (cópia do usuário) |
 | PATCH | `/api/plano/dieta/:id/substituir` | Substitui alimento (cópia do usuário) |
 | POST | `/api/evolucao` | Registra pesagem |
 | GET | `/api/evolucao` | Histórico de pesagens |
+| GET | `/api/checkin` | Resumo do check-in (sequência, recorde, últimos 7 dias) |
+| POST | `/api/checkin` | Registra o check-in do dia (treino/dieta/água/peso/observação) |
 
 ## 📝 Convenções do código
 
-Todo o código está **comentado em português** e usa **nomes de variáveis, funções e componentes em português** (`calcularTMB`, `buscarPlanoAtual`, `gerarPlanosParaPerfil`...).
+Todo o código está **comentado em português** e usa **nomes de variáveis,
+funções e componentes em português** (`calcularTMB`, `buscarPlanoAtual`,
+`gerarPlanosParaPerfil`...). O motor de cálculo existe em duas cópias
+propositalmente espelhadas — `apps/api/src/motor/` (servidor) e
+`apps/web/src/lib/motor/` (navegador) — e um teste automatizado garante que
+produzem resultados idênticos.
+
+## 📚 Referências
+
+As fontes abaixo fundamentam as regras do motor (volume, proximidade da
+falha, descanso, periodização, interferência do treinamento concorrente,
+proteína e gasto energético). Livros foram consultados em suas edições
+traduzidas quando existentes. **Nem toda recomendação do app sai
+diretamente de um único estudo** — muitas são heurísticas informadas pela
+literatura combinada e pelas convenções práticas do treinamento.
+
+### Livros-texto de treinamento
+
+1. SCHOENFELD, Brad J. **Bases Científicas do Treinamento de Hipertrofia**.
+   São Paulo: Grupo A / Artmed, 2021. (Original: *Science and Development
+   of Muscle Hypertrophy*, 2ª ed., Human Kinetics, 2021.)
+2. FLECK, Steven J.; KRAEMER, William J. **Fundamentos do Treinamento de
+   Força Muscular**. 4ª ed. Porto Alegre: Artmed, 2017. (Original:
+   *Designing Resistance Training Programs*.)
+3. ZATSIORSKY, Vladimir M.; KRAEMER, William J. **Ciência e Prática do
+   Treinamento de Força**. 2ª ed. São Paulo: Phorte, 2008. (Original:
+   *Science and Practice of Strength Training*.)
+4. BOMPA, Tudor O.; BUZZICHELLI, Carlo. **Periodização: Teoria e
+   Metodologia do Treinamento**. 6ª ed. São Paulo: Phorte, 2017.
+   (Original: *Periodization: Theory and Methodology of Training*.)
+5. THIBAUDEAU, Christian. **O Livro Negro do Treinamento de Força**
+   (*The Black Book of Training Secrets*). FOnes Publications.
+
+### Revisões sistemáticas e meta-análises
+
+6. SCHOENFELD, Brad J. **The mechanisms of muscle hypertrophy and their
+   application to resistance training**. *Journal of Strength and
+   Conditioning Research*, v. 24, n. 10, p. 2857–2872, 2010.
+7. SCHOENFELD, Brad J.; OGBORN, Dan; KRIEGER, James W. **Dose-response
+   relationship between weekly resistance training volume and increases
+   in muscle mass: a systematic review and meta-analysis**. *Journal of
+   Sports Sciences*, v. 35, n. 11, p. 1073–1082, 2017.
+8. SCHOENFELD, Brad J. et al. **Longer interset rest periods enhance
+   muscle strength and hypertrophy in resistance-trained men**.
+   *Journal of Strength and Conditioning Research*, v. 30, n. 7,
+   p. 1805–1812, 2016.
+9. MORTON, Robert W. et al. **A systematic review, meta-analysis and
+   meta-regression of the effect of protein supplementation on
+   resistance training-induced gains in muscle mass and strength in
+   healthy adults**. *British Journal of Sports Medicine*, v. 52, n. 6,
+   p. 376–384, 2018.
+10. WILSON, Jacob M. et al. **Concurrent training: a meta-analysis
+    examining interference of aerobic and resistance exercises**.
+    *Journal of Strength and Conditioning Research*, v. 26, n. 8,
+    p. 2293–2307, 2012.
+11. SABAG, Angelo et al. **The compatibility of concurrent high
+    intensity interval training and resistance training for muscular
+    strength and hypertrophy: a systematic review and meta-analysis**.
+    *Sports Medicine*, v. 48, n. 4, p. 947–952, 2018.
+12. BLAGROVE, Richard C.; HOWATSON, Glyn; HAYES, Philip R. **Effects of
+    strength training on the physiological determinants of middle- and
+    long-distance running performance: a systematic review**. *Sports
+    Medicine*, v. 48, n. 5, p. 1117–1149, 2018.
+13. RØNNESTAD, Bent R.; MUJIKA, Iñigo. **Optimizing strength training
+    for running and cycling endurance performance: a review**.
+    *Scandinavian Journal of Medicine & Science in Sports*, v. 24, n. 4,
+    p. 603–612, 2014.
+
+### Artigos de fisiologia, nutrição e energia
+
+14. KRAEMER, William J.; RATAMESS, Nicholas A. **Hormonal responses and
+    adaptations to resistance exercise and training**. *Sports
+    Medicine*, v. 35, n. 4, p. 339–361, 2005.
+15. ACHTEN, Juul; JEUKENDRUP, Asker E. **Optimizing fat oxidation
+    through exercise and diet**. *Nutrition*, v. 20, n. 7–8,
+    p. 716–727, 2004.
+16. SCHOENFELD, Brad J.; ARAGON, Alan A. **How much protein can the body
+    use in a single meal for muscle-building? Implications for daily
+    protein distribution**. *Journal of the International Society of
+    Sports Nutrition*, v. 15, art. 10, 2018.
+17. JÄGER, Ralf et al. **International Society of Sports Nutrition
+    position stand: protein and exercise**. *Journal of the
+    International Society of Sports Nutrition*, v. 14, art. 20, 2017.
+18. RHEA, Matthew R. et al. **A comparison of linear and daily
+    undulating periodized programs with equated volume and intensity for
+    strength**. *Journal of Strength and Conditioning Research*,
+    v. 16, n. 2, p. 250–255, 2002.
+19. AMERICAN COLLEGE OF SPORTS MEDICINE. **Progression models in
+    resistance training for healthy adults** (position stand).
+    *Medicine & Science in Sports & Exercise*, v. 41, n. 3,
+    p. 687–708, 2009.
+20. MIFFLIN, Mark D. et al. **A new predictive equation for resting
+    energy expenditure in healthy individuals**. *American Journal of
+    Clinical Nutrition*, v. 51, n. 2, p. 241–247, 1990.
+
+### Revisões nacionais (contexto brasileiro)
+
+21. Revisões sistemáticas da **Revista Brasileira de Prescrição e
+    Fisiologia do Exercício (RBPFEX)** sobre treinamento de força e
+    composição corporal em atletas de modalidades de combate e
+    corredores — usadas como referência de contexto na montagem dos
+    estilos "força do corredor" e "força + HIIT".
 
 ---
 
-🤖 *Projeto desenvolvido com auxílio de inteligência artificial*
+🤖 *Projeto desenvolvido com auxílio de inteligência artificial, com
+curadoria humana sobre a literatura citada.*

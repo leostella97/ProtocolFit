@@ -1,0 +1,52 @@
+{
+  "nome": "Periodização Ondulante (DUP) - 4 Dias Upper/Lower",
+  "modalidade": "academia",
+  "objetivo": "hipertrofia",
+  "dias": 4,
+  "duracao_estimada_min": 60,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia 1 - Superiores Força",
+      "exercicios": [
+        { "nome": "Supino reto com barra", "grupo": "peito", "tipo": "composto", "series": 5, "repeticoes_min": 4, "repeticoes_max": 6, "descanso_segundos": 180, "percentual_carga_peso_corporal": 0.6, "prescricao_fixa": true, "dicas": "Dia pesado: ~85% do máximo. Nos esquemas ondulantes, este é o estímulo de força — use os 3 min de descanso sem culpa." },
+        { "nome": "Barra fixa com lastro", "grupo": "costas", "tipo": "corporal", "series": 5, "repeticoes_min": 4, "repeticoes_max": 6, "descanso_segundos": 180, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Lastro no cinto ou caneleira. Sem lastro, faça excêntrica de 4 s. Força de puxar equilibra a de empurrar." },
+        { "nome": "Desenvolvimento militar com barra", "grupo": "ombro", "tipo": "composto", "series": 4, "repeticoes_min": 5, "repeticoes_max": 6, "descanso_segundos": 150, "percentual_carga_peso_corporal": 0.35, "prescricao_fixa": true, "dicas": "Em pé, glúteos e abdômen travados. A barra sobe em linha reta — afaste a cabeça, não o tronco." },
+        { "nome": "Remada curvada com barra", "grupo": "costas", "tipo": "composto", "series": 4, "repeticoes_min": 6, "repeticoes_max": 8, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.45, "prescricao_fixa": true, "dicas": "Peso que permite 6–8 reps limpas. Se precisar dar tranco com a lombar, está pesado demais." },
+        { "nome": "Tríceps testa com barra", "grupo": "triceps", "tipo": "isolador", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.18, "prescricao_fixa": true, "dicas": "Deitado, barra desce até a testa com cotovelos fixos apontando ao teto. Extensão completa lá em cima." }
+      ]
+    },
+    {
+      "titulo": "Dia 2 - Inferiores Força",
+      "exercicios": [
+        { "nome": "Levantamento terra", "grupo": "posterior", "tipo": "composto", "series": 5, "repeticoes_min": 3, "repeticoes_max": 5, "descanso_segundos": 210, "percentual_carga_peso_corporal": 0.8, "prescricao_fixa": true, "dicas": "O exercício mais exigente do programa — reps baixas com carga máxima técnica. Coluna neutra sempre; o descanso longo é regra." },
+        { "nome": "Agachamento livre", "grupo": "pernas", "tipo": "composto", "series": 5, "repeticoes_min": 4, "repeticoes_max": 6, "descanso_segundos": 180, "percentual_carga_peso_corporal": 0.7, "prescricao_fixa": true, "dicas": "Depois do terra, mantenha a técnica impecável: peito aberto, joelhos acompanham a ponta dos pés." },
+        { "nome": "Leg press 45°", "grupo": "pernas", "tipo": "composto", "series": 4, "repeticoes_min": 6, "repeticoes_max": 8, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.7, "prescricao_fixa": true, "dicas": "Volume de força sem exigir mais da lombar. Pés na largura dos ombros, desça até ~90°." },
+        { "nome": "Panturrilha sentado (sóleo)", "grupo": "panturrilha", "tipo": "isolador", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.3, "prescricao_fixa": true, "dicas": "Sentado pega o sóleo — o músculo por baixo do gêmeo. Pause 1 s no topo e desça devagar." },
+        { "nome": "Prancha com carga", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Anilha nas costas ou caneleira: sustente 30–45 s por série. Abdômen contraído como se fosse levar um soco." }
+      ]
+    },
+    {
+      "titulo": "Dia 3 - Superiores Hipertrofia",
+      "exercicios": [
+        { "nome": "Supino inclinado com halteres", "grupo": "peito", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.4, "prescricao_fixa": true, "dicas": "Depois do dia pesado vem o dia de volume. Alongue bem no fundo — o estímulo em posição alongada conta muito." },
+        { "nome": "Puxada frontal na polia", "grupo": "costas", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.4, "prescricao_fixa": true, "dicas": "Pegada um pouco além dos ombros, puxe na direção da clavícula. Imagine os cotovelos descendo, não as mãos." },
+        { "nome": "Desenvolvimento com halteres", "grupo": "ombro", "tipo": "composto", "series": 3, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.25, "prescricao_fixa": true, "dicas": "Sentado com apoio de banco para isolar o ombro. Suba até quase estender, sem bater os halteres." },
+        { "nome": "Crucifixo inclinado com halteres", "grupo": "peito", "tipo": "isolador", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.12, "prescricao_fixa": true, "dicas": "Arco amplo, cotovelos semifixos. Pare quando o halter alinha com o peito — abrir demais lesa o ombro." },
+        { "nome": "Elevação lateral", "grupo": "ombro", "tipo": "isolador", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": 0.06, "prescricao_fixa": true, "dicas": "Carga leve e técnica limpa: se o trapézio levanta junto, diminua o peso. O ombro lateral deve queimar." },
+        { "nome": "Rosca direta com halteres alternada", "grupo": "biceps", "tipo": "isolador", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 45, "percentual_carga_peso_corporal": 0.12, "prescricao_fixa": true, "dicas": "Gire o punho subindo (supinação) — é a função principal do bíceps. Desça em 2 s sem deixar o braço solto." },
+        { "nome": "Tríceps francês com halter", "grupo": "triceps", "tipo": "isolador", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 45, "percentual_carga_peso_corporal": 0.1, "prescricao_fixa": true, "dicas": "Acima da cabeça com as duas mãos no halter. Alongar o tríceps lá embaixo recruta a cabeça longa." }
+      ]
+    },
+    {
+      "titulo": "Dia 4 - Inferiores Hipertrofia",
+      "exercicios": [
+        { "nome": "Agachamento livre", "grupo": "pernas", "tipo": "composto", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.55, "prescricao_fixa": true, "dicas": "Mesmo movimento do dia de força, carga menor e mais reps — ondulação em ação: estímulos diferentes toda semana." },
+        { "nome": "Leg press 45°", "grupo": "pernas", "tipo": "composto", "series": 4, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.8, "prescricao_fixa": true, "dicas": "Volume de quadríceps seguro: aproxime da falha na última série sem perder a amplitude." },
+        { "nome": "Mesa flexora", "grupo": "posterior", "tipo": "isolador", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.25, "prescricao_fixa": true, "dicas": "Desça devagar (2–3 s) — a excêntrica controlada é o que mais protege o posterior e faz crescer." },
+        { "nome": "Cadeira extensora", "grupo": "pernas", "tipo": "isolador", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.25, "prescricao_fixa": true, "dicas": "Pause 1 s na contração máxima. Isolador serve para acumular volume do quadríceps sem cansar a lombar." },
+        { "nome": "Panturrilha em pé", "grupo": "panturrilha", "tipo": "isolador", "series": 4, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": 0.4, "prescricao_fixa": true, "dicas": "Amplitude máxima: alonga embaixo, contrai em cima. Volume de panturrilha soma com o do dia 2." },
+        { "nome": "Abdominal infra no banco", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Flexione o quadril trazendo os joelhos ao peito — só levantar as pernas retas pega o flexor, não o abdômen." }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "nome": "Força do Corredor em Casa - 3 Dias",
+  "modalidade": "pesocorporal",
+  "objetivo": "corrida",
+  "dias": 3,
+  "duracao_estimada_min": 45,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia 1 - Força unipodal (sem equipamento)",
+      "exercicios": [
+        { "nome": "Pistol squat progressão (ao apoio)", "grupo": "pernas", "tipo": "corporal", "series": 4, "repeticoes_min": 5, "repeticoes_max": 8, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "A corrida é uma sequência de apoios unipodais: força de uma perna só transfere direto. Desça até o apoio, suba sem impulso — reps por perna." },
+        { "nome": "Afundo búlgaro", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 75, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Pé traseiro no sofá ou cadeira. Trabalha o mesmo padrão do apoio da passada com carga do corpo todo numa perna." },
+        { "nome": "Ponte de glúteo unipodal", "grupo": "gluteos", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Glúteo é o motor do corredor: suba com uma perna só, pause no topo, desça devagar. Reps por lado." },
+        { "nome": "Panturrilha unipodal em degrau", "grupo": "panturrilha", "tipo": "corporal", "series": 4, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Amplitude máxima na beirada do degrau. Panturrilha forte absorve ~70% do impacto vertical da passada." },
+        { "nome": "Prancha isométrica", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "30–45 s por série. Tronco rígido = menos energia desperdiçada em rotação a cada passada." }
+      ]
+    },
+    {
+      "titulo": "Dia 2 - Pliometria e potência",
+      "exercicios": [
+        { "nome": "Saltos verticais", "grupo": "pliometria", "tipo": "corporal", "series": 4, "repeticoes_min": 5, "repeticoes_max": 8, "descanso_segundos": 120, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Salte o máximo que conseguir e aterrisse macio na ponta dos pés. Potência + rigidez elástica = economia de corrida. Descanso longo mantém a qualidade do salto." },
+        { "nome": "Saltos alternados (bound)", "grupo": "pliometria", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Avance saltando de uma perna para a outra — o gesto exato da passada potente. Contato curto com o solo, reps por lado." },
+        { "nome": "Skipping alto", "grupo": "pliometria", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Joelho alto, tronco erguido, ritmo vivo. É técnica de corrida disfarçada de exercício." },
+        { "nome": "Tibial anterior (levantar ponta do pé)", "grupo": "panturrilha", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Costas na parede, levante a ponta dos pés sem tirar o calcanhar do chão. Fortalecer o tibial previne a canelite." },
+        { "nome": "Caminhada acelerada", "grupo": "cardio", "tipo": "cardio", "series": 1, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 0, "percentual_carga_peso_corporal": null, "dicas": "15–20 min de caminhada forte: recupera as pernas sem impacto e mantém o volume aeróbico no dia de potência." }
+      ]
+    },
+    {
+      "titulo": "Dia 3 - Posterior e estabilidade",
+      "exercicios": [
+        { "nome": "Nordic curl assistido", "grupo": "posterior", "tipo": "corporal", "series": 3, "repeticoes_min": 4, "repeticoes_max": 6, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Pés presos sob o sofá, desça o tronco controlando e volte com ajuda das mãos. O melhor protetor de posterior que existe — chave para prevenir lesão de corredor." },
+        { "nome": "Single-leg RDL (terra romeno unipodal)", "grupo": "posterior", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 75, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Uma perna só, quadril gira para trás, braços descem em direção ao pé. Equilíbrio + posterior = os dois pilares do corredor. Reps por lado." },
+        { "nome": "Agachamento isométrico na parede", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 10, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Coxa paralela ao chão por 30–45 s. Isometria forte ensina o joelho a aguentar carga estática — útil em descidas." },
+        { "nome": "Prancha lateral", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "30 s por lado. Quadril estável evita o 'balanço de pélvis' que rouba eficiência e sobrecarrega o joelho." },
+        { "nome": "Corrida leve", "grupo": "cardio", "tipo": "cardio", "series": 1, "repeticoes_min": 15, "repeticoes_max": 25, "descanso_segundos": 0, "percentual_carga_peso_corporal": null, "dicas": "15–25 min de trote fácil APÓS a força: colocar o estímulo pesado primeiro e o aeróbico leve depois reduz a interferência entre os dois treinos." }
+      ]
+    }
+  ]
+}

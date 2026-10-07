@@ -6,7 +6,8 @@
  *   1) JSON válido;
  *   2) campos obrigatórios do esquema (nome, modalidade, objetivo, dias...);
  *   3) "dias" coerente com a quantidade de dias em dias_da_semana;
- *   4) exercícios com campos válidos e percentual de carga dentro de 0..1;
+ *   4) exercícios com campos válidos, percentual de carga dentro de 0..1,
+ *      prescricao_fixa booleano e distancia_km restrita ao grupo cardio;
  *   5) matriz completa: 2 modalidades x 3 objetivos x dias 2..7;
  *   6) variações nomeadas no padrão "{dias}dias-{slug}.json" com conteúdo
  *      coerente com a pasta (modalidade/objetivo) e com o nome (dias).
@@ -122,6 +123,18 @@ function validarArquivo(caminhoRelativo, contexto = {}) {
       if (exercicio.percentual_carga_peso_corporal !== null && exercicio.percentual_carga_peso_corporal !== undefined) {
         if (typeof exercicio.percentual_carga_peso_corporal !== 'number' || exercicio.percentual_carga_peso_corporal < 0 || exercicio.percentual_carga_peso_corporal > 1) {
           registrarErro(caminhoRelativo, `${rotulo}: percentual_carga_peso_corporal fora de 0..1`);
+        }
+      }
+      // TEAM_009: prescrição fixa é opcional e, quando presente, deve ser booleano.
+      if (exercicio.prescricao_fixa !== undefined && typeof exercicio.prescricao_fixa !== 'boolean') {
+        registrarErro(caminhoRelativo, `${rotulo}: prescricao_fixa deve ser booleano`);
+      }
+      // TEAM_008: distância é opcional e só faz sentido no grupo cardio (0 < km <= 500).
+      if (exercicio.distancia_km !== undefined) {
+        if (typeof exercicio.distancia_km !== 'number' || exercicio.distancia_km <= 0 || exercicio.distancia_km > 500) {
+          registrarErro(caminhoRelativo, `${rotulo}: distancia_km fora do intervalo (0, 500]`);
+        } else if (exercicio.grupo !== 'cardio') {
+          registrarErro(caminhoRelativo, `${rotulo}: distancia_km so e permitido no grupo "cardio"`);
         }
       }
     });

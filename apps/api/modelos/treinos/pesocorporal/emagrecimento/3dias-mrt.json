@@ -1,0 +1,42 @@
+{
+  "nome": "MRT em Casa - 3 Dias (metabólico sem equipamento)",
+  "modalidade": "pesocorporal",
+  "objetivo": "emagrecimento",
+  "dias": 3,
+  "duracao_estimada_min": 35,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia 1 - Circuito total",
+      "exercicios": [
+        { "nome": "Agachamento livre (peso do corpo)", "grupo": "pernas", "tipo": "corporal", "series": 4, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Circuito metabólico: passe direto ao próximo exercício e descanse só ao fim do ciclo. Pernas grandes aceleram o coração." },
+        { "nome": "Flexão de braço", "grupo": "peito", "tipo": "corporal", "series": 4, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Sem pausa no topo nem embaixo. Se faltar força, apoie os joelhos — manter o fluxo vale mais que a forma perfeita com pausa." },
+        { "nome": "Remada invertida (mesa firme)", "grupo": "costas", "tipo": "corporal", "series": 4, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Corpo reto debaixo da mesa, puxe o peito até a borda. Em casa, costas também entram no circuito." },
+        { "nome": "Afundo alternado", "grupo": "pernas", "tipo": "corporal", "series": 4, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Reps por perna, tronco alto. Já cansado é onde o circuito trabalha — mantenha o passo firme." },
+        { "nome": "Prancha com toque no ombro", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 16, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Alterne os toques sem deixar o quadril balançar. Anti-rotação sob fadiga é treino de core de verdade." },
+        { "nome": "Polichinelo", "grupo": "cardio", "tipo": "cardio", "series": 4, "repeticoes_min": 40, "repeticoes_max": 40, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Fecha cada ciclo com 40 s de polichinelo acelerado. O EPOC pós-treino é o bônus do MRT — o corpo continua queimando depois." }
+      ]
+    },
+    {
+      "titulo": "Dia 2 - Circuito explosivo",
+      "exercicios": [
+        { "nome": "Agachamento com salto", "grupo": "pliometria", "tipo": "corporal", "series": 4, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 40, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Explosão máxima na subida, aterrissagem macia. Se o joelho reclamar, faça agachamento rápido sem salto." },
+        { "nome": "Flexão de braço (ritmo)", "grupo": "peito", "tipo": "corporal", "series": 4, "repeticoes_min": 12, "repeticoes_max": 20, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Tente uma rep a mais a cada ciclo — progressão no MRT é mais trabalho no mesmo tempo." },
+        { "nome": "Mountain climbers (escalador)", "grupo": "cardio", "tipo": "cardio", "series": 4, "repeticoes_min": 30, "repeticoes_max": 30, "descanso_segundos": 40, "percentual_carga_peso_corporal": null, "dicas": "30 s de joelhos correndo ao peito. Quadril baixo, mãos firmes sob os ombros." },
+        { "nome": "Ponte de glúteo", "grupo": "gluteos", "tipo": "corporal", "series": 4, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Aperte o glúteo 1 s no topo de cada rep. Músculo grande em circuito = mais gasto e mais massa preservada." },
+        { "nome": "Abdominal bicicleta", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Rotação completa, cotovelo ao joelho oposto, sem embalo. O 'descanso ativo' do circuito." },
+        { "nome": "Burpee", "grupo": "cardio", "tipo": "cardio", "series": 4, "repeticoes_min": 30, "repeticoes_max": 30, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "30 s de burpees no fim do ciclo — o exercício de maior gasto calórico por minuto. Faça no seu ritmo; versão sem salto vale igual." }
+      ]
+    },
+    {
+      "titulo": "Dia 3 - Densidade final",
+      "exercicios": [
+        { "nome": "Agachamento isométrico + saltos", "grupo": "pernas", "tipo": "corporal", "series": 4, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Alterne: 30 s de isometria na parede + 10 agachamentos com salto. A combinação esgota a perna no bom sentido." },
+        { "nome": "Flexão diamante", "grupo": "triceps", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Mãos em losango, cotovelos colados. Variação do empurrar que cobra tríceps e peito interno." },
+        { "nome": "Remada invertida (mesa firme)", "grupo": "costas", "tipo": "corporal", "series": 4, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Se a mesa não permite, toalha na porta ou garrafas como halteres funcionam. Puxar é obrigatório — não pule." },
+        { "nome": "Afundo reverso com joelhada", "grupo": "pernas", "tipo": "corporal", "series": 4, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Passo para trás e joelho subindo ao voltar — adiciona um 'chute' de core e equilíbrio. Reps por perna." },
+        { "nome": "Prancha isométrica", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "30–45 s retos por série. Último dia da semana: core sob fadiga ensina o corpo a manter postura cansado." },
+        { "nome": "Corrida no Lugar", "grupo": "cardio", "tipo": "cardio", "series": 6, "repeticoes_min": 45, "repeticoes_max": 45, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "6 blocos de 45 s correndo no lugar com joelhos altos. Fecha a semana com cardio intervalado — máximo gasto sem sair de casa." }
+      ]
+    }
+  ]
+}

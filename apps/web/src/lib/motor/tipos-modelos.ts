@@ -31,6 +31,12 @@ export interface ModeloExercicio {
    * 1km" → 1). Ausente/null em exercícios de força.
    */
   distancia_km?: number | null;
+  /**
+   * TEAM_009: quando true, o motor NÃO sobrescreve series/reps/descanso com
+   * a regra do objetivo — usado por estilos periodizados (ondulante/DUP,
+   * força pesada p/ corredor, MRT) cuja prescrição é a essência do método.
+   */
+  prescricao_fixa?: boolean;
   /** Dica de execução. */
   dicas: string;
 }

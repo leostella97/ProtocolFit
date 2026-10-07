@@ -26,6 +26,11 @@ export interface ModeloExercicio {
   descanso_segundos: number;
   /** Fração do peso corporal sugerida como carga inicial (null = sem carga). */
   percentual_carga_peso_corporal: number | null;
+  /**
+   * TEAM_008: distância alvo em km para exercícios de cardio (ex.: "Corrida
+   * 1km" → 1). Ausente/null em exercícios de força.
+   */
+  distancia_km?: number | null;
   /** Dica de execução. */
   dicas: string;
 }

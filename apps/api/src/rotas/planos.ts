@@ -43,6 +43,14 @@ const LIMITES_EDICAO = {
   repeticoes_max: 50,
   carga_min_kg: 0,
   carga_max_kg: 400,
+  /**
+   * TEAM_008: no cardio o campo "repetições" carrega TEMPO (minutos do alvo
+   * contínuo ou segundos por tiro) — valores como "45 min" ou "90 s" iam
+   * além do teto de 50 repetições de musculação.
+   */
+  tempo_cardio_max: 600,
+  distancia_min_km: 0,
+  distancia_max_km: 500,
 } as const;
 
 /**
@@ -126,6 +134,14 @@ export async function rotasPlanos(app: FastifyInstance): Promise<void> {
     // TEAM_007: séries/repetições exigem INTEIRO e a carga exige NÚMERO —
     // antes "abc"/NaN escapavam das comparações de intervalo (NaN < x é falso)
     // e eram gravados direto na cópia do usuário.
+    // A edição precisa conhecer o exercício ANTES de validar: no cardio o
+    // campo numérico é tempo (teto maior) e existe a meta de distância.
+    const plano = interpretarConteudo<Omit<PlanoTreino, 'id' | 'versao' | 'modelo_origem' | 'criado_em'>>(linha);
+    const exercicioEditado = plano.dias_da_semana[edicao.dia_indice]?.exercicios[edicao.exercicio_indice];
+    if (!exercicioEditado) {
+      return enviarErro(resposta, 400, 'Dia ou exercício não encontrado no plano.');
+    }
+    const tetoNumerico = exercicioEditado.grupo === 'cardio' ? LIMITES_EDICAO.tempo_cardio_max : LIMITES_EDICAO.repeticoes_max;
     if (
       edicao.series !== undefined &&
       (!Number.isInteger(edicao.series) || edicao.series < LIMITES_EDICAO.series_min || edicao.series > LIMITES_EDICAO.series_max)
@@ -134,9 +150,15 @@ export async function rotasPlanos(app: FastifyInstance): Promise<void> {
     }
     if (
       edicao.repeticoes !== undefined &&
-      (!Number.isInteger(edicao.repeticoes) || edicao.repeticoes < LIMITES_EDICAO.repeticoes_min || edicao.repeticoes > LIMITES_EDICAO.repeticoes_max)
+      (!Number.isInteger(edicao.repeticoes) || edicao.repeticoes < LIMITES_EDICAO.repeticoes_min || edicao.repeticoes > tetoNumerico)
     ) {
-      return enviarErro(resposta, 400, `As repetições devem ficar entre ${LIMITES_EDICAO.repeticoes_min} e ${LIMITES_EDICAO.repeticoes_max}.`);
+      return enviarErro(
+        resposta,
+        400,
+        exercicioEditado.grupo === 'cardio'
+          ? `O tempo deve ficar entre ${LIMITES_EDICAO.repeticoes_min} e ${LIMITES_EDICAO.tempo_cardio_max}.`
+          : `As repetições devem ficar entre ${LIMITES_EDICAO.repeticoes_min} e ${LIMITES_EDICAO.repeticoes_max}.`,
+      );
     }
     if (
       edicao.carga_kg !== undefined &&
@@ -146,9 +168,16 @@ export async function rotasPlanos(app: FastifyInstance): Promise<void> {
     ) {
       return enviarErro(resposta, 400, `A carga deve ficar entre ${LIMITES_EDICAO.carga_min_kg} e ${LIMITES_EDICAO.carga_max_kg} kg.`);
     }
-
-    // Aplica a edição na cópia do usuário (o mestre permanece intacto).
-    const plano = interpretarConteudo<Omit<PlanoTreino, 'id' | 'versao' | 'modelo_origem' | 'criado_em'>>(linha);
+    // TEAM_008: a distância é opcional — número finito no intervalo, ou null
+    // para remover a meta de km do exercício de cardio.
+    if (
+      edicao.distancia_km !== undefined &&
+      edicao.distancia_km !== null &&
+      (typeof edicao.distancia_km !== 'number' || !Number.isFinite(edicao.distancia_km) ||
+        edicao.distancia_km <= LIMITES_EDICAO.distancia_min_km || edicao.distancia_km > LIMITES_EDICAO.distancia_max_km)
+    ) {
+      return enviarErro(resposta, 400, `A distância deve ficar entre 0 e ${LIMITES_EDICAO.distancia_max_km} km.`);
+    }
     try {
       aplicarEdicaoTreino(plano, edicao);
     } catch (erro) {

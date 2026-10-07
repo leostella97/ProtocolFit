@@ -77,6 +77,11 @@ export interface ExercicioDoPlano {
   descanso_segundos: number;
   /** Carga sugerida em kg (null para exercícios de peso corporal). */
   carga_sugerida_kg: number | null;
+  /**
+   * TEAM_008: distância alvo em km (exercícios de cardio; null = sem meta).
+   * Cópias de plano antigas não trazem o campo — undefined vira null.
+   */
+  distancia_km?: number | null;
   dicas: string;
 }
 

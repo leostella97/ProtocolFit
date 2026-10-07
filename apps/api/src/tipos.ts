@@ -101,6 +101,12 @@ export interface ModeloExercicio {
   descanso_segundos: number;
   /** Fração do peso corporal sugerida como carga inicial (null = sem carga). */
   percentual_carga_peso_corporal: number | null;
+  /**
+   * TEAM_008: distância alvo em km para exercícios de cardio (ex.: "Corrida
+   * 1km" → 1). Ausente/null em exercícios de força — o campo é opcional nos
+   * arquivos do modelo.
+   */
+  distancia_km?: number | null;
   /** Dica de execução exibida ao usuário. */
   dicas: string;
 }
@@ -219,6 +225,11 @@ export interface ExercicioDoPlano {
   descanso_segundos: number;
   /** Carga inicial sugerida em kg (null para exercícios de peso corporal). */
   carga_sugerida_kg: number | null;
+  /**
+   * TEAM_008: distância alvo em km (exercícios de cardio; null = sem meta de
+   * distância). Cópias antigas não trazem o campo — undefined vira null.
+   */
+  distancia_km?: number | null;
   /** Dica de execução. */
   dicas: string;
 }

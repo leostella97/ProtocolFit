@@ -2,13 +2,16 @@
  * page.tsx — Treino do painel
  * ---------------------------------------------------------------------------
  * Exibe o plano de treino organizado em abas (um dia por aba). Cada
- * exercício é um cartão editável (séries, repetições e carga) que salva via
- * editarExercicio(), com feedback "Salvo ✓" temporário ou erro em vermelho.
- * TEAM_004: cada exercício pode ser marcado como concluído na sessão de hoje;
- * ao concluir TODOS os exercícios do dia, o check-in recebe treino_feito
- * automaticamente — ou pelo botão "Concluir treino de hoje" da aba.
+ * exercício é um cartão editável (séries, repetições e carga; no cardio,
+ * tiros, tempo e distância) que salva via editarExercicio(), com feedback
+ * "Salvo ✓" temporário ou erro em vermelho.
+ * TEAM_004: cada exercício pode ser marcado como concluído; ao concluir
+ * TODOS os exercícios do dia, o check-in recebe treino_feito automaticamente
+ * — ou pelo botão "Concluir treino de hoje" da aba.
  * TEAM_006: cada exercício tem um timer de descanso com atalhos de 1/2/3 min
  * ou tempo personalizado (CronometroDeDescanso).
+ * TEAM_008: a checklist persiste entre visitas (progresso-treino.ts) e os
+ * exercícios de cardio exibem distância/tempo em vez de séries/repetições.
  * ---------------------------------------------------------------------------
  */
 'use client';
@@ -46,52 +49,16 @@ import {
   type CorpoEdicaoExercicio,
 } from '@/lib/api';
 import { encerrarSessao } from '@/lib/armazenamento';
-import { hojeLocal } from '@/lib/checkin-util';
-import { combinarClasses, rotuloDoObjetivo } from '@/lib/util';
+import { lerConcluidos, gravarConcluidos } from '@/lib/progresso-treino';
+import { combinarClasses, formatarAlvoDoExercicio, rotuloDoObjetivo } from '@/lib/util';
 import type { AlternativaDeExercicio, ExercicioDoPlano, PlanoCompleto, PlanoTreino } from '@/lib/tipos';
 
 /* ===========================================================================
- * TEAM_004 — progresso da sessão de hoje (checklist de exercícios).
- * Estado efêmero por plano+dia civil+aba: zera sozinho a cada dia (a data
- * está na chave) e não vai ao banco — o registro durável é o check-in.
+ * TEAM_004/TEAM_008 — checklist de exercícios concluídos, persistida por
+ * plano+dia em progresso-treino.ts. A marca sobrevive entre visitas: só zera
+ * quando uma sessão CONCLUÍDA vira um dia novo (sessão incompleta continua).
+ * Não vai ao banco — o registro durável do treino é o check-in.
  * ======================================================================== */
-
-/** Monta a chave do localStorage para a checklist de um dia do plano. */
-function chaveDoProgresso(planoId: number, diaIndice: number): string {
-  return `protocolfit_treino_concluido:${planoId}:${hojeLocal()}:${diaIndice}`;
-}
-
-/** Lê os índices dos exercícios concluídos hoje num dia do plano. */
-function lerConcluidos(planoId: number, diaIndice: number): number[] {
-  try {
-    const bruto = localStorage.getItem(chaveDoProgresso(planoId, diaIndice));
-    const lista: unknown = JSON.parse(bruto ?? '[]');
-    // Descarta entradas corrompidas — só inteiros (índices) são válidos.
-    return Array.isArray(lista) ? lista.filter((item): item is number => Number.isInteger(item)) : [];
-  } catch {
-    return [];
-  }
-}
-
-/** Grava os índices dos exercícios concluídos hoje num dia do plano. */
-function gravarConcluidos(planoId: number, diaIndice: number, concluidos: number[]) {
-  try {
-    localStorage.setItem(chaveDoProgresso(planoId, diaIndice), JSON.stringify(concluidos));
-    // TEAM_007: aproveita a gravação para PODAR as chaves de dias anteriores —
-    // sem isso o localStorage acumulava uma chave por dia para sempre.
-    const hoje = hojeLocal();
-    const antigas: string[] = [];
-    for (let indice = 0; indice < localStorage.length; indice += 1) {
-      const chave = localStorage.key(indice);
-      if (chave?.startsWith('protocolfit_treino_concluido:') && chave.split(':')[2] !== hoje) {
-        antigas.push(chave);
-      }
-    }
-    antigas.forEach((chave) => localStorage.removeItem(chave));
-  } catch {
-    // Armazenamento bloqueado/cheio: a checklist segue só na memória da sessão.
-  }
-}
 
 /** Propriedades do cartão editável de um exercício. */
 interface PropriedadesDoCartaoDeExercicio {
@@ -127,9 +94,15 @@ function CartaoDeExercicio({
   alternativas,
   aoTrocarExercicio,
 }: PropriedadesDoCartaoDeExercicio) {
+  // TEAM_008: no grupo "cardio" o alvo é tempo/distância, não séries × reps.
+  const ehCardio = exercicio.grupo === 'cardio';
   // Campos editados localmente (strings para inputs numéricos).
   const [series, definirSeries] = useState(String(exercicio.series));
   const [repeticoes, definirRepeticoes] = useState(String(exercicio.repeticoes_min));
+  // Distância alvo do cardio em km (vazio = sem meta de distância).
+  const [distancia, definirDistancia] = useState(
+    exercicio.distancia_km != null && exercicio.distancia_km > 0 ? String(exercicio.distancia_km) : '',
+  );
   // Toggle de carga: true = carga definida, false = peso corporal.
   const [usarCarga, definirUsarCarga] = useState(exercicio.carga_sugerida_kg !== null);
   // Valor da carga em kg (vazio = voltar para peso corporal).
@@ -189,17 +162,32 @@ function CartaoDeExercicio({
     const seriesNumericas = Number(series);
     const repeticoesNumericas = Number(repeticoes);
     // Validações locais antes de chamar a API (mensagens amigáveis).
+    // TEAM_008: no cardio "séries" são tiros e "repetições" são o tempo-alvo
+    // (minutos no contínuo, segundos por tiro no intervalado) — teto maior.
+    const tetoDoTempo = ehCardio ? 600 : 50;
     if (!Number.isFinite(seriesNumericas) || seriesNumericas < 1 || seriesNumericas > 10) {
-      definirMensagemDeErro('As séries devem ficar entre 1 e 10.');
+      definirMensagemDeErro(ehCardio ? 'Os tiros devem ficar entre 1 e 10.' : 'As séries devem ficar entre 1 e 10.');
       return;
     }
-    if (!Number.isFinite(repeticoesNumericas) || repeticoesNumericas < 1 || repeticoesNumericas > 50) {
-      definirMensagemDeErro('As repetições devem ficar entre 1 e 50.');
+    if (!Number.isFinite(repeticoesNumericas) || repeticoesNumericas < 1 || repeticoesNumericas > tetoDoTempo) {
+      definirMensagemDeErro(
+        ehCardio ? `O tempo deve ficar entre 1 e ${tetoDoTempo}.` : `As repetições devem ficar entre 1 e ${tetoDoTempo}.`,
+      );
       return;
+    }
+    // Distância alvo do cardio: vazio = sem meta; número finito até 500 km.
+    let distanciaNumerica: number | null = null;
+    if (ehCardio && distancia !== '') {
+      const valorDaDistancia = Number(distancia.replace(',', '.'));
+      if (!Number.isFinite(valorDaDistancia) || valorDaDistancia <= 0 || valorDaDistancia > 500) {
+        definirMensagemDeErro('Informe uma distância válida em km (até 500).');
+        return;
+      }
+      distanciaNumerica = valorDaDistancia;
     }
     // Carga: null em modo peso corporal; número válido quando informada.
     let cargaNumerica: number | null = null;
-    if (usarCarga && carga !== '') {
+    if (!ehCardio && usarCarga && carga !== '') {
       const valorDaCarga = Number(carga);
       // Validação local da carga antes de chamar a API.
       if (!Number.isFinite(valorDaCarga)) {
@@ -218,6 +206,9 @@ function CartaoDeExercicio({
         repeticoes: repeticoesNumericas,
         // null quando em modo peso corporal (remove a carga no servidor).
         carga_kg: cargaNumerica,
+        // TEAM_008: meta de distância só existe para cardio; demais grupos
+        // não enviam o campo (edição parcial preserva o valor atual).
+        ...(ehCardio ? { distancia_km: distanciaNumerica } : {}),
       };
       // Salva na cópia do usuário e recebe o plano atualizado.
       const novoTreino = await editarExercicio(treino.id, corpo);
@@ -272,11 +263,21 @@ function CartaoDeExercicio({
       </CartaoCabecalho>
 
       <CartaoConteudo className="space-y-4">
-        {/* Grade dos campos editáveis: séries, repetições e carga. */}
+        {/* TEAM_008: alvo resumido do exercício — "3×10–12" na musculação;
+            no cardio, distância e/ou tempo ("1,0 km", "20–30 min",
+            "8 tiros de 15–20 s") em vez de repetições. */}
+        <p className="text-xs text-texto-suave">
+          Alvo: {formatarAlvoDoExercicio(exercicio)}
+        </p>
+
+        {/* Grade dos campos editáveis: séries/tiros, repetições/tempo e
+            carga/distância (os rótulos mudam no cardio — TEAM_008). */}
         <div className="grid gap-4 sm:grid-cols-3">
-          {/* Campo de séries (1 a 10). */}
+          {/* Séries (1 a 10); no cardio são tiros — 1 = trabalho contínuo. */}
           <div className="space-y-1.5">
-            <Rotulo htmlFor={`series-${diaIndice}-${exercicioIndice}`}>Séries</Rotulo>
+            <Rotulo htmlFor={`series-${diaIndice}-${exercicioIndice}`}>
+              {ehCardio ? 'Tiros (1 = contínuo)' : 'Séries'}
+            </Rotulo>
             <CampoDeEntrada
               id={`series-${diaIndice}-${exercicioIndice}`}
               type="number"
@@ -286,19 +287,38 @@ function CartaoDeExercicio({
               onChange={(evento) => definirSeries(evento.target.value)}
             />
           </div>
-          {/* Campo de repetições (1 a 50). */}
+          {/* Repetições na musculação; no cardio é o TEMPO — minutos no
+              contínuo, segundos por tiro no intervalado. */}
           <div className="space-y-1.5">
-            <Rotulo htmlFor={`repeticoes-${diaIndice}-${exercicioIndice}`}>Repetições</Rotulo>
+            <Rotulo htmlFor={`repeticoes-${diaIndice}-${exercicioIndice}`}>
+              {ehCardio ? (Number(series) > 1 ? 'Tempo por tiro (s)' : 'Tempo (min)') : 'Repetições'}
+            </Rotulo>
             <CampoDeEntrada
               id={`repeticoes-${diaIndice}-${exercicioIndice}`}
               type="number"
               min={1}
-              max={50}
+              max={ehCardio ? 600 : 50}
               value={repeticoes}
               onChange={(evento) => definirRepeticoes(evento.target.value)}
             />
           </div>
-          {/* Campo de carga com toggle de peso corporal. */}
+          {/* Musculação: carga com toggle de peso corporal.
+              Cardio: distância alvo em km (opcional). */}
+          {ehCardio ? (
+            <div className="space-y-1.5">
+              <Rotulo htmlFor={`distancia-${diaIndice}-${exercicioIndice}`}>Distância (km)</Rotulo>
+              <CampoDeEntrada
+                id={`distancia-${diaIndice}-${exercicioIndice}`}
+                type="number"
+                step={0.1}
+                min={0}
+                max={500}
+                placeholder="opcional"
+                value={distancia}
+                onChange={(evento) => definirDistancia(evento.target.value)}
+              />
+            </div>
+          ) : (
           <div className="space-y-1.5">
             <Rotulo htmlFor={`carga-${diaIndice}-${exercicioIndice}`}>Carga (kg)</Rotulo>
             {usarCarga ? (
@@ -334,6 +354,7 @@ function CartaoDeExercicio({
               </Botao>
             ) : null}
           </div>
+          )}
         </div>
 
         {/* Linha de ação: salvar + feedback de sucesso ou erro. */}
@@ -477,8 +498,10 @@ export default function PaginaDoTreino() {
     void carregarDados();
   }, [carregarDados]);
 
-  // TEAM_004: restaura a checklist da sessão de hoje quando o PLANO chega
-  // ou troca de id (novo plano = progresso novo). A edição de exercício não
+  // TEAM_004/008: restaura a checklist persistida quando o PLANO chega ou
+  // troca de id (novo plano = progresso novo). Marcas de uma sessão ainda
+  // incompleta são mantidas entre visitas; sessão concluída + dia novo =
+  // lista zerada (regra do progresso-treino.ts). A edição de exercício não
   // altera o id, então a checklist por índice do slot é preservada.
   const treinoId = plano?.treino.id ?? null;
   const diasDaSemana = plano?.treino.dias_da_semana;
@@ -487,8 +510,8 @@ export default function PaginaDoTreino() {
       return;
     }
     const inicial: Record<number, number[]> = {};
-    diasDaSemana.forEach((_, indice) => {
-      inicial[indice] = lerConcluidos(treinoId, indice);
+    diasDaSemana.forEach((dia, indice) => {
+      inicial[indice] = lerConcluidos(treinoId, indice, dia.exercicios.length);
     });
     definirConcluidosPorDia(inicial);
   }, [treinoId, diasDaSemana]);
@@ -627,7 +650,8 @@ export default function PaginaDoTreino() {
         </ListaDeAbas>
         {/* Conteúdo de cada aba: título do dia + exercícios editáveis. */}
         {treino.dias_da_semana.map((dia, indice) => {
-          // TEAM_004: quantos exercícios do dia já foram concluídos hoje.
+          // TEAM_004/008: exercícios já concluídos nesta sessão — a checklist
+          // persiste entre visitas até o dia inteiro ser concluído.
           const concluidosNoDia = (concluidosPorDia[indice] ?? []).length;
           return (
             <ConteudoDeAba key={indice} valor={String(indice)}>
@@ -635,12 +659,12 @@ export default function PaginaDoTreino() {
                 {/* Título do dia selecionado. */}
                 <h2 className="font-display text-lg font-bold text-foreground">{dia.titulo}</h2>
 
-                {/* TEAM_004: progresso da sessão de hoje + atalho que marca o
-                    treino como feito no check-in diário. */}
+                {/* TEAM_004/008: progresso da sessão (persiste entre visitas)
+                    + atalho que marca o treino como feito no check-in diário. */}
                 <div className="space-y-2 rounded-lg border border-border bg-card p-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <p className="text-sm font-medium text-foreground">
-                      Sessão de hoje: {concluidosNoDia}/{dia.exercicios.length} exercícios
+                      Progresso da sessão: {concluidosNoDia}/{dia.exercicios.length} exercícios
                     </p>
                     {treinoFeitoHoje ? (
                       // Check-in já registra o treino do dia como feito.

@@ -59,6 +59,49 @@ export function formatarMinutosSegundos(totalSegundos: number): string {
   return `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
 }
 
+/**
+ * TEAM_008: alvo textual do exercício. Musculação mostra "séries × reps";
+ * no grupo cardio os campos carregam TEMPO/DISTÂNCIA — 1 série é trabalho
+ * contínuo (a faixa é em minutos) e várias séries são tiros (faixa em
+ * segundos por tiro). A distância, quando presente, vem primeiro.
+ */
+export function formatarAlvoDoExercicio(exercicio: {
+  grupo: string;
+  series: number;
+  repeticoes_min: number;
+  repeticoes_max: number;
+  distancia_km?: number | null;
+}): string {
+  if (exercicio.grupo !== 'cardio') {
+    return exercicio.repeticoes_min === exercicio.repeticoes_max
+      ? `${exercicio.series}×${exercicio.repeticoes_min}`
+      : `${exercicio.series}×${exercicio.repeticoes_min}–${exercicio.repeticoes_max}`;
+  }
+  const partes: string[] = [];
+  if (typeof exercicio.distancia_km === 'number' && exercicio.distancia_km > 0) {
+    partes.push(`${formatarDecimal(exercicio.distancia_km)} km`);
+  }
+  if (exercicio.series > 1) {
+    // Intervalado: a faixa guarda os SEGUNDOS de cada tiro.
+    const porTiro =
+      exercicio.repeticoes_min === exercicio.repeticoes_max
+        ? `${exercicio.repeticoes_min} s`
+        : `${exercicio.repeticoes_min}–${exercicio.repeticoes_max} s`;
+    partes.push(`${exercicio.series} tiros de ${porTiro}`);
+  } else {
+    // Contínuo: a faixa guarda os MINUTOS do alvo ("1–1" = sem tempo-alvo).
+    const semTempo = exercicio.repeticoes_min <= 1 && exercicio.repeticoes_max <= 1;
+    if (!semTempo) {
+      partes.push(
+        exercicio.repeticoes_min === exercicio.repeticoes_max
+          ? `${exercicio.repeticoes_min} min`
+          : `${exercicio.repeticoes_min}–${exercicio.repeticoes_max} min`,
+      );
+    }
+  }
+  return partes.join(' · ') || 'tempo livre';
+}
+
 /** Rótulo amigável de um objetivo. */
 export function rotuloDoObjetivo(objetivo: string): string {
   const rotulos: Record<string, string> = {

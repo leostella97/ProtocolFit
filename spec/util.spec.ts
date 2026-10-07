@@ -8,6 +8,7 @@
  */
 import {
   combinarClasses,
+  formatarAlvoDoExercicio,
   formatarData,
   formatarDecimal,
   formatarMinutosSegundos,
@@ -39,6 +40,54 @@ describe('formatarMinutosSegundos (visor do timer)', () => {
     expect(formatarMinutosSegundos(60)).toBe('01:00');
     expect(formatarMinutosSegundos(90)).toBe('01:30');
     expect(formatarMinutosSegundos(3600)).toBe('60:00');
+  });
+});
+
+describe('formatarAlvoDoExercicio (TEAM_008)', () => {
+  const base = { series: 3, repeticoes_min: 10, repeticoes_max: 12 };
+
+  it('mostra séries × reps para musculação', () => {
+    expect(formatarAlvoDoExercicio({ grupo: 'peito', ...base })).toBe('3×10–12');
+    expect(formatarAlvoDoExercicio({ grupo: 'costas', series: 5, repeticoes_min: 5, repeticoes_max: 5 })).toBe('5×5');
+  });
+
+  it('mostra tempo em minutos para cardio contínuo', () => {
+    expect(formatarAlvoDoExercicio({ grupo: 'cardio', series: 1, repeticoes_min: 20, repeticoes_max: 30 })).toBe(
+      '20–30 min',
+    );
+    expect(formatarAlvoDoExercicio({ grupo: 'cardio', series: 1, repeticoes_min: 30, repeticoes_max: 30 })).toBe(
+      '30 min',
+    );
+  });
+
+  it('mostra só a distância quando o cardio não tem tempo-alvo (1–1)', () => {
+    expect(
+      formatarAlvoDoExercicio({ grupo: 'cardio', series: 1, repeticoes_min: 1, repeticoes_max: 1, distancia_km: 1 }),
+    ).toBe('1,0 km');
+    expect(
+      formatarAlvoDoExercicio({ grupo: 'cardio', series: 1, repeticoes_min: 1, repeticoes_max: 1, distancia_km: 0.4 }),
+    ).toBe('0,4 km');
+  });
+
+  it('combina distância e tempo quando os dois existem', () => {
+    expect(
+      formatarAlvoDoExercicio({ grupo: 'cardio', series: 1, repeticoes_min: 15, repeticoes_max: 20, distancia_km: 2 }),
+    ).toBe('2,0 km · 15–20 min');
+  });
+
+  it('mostra tiros em segundos para cardio intervalado (séries > 1)', () => {
+    expect(formatarAlvoDoExercicio({ grupo: 'cardio', series: 3, repeticoes_min: 30, repeticoes_max: 45 })).toBe(
+      '3 tiros de 30–45 s',
+    );
+    expect(formatarAlvoDoExercicio({ grupo: 'cardio', series: 8, repeticoes_min: 20, repeticoes_max: 20 })).toBe(
+      '8 tiros de 20 s',
+    );
+  });
+
+  it('usa "tempo livre" para cardio sem meta alguma', () => {
+    expect(formatarAlvoDoExercicio({ grupo: 'cardio', series: 1, repeticoes_min: 1, repeticoes_max: 1 })).toBe(
+      'tempo livre',
+    );
   });
 });
 

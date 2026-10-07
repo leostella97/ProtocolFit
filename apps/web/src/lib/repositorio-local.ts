@@ -648,9 +648,16 @@ const LIMITES_EDICAO = {
   repeticoes_max: 50,
   carga_min_kg: 0,
   carga_max_kg: 400,
+  /**
+   * TEAM_008: no cardio o campo numérico carrega TEMPO (minutos do alvo
+   * contínuo ou segundos por tiro) — o teto de 50 repetições barrava
+   * valores legítimos como "45 min".
+   */
+  tempo_cardio_max: 600,
+  distancia_max_km: 500,
 } as const;
 
-/** Edita séries/repetições/carga de um exercício (espelha PATCH /plano/treino/:id). */
+/** Edita séries/repetições/carga/distância de um exercício (espelha PATCH /plano/treino/:id). */
 export async function editarExercicioLocal(planoId: number, corpo: EdicaoDeExercicio): Promise<PlanoTreino> {
   const banco = lerBanco();
   const plano = exigirPlano(banco, planoId, 'treino');
@@ -662,6 +669,14 @@ export async function editarExercicioLocal(planoId: number, corpo: EdicaoDeExerc
   ) {
     throw new ErroDaApi(400, 'Informe o dia e o exercício que deseja editar.');
   }
+  // A edição precisa conhecer o exercício ANTES de validar: no cardio o campo
+  // numérico é tempo (teto maior) e existe a meta de distância.
+  const conteudo = JSON.parse(plano.conteudo) as Omit<PlanoTreino, 'id' | 'versao' | 'modelo_origem' | 'criado_em'>;
+  const exercicioEditado = conteudo.dias_da_semana[corpo.dia_indice]?.exercicios[corpo.exercicio_indice];
+  if (!exercicioEditado) {
+    throw new ErroDaApi(400, 'Dia ou exercício não encontrado no plano.');
+  }
+  const tetoNumerico = exercicioEditado.grupo === 'cardio' ? LIMITES_EDICAO.tempo_cardio_max : LIMITES_EDICAO.repeticoes_max;
   if (
     corpo.series !== undefined &&
     (!Number.isInteger(corpo.series) || corpo.series < LIMITES_EDICAO.series_min || corpo.series > LIMITES_EDICAO.series_max)
@@ -670,9 +685,14 @@ export async function editarExercicioLocal(planoId: number, corpo: EdicaoDeExerc
   }
   if (
     corpo.repeticoes !== undefined &&
-    (!Number.isInteger(corpo.repeticoes) || corpo.repeticoes < LIMITES_EDICAO.repeticoes_min || corpo.repeticoes > LIMITES_EDICAO.repeticoes_max)
+    (!Number.isInteger(corpo.repeticoes) || corpo.repeticoes < LIMITES_EDICAO.repeticoes_min || corpo.repeticoes > tetoNumerico)
   ) {
-    throw new ErroDaApi(400, `As repetições devem ficar entre ${LIMITES_EDICAO.repeticoes_min} e ${LIMITES_EDICAO.repeticoes_max}.`);
+    throw new ErroDaApi(
+      400,
+      exercicioEditado.grupo === 'cardio'
+        ? `O tempo deve ficar entre ${LIMITES_EDICAO.repeticoes_min} e ${LIMITES_EDICAO.tempo_cardio_max}.`
+        : `As repetições devem ficar entre ${LIMITES_EDICAO.repeticoes_min} e ${LIMITES_EDICAO.repeticoes_max}.`,
+    );
   }
   if (
     corpo.carga_kg !== undefined &&
@@ -682,8 +702,17 @@ export async function editarExercicioLocal(planoId: number, corpo: EdicaoDeExerc
   ) {
     throw new ErroDaApi(400, `A carga deve ficar entre ${LIMITES_EDICAO.carga_min_kg} e ${LIMITES_EDICAO.carga_max_kg} kg.`);
   }
+  // TEAM_008: distância opcional — número finito no intervalo, ou null para
+  // remover a meta de km do exercício de cardio.
+  if (
+    corpo.distancia_km !== undefined &&
+    corpo.distancia_km !== null &&
+    (typeof corpo.distancia_km !== 'number' || !Number.isFinite(corpo.distancia_km) ||
+      corpo.distancia_km <= 0 || corpo.distancia_km > LIMITES_EDICAO.distancia_max_km)
+  ) {
+    throw new ErroDaApi(400, `A distância deve ficar entre 0 e ${LIMITES_EDICAO.distancia_max_km} km.`);
+  }
   // Aplica a edição na cópia (o modelo mestre permanece intacto).
-  const conteudo = JSON.parse(plano.conteudo) as Omit<PlanoTreino, 'id' | 'versao' | 'modelo_origem' | 'criado_em'>;
   try {
     aplicarEdicaoTreino(conteudo, corpo);
   } catch (erro) {

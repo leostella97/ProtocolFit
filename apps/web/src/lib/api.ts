@@ -188,6 +188,8 @@ export interface CorpoEdicaoExercicio {
   series?: number;
   repeticoes?: number;
   carga_kg?: number | null;
+  /** TEAM_008: meta de distância em km para exercícios de cardio. */
+  distancia_km?: number | null;
 }
 
 /** Edita séries/repetições/carga de um exercício na CÓPIA do usuário. */

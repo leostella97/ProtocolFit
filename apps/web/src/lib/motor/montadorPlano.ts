@@ -116,22 +116,28 @@ function montarDia(dia: ModeloDiaTreino, perfil: Perfil): DiaDeTreino {
   const regra = REGRAS_POR_OBJETIVO[perfil.objetivo];
   return {
     titulo: dia.titulo,
-    exercicios: dia.exercicios.map((exercicio) => ({
-      nome: exercicio.nome,
-      grupo: exercicio.grupo,
-      tipo: exercicio.tipo,
-      // Séries, repetições e descanso sobrescritos pelo objetivo do usuário.
-      series: regra.series,
-      repeticoes_min: regra.repeticoes_min,
-      repeticoes_max: regra.repeticoes_max,
-      descanso_segundos: regra.descanso_segundos,
-      // Carga inicial sugerida = fração do peso corporal do exercício.
-      carga_sugerida_kg:
-        exercicio.percentual_carga_peso_corporal === null
-          ? null
-          : arredondarCarga(perfil.peso_kg * exercicio.percentual_carga_peso_corporal),
-      dicas: exercicio.dicas,
-    })),
+    exercicios: dia.exercicios.map((exercicio) => {
+      // TEAM_008: no grupo "cardio" os campos do modelo já são TEMPO/DISTÂNCIA
+      // (1 série = minutos contínuos; várias = tiros de X–Y segundos) — a regra
+      // do objetivo, feita para reps de musculação, destruía essa semântica.
+      const ehCardio = exercicio.grupo === 'cardio';
+      return {
+        nome: exercicio.nome,
+        grupo: exercicio.grupo,
+        tipo: exercicio.tipo,
+        series: ehCardio ? exercicio.series : regra.series,
+        repeticoes_min: ehCardio ? exercicio.repeticoes_min : regra.repeticoes_min,
+        repeticoes_max: ehCardio ? exercicio.repeticoes_max : regra.repeticoes_max,
+        descanso_segundos: ehCardio ? exercicio.descanso_segundos : regra.descanso_segundos,
+        // Carga inicial sugerida = fração do peso corporal do exercício.
+        carga_sugerida_kg:
+          exercicio.percentual_carga_peso_corporal === null
+            ? null
+            : arredondarCarga(perfil.peso_kg * exercicio.percentual_carga_peso_corporal),
+        distancia_km: exercicio.distancia_km ?? null,
+        dicas: exercicio.dicas,
+      };
+    }),
   };
 }
 
@@ -225,6 +231,8 @@ export interface EdicaoDeExercicio {
   repeticoes?: number;
   /** Nova carga em kg (opcional; null remove a carga). */
   carga_kg?: number | null;
+  /** TEAM_008: nova distância alvo em km p/ cardio (null remove a meta). */
+  distancia_km?: number | null;
 }
 
 /** Aplica a edição do usuário na CÓPIA do plano. */
@@ -246,11 +254,22 @@ export function aplicarEdicaoTreino(
   }
   if (edicao.repeticoes !== undefined) {
     // Mantém amplitude de 2 repetições na faixa.
-    exercicio.repeticoes_min = edicao.repeticoes;
-    exercicio.repeticoes_max = edicao.repeticoes + 2;
+    // TEAM_008: no cardio o campo é tempo-alvo (min ou s por tiro) — alvo
+    // exato, sem amplitude artificial de repetição.
+    if (exercicio.grupo === 'cardio') {
+      exercicio.repeticoes_min = edicao.repeticoes;
+      exercicio.repeticoes_max = edicao.repeticoes;
+    } else {
+      exercicio.repeticoes_min = edicao.repeticoes;
+      exercicio.repeticoes_max = edicao.repeticoes + 2;
+    }
   }
   if (edicao.carga_kg !== undefined) {
     exercicio.carga_sugerida_kg = edicao.carga_kg;
+  }
+  // TEAM_008: meta de distância do cardio (null limpa a meta).
+  if (edicao.distancia_km !== undefined) {
+    exercicio.distancia_km = edicao.distancia_km;
   }
   return plano;
 }
@@ -342,6 +361,8 @@ export function aplicarTrocaDeExercicio(
   // Troca a identidade do exercício, preservando o volume do slot.
   exercicio.nome = alternativa.nome;
   exercicio.tipo = alternativa.tipo;
+  // TEAM_008: a meta de distância pertence ao exercício novo, não ao slot.
+  exercicio.distancia_km = alternativa.distancia_km ?? null;
   exercicio.dicas = alternativa.dicas;
   exercicio.carga_sugerida_kg =
     alternativa.percentual_carga_peso_corporal === null

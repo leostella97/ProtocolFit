@@ -32,7 +32,7 @@
         { "nome": "Flexão", "grupo": "peito", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "5-10-15 estilo Cindy." },
         { "nome": "Agachamento Livre", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 25, "repeticoes_max": 30, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Agachamento completo, ritmo." },
         { "nome": "Abmat Sit-up", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 25, "repeticoes_max": 30, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Âncora pés, subida completa." },
-        { "nome": "Corrida 400m", "grupo": "cardio", "tipo": "cardio", "series": 1, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 180, "percentual_carga_peso_corporal": null, "dicas": "Ritmo forte, 80-90% FCmáx." }
+        { "nome": "Corrida 400m", "grupo": "cardio", "tipo": "cardio", "series": 1, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 180, "percentual_carga_peso_corporal": null, "distancia_km": 0.4, "dicas": "Ritmo forte, 80-90% FCmáx." }
       ]
     },
     {
@@ -48,7 +48,7 @@
     {
       "titulo": "Dia 5 - WOD 'Murph' Style + Força",
       "exercicios": [
-        { "nome": "Corrida 1km", "grupo": "cardio", "tipo": "cardio", "series": 1, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 180, "percentual_carga_peso_corporal": null, "dicas": "Ritmo forte, 85-90% FCmáx." },
+        { "nome": "Corrida 1km", "grupo": "cardio", "tipo": "cardio", "series": 1, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 180, "percentual_carga_peso_corporal": null, "distancia_km": 1, "dicas": "Ritmo forte, 85-90% FCmáx." },
         { "nome": "Pull-up", "grupo": "costas", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 120, "percentual_carga_peso_corporal": null, "dicas": "Kipping se souber, senão elástico." },
         { "nome": "Push-up", "grupo": "peito", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 30, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Padrão Murph: 100-200 reps total." },
         { "nome": "Agachamento com Salto", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Explosão no salto, aterrissagem suave." },

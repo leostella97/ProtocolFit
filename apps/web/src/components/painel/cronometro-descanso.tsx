@@ -69,6 +69,9 @@ export function CronometroDeDescanso({ descansoSugerido }: PropriedadesDoCronome
   const audioRef = useRef<AudioContext | null>(null);
   // Handle do timeout que apaga o aviso de conclusão.
   const avisoRef = useRef<number | null>(null);
+  // TEAM_008: marca quando a contagem zerou com a página oculta — o Chrome
+  // ignora vibrate() em segundo plano, então o aviso se repete ao voltar.
+  const concluiuOcultoRef = useRef(false);
 
   /** Para o intervalo do visor, se existir. */
   function pararIntervalo() {
@@ -80,8 +83,9 @@ export function CronometroDeDescanso({ descansoSugerido }: PropriedadesDoCronome
 
   /** Emite três bipes via Web Audio e vibra o aparelho, onde houver suporte. */
   function avisarFimDoDescanso() {
-    // Vibração em celulares (ignorada silenciosamente onde não há suporte).
-    navigator.vibrate?.([150, 80, 150]);
+    // TEAM_008: padrão forte e longo — dois pulsos curtos + um longo — porque
+    // o aviso típico é num aparelho guardado no bolso (ignorado sem suporte).
+    navigator.vibrate?.([250, 120, 250, 120, 600]);
     try {
       // Safari antigo expõe o construtor com o prefixo webkit.
       const ConstrutorDeAudio =
@@ -126,6 +130,9 @@ export function CronometroDeDescanso({ descansoSugerido }: PropriedadesDoCronome
       definirRestante(0);
       definirFase('parado');
       definirAvisandoConclusao(true);
+      // TEAM_008: se zerou com a aba oculta, o aviso se repete ao voltar —
+      // vibrate()/bipes disparados em segundo plano não chegam ao usuário.
+      concluiuOcultoRef.current = document.hidden;
       // Apaga o aviso depois de alguns segundos.
       if (avisoRef.current !== null) {
         window.clearTimeout(avisoRef.current);
@@ -142,6 +149,7 @@ export function CronometroDeDescanso({ descansoSugerido }: PropriedadesDoCronome
     pararIntervalo();
     definirErroDoTempo(null);
     definirAvisandoConclusao(false);
+    concluiuOcultoRef.current = false;
     terminaEmRef.current = Date.now() + segundos * 1000;
     definirRestante(segundos);
     definirFase('rodando');
@@ -195,6 +203,29 @@ export function CronometroDeDescanso({ descansoSugerido }: PropriedadesDoCronome
       }
       void audioRef.current?.close();
     };
+  }, []);
+
+  // TEAM_008: ao voltar a olhar a página, primeiro recalcula o restante —
+  // se o timer zerou enquanto oculto, completa agora (visível → a vibração
+  // funciona). Se a conclusão já tinha rodado oculta, repete o aviso.
+  useEffect(() => {
+    function aoVoltarAFicarVisivel() {
+      if (document.hidden) {
+        return;
+      }
+      sincronizarRestante();
+      if (concluiuOcultoRef.current) {
+        concluiuOcultoRef.current = false;
+        definirAvisandoConclusao(true);
+        if (avisoRef.current !== null) {
+          window.clearTimeout(avisoRef.current);
+        }
+        avisoRef.current = window.setTimeout(() => definirAvisandoConclusao(false), DURACAO_DO_AVISO_MS);
+        avisarFimDoDescanso();
+      }
+    }
+    document.addEventListener('visibilitychange', aoVoltarAFicarVisivel);
+    return () => document.removeEventListener('visibilitychange', aoVoltarAFicarVisivel);
   }, []);
 
   return (

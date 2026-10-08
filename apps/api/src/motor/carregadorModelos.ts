@@ -92,7 +92,7 @@ export function listarVariacoesDeTreino(): VariacaoDeTreino[] {
   // Percorre modalidades (academia, pesocorporal...).
   for (const modalidade of readdirSync(raizDosTreinos)) {
     const pastaDaModalidade = `${raizDosTreinos}/${modalidade}`;
-    // Percorre objetivos (emagrecimento, hipertrofia, corrida).
+    // Percorre objetivos (emagrecimento, hipertrofia, corrida, luta).
     for (const objetivo of readdirSync(pastaDaModalidade)) {
       const pastaDoObjetivo = `${pastaDaModalidade}/${objetivo}`;
       // Percorre os arquivos JSON no padrão oficial de nomes.

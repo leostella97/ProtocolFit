@@ -13,7 +13,7 @@
  */
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Check, Loader2, Ruler, Scale } from 'lucide-react';
 import { Botao } from '@/components/ui/button';
 import { Cartao, CartaoCabecalho, CartaoConteudo, CartaoDescricao, CartaoTitulo } from '@/components/ui/card';
@@ -43,6 +43,27 @@ export function CartaoCorpo({ perfil, aoAtualizarPerfil }: PropriedadesDoCartaoC
   const [sucesso, definirSucesso] = useState(false);
   // Mensagem de erro (validação do servidor ou do navegador).
   const [erro, definirErro] = useState<string | null>(null);
+  // TEAM_011: handle do timeout do aviso de sucesso — sem ref, o callback
+  // rodava mesmo com o cartão desmontado (timer órfão).
+  const temporizadorSucesso = useRef<number | null>(null);
+
+  // Limpa o timeout pendente ao desmontar o cartão.
+  useEffect(() => {
+    return () => {
+      if (temporizadorSucesso.current !== null) {
+        window.clearTimeout(temporizadorSucesso.current);
+      }
+    };
+  }, []);
+
+  /** Liga o aviso de sucesso e agenda o apagamento automático. */
+  function avisarSucesso(tempoMs: number) {
+    definirSucesso(true);
+    if (temporizadorSucesso.current !== null) {
+      window.clearTimeout(temporizadorSucesso.current);
+    }
+    temporizadorSucesso.current = window.setTimeout(() => definirSucesso(false), tempoMs);
+  }
 
   /** Salva a altura e/ou o peso informados. */
   async function salvarDadosCorporais() {
@@ -75,15 +96,13 @@ export function CartaoCorpo({ perfil, aoAtualizarPerfil }: PropriedadesDoCartaoC
       }
       // Nada mudou: evita uma chamada desnecessária.
       if (corpo.peso_kg === undefined && corpo.altura_cm === undefined) {
-        definirSucesso(true);
-        window.setTimeout(() => definirSucesso(false), 2000);
+        avisarSucesso(2000);
         return;
       }
       // Persiste a alteração e atualiza a tela.
       const resposta = await atualizarCorpo(corpo);
       aoAtualizarPerfil(resposta.perfil);
-      definirSucesso(true);
-      window.setTimeout(() => definirSucesso(false), 2500);
+      avisarSucesso(2500);
     } catch (erroCapturado: unknown) {
       definirErro(erroCapturado instanceof Error ? erroCapturado.message : 'Não foi possível salvar. Tente novamente.');
     } finally {

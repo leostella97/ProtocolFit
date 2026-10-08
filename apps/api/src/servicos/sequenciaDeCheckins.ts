@@ -26,11 +26,6 @@ function paraNumeroDeDias(data: string): number {
   return Math.floor(new Date(`${data}T00:00:00Z`).getTime() / UM_DIA_MS);
 }
 
-/** Converte um número de dias (desde 1970) de volta para AAAA-MM-DD. */
-function paraData(numeroDeDias: number): string {
-  return new Date(numeroDeDias * UM_DIA_MS).toISOString().slice(0, 10);
-}
-
 /** Verifica se um check-in conta como "dia cumprido". */
 function diaCumprido(checkin: CheckinDiario): boolean {
   return checkin.treino_feito || checkin.dieta_seguida;
@@ -53,14 +48,18 @@ export function montarResumoDeCheckins(registros: CheckinDiario[], referenciaDeH
   const hojeTexto = referenciaDeHoje ?? hojeEmTexto();
   // Datas cumpridas em ordem crescente e sem repetição.
   const diasCumpridos = registros.filter(diaCumprido).map((registro) => registro.data).sort();
-  const conjuntoDeDias = new Set(diasCumpridos);
+
+  // TEAM_011: o laço trabalha com o NÚMERO do dia em vez de formatar a data
+  // de volta (paraData criava um Date + string ISO por dia do streak — churn
+  // de alocações a cada GET/POST de check-in).
+  const diasCumpridosNumericos = diasCumpridos.map(paraNumeroDeDias);
+  const conjuntoDeDias = new Set(diasCumpridosNumericos);
 
   // ---- Sequência máxima: maior bloco de dias consecutivos ----------------
   let sequenciaMaxima = 0;
   let sequenciaCorrente = 0;
   let diaAnterior: number | null = null;
-  for (const data of diasCumpridos) {
-    const numeroDoDia = paraNumeroDeDias(data);
+  for (const numeroDoDia of diasCumpridosNumericos) {
     // Continua a sequência quando o dia é exatamente o seguinte.
     sequenciaCorrente = diaAnterior !== null && numeroDoDia === diaAnterior + 1 ? sequenciaCorrente + 1 : 1;
     sequenciaMaxima = Math.max(sequenciaMaxima, sequenciaCorrente);
@@ -70,9 +69,9 @@ export function montarResumoDeCheckins(registros: CheckinDiario[], referenciaDeH
   // ---- Sequência atual: conta de trás para frente a partir de hoje -------
   const hoje = paraNumeroDeDias(hojeTexto);
   // Se hoje ainda não foi cumprido, a contagem começa em ontem.
-  let cursor = conjuntoDeDias.has(paraData(hoje)) ? hoje : hoje - 1;
+  let cursor = conjuntoDeDias.has(hoje) ? hoje : hoje - 1;
   let sequenciaAtual = 0;
-  while (conjuntoDeDias.has(paraData(cursor))) {
+  while (conjuntoDeDias.has(cursor)) {
     sequenciaAtual += 1;
     cursor -= 1;
   }

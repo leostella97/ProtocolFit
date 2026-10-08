@@ -59,21 +59,22 @@ export async function rotasAutenticacao(app: FastifyInstance): Promise<void> {
   app.post('/cadastro', async (requisicao, resposta) => {
     const { nome, email, senha } = (requisicao.body ?? {}) as Partial<CorpoCadastro>;
 
-    // Validação do nome: obrigatório e com pelo menos 3 caracteres.
-    if (!nome || nome.trim().length < 3) {
+    // TEAM_011: tipos errados (número, objeto) chegavam ao .trim()/.length e
+    // estouravam TypeError → 500 em vez do 400 que a validação promete.
+    if (typeof nome !== 'string' || nome.trim().length < 3) {
       return enviarErro(resposta, 400, 'Informe seu nome completo (mínimo de 3 caracteres).');
     }
 
     // Normaliza o e-mail (minúsculas e sem espaços nas bordas).
-    const emailLimpo = (email ?? '').trim().toLowerCase();
+    const emailLimpo = typeof email === 'string' ? email.trim().toLowerCase() : '';
 
     // Validação do formato de e-mail com expressão regular simples.
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailLimpo)) {
       return enviarErro(resposta, 400, 'Informe um e-mail válido.');
     }
 
-    // Validação da senha: mínimo de 8 caracteres.
-    if (!senha || senha.length < 8) {
+    // Validação da senha: string com mínimo de 8 caracteres.
+    if (typeof senha !== 'string' || senha.length < 8) {
       return enviarErro(resposta, 400, 'A senha precisa ter pelo menos 8 caracteres.');
     }
 
@@ -113,8 +114,9 @@ export async function rotasAutenticacao(app: FastifyInstance): Promise<void> {
     const { email, senha } = (requisicao.body ?? {}) as Partial<CorpoLogin>;
 
     // Normaliza o e-mail antes da consulta.
-    const emailLimpo = (email ?? '').trim().toLowerCase();
-    if (!emailLimpo || !senha) {
+    // TEAM_011: tipos errados (número, objeto) viravam TypeError → 500.
+    const emailLimpo = typeof email === 'string' ? email.trim().toLowerCase() : '';
+    if (!emailLimpo || typeof senha !== 'string' || !senha) {
       return enviarErro(resposta, 400, 'Informe e-mail e senha.');
     }
 

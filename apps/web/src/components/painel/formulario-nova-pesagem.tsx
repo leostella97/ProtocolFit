@@ -9,7 +9,7 @@
  */
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Check, Loader2, Plus, Scale } from 'lucide-react';
 import { Botao } from '@/components/ui/button';
 import { CampoDeEntrada } from '@/components/ui/input';
@@ -32,6 +32,17 @@ export function FormularioNovaPesagem({ pesoAtualKg, aoRegistrar }: Propriedades
   const [salvando, definirSalvando] = useState(false);
   const [sucesso, definirSucesso] = useState(false);
   const [erro, definirErro] = useState<string | null>(null);
+  // TEAM_011: handle do timeout do aviso — evita timer órfão ao desmontar.
+  const temporizadorSucesso = useRef<number | null>(null);
+
+  // Limpa o timeout pendente ao desmontar o formulário.
+  useEffect(() => {
+    return () => {
+      if (temporizadorSucesso.current !== null) {
+        window.clearTimeout(temporizadorSucesso.current);
+      }
+    };
+  }, []);
 
   /** Registra a nova pesagem e avisa o painel para recarregar o gráfico. */
   async function registrar() {
@@ -48,7 +59,10 @@ export function FormularioNovaPesagem({ pesoAtualKg, aoRegistrar }: Propriedades
       // Grava a pesagem do dia (o painel atualiza o gráfico e a progressão).
       await aoRegistrar(pesoNumerico);
       definirSucesso(true);
-      window.setTimeout(() => definirSucesso(false), 2500);
+      if (temporizadorSucesso.current !== null) {
+        window.clearTimeout(temporizadorSucesso.current);
+      }
+      temporizadorSucesso.current = window.setTimeout(() => definirSucesso(false), 2500);
     } catch (erroCapturado: unknown) {
       definirErro(erroCapturado instanceof Error ? erroCapturado.message : 'Não foi possível registrar a pesagem.');
     } finally {

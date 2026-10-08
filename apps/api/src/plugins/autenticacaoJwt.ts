@@ -32,5 +32,8 @@ export async function configurarAutenticacao(app: FastifyInstance): Promise<void
     secret: SEGREDO_JWT ?? 'protocolfit-segredo-apenas-desenvolvimento',
     // Validade padrão dos tokens emitidos.
     sign: { expiresIn: '7d' },
+    // TEAM_011: aceita APENAS HS256 na verificação — sem a lista, um token
+    // forjado com outro algoritmo (ou "alg": "none") não é rejeitado de cara.
+    verify: { algorithms: ['HS256'] },
   });
 }

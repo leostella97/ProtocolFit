@@ -39,6 +39,8 @@ ProtocolFit/
 ├── tsconfig.base.json               # configuração TypeScript compartilhada
 ├── spec/                            # specs Jasmine (motor, utilitários, regressões)
 ├── docs/
+│   ├── ARQUITETURA.md               # visão do sistema (modos, motor, segurança)
+│   ├── API.md                       # referência de endpoints da API
 │   └── ESPECIFICACAO-DO-FRONTEND.md # contrato de implementação do frontend
 └── apps/
     ├── api/                         # ── BACKEND (Fastify) ─────────────────────

@@ -179,14 +179,78 @@ function proximoId(banco: BancoLocal): number {
   return id;
 }
 
-/** Calcula o hash SHA-256 de um texto (senha) em hexadecimal. */
-async function calcularHash(texto: string): Promise<string> {
-  // Usa a Web Crypto API disponível em todos os navegadores modernos.
-  const dados = new TextEncoder().encode(texto);
-  const digesto = await window.crypto.subtle.digest('SHA-256', dados);
-  return Array.from(new Uint8Array(digesto))
+/** Converte bytes em hexadecimal minúsculo. */
+function paraHex(vetor: Uint8Array): string {
+  return Array.from(vetor)
     .map((byte) => byte.toString(16).padStart(2, '0'))
     .join('');
+}
+
+/** Converte hexadecimal de volta em bytes. */
+function deHex(texto: string): Uint8Array {
+  const vetor = new Uint8Array(texto.length / 2);
+  for (let indice = 0; indice < vetor.length; indice += 1) {
+    vetor[indice] = Number.parseInt(texto.slice(indice * 2, indice * 2 + 2), 16);
+  }
+  return vetor;
+}
+
+/** Comparação em tempo constante (não vaza quantos caracteres coincidem). */
+function iguaisEmTempoConstante(a: string, b: string): boolean {
+  if (a.length !== b.length) {
+    return false;
+  }
+  let diferenca = 0;
+  for (let indice = 0; indice < a.length; indice += 1) {
+    diferenca |= a.charCodeAt(indice) ^ b.charCodeAt(indice);
+  }
+  return diferenca === 0;
+}
+
+// TEAM_011: senhas locais passam de SHA-256 puro (rápido demais → ataque de
+// dicionário trivial num localStorage extraído) para PBKDF2-SHA-256 com sal
+// aleatório por conta e 100 mil iterações — piso recomendado pela OWASP,
+// tudo via Web Crypto nativa, sem dependência nova.
+const PREFIXO_PBKDF2 = 'pbkdf2';
+const ITERACOES_PBKDF2 = 100_000;
+const TAMANHO_DO_SAL_BYTES = 16;
+
+/** Deriva o hash PBKDF2 da senha no formato "pbkdf2$iters$sal_hex$hash_hex". */
+async function derivarHashDaSenha(senha: string, iteracoes = ITERACOES_PBKDF2, salHex?: string): Promise<string> {
+  const sal = salHex ? deHex(salHex) : window.crypto.getRandomValues(new Uint8Array(TAMANHO_DO_SAL_BYTES));
+  const material = await window.crypto.subtle.importKey('raw', new TextEncoder().encode(senha), 'PBKDF2', false, ['deriveBits']);
+  const bits = await window.crypto.subtle.deriveBits(
+    { name: 'PBKDF2', hash: 'SHA-256', salt: sal as BufferSource, iterations: iteracoes },
+    material,
+    256,
+  );
+  return `${PREFIXO_PBKDF2}$${iteracoes}$${paraHex(sal)}$${paraHex(new Uint8Array(bits))}`;
+}
+
+/** LEGADO: SHA-256 puro — formato das contas criadas antes da TEAM_011. */
+async function calcularHashLegado(texto: string): Promise<string> {
+  const dados = new TextEncoder().encode(texto);
+  const digesto = await window.crypto.subtle.digest('SHA-256', dados);
+  return paraHex(new Uint8Array(digesto));
+}
+
+/**
+ * Confere a senha contra o hash gravado, aceitando o formato legado.
+ * Devolve `precisaMigrar` quando o hash ainda é SHA-256 puro — o chamador
+ * regrava no formato novo após um login bem-sucedido.
+ */
+async function conferirSenha(senha: string, hashArmazenado: string): Promise<{ confere: boolean; precisaMigrar: boolean }> {
+  const partes = hashArmazenado.split('$');
+  if (partes[0] === PREFIXO_PBKDF2 && partes.length === 4) {
+    const iteracoes = Number(partes[1]);
+    if (!Number.isInteger(iteracoes) || iteracoes <= 0) {
+      return { confere: false, precisaMigrar: false };
+    }
+    const derivado = await derivarHashDaSenha(senha, iteracoes, partes[2]);
+    return { confere: iguaisEmTempoConstante(derivado.split('$')[3], partes[3]), precisaMigrar: false };
+  }
+  const legado = await calcularHashLegado(senha);
+  return { confere: iguaisEmTempoConstante(legado, hashArmazenado), precisaMigrar: true };
 }
 
 /**
@@ -235,8 +299,10 @@ function emailValido(email: string): boolean {
 /** Cria a conta no navegador e abre a sessão. */
 export async function cadastrarLocal(corpo: { nome: string; email: string; senha: string }): Promise<RespostaDeAutenticacao> {
   const banco = lerBanco();
-  const nome = (corpo.nome ?? '').trim();
-  const email = (corpo.email ?? '').trim().toLowerCase();
+  // TEAM_011: mesma validação de TIPO do servidor — campos não-string
+  // chegavam ao .trim() e estouravam TypeError em vez de ErroDaApi(400).
+  const nome = typeof corpo.nome === 'string' ? corpo.nome.trim() : '';
+  const email = typeof corpo.email === 'string' ? corpo.email.trim().toLowerCase() : '';
 
   // Mesmas validações do servidor, com as mesmas mensagens.
   if (nome.length < 3) {
@@ -245,19 +311,19 @@ export async function cadastrarLocal(corpo: { nome: string; email: string; senha
   if (!emailValido(email)) {
     throw new ErroDaApi(400, 'Informe um e-mail válido.');
   }
-  if (!corpo.senha || corpo.senha.length < 8) {
+  if (typeof corpo.senha !== 'string' || corpo.senha.length < 8) {
     throw new ErroDaApi(400, 'A senha precisa ter pelo menos 8 caracteres.');
   }
   if (banco.contas.some((conta) => conta.email === email)) {
     throw new ErroDaApi(409, 'Este e-mail já está cadastrado. Faça login para continuar.');
   }
 
-  // Cria a conta com o hash da senha.
+  // Cria a conta com o hash PBKDF2 da senha.
   const nova: ContaLocal = {
     id: proximoId(banco),
     nome,
     email,
-    senha_hash: await calcularHash(corpo.senha),
+    senha_hash: await derivarHashDaSenha(corpo.senha),
     tentativas_falhas: 0,
     bloqueado_ate: null,
     criado_em: new Date().toISOString(),
@@ -275,8 +341,9 @@ export async function cadastrarLocal(corpo: { nome: string; email: string; senha
 /** Autentica no navegador, com bloqueio de 3 tentativas por 5 horas. */
 export async function entrarLocal(corpo: { email: string; senha: string }): Promise<RespostaDeAutenticacao> {
   const banco = lerBanco();
-  const email = (corpo.email ?? '').trim().toLowerCase();
-  if (!email || !corpo.senha) {
+  // TEAM_011: mesma validação de TIPO do servidor (TypeError → erro 400).
+  const email = typeof corpo.email === 'string' ? corpo.email.trim().toLowerCase() : '';
+  if (!email || typeof corpo.senha !== 'string' || !corpo.senha) {
     throw new ErroDaApi(400, 'Informe e-mail e senha.');
   }
   const conta = banco.contas.find((candidata) => candidata.email === email);
@@ -295,10 +362,10 @@ export async function entrarLocal(corpo: { email: string; senha: string }): Prom
     );
   }
 
-  // Compara o hash da senha informada com o armazenado.
-  const senhaConfere = (await calcularHash(corpo.senha)) === conta.senha_hash;
+  // Compara a senha informada com o hash armazenado (aceita SHA-256 legado).
+  const verificacao = await conferirSenha(corpo.senha, conta.senha_hash);
 
-  if (!senhaConfere) {
+  if (!verificacao.confere) {
     const tentativas = conta.tentativas_falhas + 1;
     // Ao atingir o limite, bloqueia por 5 horas e zera o contador.
     if (tentativas >= LIMITE_TENTATIVAS_LOGIN) {
@@ -318,6 +385,11 @@ export async function entrarLocal(corpo: { email: string; senha: string }): Prom
   // Sucesso: zera as tentativas e abre a sessão.
   conta.tentativas_falhas = 0;
   conta.bloqueado_ate = null;
+  // TEAM_011: conta ainda em SHA-256 → regrava em PBKDF2 (migração silenciosa
+  // no primeiro login após a atualização — a senha só existe neste momento).
+  if (verificacao.precisaMigrar) {
+    conta.senha_hash = await derivarHashDaSenha(corpo.senha);
+  }
   salvarBanco(banco);
 
   const token = `${PREFIXO_TOKEN}${conta.id}`;
@@ -939,11 +1011,6 @@ function diaCumprido(checkin: CheckinDiarioInterno): boolean {
   return checkin.treino_feito || checkin.dieta_seguida;
 }
 
-/** Converte o número de dias (desde 1970) em AAAA-MM-DD. */
-function deNumeroParaData(numeroDeDias: number): string {
-  return new Date(numeroDeDias * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-}
-
 /** Converte AAAA-MM-DD no número de dias desde 1970. */
 function deDataParaNumero(data: string): number {
   return Math.floor(new Date(`${data}T00:00:00Z`).getTime() / (24 * 60 * 60 * 1000));
@@ -959,14 +1026,16 @@ function montarResumo(registrosDoUsuario: CheckinDiarioInterno[], referenciaDeHo
   const ordenados = [...registrosDoUsuario].sort((a, b) => b.data.localeCompare(a.data));
   // Datas cumpridas em ordem crescente.
   const diasCumpridos = ordenados.filter(diaCumprido).map((registro) => registro.data).sort();
-  const conjunto = new Set(diasCumpridos);
+  // TEAM_011: laço sobre o NÚMERO do dia (espelho do servidor) — sem criar
+  // Date/string ISO por dia do streak.
+  const diasCumpridosNumericos = diasCumpridos.map(deDataParaNumero);
+  const conjunto = new Set(diasCumpridosNumericos);
 
   // Sequência máxima: maior bloco de dias consecutivos.
   let sequenciaMaxima = 0;
   let corrente = 0;
   let anterior: number | null = null;
-  for (const data of diasCumpridos) {
-    const numero = deDataParaNumero(data);
+  for (const numero of diasCumpridosNumericos) {
     corrente = anterior !== null && numero === anterior + 1 ? corrente + 1 : 1;
     sequenciaMaxima = Math.max(sequenciaMaxima, corrente);
     anterior = numero;
@@ -974,9 +1043,9 @@ function montarResumo(registrosDoUsuario: CheckinDiarioInterno[], referenciaDeHo
 
   // Sequência atual: conta de trás para frente a partir da referência (ou ontem).
   const hoje = deDataParaNumero(referenciaDeHoje);
-  let cursor = conjunto.has(deNumeroParaData(hoje)) ? hoje : hoje - 1;
+  let cursor = conjunto.has(hoje) ? hoje : hoje - 1;
   let sequenciaAtual = 0;
-  while (conjunto.has(deNumeroParaData(cursor))) {
+  while (conjunto.has(cursor)) {
     sequenciaAtual += 1;
     cursor -= 1;
   }

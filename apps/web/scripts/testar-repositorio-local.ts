@@ -381,6 +381,34 @@ async function principal(): Promise<void> {
     conferir('Conta bloqueada recusa senha correta', 423, (erro as { status: number }).status);
   }
 
+  // ---- 11b) TEAM_011: conta com hash SHA-256 legado migra para PBKDF2 ----
+  // Simula uma conta criada antes da atualização (hash antigo de 64 hex).
+  await repositorio.cadastrarLocal({ nome: 'Legado Teste', email: 'legado@teste.com', senha: 'senhaLegada123' });
+  const bancoLegado = JSON.parse(armazenamento.getItem('protocolfit_banco_local') as string) as {
+    contas: { email: string; senha_hash: string }[];
+  };
+  const contaLegada = bancoLegado.contas.find((conta) => conta.email === 'legado@teste.com');
+  conferir('Hash novo usa formato PBKDF2', true, contaLegada?.senha_hash.startsWith('pbkdf2$'));
+  // Regrava o hash no formato ANTIGO (SHA-256 puro) para simular conta legada.
+  const digestoLegado = await webcrypto.subtle.digest('SHA-256', new TextEncoder().encode('senhaLegada123'));
+  if (contaLegada) {
+    contaLegada.senha_hash = Array.from(new Uint8Array(digestoLegado))
+      .map((byte) => byte.toString(16).padStart(2, '0'))
+      .join('');
+  }
+  armazenamento.setItem('protocolfit_banco_local', JSON.stringify(bancoLegado));
+  // Login com hash legado: confere E migra para PBKDF2 na mesma operação.
+  const loginLegado = await repositorio.entrarLocal({ email: 'legado@teste.com', senha: 'senhaLegada123' });
+  conferir('Login com hash legado funciona', 'Legado Teste', loginLegado.usuario.nome);
+  const bancoMigrado = JSON.parse(armazenamento.getItem('protocolfit_banco_local') as string) as {
+    contas: { email: string; senha_hash: string }[];
+  };
+  const contaMigrada = bancoMigrado.contas.find((conta) => conta.email === 'legado@teste.com');
+  conferir('Hash legado migrado para PBKDF2', true, contaMigrada?.senha_hash.startsWith('pbkdf2$'));
+  // O login acima trocou a sessão — restaura a sessão da Maria (id 1) para as
+  // seções seguintes, que dependem do plano/check-ins dela.
+  armazenamento.setItem('protocolfit_token', 'local:1');
+
   // ---- 12) PORTABILIDADE: exportar e importar o progresso ------------------
   // A sessão ativa ainda é a da Maria (o bloqueio vale só para NOVOS logins).
   const backup = await repositorio.exportarProgressoLocal();

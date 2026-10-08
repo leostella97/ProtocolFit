@@ -68,6 +68,20 @@ app.addContentTypeParser('application/json', { parseAs: 'string' }, (requisicao,
   }
 });
 
+// TEAM_011: cabeçalhos de segurança em TODA resposta — a API só entrega
+// JSON, mas os headers protegem quem abre a URL direto no navegador e
+// impedem cache intermediário de dados pessoais (perfil, planos, check-ins).
+app.addHook('onSend', async (_requisicao, resposta) => {
+  // Impede o navegador de "adivinhar" o tipo do conteúdo (MIME sniffing).
+  resposta.header('X-Content-Type-Options', 'nosniff');
+  // A API nunca deve ser embutida em <iframe> (clickjacking).
+  resposta.header('X-Frame-Options', 'DENY');
+  // Não vaza a URL de origem para terceiros via cabeçalho Referer.
+  resposta.header('Referrer-Policy', 'no-referrer');
+  // Respostas de API não devem ficar em cache de proxies/navegador.
+  resposta.header('Cache-Control', 'no-store');
+});
+
 // Configura o JWT na instância raiz — chamada DIRETA (não app.register)
 // para que os decorators (app.jwt, request.jwtVerify) fiquem globais.
 await configurarAutenticacao(app);
@@ -95,8 +109,20 @@ app.setErrorHandler((erro: unknown, _requisicao, resposta) => {
   return resposta.code(status).send({ mensagem: falha.message ?? 'Requisição inválida.' });
 });
 
-// Registra as rotas com seus prefixos de API.
-await app.register(rotasOpcoes, { prefix: '/api' }); // GET  /api/opcoes
+// TEAM_011: registra o rate-limit na raiz com global:false — cria o decorator
+// app.rateLimit para opt-in por rota (/api/saude) sem limitar tudo; rotas
+// autenticadas ficam sem teto por dependerem de JWT válido.
+await app.register(rateLimit, { global: false });
+
+// TEAM_011: rate limit nas rotas PÚBLICAS (as demais exigem JWT válido — um
+// atacante sem conta não as alcança; um usuário logado só derruba a si mesmo).
+// 300 req/min por IP é folga larga para uso humano e barreira para flood —
+// e não sufoca os testes de integração legítimos que fazem centenas de
+// requisições autenticadas em sequência.
+await app.register(async (rotasPublicas) => {
+  await rotasPublicas.register(rateLimit, { max: 300, timeWindow: '1 minute' });
+  await rotasPublicas.register(rotasOpcoes);
+}, { prefix: '/api' }); // GET /api/opcoes
 
 // TEAM_007: as rotas de autenticação recebem rate limit próprio — 30
 // requisições/minuto por IP é folga para uso humano e barreira para bots.
@@ -111,7 +137,9 @@ await app.register(rotasEvolucao, { prefix: '/api/evolucao' }); // POST /api/evo
 await app.register(rotasCheckin, { prefix: '/api/checkin' }); // GET /api/checkin | POST /api/checkin (check-in diário)
 
 /** Rota de saúde — usada para monitorar se o servidor está no ar. */
-app.get('/api/saude', async () => ({
+// TEAM_011: também pública → fica dentro do mesmo teto de 300 req/min.
+// Registrada direto na instância raiz com config própria do rate-limit.
+app.get('/api/saude', { config: { rateLimit: { max: 300, timeWindow: '1 minute' } } }, async () => ({
   status: 'ok',
   sistema: 'ProtocolFit',
   timestamp: new Date().toISOString(),

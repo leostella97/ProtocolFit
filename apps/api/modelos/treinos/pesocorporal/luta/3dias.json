@@ -1,0 +1,41 @@
+{
+  "nome": "Luta de Calistenia — Força, Potência e Condicionamento (3 dias)",
+  "modalidade": "pesocorporal",
+  "objetivo": "luta",
+  "dias": 3,
+  "duracao_estimada_min": 60,
+  "dias_da_semana": [
+    {
+      "titulo": "Força — Corpo Superior",
+      "exercicios": [
+        { "nome": "Flexão de braço", "grupo": "peito", "tipo": "corporal", "series": 4, "repeticoes_min": 8, "repeticoes_max": 15, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Desça o peito ao chão e suba completo — força de empurrar é defesa de queda." },
+        { "nome": "Flexão diamante", "grupo": "triceps", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Mãos juntas sob o peito — tríceps para o jab e para postar no chão." },
+        { "nome": "Barra fixa", "grupo": "costas", "tipo": "corporal", "series": 4, "repeticoes_min": 5, "repeticoes_max": 8, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Puxar o peso do corpo é a pegada funcional — sem barra, use remada invertida." },
+        { "nome": "Pike push-up", "grupo": "ombro", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Quadril alto, cabeça entre as mãos — ombros fortes para a guarda." },
+        { "nome": "Isometria na barra (dead hang)", "grupo": "corpointeiro", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 40, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Pendure até a pegada falhar — antebraço de quem segura kimono." },
+        { "nome": "Prancha lateral", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "30–40 segundos de cada lado — estabilidade de clinch e base." }
+      ]
+    },
+    {
+      "titulo": "Força — Corpo Inferior",
+      "exercicios": [
+        { "nome": "Agachamento livre", "grupo": "pernas", "tipo": "corporal", "series": 4, "repeticoes_min": 15, "repeticoes_max": 20, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Profundo e controlado — as pernas são o chão de toda projeção." },
+        { "nome": "Agachamento búlgaro", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Pé de trás apoiado num banco/sofá — força unilateral de verdade." },
+        { "nome": "Afundo alternado", "grupo": "pernas", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 16, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Passo firme e joelho alinhado — resistência de pernas para os rounds." },
+        { "nome": "Elevação pélvica", "grupo": "gluteos", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Esprem o quadril no topo — o motor da ponte e da saída de baixo." },
+        { "nome": "Panturrilha unipodal", "grupo": "panturrilha", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Uma perna de cada vez, amplitude total — equilíbrio e pivô." },
+        { "nome": "Prancha isométrica", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "40–60 segundos — o core é a ponte entre soco e perna." }
+      ]
+    },
+    {
+      "titulo": "Potência e Explosão",
+      "exercicios": [
+        { "nome": "Agachamento com salto explosivo", "grupo": "pliometria", "tipo": "corporal", "series": 4, "repeticoes_min": 6, "repeticoes_max": 10, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Máxima altura, aterrissagem macia — explosão de quadril para quedas." },
+        { "nome": "Flexão explosiva (com palma)", "grupo": "peito", "tipo": "corporal", "series": 4, "repeticoes_min": 5, "repeticoes_max": 8, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Descole as mãos do chão se conseguir — potência de soco começa aqui." },
+        { "nome": "Saltos alternados (bound)", "grupo": "pliometria", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Passadas longas e elásticas — explosão horizontal de entrada." },
+        { "nome": "Burpee com salto", "grupo": "corpointeiro", "tipo": "corporal", "series": 4, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Sprawl + salto num movimento — explosão completa do lutador." },
+        { "nome": "Rotação de tronco em pé", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 12, "repeticoes_max": 16, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Gire rápido com os pés firmes — rotação é a mecânica do golpe." }
+      ]
+    }
+  ]
+}

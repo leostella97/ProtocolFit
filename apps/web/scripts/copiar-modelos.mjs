@@ -29,7 +29,7 @@ const DESTINO = join(RAIZ_DO_ARQUIVO, '..', 'public', 'modelos');
 
 // Modalidades e objetivos do sistema.
 const MODALIDADES = ['academia', 'pesocorporal'];
-const OBJETIVOS = ['emagrecimento', 'hipertrofia', 'corrida'];
+const OBJETIVOS = ['emagrecimento', 'hipertrofia', 'corrida', 'luta'];
 
 // Reconhece "{dias}dias.json" e "{dias}dias-{slug}.json".
 const PADRAO_DO_NOME = /^(\d+)dias(?:-([a-z0-9]+(?:-[a-z0-9]+)*))?\.json$/;

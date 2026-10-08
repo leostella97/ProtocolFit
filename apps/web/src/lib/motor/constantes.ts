@@ -79,6 +79,12 @@ export const OBJETIVOS: { valor: Objetivo; rotulo: string; descricao: string }[]
     rotulo: 'Corrida',
     descricao: 'Manutenção calórica com alto carboidrato e fortalecimento específico para melhorar o desempenho.',
   },
+  {
+    // TEAM_010: mesma entrada da API — paridade de opções no modo navegador.
+    valor: 'luta',
+    rotulo: 'Luta',
+    descricao: 'Manutenção calórica com força explosiva, pegada forte e condicionamento de rounds para o desempenho no combate.',
+  },
 ];
 
 /** Modalidades de treino disponíveis com rótulo e descrição. */

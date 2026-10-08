@@ -36,6 +36,8 @@ const AJUSTE_POR_OBJETIVO: Record<Objetivo, number> = {
   emagrecimento: -0.2, // Déficit de 20%
   hipertrofia: 0.1, // Superávit de 10%
   corrida: 0, // Manutenção
+  // TEAM_010: luta é performance — manutenção (corte de peso é território profissional).
+  luta: 0,
 };
 
 /** Meta de proteína em gramas por quilo de peso corporal, por objetivo. */
@@ -43,6 +45,8 @@ const PROTEINA_G_POR_KG: Record<Objetivo, number> = {
   emagrecimento: 2.0,
   hipertrofia: 1.8,
   corrida: 1.6,
+  // TEAM_010: recuperação entre sessões de força + específico de combate.
+  luta: 1.8,
 };
 
 /** Percentual das calorias totais destinado às gorduras, por objetivo. */
@@ -50,6 +54,8 @@ const GORDURA_PERCENTUAL: Record<Objetivo, number> = {
   emagrecimento: 0.25,
   hipertrofia: 0.3,
   corrida: 0.2,
+  // TEAM_010: gordura moderada — o combate é glicolítico, carbo com prioridade.
+  luta: 0.25,
 };
 
 /** Calorias contidas em 1 grama de cada macronutriente. */
@@ -60,6 +66,7 @@ export const AGUA_ML_POR_KG: Record<Objetivo, number> = {
   emagrecimento: 35,
   hipertrofia: 35,
   corrida: 40,
+  luta: 40, // TEAM_010: quimono/suíte e rounds elevam a sudorese como na corrida
 };
 
 /** Converte uma faixa etária canônica (ex.: "19-23") na idade representativa. */

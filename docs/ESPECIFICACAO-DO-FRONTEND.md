@@ -109,10 +109,10 @@ Tom: confiança científica + energia + simplicidade. Frases de apoio (use livre
 
 - **Cabeçalho fixo**: logo "ProtocolFit" (ícone `HeartPulse` do lucide + `font-display font-bold`), links âncora (Como funciona, Diferenciais), botões Entrar (fantasma) e "Começar grátis" (gradiente) → `/cadastro`.
 - **Hero**: título grande `font-display` ("Seu treino e dieta personalizados em **segundos**" com `texto-gradiente` na palavra-chave), subtítulo persuasivo, 2 CTAs ("Criar meu plano grátis" → `/cadastro`, "Ver como funciona" âncora), prova social ("3 passos · 0 custo de IA · 100% ciência"). Animação de entrada escalonada (motion).
-- **Faixa de estatísticas**: 4 números com contador simples (`motion` + `useEffect`), ex.: "3 objetivos", "17 faixas etárias", "0 chamadas de IA", "100% determinístico".
+- **Faixa de estatísticas**: 4 números com contador simples (`motion` + `useEffect`), ex.: "4 objetivos", "17 faixas etárias", "0 chamadas de IA", "100% determinístico".
 - **Como funciona**: 3 cartões com ícones (`ClipboardList`, `Calculator`, `Dumbbell`) — 1. Responda o onboarding, 2. Motor calcula TMB/macros, 3. Treine e evolua.
 - **Diferenciais**: grade 2x2 (Zero IA = `ShieldCheck`; Milissegundos = `Zap`; Isolamento de dados = `Lock`; Edite à vontade = `SlidersHorizontal`).
-- **Objetivos**: 3 cartões (Emagrecimento `Flame`, Hipertrofia `Dumbbell`, Corrida `Footprints`) com mini-descrição e seta para `/cadastro`.
+- **Objetivos**: 4 cartões (Emagrecimento `Flame`, Hipertrofia `Dumbbell`, Corrida `Footprints`, Luta `Swords`) com mini-descrição e seta para `/cadastro`.
 - **CTA final**: painel gradiente-marca com título e botão branco "Criar meu plano grátis".
 - **Rodapé**: logo, tagline e © ano ProtocolFit.
 

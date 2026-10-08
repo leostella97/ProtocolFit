@@ -48,16 +48,16 @@ ProtocolFit/
     │   ├── dados/                   # SQLite (protocolfit.db, criado em runtime)
     │   ├── modelos/                 # ── MODELOS JSON MESTRES (somente leitura)
     │   │   ├── LEIA-ME.md           # esquema dos modelos (inclui prescricao_fixa e cardio)
-    │   │   ├── treinos/             # 208 modelos: 36 padrão da matriz
-    │   │   │   │                    # (2 modalidades x 3 objetivos x 2..7 dias)
-    │   │   │   ├── academia/        # hipertrofia, emagrecimento, corrida
-    │   │   │   └── pesocorporal/    # hipertrofia, emagrecimento, corrida
+    │   │   ├── treinos/             # 221 modelos: 48 padrão da matriz
+    │   │   │   │                    # (2 modalidades x 4 objetivos x 2..7 dias)
+    │   │   │   ├── academia/        # hipertrofia, emagrecimento, corrida, luta
+    │   │   │   └── pesocorporal/    # hipertrofia, emagrecimento, corrida, luta
     │   │   │                        # + variações de estilo "{dias}dias-{slug}.json":
     │   │   │                        # forca-maxima, powerlifting, funcional, crossfit,
     │   │   │                        # hiit, circuito, upper-lower, push-pull-legs,
     │   │   │                        # ondulante (DUP), mrt, hiit-forca,
     │   │   │                        # forca-corredor, tensao-progressiva...
-    │   │   └── dietas/              # 3 padrão por objetivo + variações
+    │   │   └── dietas/              # 4 padrão por objetivo + variações
     │   │                            # pareadas por slug ({objetivo}-{slug}.json)
     │   └── src/
     │       ├── servidor.ts          # bootstrap do Fastify (porta 3333)
@@ -99,7 +99,7 @@ ProtocolFit/
 ## 🔄 O fluxo do usuário
 
 1. **Onboarding** — você cadastra-se e informa sexo, faixa etária, altura, peso,
-   objetivo (emagrecimento | hipertrofia | corrida), dias disponíveis por
+   objetivo (emagrecimento | hipertrofia | corrida | luta), dias disponíveis por
    semana e modalidade (academia | peso do corpo). Nesse passo também escolhe o
    **estilo de treino**, quando a combinação oferece variações.
 2. **Geração** — o motor cruza os filtros, localiza o modelo JSON mestre e
@@ -181,8 +181,8 @@ A mesma combinação pode oferecer mais de um formato: o padrão é
 A lista vai no `GET /opcoes` (`variacoes_de_treino`), o usuário escolhe no
 onboarding ou depois em **Perfil → Estilo de treino** (`PATCH
 /perfil/treino`), e o estilo fica gravado no perfil (`variacao_treino`).
-Hoje são **36 modelos padrão + 172 variações de estilo = 208 treinos** e
-**158 modelos de dieta**.
+Hoje são **48 modelos padrão + 173 variações de estilo = 221 treinos** e
+**160 modelos de dieta**.
 
 Quando a dieta tem o mesmo slug do estilo (`dietas/{objetivo}-{slug}.json`,
 ex.: `hipertrofia-ondulante.json`), ela é usada automaticamente — treino e
@@ -214,7 +214,8 @@ vira 4×8–12 deixaria de ser DUP. Modelos assim marcam os exercícios com
 `TMB (Mifflin-St Jeor) → fator de atividade → gasto total →
 déficit/superávit por objetivo → macros em gramas`, com piso calórico de
 segurança (1500 kcal ♂ / 1200 kcal ♀), fibras (14 g/1000 kcal) e água
-(35–40 ml/kg — o objetivo corrida usa a faixa maior). Cargas iniciais =
+(35–40 ml/kg — os objetivos corrida e luta usam a faixa maior, pela
+sudorese elevada). Cargas iniciais =
 fração do peso corporal, arredondadas a 2,5 kg. As quantidades dos
 alimentos saem das calorias da refeição (`% do dia → % da refeição →
 gramas por densidade calórica`), mantendo o equilíbrio calórico ao trocar
@@ -250,6 +251,12 @@ listadas em **Referências** no fim deste arquivo. Em resumo honesto:
   "força do corredor" separa os estímulos.
 - **Corredor forte corre melhor**: força pesada + pliometria melhora a
   economia de corrida (Blagrove et al., 2018; Rønnestad & Mujika, 2014).
+- **Lutador forte luta melhor**: nos esportes de combate, a força e a
+  potência sustentam golpes, quedas e clinch — e o gás de round vem de
+  condicionamento intermitente, não de volume infinito de musculação
+  (James et al., 2016; Franchini et al., 2011). E corte de peso agudo por
+  desidratação **prejudica performance e saúde** — por isso o objetivo
+  "luta" mantém as calorias (Reale et al., 2017).
 - **Energia**: o gasto é estimado por Mifflin-St Jeor (1990), a equação
   recomendada pela Academy of Nutrition and Dietetics para adultos
   saudáveis — ainda assim é **estimativa**, com erro individual real.
@@ -301,8 +308,8 @@ npm run dev:web
 npm test                                            # Jasmine: specs do motor e utilitários
 node scripts/validar-modelos.mjs                    # valida os 366 modelos JSON
 powershell -File scripts/teste-da-api.ps1           # fluxo completo da API (inclui troca de estilo)
-powershell -File scripts/teste-da-matriz.ps1        # 36 combinações de treino vinculadas
-powershell -File scripts/teste-dos-dados-possiveis.ps1  # 212 perfis possíveis (treino + dieta)
+powershell -File scripts/teste-da-matriz.ps1        # 48 combinações de treino vinculadas
+powershell -File scripts/teste-dos-dados-possiveis.ps1  # 280 perfis possíveis (treino + dieta)
 powershell -File scripts/teste-do-checkin.ps1       # check-in diário + alteração de peso/altura
 ```
 
@@ -594,6 +601,19 @@ literatura combinada e pelas convenções práticas do treinamento.
     composição corporal em atletas de modalidades de combate e
     corredores — usadas como referência de contexto na montagem dos
     estilos "força do corredor" e "força + HIIT".
+
+### Esportes de combate (objetivo "luta")
+
+22. JAMES, Lachlan P. et al. **Towards a determination of the
+    physiological characteristics distinguishing successful mixed
+    martial arts athletes: a systematic review of combat sport
+    literature**. *Sports Medicine*, v. 46, n. 10, p. 1525–1551, 2016.
+23. FRANCHINI, Emerson et al. **Physiological profiles of elite judo
+    athletes**. *Sports Medicine*, v. 41, n. 2, p. 147–166, 2011.
+24. REALE, Reid; SLATER, Gary; BURKE, Louise M. **Acute-weight-loss
+    strategies for combat sports and applications to Olympic success**.
+    *International Journal of Sports Physiology and Performance*, v. 12,
+    n. 2, p. 142–151, 2017.
 
 ---
 

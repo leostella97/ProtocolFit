@@ -147,7 +147,7 @@ function criarTabelas(): void {
       faixa_etaria       TEXT    NOT NULL,                  -- ex.: "19-23"
       peso_kg            REAL    NOT NULL,                  -- peso em kg (aceita decimal)
       altura_cm          REAL    NOT NULL,                  -- altura em cm
-      objetivo           TEXT    NOT NULL,                  -- emagrecimento | hipertrofia | corrida
+      objetivo           TEXT    NOT NULL,                  -- emagrecimento | hipertrofia | corrida | luta
       frequencia_semanal INTEGER NOT NULL,                  -- sessões por semana
       dias_disponiveis   TEXT    NOT NULL,                  -- JSON: ["segunda","quarta"]
       modalidade         TEXT    NOT NULL,                  -- academia | pesocorporal

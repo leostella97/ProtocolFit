@@ -1,0 +1,30 @@
+{
+  "nome": "Luta de Calistenia — Força, Potência e Condicionamento (2 dias)",
+  "modalidade": "pesocorporal",
+  "objetivo": "luta",
+  "dias": 2,
+  "duracao_estimada_min": 60,
+  "dias_da_semana": [
+    {
+      "titulo": "Força — Corpo Superior",
+      "exercicios": [
+        { "nome": "Flexão de braço", "grupo": "peito", "tipo": "corporal", "series": 4, "repeticoes_min": 8, "repeticoes_max": 15, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Desça o peito ao chão e suba completo — força de empurrar é defesa de queda." },
+        { "nome": "Flexão diamante", "grupo": "triceps", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Mãos juntas sob o peito — tríceps para o jab e para postar no chão." },
+        { "nome": "Barra fixa", "grupo": "costas", "tipo": "corporal", "series": 4, "repeticoes_min": 5, "repeticoes_max": 8, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "dicas": "Puxar o peso do corpo é a pegada funcional — sem barra, use remada invertida." },
+        { "nome": "Pike push-up", "grupo": "ombro", "tipo": "corporal", "series": 3, "repeticoes_min": 8, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Quadril alto, cabeça entre as mãos — ombros fortes para a guarda." },
+        { "nome": "Isometria na barra (dead hang)", "grupo": "corpointeiro", "tipo": "corporal", "series": 3, "repeticoes_min": 20, "repeticoes_max": 40, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "Pendure até a pegada falhar — antebraço de quem segura kimono." },
+        { "nome": "Prancha lateral", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "30–40 segundos de cada lado — estabilidade de clinch e base." }
+      ]
+    },
+    {
+      "titulo": "Condicionamento de Rounds (HIIT)",
+      "exercicios": [
+        { "nome": "Sombra de luta — tiros", "grupo": "cardio", "tipo": "cardio", "series": 6, "repeticoes_min": 60, "repeticoes_max": 60, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "6 tiros de 1 min golpeando no ar com ritmo e guarda alta." },
+        { "nome": "Corrida em tiros", "grupo": "cardio", "tipo": "cardio", "series": 8, "repeticoes_min": 30, "repeticoes_max": 30, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "8 tiros de 30 s rápidos com 60 s trotando — gás de round." },
+        { "nome": "Mountain climbers", "grupo": "core", "tipo": "corporal", "series": 4, "repeticoes_min": 30, "repeticoes_max": 40, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Joelhos ao peito sem parar — cardio disfarçado de abdominal." },
+        { "nome": "Polichinelo", "grupo": "corpointeiro", "tipo": "corporal", "series": 3, "repeticoes_min": 30, "repeticoes_max": 40, "descanso_segundos": 30, "percentual_carga_peso_corporal": null, "dicas": "Ritmo vivo e coordenação — pés ativos como na troca de base." },
+        { "nome": "Bear crawl (caminhada de urso)", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "Quadril baixo e costas planas — escapa, entra e sai de posições." }
+      ]
+    }
+  ]
+}

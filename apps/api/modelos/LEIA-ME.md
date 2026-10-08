@@ -13,15 +13,18 @@ modelos/
 │   ├── academia/                  # treinos com pesos e máquinas
 │   │   ├── hipertrofia/           # 2dias.json ... 7dias.json (6 arquivos)
 │   │   ├── emagrecimento/         # 2dias.json ... 7dias.json (6 arquivos)
-│   │   └── corrida/               # 2dias.json ... 7dias.json (6 arquivos)
+│   │   ├── corrida/               # 2dias.json ... 7dias.json (6 arquivos)
+│   │   └── luta/                  # 2dias.json ... 7dias.json (6 arquivos)
 │   └── pesocorporal/              # calistenia, sem equipamentos
 │       ├── hipertrofia/           # 2dias.json ... 7dias.json (6 arquivos)
 │       ├── emagrecimento/         # 2dias.json ... 7dias.json (6 arquivos)
-│       └── corrida/               # 2dias.json ... 7dias.json (6 arquivos)
+│       ├── corrida/               # 2dias.json ... 7dias.json (6 arquivos)
+│       └── luta/                  # 2dias.json ... 7dias.json (6 arquivos)
 └── dietas/
     ├── emagrecimento.json            # dieta padrão do objetivo
     ├── hipertrofia.json
     ├── corrida.json
+    ├── luta.json
     └── {objetivo}-{slug}.json        # variações pareadas com estilos de treino
 ```
 
@@ -32,8 +35,8 @@ modelos/
 > `hipertrofia-ondulante.json`), ela é usada no lugar da dieta padrão do
 > objetivo — treino e dieta ficam tematicamente pareados.
 
-> **Matriz completa (36 treinos):** toda combinação selecionável no site
-> (2 modalidades × 3 objetivos × 6 quantidades de dias, de 2 a 7) tem seu
+> **Matriz completa (48 treinos padrão):** toda combinação selecionável no site
+> (2 modalidades × 4 objetivos × 6 quantidades de dias, de 2 a 7) tem seu
 > arquivo JSON exato. O vínculo com o usuário é explícito: a coluna
 > `modelo_origem` do SQLite e o campo `modelo_origem` da API registram o
 > caminho do modelo mestre usado na clonagem (ex.: `treinos/academia/corrida/4dias.json`).
@@ -48,7 +51,7 @@ modelos/
 {
   "nome": "Nome do modelo",               // exibido no painel
   "modalidade": "academia",               // academia | pesocorporal
-  "objetivo": "hipertrofia",              // emagrecimento | hipertrofia | corrida
+  "objetivo": "hipertrofia",              // emagrecimento | hipertrofia | corrida | luta
   "dias": 3,                              // quantidade de dias do modelo
   "duracao_estimada_min": 60,             // tempo estimado por sessão
   "dias_da_semana": [                     // estrutura dos dias
@@ -81,6 +84,7 @@ modelos/
 | Emagrecimento  | 3      | 12 a 15    | 60 s     |
 | Hipertrofia    | 4      | 8 a 12     | 90 s     |
 | Corrida        | 3      | 10 a 12    | 60 s     |
+| Luta           | 4      | 6 a 10     | 90 s     |
 
 A carga inicial sugerida é `peso_kg × percentual_carga_peso_corporal`,
 arredondada para múltiplos de 2,5 kg.

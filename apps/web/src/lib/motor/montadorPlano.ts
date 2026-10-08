@@ -26,6 +26,9 @@ const REGRAS_POR_OBJETIVO: Record<Objetivo, { series: number; repeticoes_min: nu
   emagrecimento: { series: 3, repeticoes_min: 12, repeticoes_max: 15, descanso_segundos: 60 },
   hipertrofia: { series: 4, repeticoes_min: 8, repeticoes_max: 12, descanso_segundos: 90 },
   corrida: { series: 3, repeticoes_min: 10, repeticoes_max: 12, descanso_segundos: 60 },
+  // TEAM_010: luta pede força e potência — reps moderadas com carga real e
+  // descanso que preserve a qualidade explosiva da série seguinte.
+  luta: { series: 4, repeticoes_min: 6, repeticoes_max: 10, descanso_segundos: 90 },
 };
 
 /** Orientações gerais de treino exibidas no painel, por objetivo. */
@@ -52,6 +55,14 @@ const DICAS_DE_TREINO_POR_OBJETIVO: Record<Objetivo, string[]> = {
     'Panturrilha e tibial fortes são o "sistema de amortecimento" do corredor — não pule esses exercícios.',
     'Progressão gradual protege: aumente carga, séries ou quilometragem aos poucos, nunca tudo de uma vez.',
   ],
+  luta: [
+    // TEAM_010: força-potência + condicionamento — a base física do combatente.
+    'Potência é força aplicada com velocidade: nos compostos, suba explosivo e desça controlado — é a intenção que treina a explosão.',
+    'Pegada e core anti-rotação sustentam clinch, quedas e raspagens: não pule farmer walk, isometria na barra e pranchas.',
+    'Os tiros do plano imitam a alternância esforço-descanso de um round — encare-os como treino de gás, não como castigo.',
+    'Cargas na faixa de 6–10 reps constroem força sem volume excessivo que roube energia dos treinos técnicos.',
+    'Separar a musculação dos treinos específicos intensos por ~6+ horas reduz a interferência — um estímulo não atrapalha o outro.',
+  ],
 };
 
 /** Orientações nutricionais exibidas no plano de dieta de cada objetivo. */
@@ -77,6 +88,14 @@ const DICAS_POR_OBJETIVO: Record<Objetivo, string[]> = {
     'Recuperação se compra no prato: após treinos longos, combine carboidrato + proteína (~3:1) para repor glicogênio e reparar o músculo.',
     'Hidrate-se bem: sua meta de água é maior por causa da transpiração nas corridas.',
     'O intestino também treina: antes de provas, evite fibras e gorduras em excesso na refeição pré-corrida.',
+  ],
+  luta: [
+    // TEAM_010: combate é esforço glicolítico intermitente — carbo é prioridade.
+    'Coma para treinar: rounds puxam pelo carboidrato — mantenha as porções das refeições que cercam os treinos de força e específico.',
+    'Sua proteína diária já está alta de propósito: distribuída nas refeições, ela sustenta a recuperação entre academia e tatame/ringue.',
+    'Suar de quimono e rounds derruba desempenho quando a água falta — trate a meta diária como o mínimo, não o teto.',
+    'Pós-treino de força: proteína + carboidrato na refeição seguinte repõe o glicogênio e repara o músculo para o treino técnico.',
+    'Corte de peso para categoria é território de nutricionista e médico: este plano mantém o seu peso — nunca desidrate por conta própria.',
   ],
 };
 

@@ -108,6 +108,7 @@ export function rotuloDoObjetivo(objetivo: string): string {
     emagrecimento: 'Emagrecimento',
     hipertrofia: 'Hipertrofia',
     corrida: 'Corrida',
+    luta: 'Luta',
   };
   return rotulos[objetivo] ?? objetivo;
 }

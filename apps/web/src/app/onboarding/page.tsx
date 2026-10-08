@@ -24,6 +24,7 @@ import {
   Mars,
   PersonStanding,
   Sparkles,
+  Swords,
   Venus,
 } from 'lucide-react';
 // Tipo dos ícones do lucide (usado nos mapas de ícones).
@@ -104,6 +105,8 @@ const ICONES_DOS_OBJETIVOS: Record<Objetivo, LucideIcon> = {
   emagrecimento: Flame,
   hipertrofia: Dumbbell,
   corrida: Footprints,
+  // TEAM_010: luta entra como quarto objetivo (força-potência + condicionamento).
+  luta: Swords,
 };
 
 /** Ícones associados a cada modalidade de treino. */

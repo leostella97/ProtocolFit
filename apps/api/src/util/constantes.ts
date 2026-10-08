@@ -69,6 +69,13 @@ export const OBJETIVOS: { valor: Objetivo; rotulo: string; descricao: string }[]
     rotulo: 'Corrida',
     descricao: 'Manutenção calórica com alto carboidrato e fortalecimento específico para melhorar o desempenho.',
   },
+  {
+    // TEAM_010: luta é objetivo de PERFORMANCE — manutenção calórica,
+    // proteína alta e treino de força-potência + condicionamento intervalado.
+    valor: 'luta',
+    rotulo: 'Luta',
+    descricao: 'Manutenção calórica com força explosiva, pegada forte e condicionamento de rounds para o desempenho no combate.',
+  },
 ];
 
 /** Modalidades de treino disponíveis com rótulo e descrição. */

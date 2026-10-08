@@ -1,0 +1,51 @@
+{
+  "nome": "MMA - Força, Potência e Gás de Round (4 dias)",
+  "modalidade": "academia",
+  "objetivo": "luta",
+  "dias": 4,
+  "duracao_estimada_min": 65,
+  "dias_da_semana": [
+    {
+      "titulo": "Dia 1 - Força Pesada (base de grappling)",
+      "exercicios": [
+        { "nome": "Agachamento livre", "grupo": "pernas", "tipo": "composto", "series": 5, "repeticoes_min": 4, "repeticoes_max": 6, "descanso_segundos": 180, "percentual_carga_peso_corporal": 0.7, "prescricao_fixa": true, "dicas": "Força máxima de pernas: base de queda, defesa de takedown e explosão de quadril. Descanse os 3 min completos." },
+        { "nome": "Levantamento terra", "grupo": "posterior", "tipo": "composto", "series": 4, "repeticoes_min": 4, "repeticoes_max": 6, "descanso_segundos": 180, "percentual_carga_peso_corporal": 0.8, "prescricao_fixa": true, "dicas": "Levantar peso do chão é o movimento do double-leg — cadeia posterior pura." },
+        { "nome": "Supino reto com barra", "grupo": "peito", "tipo": "composto", "series": 4, "repeticoes_min": 5, "repeticoes_max": 6, "descanso_segundos": 150, "percentual_carga_peso_corporal": 0.6, "prescricao_fixa": true, "dicas": "Empurrar pesado constrói a pressão de cima do ground and pound." },
+        { "nome": "Barra fixa com lastro", "grupo": "costas", "tipo": "corporal", "series": 4, "repeticoes_min": 4, "repeticoes_max": 6, "descanso_segundos": 150, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Puxada pesada é a força que traz o adversário para o seu colo no clinch." },
+        { "nome": "Farmer's Walk", "grupo": "corpointeiro", "tipo": "composto", "series": 3, "repeticoes_min": 30, "repeticoes_max": 40, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.45, "prescricao_fixa": true, "dicas": "Pegada que não abre: caminhe 30-40 s com o máximo que segurar." },
+        { "nome": "Prancha isométrica", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 1, "repeticoes_max": 1, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "40-60 s estáveis — brace firme como quem absorve um chute no corpo." }
+      ]
+    },
+    {
+      "titulo": "Dia 2 - Potência e Striking",
+      "exercicios": [
+        { "nome": "Arranco em potência com barra (hang clean)", "grupo": "pernas", "tipo": "composto", "series": 5, "repeticoes_min": 3, "repeticoes_max": 5, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.4, "prescricao_fixa": true, "dicas": "O exercício mais explosivo do plano — quadril estica e a barra voa: a mecânica do upkick e do nocaute." },
+        { "nome": "Supino explosivo com halteres", "grupo": "peito", "tipo": "composto", "series": 4, "repeticoes_min": 4, "repeticoes_max": 6, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.35, "prescricao_fixa": true, "dicas": "Velocidade máxima na subida — soco é força aplicada em fração de segundo." },
+        { "nome": "Salto em caixa", "grupo": "pliometria", "tipo": "corporal", "series": 4, "repeticoes_min": 5, "repeticoes_max": 8, "descanso_segundos": 90, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Aterrissagem silenciosa — potência que não machuca a articulação." },
+        { "nome": "Rotação russa com anilha", "grupo": "core", "tipo": "isolador", "series": 3, "repeticoes_min": 12, "repeticoes_max": 15, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.1, "prescricao_fixa": true, "dicas": "Giro controlado com carga — a rotação do cruzado e do rodado." },
+        { "nome": "Saco de pancada — tiros de velocidade", "grupo": "cardio", "tipo": "cardio", "series": 5, "repeticoes_min": 60, "repeticoes_max": 60, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "dicas": "5 tiros de 1 min com volume e precisão — striking sob fadiga." }
+      ]
+    },
+    {
+      "titulo": "Dia 3 - Força do Puxar + Pegada",
+      "exercicios": [
+        { "nome": "Remada curvada com barra", "grupo": "costas", "tipo": "composto", "series": 5, "repeticoes_min": 5, "repeticoes_max": 8, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.5, "prescricao_fixa": true, "dicas": "Remada pesada é o tranco de puxada de kimono — força horizontal total." },
+        { "nome": "Desenvolvimento militar com barra", "grupo": "ombro", "tipo": "composto", "series": 4, "repeticoes_min": 5, "repeticoes_max": 8, "descanso_segundos": 120, "percentual_carga_peso_corporal": 0.35, "prescricao_fixa": true, "dicas": "Ombros fortes sustentam guarda alta por rounds e slams controlados." },
+        { "nome": "Puxada frontal pesada", "grupo": "costas", "tipo": "composto", "series": 4, "repeticoes_min": 6, "repeticoes_max": 8, "descanso_segundos": 90, "percentual_carga_peso_corporal": 0.4, "prescricao_fixa": true, "dicas": "Alternativa à barra fixa com lastro — dorsal larga para o clinch." },
+        { "nome": "Isometria na barra (dead hang)", "grupo": "corpointeiro", "tipo": "corporal", "series": 4, "repeticoes_min": 20, "repeticoes_max": 40, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Pendure até quase soltar — pegada que segura a lapela até o fim." },
+        { "nome": "Encolhimento com halteres", "grupo": "trapezio", "tipo": "isolador", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.3, "prescricao_fixa": true, "dicas": "Trapézio e pescoço fortes absorvem impacto e protegem na queda." },
+        { "nome": "Pallof press", "grupo": "core", "tipo": "isolador", "series": 3, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 45, "percentual_carga_peso_corporal": 0.15, "prescricao_fixa": true, "dicas": "Anti-rotação: fique de pé quando tentarem te girar no clinch." }
+      ]
+    },
+    {
+      "titulo": "Dia 4 - Condicionamento de Luta (gás de round)",
+      "exercicios": [
+        { "nome": "Corda naval (battle rope)", "grupo": "cardio", "tipo": "cardio", "series": 6, "repeticoes_min": 30, "repeticoes_max": 30, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "6 tiros de 30 s máximo — a alternância esforço/pausa de um round de MMA." },
+        { "nome": "Corrida em tiros", "grupo": "cardio", "tipo": "cardio", "series": 8, "repeticoes_min": 30, "repeticoes_max": 30, "descanso_segundos": 60, "percentual_carga_peso_corporal": null, "dicas": "8 tiros de 30 s fortes — o HIIT que separa quem aguenta o terceiro round." },
+        { "nome": "Thruster com halteres", "grupo": "corpointeiro", "tipo": "composto", "series": 4, "repeticoes_min": 10, "repeticoes_max": 12, "descanso_segundos": 60, "percentual_carga_peso_corporal": 0.25, "prescricao_fixa": true, "dicas": "Agachamento + arremesso contínuo — explosão total sob fadiga." },
+        { "nome": "Burpee com salto", "grupo": "corpointeiro", "tipo": "corporal", "series": 4, "repeticoes_min": 10, "repeticoes_max": 15, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Sprawl + salto: o movimento de derrubar e levantar do próprio corpo." },
+        { "nome": "Prancha com toque no ombro", "grupo": "core", "tipo": "corporal", "series": 3, "repeticoes_min": 16, "repeticoes_max": 20, "descanso_segundos": 45, "percentual_carga_peso_corporal": null, "prescricao_fixa": true, "dicas": "Quadril travado sob esforço — postura de base no ground and pound." }
+      ]
+    }
+  ]
+}

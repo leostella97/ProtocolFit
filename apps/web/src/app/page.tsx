@@ -20,6 +20,7 @@ import {
   Lock,
   SlidersHorizontal,
   Sparkles,
+  Swords,
   Zap,
 } from 'lucide-react';
 // Tipo dos ícones do lucide (usado para tipar as listas de conteúdo).
@@ -110,9 +111,10 @@ function EstatisticaAnimada({ valor, sufixo, rotulo }: PropriedadesDaEstatistica
 
 /** Números da faixa de estatísticas (prova social numérica). */
 const ESTATISTICAS = [
-  { valor: 3, sufixo: '', rotulo: 'objetivos' },
+  { valor: 4, sufixo: '', rotulo: 'objetivos' },
   { valor: 17, sufixo: '', rotulo: 'faixas etárias' },
-  { valor: 36, sufixo: '', rotulo: 'treinos prontos' },
+  // TEAM_010: matriz padrão de treinos (2 modalidades x 4 objetivos x 2-7 dias).
+  { valor: 48, sufixo: '', rotulo: 'treinos prontos' },
   { valor: 0, sufixo: ' R$', rotulo: 'de mensalidade' },
 ] as const;
 
@@ -136,6 +138,8 @@ const OBJETIVOS_DA_LANDING: { icone: LucideIcon; titulo: string; descricao: stri
   { icone: Flame, titulo: 'Emagrecimento', descricao: 'Déficit calórico seguro para secar sem perder músculo.' },
   { icone: Dumbbell, titulo: 'Hipertrofia', descricao: 'Superávit e proteína calculados para construir massa magra.' },
   { icone: Footprints, titulo: 'Corrida', descricao: 'Energia e carboidratos na medida para render no asfalto.' },
+  // TEAM_010: quarto objetivo — força explosiva e condicionamento de combate.
+  { icone: Swords, titulo: 'Luta', descricao: 'Força explosiva, pegada forte e gás de rounds para o combate.' },
 ];
 
 /** Página inicial — apresentação persuasiva do ProtocolFit. */

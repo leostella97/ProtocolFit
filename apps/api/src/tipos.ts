@@ -11,7 +11,7 @@
 export type Sexo = 'masculino' | 'feminino';
 
 /** Objetivo principal do usuário — define déficit/superávit e o modelo de treino. */
-export type Objetivo = 'emagrecimento' | 'hipertrofia' | 'corrida';
+export type Objetivo = 'emagrecimento' | 'hipertrofia' | 'corrida' | 'luta';
 
 /** Modalidade de treino — academia (pesos e máquinas) ou peso do corpo (calistenia). */
 export type Modalidade = 'academia' | 'pesocorporal';

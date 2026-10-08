@@ -8,7 +8,7 @@
  *   3) "dias" coerente com a quantidade de dias em dias_da_semana;
  *   4) exercícios com campos válidos, percentual de carga dentro de 0..1,
  *      prescricao_fixa booleano e distancia_km restrita ao grupo cardio;
- *   5) matriz completa: 2 modalidades x 3 objetivos x dias 2..7;
+ *   5) matriz completa: 2 modalidades x 4 objetivos x dias 2..7;
  *   6) variações nomeadas no padrão "{dias}dias-{slug}.json" com conteúdo
  *      coerente com a pasta (modalidade/objetivo) e com o nome (dias).
  * Uso: node scripts/validar-modelos.mjs
@@ -24,7 +24,7 @@ const PASTA_DIETAS = fileURLToPath(new URL('../apps/api/modelos/dietas', import.
 
 // Matriz completa esperada pelo site.
 const MODALIDADES = ['academia', 'pesocorporal'];
-const OBJETIVOS = ['emagrecimento', 'hipertrofia', 'corrida'];
+const OBJETIVOS = ['emagrecimento', 'hipertrofia', 'corrida', 'luta'];
 const DIAS = [2, 3, 4, 5, 6, 7];
 
 // Tipos de exercício permitidos pelo esquema.

@@ -1,6 +1,6 @@
 # ============================================================================
 # teste-da-matriz.ps1 - Valida a MATRIZ COMPLETA de treinos do ProtocolFit
-# Percorre as 36 combinacoes (2 modalidades x 3 objetivos x 6 quantidades de
+# Percorre as 48 combinacoes (2 modalidades x 4 objetivos x 6 quantidades de
 # dias = 2..7) e confere, para cada uma:
 #   1) o treino devolvido bate com a modalidade/objetivo/dias escolhidos;
 #   2) o vinculo com o modelo mestre (treino.modelo_origem);
@@ -27,7 +27,7 @@ $falhas = 0
 
 # Percorre todas as combinacoes da matriz do site.
 foreach ($modalidade in @("academia", "pesocorporal")) {
-    foreach ($objetivo in @("emagrecimento", "hipertrofia", "corrida")) {
+    foreach ($objetivo in @("emagrecimento", "hipertrofia", "corrida", "luta")) {
         foreach ($quantidade in 2..7) {
             $total += 1
             # Monta o corpo do perfil com N dias disponiveis.
@@ -76,7 +76,7 @@ foreach ($modalidade in @("academia", "pesocorporal")) {
 Write-Output ""
 Write-Output "=== MATRIZ: $total combinacoes | $falhas falha(s) ==="
 if ($falhas -eq 0) {
-    Write-Output "RESULTADO: TODAS AS 36 COMBINACOES VINCULADAS CORRETAMENTE AO USUARIO."
+    Write-Output "RESULTADO: TODAS AS 48 COMBINACOES VINCULADAS CORRETAMENTE AO USUARIO."
 } else {
     Write-Output "RESULTADO: EXISTEM FALHAS - revise os arquivos JSON e as rotas."
     exit 1

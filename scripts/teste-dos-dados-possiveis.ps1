@@ -2,7 +2,7 @@
 # teste-dos-dados-possiveis.ps1 - Gera treino + dieta para TODOS os dados
 # possiveis do site e confere que o sistema responde corretamente.
 #
-# Cobre: 2 sexos x 17 faixas etarias x 3 objetivos x 2 modalidades = 204
+# Cobre: 2 sexos x 17 faixas etarias x 4 objetivos x 2 modalidades = 272
 # combinacoes, mais casos-limite de peso (30 e 300 kg), altura (100 e 230 cm),
 # quantidade de dias (2 e 7) e peso com decimal.
 #
@@ -58,14 +58,14 @@ function TestarPerfil {
 }
 
 # ============================================================================
-# 1) MATRIZ PRINCIPAL: 2 sexos x 17 faixas x 3 objetivos x 2 modalidades
+# 1) MATRIZ PRINCIPAL: 2 sexos x 17 faixas x 4 objetivos x 2 modalidades
 # ============================================================================
 foreach ($sexo in @("masculino", "feminino")) {
     # Peso/altura representativos por sexo.
     $pesoBase = 82.5; $alturaBase = 178
     if ($sexo -eq "feminino") { $pesoBase = 62.0; $alturaBase = 165 }
     foreach ($faixa in $faixas) {
-        foreach ($objetivo in @("emagrecimento", "hipertrofia", "corrida")) {
+        foreach ($objetivo in @("emagrecimento", "hipertrofia", "corrida", "luta")) {
             foreach ($modalidade in @("academia", "pesocorporal")) {
                 TestarPerfil ("$sexo/$faixa/$objetivo/$modalidade") $sexo $faixa $pesoBase $alturaBase $objetivo 4 $modalidade
             }

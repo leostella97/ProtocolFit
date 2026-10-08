@@ -37,6 +37,9 @@ const AJUSTE_POR_OBJETIVO: Record<Objetivo, number> = {
   emagrecimento: -0.2, // Déficit de 20% para perda de gordura saudável
   hipertrofia: 0.1, // Superávit de 10% para ganho de massa magra
   corrida: 0, // Manutenção calórica para desempenho
+  // TEAM_010: lutador é objetivo de performance — manutenção. Corte de peso
+  // para categoria exige acompanhamento profissional, não fórmula genérica.
+  luta: 0,
 };
 
 /** Meta de proteína em gramas por quilo de peso corporal, por objetivo. */
@@ -44,6 +47,9 @@ const PROTEINA_G_POR_KG: Record<Objetivo, number> = {
   emagrecimento: 2.0, // Proteína alta preserva massa magra durante o déficit
   hipertrofia: 1.8, // Suficiente para síntese proteica máxima
   corrida: 1.6, // Recuperação muscular sem excesso calórico
+  // TEAM_010: treino de combate é duro e frequente — 1,8 g/kg sustenta a
+  // recuperação entre sessões de força + específico (Morton et al., 2018).
+  luta: 1.8,
 };
 
 /** Percentual das calorias totais destinado às gorduras, por objetivo. */
@@ -51,6 +57,9 @@ const GORDURA_PERCENTUAL: Record<Objetivo, number> = {
   emagrecimento: 0.25, // 25% das calorias vindas de gordura
   hipertrofia: 0.3, // 30% — gorduras apoiam a produção hormonal
   corrida: 0.2, // 20% — prioriza carboidrato para o desempenho
+  // TEAM_010: gordura moderada — o combate é glicolítico, o carboidrato
+  // fica com a prioridade das calorias restantes.
+  luta: 0.25,
 };
 
 /** Calorias contidas em 1 grama de cada macronutriente. */
@@ -65,6 +74,7 @@ const AGUA_ML_POR_KG: Record<Objetivo, number> = {
   emagrecimento: 35,
   hipertrofia: 35,
   corrida: 40, // Corredores perdem mais líquido pela transpiração
+  luta: 40, // TEAM_010: mesma lógica da corrida — quimono/suíte e rounds elevam a sudorese
 };
 
 /** Converte uma faixa etária canônica (ex.: "19-23") na idade representativa. */

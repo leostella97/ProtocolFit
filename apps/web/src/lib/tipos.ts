@@ -10,7 +10,7 @@
 export type Sexo = 'masculino' | 'feminino';
 
 /** Objetivo principal do plano. */
-export type Objetivo = 'emagrecimento' | 'hipertrofia' | 'corrida';
+export type Objetivo = 'emagrecimento' | 'hipertrofia' | 'corrida' | 'luta';
 
 /** Modalidade de treino. */
 export type Modalidade = 'academia' | 'pesocorporal';

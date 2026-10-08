@@ -69,6 +69,11 @@ describe('calcularMetaCalorica', () => {
     expect(calcularMetaCalorica(1600, 1.375, 'corrida', 'feminino')).toBe(2200);
   });
 
+  it('TEAM_010: luta mantém o gasto total (performance, sem corte de peso)', () => {
+    // 1600 × 1,375 = 2200 — manutenção deliberada para o lutador.
+    expect(calcularMetaCalorica(1600, 1.375, 'luta', 'feminino')).toBe(2200);
+  });
+
   it('nunca desce abaixo do piso de segurança do sexo', () => {
     // 900 × 1,2 × 0,8 = 864 → piso feminino.
     expect(calcularMetaCalorica(900, 1.2, 'emagrecimento', 'feminino')).toBe(
@@ -157,5 +162,15 @@ describe('calcularPlanoNutricional', () => {
     expect(meta.meta_kcal).toBeLessThan(meta.gasto_total);
     // Proteína de emagrecimento: 2,0 g/kg.
     expect(meta.proteinas_g).toBe(160);
+  });
+
+  it('TEAM_010: luta mantém a meta no gasto total, com proteína e água altas', () => {
+    const meta = calcularPlanoNutricional({ ...perfil, objetivo: 'luta' });
+    // Manutenção: meta = gasto total.
+    expect(meta.meta_kcal).toBe(meta.gasto_total);
+    // Proteína de luta: 1,8 g/kg → 80 × 1,8 = 144 g.
+    expect(meta.proteinas_g).toBe(144);
+    // Água de luta: 40 ml/kg (sudorese alta) → 80 × 40 = 3200 ml.
+    expect(meta.agua_ml).toBe(3200);
   });
 });

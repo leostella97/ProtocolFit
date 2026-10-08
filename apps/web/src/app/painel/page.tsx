@@ -40,6 +40,8 @@ const FRASES_POR_OBJETIVO: Record<string, string> = {
   emagrecimento: 'Você está em déficit de 20% — consistência vence intensidade.',
   hipertrofia: 'Você está em superávit calórico — cada série constrói músculo.',
   corrida: 'Energia e carboidrato no ponto certo — sua performance agradece.',
+  // TEAM_010: luta é performance — manutenção calórica e gás de round.
+  luta: 'Força, explosão e gás de round — coma para treinar, não para cortar peso.',
 };
 
 /** Linha de macro exibida com barra de progresso no resumo da dieta. */

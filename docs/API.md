@@ -118,8 +118,11 @@ distância >0–500 km. → `200` treino atualizado · `400` índice/campo invá
 
 ### `GET /api/plano/treino/:planoId/alternativas?dia_indice=N` — autenticada
 
-Alternativas de **todos** os exercícios do dia numa única chamada (mesmo grupo,
-mesma modalidade, exclui os que já estão no dia). → `200 { alternativasPorExercicio }` · `403`/`404`.
+Alternativas de **todos** os exercícios do dia numa única chamada (mesmo
+**músculo-alvo** dentro do grupo, mesma modalidade, exclui os que já estão no
+dia — com fallback para o grupo inteiro quando o músculo não tem outra opção).
+Cada alternativa traz `nome`, `tipo` e `mesmo_musculo` (false só no fallback).
+→ `200 { alternativasPorExercicio }` · `403`/`404`.
 
 ### `PATCH /api/plano/treino/:planoId/trocar` — autenticada
 
@@ -127,7 +130,8 @@ mesma modalidade, exclui os que já estão no dia). → `200 { alternativasPorEx
 { "dia_indice": 0, "exercicio_indice": 2, "exercicio_nome": "Supino inclinado com halteres" }
 ```
 
-Troca por alternativa do mesmo grupo (carga recalculada pelo peso do perfil).
+Troca por alternativa do mesmo grupo **e mesmo músculo** quando o catálogo
+oferece opção do mesmo músculo (carga recalculada pelo peso do perfil).
 → `200` treino atualizado · `400` grupo diferente/nome inválido · `403`.
 
 ### `PATCH /api/plano/dieta/:planoId/substituir` — autenticada

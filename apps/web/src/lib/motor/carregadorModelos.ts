@@ -10,6 +10,7 @@
  */
 import type { ModeloDieta, ModeloExercicio, ModeloTreino, IndiceDeModelos, VariacaoDeTreino } from './tipos-modelos';
 import type { Modalidade, Objetivo } from '../tipos';
+import { musculoAlvoDoExercicio } from './musculoAlvo';
 
 /**
  * Caminho base do site publicado. No GitHub Pages o projeto é servido em
@@ -196,18 +197,32 @@ export async function listarCatalogoDeExercicios(modalidade: Modalidade): Promis
 }
 
 /**
- * TEAM_003: alternativas de exercício do MESMO grupo muscular dentro da
- * modalidade, excluindo os nomes já usados no dia — evita repetir exercício
- * na mesma sessão.
+ * Alternativas de exercício que trabalham o MESMO músculo do original dentro
+ * da modalidade, excluindo os nomes já usados no dia — evita repetir
+ * exercício na mesma sessão.
+ *
+ * TEAM_003: só do mesmo grupo muscular.
+ * TEAM_012: dentro do grupo, exige o mesmo músculo-alvo (ex.: agachamento →
+ * quadríceps nunca vira mesa flexora → posterior). Se o catálogo da
+ * modalidade não tiver OUTRA opção do mesmo músculo, cai para o grupo
+ * inteiro — trocar por algo do grupo ainda é melhor que não oferecer troca.
  */
 export async function listarAlternativasDeExercicio(
   modalidade: Modalidade,
-  grupo: string,
+  exercicio: Pick<ModeloExercicio, 'nome' | 'grupo'>,
   nomesExcluidos: string[] = [],
 ): Promise<ModeloExercicio[]> {
   const excluidos = new Set(nomesExcluidos);
   const catalogo = await listarCatalogoDeExercicios(modalidade);
-  return catalogo.filter(
-    (exercicio) => exercicio.grupo === grupo && !excluidos.has(exercicio.nome),
+  const doGrupo = catalogo.filter(
+    (candidato) => candidato.grupo === exercicio.grupo && !excluidos.has(candidato.nome),
   );
+  // Músculo-alvo do exercício que será substituído.
+  const musculoAlvo = musculoAlvoDoExercicio(exercicio.nome, exercicio.grupo);
+  // Filtra as candidatas que atingem o mesmo músculo.
+  const doMesmoMusculo = doGrupo.filter(
+    (candidato) => musculoAlvoDoExercicio(candidato.nome, candidato.grupo) === musculoAlvo,
+  );
+  // Fallback: sem opção do mesmo músculo, devolve o grupo completo.
+  return doMesmoMusculo.length > 0 ? doMesmoMusculo : doGrupo;
 }

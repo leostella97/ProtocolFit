@@ -50,7 +50,8 @@ import {
 } from '@/lib/api';
 import { encerrarSessao } from '@/lib/armazenamento';
 import { lerConcluidos, gravarConcluidos } from '@/lib/progresso-treino';
-import { combinarClasses, formatarAlvoDoExercicio, rotuloDoObjetivo } from '@/lib/util';
+import { musculoAlvoDoExercicio } from '@/lib/motor/musculoAlvo';
+import { combinarClasses, formatarAlvoDoExercicio, rotuloDoMusculo, rotuloDoObjetivo } from '@/lib/util';
 import type { AlternativaDeExercicio, ExercicioDoPlano, PlanoCompleto, PlanoTreino } from '@/lib/tipos';
 
 /* ===========================================================================
@@ -372,12 +373,17 @@ function CartaoDeExercicio({
           ) : null}
         </div>
 
-        {/* TEAM_003: troca do exercício por outro do MESMO grupo muscular —
-            some quando o catálogo não tem alternativa para o grupo. */}
+        {/* TEAM_003+TEAM_012: troca por exercício do MESMO músculo — some
+            quando o catálogo não tem alternativa; no fallback (músculo sem
+            outra opção) o rótulo volta a mostrar o grupo. */}
         {alternativas.length > 0 ? (
           <div className="max-w-xs space-y-1.5">
             <Rotulo htmlFor={`trocar-${diaIndice}-${exercicioIndice}`}>
-              <ArrowLeftRight className="size-3.5 text-primary" /> Trocar exercício ({exercicio.grupo})
+              <ArrowLeftRight className="size-3.5 text-primary" /> Trocar exercício (
+              {alternativas.every((alternativa) => alternativa.mesmo_musculo)
+                ? rotuloDoMusculo(musculoAlvoDoExercicio(exercicio.nome, exercicio.grupo))
+                : exercicio.grupo}
+              )
             </Rotulo>
             <MenuDeSelecao
               id={`trocar-${diaIndice}-${exercicioIndice}`}

@@ -11,6 +11,7 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import type { Modalidade, ModeloDieta, ModeloExercicio, ModeloTreino, Objetivo, VariacaoDeTreino } from '../tipos.js';
+import { musculoAlvoDoExercicio } from './musculoAlvo.js';
 
 /** Caminho absoluto da pasta de modelos do servidor (apps/api/modelos). */
 const CAMINHO_MODELOS = fileURLToPath(new URL('../../modelos', import.meta.url));
@@ -249,17 +250,31 @@ export function listarCatalogoDeExercicios(modalidade: Modalidade): ModeloExerci
 }
 
 /**
- * TEAM_003: alternativas de exercício do MESMO grupo muscular dentro da
- * modalidade, excluindo os nomes já usados no dia — evita repetir exercício
- * na mesma sessão.
+ * Alternativas de exercício que trabalham o MESMO músculo do original dentro
+ * da modalidade, excluindo os nomes já usados no dia — evita repetir
+ * exercício na mesma sessão.
+ *
+ * TEAM_003: só do mesmo grupo muscular.
+ * TEAM_012: dentro do grupo, exige o mesmo músculo-alvo (ex.: agachamento →
+ * quadríceps nunca vira mesa flexora → posterior). Se o catálogo da
+ * modalidade não tiver OUTRA opção do mesmo músculo, cai para o grupo
+ * inteiro — trocar por algo do grupo ainda é melhor que não oferecer troca.
  */
 export function listarAlternativasDeExercicio(
   modalidade: Modalidade,
-  grupo: string,
+  exercicio: Pick<ModeloExercicio, 'nome' | 'grupo'>,
   nomesExcluidos: string[] = [],
 ): ModeloExercicio[] {
   const excluidos = new Set(nomesExcluidos);
-  return listarCatalogoDeExercicios(modalidade).filter(
-    (exercicio) => exercicio.grupo === grupo && !excluidos.has(exercicio.nome),
+  const doGrupo = listarCatalogoDeExercicios(modalidade).filter(
+    (candidato) => candidato.grupo === exercicio.grupo && !excluidos.has(candidato.nome),
   );
+  // Músculo-alvo do exercício que será substituído.
+  const musculoAlvo = musculoAlvoDoExercicio(exercicio.nome, exercicio.grupo);
+  // Filtra as candidatas que atingem o mesmo músculo.
+  const doMesmoMusculo = doGrupo.filter(
+    (candidato) => musculoAlvoDoExercicio(candidato.nome, candidato.grupo) === musculoAlvo,
+  );
+  // Fallback: sem opção do mesmo músculo, devolve o grupo completo.
+  return doMesmoMusculo.length > 0 ? doMesmoMusculo : doGrupo;
 }

@@ -10,6 +10,7 @@
  * ---------------------------------------------------------------------------
  */
 import { arredondarCarga } from './calculos.js';
+import { musculoAlvoDoExercicio } from './musculoAlvo.js';
 import type {
   DiaDeTreino,
   DistribuicaoMacros,
@@ -351,7 +352,7 @@ export function aplicarSubstituicao(
   return plano;
 }
 
-/** Corpo da troca de um exercício por outro do mesmo grupo muscular. */
+/** Corpo da troca de um exercício por outro do mesmo músculo (TEAM_012). */
 export interface TrocaDeExercicio {
   /** Índice do dia no plano (0-based). */
   dia_indice: number;
@@ -387,9 +388,27 @@ export function aplicarTrocaDeExercicio(
   if (!alternativa) {
     throw new Error('Exercício alternativo não encontrado no catálogo.');
   }
-  // Regra central: a troca só vale entre exercícios do mesmo músculo.
+  // Regra central: a troca só vale entre exercícios do mesmo grupo.
   if (alternativa.grupo !== exercicio.grupo) {
     throw new Error('A troca só é permitida entre exercícios do mesmo grupo muscular.');
+  }
+  // TEAM_012: dentro do grupo, o músculo também precisa bater quando o
+  // catálogo oferece outra opção do mesmo músculo — a listagem de
+  // alternativas aplica a mesma regra (fallback para o grupo só quando não
+  // existe mais opção do mesmo músculo).
+  const nomesDoDia = new Set(dia.exercicios.map((item) => item.nome));
+  const musculoAlvo = musculoAlvoDoExercicio(exercicio.nome, exercicio.grupo);
+  const existeOpcaoDoMusculo = catalogo.some(
+    (candidata) =>
+      candidata.grupo === exercicio.grupo &&
+      !nomesDoDia.has(candidata.nome) &&
+      musculoAlvoDoExercicio(candidata.nome, candidata.grupo) === musculoAlvo,
+  );
+  if (
+    existeOpcaoDoMusculo &&
+    musculoAlvoDoExercicio(alternativa.nome, alternativa.grupo) !== musculoAlvo
+  ) {
+    throw new Error('A troca só é permitida entre exercícios que trabalham o mesmo músculo.');
   }
   // Troca a identidade do exercício, preservando o volume do slot.
   exercicio.nome = alternativa.nome;

@@ -491,8 +491,8 @@ aplicativo*).
 | POST | `/api/perfil/recalcular` | **Renova planos** pela evolução física |
 | GET | `/api/plano/atual` | Plano vigente (perfil + treino + dieta) |
 | PATCH | `/api/plano/treino/:id` | Edita carga/séries/repetições/tempo/distância (cópia do usuário) |
-| GET | `/api/plano/treino/:id/alternativas` | Alternativas do mesmo grupo muscular (em lote por dia, via `?dia_indice=`) |
-| PATCH | `/api/plano/treino/:id/trocar` | Troca o exercício por outro do mesmo grupo (cópia do usuário) |
+| GET | `/api/plano/treino/:id/alternativas` | Alternativas do mesmo músculo-alvo (em lote por dia, via `?dia_indice=`; fallback para o grupo) |
+| PATCH | `/api/plano/treino/:id/trocar` | Troca o exercício por outro do mesmo músculo (cópia do usuário) |
 | PATCH | `/api/plano/dieta/:id/substituir` | Substitui alimento (cópia do usuário) |
 | POST | `/api/evolucao` | Registra pesagem |
 | GET | `/api/evolucao` | Histórico de pesagens |

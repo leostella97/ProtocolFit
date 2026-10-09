@@ -46,6 +46,7 @@ import {
   listarCatalogoDeExercicios,
   listarVariacoesDeTreino,
 } from './motor/carregadorModelos';
+import { musculoAlvoDoExercicio } from './motor/musculoAlvo';
 import {
   aplicarEdicaoTreino,
   aplicarSubstituicao,
@@ -817,13 +818,20 @@ export async function listarAlternativasDoDiaLocal(
   const nomesDoDia = dia.exercicios.map((item) => item.nome);
   const alternativasPorExercicio: AlternativaDeExercicio[][] = [];
   for (const exercicio of dia.exercicios) {
-    const alternativas = await listarAlternativasDeExercicio(conteudo.modalidade, exercicio.grupo, nomesDoDia);
-    alternativasPorExercicio.push(alternativas.map((alternativa) => ({ nome: alternativa.nome, tipo: alternativa.tipo })));
+    // TEAM_012: alternativas do mesmo músculo (o motor cai para o grupo quando
+    // não há opção do mesmo músculo) — espelha a rota de alternativas da API.
+    const musculoAlvo = musculoAlvoDoExercicio(exercicio.nome, exercicio.grupo);
+    const alternativas = await listarAlternativasDeExercicio(conteudo.modalidade, exercicio, nomesDoDia);
+    alternativasPorExercicio.push(alternativas.map((alternativa) => ({
+      nome: alternativa.nome,
+      tipo: alternativa.tipo,
+      mesmo_musculo: musculoAlvoDoExercicio(alternativa.nome, alternativa.grupo) === musculoAlvo,
+    })));
   }
   return alternativasPorExercicio;
 }
 
-/** TEAM_003: troca um exercício por outro do mesmo grupo (espelha PATCH /plano/treino/:id/trocar). */
+/** TEAM_003+TEAM_012: troca por exercício do mesmo músculo (espelha PATCH /plano/treino/:id/trocar). */
 export async function trocarExercicioLocal(planoId: number, corpo: TrocaDeExercicio): Promise<PlanoTreino> {
   const banco = lerBanco();
   const plano = exigirPlano(banco, planoId, 'treino');

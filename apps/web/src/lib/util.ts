@@ -113,6 +113,42 @@ export function rotuloDoObjetivo(objetivo: string): string {
   return rotulos[objetivo] ?? objetivo;
 }
 
+/**
+ * TEAM_012: rótulo legível do músculo-alvo derivado por musculoAlvoDoExercicio
+ * — usado no seletor de troca ("Trocar exercício (quadríceps)").
+ * Grupos não fatiados aparecem com o próprio nome do grupo.
+ */
+export function rotuloDoMusculo(musculo: string): string {
+  const rotulos: Record<string, string> = {
+    quadriceps: 'quadríceps',
+    posterior_de_coxa: 'posterior de coxa',
+    gluteos: 'glúteos',
+    adutores: 'adutores/glúteos médios',
+    deltoide_anterior: 'deltoide anterior',
+    deltoide_lateral: 'deltoide lateral',
+    deltoide_posterior: 'deltoide posterior',
+    reto_abdominal: 'reto abdominal',
+    obliquos: 'oblíquos',
+    core_estabilizacao: 'core estabilizador',
+    peito: 'peito',
+    costas: 'costas',
+    biceps: 'bíceps',
+    triceps: 'tríceps',
+    panturrilha: 'panturrilha',
+    trapezio: 'trapézio',
+    lombar: 'lombar',
+    corpointeiro: 'corpo inteiro',
+    pliometria: 'pliometria',
+    cardio: 'cardio',
+    mobilidade: 'mobilidade',
+    tecnica: 'técnica',
+    respiracao: 'respiração',
+    equilibrio: 'equilíbrio',
+    posterior: 'posterior',
+  };
+  return rotulos[musculo] ?? musculo;
+}
+
 /** Rótulo amigável de uma modalidade. */
 export function rotuloDaModalidade(modalidade: string): string {
   const rotulos: Record<string, string> = {

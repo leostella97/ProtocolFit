@@ -91,12 +91,18 @@ export interface DiaDeTreino {
   exercicios: ExercicioDoPlano[];
 }
 
-/** TEAM_003: alternativa de exercício oferecida para troca (mesmo grupo muscular). */
+/** TEAM_003+TEAM_012: alternativa de exercício oferecida para troca. */
 export interface AlternativaDeExercicio {
   /** Nome do exercício alternativo. */
   nome: string;
   /** Tipo biomecânico do movimento (composto, isolador, cardio, corporal). */
   tipo: ExercicioDoPlano['tipo'];
+  /**
+   * TEAM_012: true quando a alternativa atinge o mesmo MÚSCULO do exercício
+   * original; false só no fallback (catálogo sem outra opção do mesmo
+   * músculo — aí a lista traz o grupo inteiro).
+   */
+  mesmo_musculo: boolean;
 }
 
 /** Plano de treino clonado do usuário. */

@@ -26,6 +26,7 @@ import {
   type TrocaDeExercicio,
 } from '../motor/montadorPlano.js';
 import { listarAlternativasDeExercicio, listarCatalogoDeExercicios } from '../motor/carregadorModelos.js';
+import { musculoAlvoDoExercicio } from '../motor/musculoAlvo.js';
 import { buscarPerfilPorUsuario } from '../bd/banco.js';
 import type { PlanoDieta, PlanoTreino } from '../tipos.js';
 import { enviarErro, exigirAutenticacao, usuarioIdDaRequisicao } from '../util/respostas.js';
@@ -231,19 +232,26 @@ export async function rotasPlanos(app: FastifyInstance): Promise<void> {
       return enviarErro(resposta, 404, 'Dia de treino não encontrado no plano.');
     }
 
-    // TEAM_003: alternativas do mesmo grupo na modalidade do plano; os nomes
-    // já usados no dia ficam fora para não repetir exercício na sessão.
+    // TEAM_003+TEAM_012: alternativas do mesmo músculo na modalidade do plano
+    // (o motor cai para o grupo quando não há opção do mesmo músculo); os
+    // nomes já usados no dia ficam fora para não repetir exercício na sessão.
     // TEAM_007: uma lista por posição do dia, na mesma ordem dos exercícios.
     const nomesDoDia = dia.exercicios.map((item) => item.nome);
-    const alternativasPorExercicio = dia.exercicios.map((exercicio) =>
-      listarAlternativasDeExercicio(plano.modalidade, exercicio.grupo, nomesDoDia).map(
-        (alternativa) => ({ nome: alternativa.nome, tipo: alternativa.tipo }),
-      ),
-    );
+    const alternativasPorExercicio = dia.exercicios.map((exercicio) => {
+      const musculoAlvo = musculoAlvoDoExercicio(exercicio.nome, exercicio.grupo);
+      return listarAlternativasDeExercicio(plano.modalidade, exercicio, nomesDoDia).map(
+        (alternativa) => ({
+          nome: alternativa.nome,
+          tipo: alternativa.tipo,
+          // TEAM_012: informa se a opção atinge o mesmo músculo do exercício.
+          mesmo_musculo: musculoAlvoDoExercicio(alternativa.nome, alternativa.grupo) === musculoAlvo,
+        }),
+      );
+    });
     return resposta.send({ alternativasPorExercicio });
   });
 
-  /** PATCH /api/plano/treino/:planoId/trocar — troca um exercício por outro do mesmo grupo. */
+  /** PATCH /api/plano/treino/:planoId/trocar — troca um exercício por outro do mesmo músculo (fallback: mesmo grupo). */
   app.patch<{ Params: { planoId: string } }>('/treino/:planoId/trocar', { onRequest: [exigirAutenticacao] }, async (requisicao, resposta) => {
     // Recupera o id do usuário autenticado.
     const usuarioId = usuarioIdDaRequisicao(requisicao);

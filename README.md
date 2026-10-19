@@ -111,7 +111,10 @@ ProtocolFit/
    alimentos na própria cópia**, **altera peso e altura direto no painel**,
    faz o **check-in diário** e solicita **recálculos** conforme seu corpo
    muda. As páginas de Treino e Dieta mostram há quanto tempo você está com
-   o plano e sugerem renovação (recomendado a cada 30 dias).
+   o plano e sugerem renovação (recomendado a cada 30 dias). No **Treino**
+   você troca **objetivo, quantas vezes treinar por semana e estilo** na
+   hora; na **Dieta** e no **Perfil** você troca o **estilo de dieta**
+   (automática = segue o pareamento do treino).
 
 ### ⏱️ Timer de descanso em todo exercício
 
@@ -189,6 +192,16 @@ Hoje são **48 modelos padrão + 173 variações de estilo = 221 treinos** e
 Quando a dieta tem o mesmo slug do estilo (`dietas/{objetivo}-{slug}.json`,
 ex.: `hipertrofia-ondulante.json`), ela é usada automaticamente — treino e
 dieta ficam tematicamente pareados.
+
+### Estilos de dieta (variações nomeadas)
+
+Cada objetivo tem a dieta base (`dietas/{objetivo}.json`) mais variações
+nomeadas (`{objetivo}-{slug}.json`, ex.: `hipertrofia-ondulante.json`).
+`variacao_dieta` no perfil controla a escolha: **automática** (null — segue o
+pareamento do treino), **Padrão** (força a base) ou uma variação nomeada.
+Troca em **Dieta → Estilo de dieta** ou **Perfil → Estilo de dieta**
+(`PATCH /perfil/dieta`), com fallback para a base quando o slug pareado não
+existe.
 
 ### `prescricao_fixa`: quando a prescrição é o método
 
@@ -488,6 +501,7 @@ aplicativo*).
 | POST | `/api/perfil` | Salva perfil e **gera os planos** |
 | PATCH | `/api/perfil/corpo` | Atualiza peso/altura (regera metas) |
 | PATCH | `/api/perfil/treino` | Troca o **estilo de treino** e regenera os planos |
+| PATCH | `/api/perfil/dieta` | Troca o **estilo de dieta** e regenera os planos |
 | POST | `/api/perfil/recalcular` | **Renova planos** pela evolução física |
 | GET | `/api/plano/atual` | Plano vigente (perfil + treino + dieta) |
 | PATCH | `/api/plano/treino/:id` | Edita carga/séries/repetições/tempo/distância (cópia do usuário) |

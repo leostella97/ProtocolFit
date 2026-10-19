@@ -33,8 +33,8 @@ Status do serviço.
 
 Todas as opções estáticas do onboarding: `faixas_etarias`, `objetivos`
 (emagrecimento | hipertrofia | corrida | luta), `modalidades`,
-`frequencias_semanais`, `dias_semana`, `variacoes_de_treino` (estilos lidos
-dos modelos mestres, em cache no servidor).
+`frequencias_semanais`, `dias_semana`, `variacoes_de_treino` e
+`variacoes_de_dieta` (estilos lidos dos modelos mestres, em cache no servidor).
 
 ### `POST /api/auth/cadastro` — público, rate-limited
 
@@ -71,7 +71,8 @@ Sessão atual + estado do onboarding.
   "dias_disponiveis": ["segunda", "quinta"],
   "modalidade": "academia|pesocorporal",
   "nivel": "iniciante|intermediario|avancado",
-  "variacao_treino": "slug-do-estilo | null | \"padrao\""
+  "variacao_treino": "slug-do-estilo | null | \"padrao\"",
+  "variacao_dieta": "slug-da-dieta | null | \"auto\" | \"padrao\""
 }
 ```
 
@@ -94,6 +95,18 @@ pesagem no dia civil do cliente. → `200 { perfil }` · `404` sem perfil.
 
 Troca o estilo de treino e regenera os planos (transação). `"padrao"`/`null`
 volta ao clássico. → `200 { perfil, treino, dieta }` · `400` estilo inválido · `404` sem perfil.
+
+### `PATCH /api/perfil/dieta` — autenticada
+
+```json
+{ "variacao_dieta": "ondulante" }
+```
+
+Troca o estilo de dieta e regenera os planos (transação). Semântica do campo:
+`null`/`"auto"` = automático (a dieta segue o pareamento do estilo de treino),
+`"padrao"` = dieta base do objetivo (`{objetivo}.json`), `slug` = dieta nomeada
+(`{objetivo}-{slug}.json`). → `200 { perfil, treino, dieta }` · `400` estilo
+inválido/inexistente para o objetivo · `404` sem perfil.
 
 ### `POST /api/perfil/recalcular` — autenticada
 

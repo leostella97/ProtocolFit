@@ -49,7 +49,7 @@ function rotuloDaVariacao(nomeDoModelo, id) {
 }
 
 /** Estrutura do índice gerado. */
-const indice = { treinos: {}, variacoes: [], dietas: [] };
+const indice = { treinos: {}, variacoes: [], dietas: [], variacoes_de_dieta: [] };
 
 // ---- 1) Treinos: copia os arquivos e monta o índice ------------------------
 for (const modalidade of MODALIDADES) {
@@ -116,11 +116,33 @@ if (existsSync(pastaDietasOrigem)) {
       indice.dietas.push(objetivo);
     }
   }
+  // TEAM_015: registra cada estilo de dieta para o seletor da interface —
+  // "{objetivo}.json" vira o estilo "padrao", "{objetivo}-{slug}.json" vira o
+  // estilo nomeado (mesma convenção do índice de treinos).
+  for (const arquivo of arquivosDietas) {
+    const reconhecido = /^([a-z]+)(?:-([a-z0-9-]+))?\.json$/.exec(arquivo);
+    if (!reconhecido) {
+      continue;
+    }
+    const [, objetivoDoNome, slug] = reconhecido;
+    const modelo = JSON.parse(readFileSync(join(pastaDietasOrigem, arquivo), 'utf-8'));
+    if (modelo.objetivo !== objetivoDoNome) {
+      console.warn(`[modelos] dieta ignorada (objetivo não bate com o nome): ${arquivo}`);
+      continue;
+    }
+    const id = slug ?? 'padrao';
+    indice.variacoes_de_dieta.push({
+      id,
+      nome: rotuloDaVariacao(modelo.nome, id),
+      arquivo,
+      objetivo: modelo.objetivo,
+    });
+  }
   console.log(`[modelos] ${arquivosDietas.length} arquivo(s) de dieta copiado(s)`);
 }
 
 // ---- 3) Grava o índice usado pelo carregador no navegador -----------------
 writeFileSync(join(DESTINO, 'indice.json'), JSON.stringify(indice, null, 2), 'utf-8');
 console.log(
-  `[modelos] indice.json gerado com ${indice.variacoes.length} estilo(s) de treino e ${indice.dietas.length} dieta(s)`,
+  `[modelos] indice.json gerado com ${indice.variacoes.length} estilo(s) de treino e ${indice.variacoes_de_dieta.length} estilo(s) de dieta`,
 );

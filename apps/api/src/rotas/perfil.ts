@@ -5,6 +5,7 @@
  *  - POST   /            → salva o perfil (onboarding) e GERA os planos
  *  - PATCH  /corpo       → altera peso/altura (sem regenerar)
  *  - PATCH  /treino      → troca o estilo de treino e regenera os planos
+ *  - PATCH  /dieta       → troca o estilo de dieta e regenera os planos
  *  - POST   /recalcular  → regenera os planos com base na evolução física
  *
  * O recálculo usa o peso mais recente registrado na evolução (se existir)
@@ -21,7 +22,7 @@ import {
   salvarPesagemDoDia,
 } from '../bd/banco.js';
 import { gerarPlanosParaPerfil } from '../servicos/geradorDePlanos.js';
-import { listarVariacoesDeTreino } from '../motor/carregadorModelos.js';
+import { listarVariacoesDeDieta, listarVariacoesDeTreino } from '../motor/carregadorModelos.js';
 import type { Modalidade, Nivel, Objetivo, Perfil, Sexo } from '../tipos.js';
 import {
   DIAS_DA_SEMANA,
@@ -47,6 +48,8 @@ interface CorpoPerfil {
   modalidade?: Modalidade;
   nivel?: Nivel;
   variacao_treino?: string | null;
+  /** TEAM_015: estilo de dieta ("auto"/ausente = segue o treino). */
+  variacao_dieta?: string | null;
 }
 
 /** Formato aceito para o identificador de estilo de treino (slug). */
@@ -74,6 +77,30 @@ function estiloInvalido(variacao: string | null | undefined): string | null {
   const existe = listarVariacoesDeTreino().some((disponivel) => disponivel.id === variacao);
   if (!existe) {
     return 'Estilo de treino indisponível.';
+  }
+  return null;
+}
+
+/**
+ * TEAM_015: valida o identificador do estilo de dieta.
+ * null/undefined/"auto" = automático (segue o pareamento do treino);
+ * "padrao" = dieta base do objetivo; slug precisa existir em /modelos/dietas.
+ */
+function estiloDeDietaInvalido(variacao: string | null | undefined, objetivo?: Objetivo): string | null {
+  // Automático e padrão são sempre válidos.
+  if (variacao === null || variacao === undefined || variacao === 'auto' || variacao === 'padrao') {
+    return null;
+  }
+  // Aceita apenas o slug em minúsculas com hífens.
+  if (typeof variacao !== 'string' || variacao.length > 40 || !FORMATO_DO_ESTILO.test(variacao)) {
+    return 'Estilo de dieta inválido.';
+  }
+  // Confere se o estilo de dieta existe para o objetivo informado.
+  const existe = listarVariacoesDeDieta().some(
+    (disponivel) => disponivel.id === variacao && (!objetivo || disponivel.objetivo === objetivo),
+  );
+  if (!existe) {
+    return 'Estilo de dieta indisponível.';
   }
   return null;
 }
@@ -134,6 +161,12 @@ function validarCorpoPerfil(corpo: CorpoPerfil): string | null {
   if (erroDoEstilo) {
     return erroDoEstilo;
   }
+  // TEAM_015: valida o estilo de dieta (opcional, padrão: automático) contra
+  // as variações disponíveis para o objetivo escolhido.
+  const erroDoEstiloDeDieta = estiloDeDietaInvalido(corpo.variacao_dieta, corpo.objetivo);
+  if (erroDoEstiloDeDieta) {
+    return erroDoEstiloDeDieta;
+  }
   return null;
 }
 
@@ -167,6 +200,11 @@ export async function rotasPerfil(app: FastifyInstance): Promise<void> {
         nivel: (corpo.nivel as Nivel | undefined) ?? 'iniciante',
         // Estilo clássico quando o onboarding não escolhe um estilo nomeado.
         variacao_treino: corpo.variacao_treino ?? null,
+        // TEAM_015: "auto"/ausente = null (a dieta segue o pareamento do treino).
+        variacao_dieta:
+          corpo.variacao_dieta === 'auto' || corpo.variacao_dieta === undefined
+            ? null
+            : corpo.variacao_dieta,
       });
 
       // Gera e clona os planos (treino + dieta) para a tabela do usuário.
@@ -290,6 +328,54 @@ export async function rotasPerfil(app: FastifyInstance): Promise<void> {
       const perfilComEstilo = salvarPerfil(usuarioId, {
         ...perfilAtual,
         variacao_treino: estiloNormalizado,
+      });
+
+      // Regenera os planos já com o novo estilo (nova versão, antigas inativas).
+      const planos = gerarPlanosParaPerfil(usuarioId, perfilComEstilo);
+      return { perfilAtualizado: perfilComEstilo, ...planos };
+    });
+
+    // Responde com o perfil e os planos atualizados.
+    return resposta.send({ perfil: perfilAtualizado, treino, dieta });
+  });
+
+  /**
+   * TEAM_015: PATCH /api/perfil/dieta — troca o ESTILO de dieta e regenera
+   * os planos. null/"auto" volta ao automático (pareamento pelo estilo de
+   * treino); "padrao" força a dieta base do objetivo; slug usa a nomeada.
+   */
+  app.patch('/dieta', { onRequest: [exigirAutenticacao] }, async (requisicao, resposta) => {
+    // Recupera o id do usuário autenticado.
+    const usuarioId = usuarioIdDaRequisicao(requisicao);
+    const corpo = (requisicao.body ?? {}) as { variacao_dieta?: string | null };
+
+    // O campo é obrigatório (null/"auto" limpa o estilo e volta ao automático).
+    if (!('variacao_dieta' in corpo)) {
+      return enviarErro(resposta, 400, 'Informe o estilo de dieta desejado.');
+    }
+
+    // Garante que o perfil existe antes de alterar.
+    const perfilAtual = buscarPerfilPorUsuario(usuarioId);
+    if (!perfilAtual) {
+      return enviarErro(resposta, 404, 'Perfil não encontrado. Complete o onboarding primeiro.');
+    }
+
+    // Valida o estilo pedido contra as dietas do objetivo do usuário.
+    const erroDoEstilo = estiloDeDietaInvalido(corpo.variacao_dieta, perfilAtual.objetivo);
+    if (erroDoEstilo) {
+      return enviarErro(resposta, 400, erroDoEstilo);
+    }
+
+    // Troca do estilo + regeneração dos planos em UMA transação.
+    const { perfilAtualizado, treino, dieta } = executarEmTransacao(() => {
+      // Grava o novo estilo: null/"auto" = automático (segue o treino).
+      const estiloNormalizado =
+        corpo.variacao_dieta === undefined || corpo.variacao_dieta === 'auto'
+          ? null
+          : corpo.variacao_dieta;
+      const perfilComEstilo = salvarPerfil(usuarioId, {
+        ...perfilAtual,
+        variacao_dieta: estiloNormalizado,
       });
 
       // Regenera os planos já com o novo estilo (nova versão, antigas inativas).

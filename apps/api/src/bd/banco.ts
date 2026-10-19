@@ -86,6 +86,8 @@ interface LinhaPerfil {
   nivel: string;
   /** Estilo de treino escolhido (null = estilo padrão). */
   variacao_treino: string | null;
+  /** TEAM_015: estilo de dieta (null = automático, segue o treino). */
+  variacao_dieta: string | null;
   /** Data da última atualização. */
   atualizado_em: string;
 }
@@ -153,6 +155,7 @@ function criarTabelas(): void {
       modalidade         TEXT    NOT NULL,                  -- academia | pesocorporal
       nivel              TEXT    NOT NULL DEFAULT 'iniciante', -- nível de experiência
       variacao_treino    TEXT,                              -- estilo de treino (null = padrão)
+      variacao_dieta     TEXT,                              -- TEAM_015: estilo de dieta (null = segue o treino)
       atualizado_em      TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')) -- última atualização
     );
 
@@ -215,6 +218,10 @@ function migrarTabelas(): void {
   if (!colunas.some((coluna) => coluna.name === 'variacao_treino')) {
     banco.exec('ALTER TABLE perfis ADD COLUMN variacao_treino TEXT');
   }
+  // TEAM_015: bancos anteriores também não têm a coluna do estilo de dieta.
+  if (!colunas.some((coluna) => coluna.name === 'variacao_dieta')) {
+    banco.exec('ALTER TABLE perfis ADD COLUMN variacao_dieta TEXT');
+  }
 }
 
 /** Executa a criação do esquema assim que o módulo é importado. */
@@ -274,6 +281,7 @@ export function buscarPerfilPorUsuario(usuarioId: number): Perfil | undefined {
     modalidade: linha.modalidade as Modalidade,
     nivel: linha.nivel as Nivel,
     variacao_treino: linha.variacao_treino ?? null,
+    variacao_dieta: linha.variacao_dieta ?? null,
   };
 }
 
@@ -284,8 +292,8 @@ export function salvarPerfil(
 ): Perfil {
   banco
     .prepare(
-      `INSERT INTO perfis (usuario_id, sexo, faixa_etaria, peso_kg, altura_cm, objetivo, frequencia_semanal, dias_disponiveis, modalidade, nivel, variacao_treino)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `INSERT INTO perfis (usuario_id, sexo, faixa_etaria, peso_kg, altura_cm, objetivo, frequencia_semanal, dias_disponiveis, modalidade, nivel, variacao_treino, variacao_dieta)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
        ON CONFLICT (usuario_id) DO UPDATE SET
          sexo = excluded.sexo,
          faixa_etaria = excluded.faixa_etaria,
@@ -297,6 +305,7 @@ export function salvarPerfil(
          modalidade = excluded.modalidade,
          nivel = excluded.nivel,
          variacao_treino = excluded.variacao_treino,
+         variacao_dieta = excluded.variacao_dieta,
          atualizado_em = strftime('%Y-%m-%dT%H:%M:%fZ','now')`,
     )
     .run(
@@ -311,6 +320,7 @@ export function salvarPerfil(
       dados.modalidade,
       dados.nivel,
       dados.variacao_treino ?? null,
+      dados.variacao_dieta ?? null,
     );
   return buscarPerfilPorUsuario(usuarioId) as Perfil;
 }

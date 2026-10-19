@@ -287,6 +287,36 @@ async function principal(): Promise<void> {
     semEstilo.treino.nome,
   );
 
+  // ---- 8.2) TEAM_015: estilo de DIETA — troca, padrão forçado e automático
+  // Dieta nomeada do objetivo: grava o slug e vincula o arquivo certo.
+  const comDieta = await repositorio.atualizarEstiloDeDietaLocal('ondulante');
+  conferir('Estilo de dieta gravado no perfil', 'ondulante', comDieta.perfil.variacao_dieta);
+  conferir(
+    'Modelo da dieta nomeada vinculado',
+    'dietas/hipertrofia-ondulante.json',
+    comDieta.dieta.modelo_origem,
+  );
+  conferir(
+    'Dieta nomeada aplicada',
+    'Dieta Ondulante - Proteína Distribuída (DUP)',
+    comDieta.dieta.nome,
+  );
+  // "padrao" força a dieta base do objetivo (sem voltar ao automático).
+  const dietaPadrao = await repositorio.atualizarEstiloDeDietaLocal('padrao');
+  conferir('Estilo de dieta padrão gravado', 'padrao', dietaPadrao.perfil.variacao_dieta);
+  conferir('Dieta base aplicada', 'dietas/hipertrofia.json', dietaPadrao.dieta.modelo_origem);
+  // Estilo que existe, mas para OUTRO objetivo, é recusado (400).
+  try {
+    await repositorio.atualizarEstiloDeDietaLocal('mma');
+    conferir('Estilo de dieta de outro objetivo recusado', '400', 'não recusou');
+  } catch (erro) {
+    conferir('Estilo de dieta de outro objetivo recusado', 400, (erro as { status: number }).status);
+  }
+  // "auto" (null) volta ao pareamento pelo estilo de treino.
+  const dietaAutomatica = await repositorio.atualizarEstiloDeDietaLocal(null);
+  conferir('Volta ao estilo de dieta automático', 'null', dietaAutomatica.perfil.variacao_dieta);
+  conferir('Dieta pareada restaurada', 'dietas/hipertrofia.json', dietaAutomatica.dieta.modelo_origem);
+
   // ---- 9) CHECK-IN DIÁRIO: hoje, ontem e anteontem (sequência de 3 dias) ---
   // TEAM_001: as datas vizinhas partem do dia civil do usuário (não do UTC).
   const ontem = deslocarDias(hoje, -1);
@@ -423,7 +453,7 @@ async function principal(): Promise<void> {
   };
   conferir('Envelope do backup', 'protocolfit', pacote.aplicativo);
   conferir('Backup carrega a conta', 'maria@teste.com', pacote.conta?.email);
-  conferir('Backup carrega os 8 planos', 8, pacote.planos?.length);
+  conferir('Backup carrega os 14 planos', 14, pacote.planos?.length);
   conferir('Backup carrega as pesagens', 3, pacote.evolucao?.length);
   conferir('Backup carrega os check-ins', 4, pacote.checkins?.length);
   conferir('Aceite do termo viaja no backup', VERSAO_DO_TERMO, pacote.aceite_do_termo?.versao);
@@ -470,7 +500,7 @@ async function principal(): Promise<void> {
     'Hipertrofia Split Clássico — 5 dias (ABCDE)',
     planoRestaurado.treino.nome,
   );
-  conferir('Versão do treino preservada', 4, planoRestaurado.treino.versao);
+  conferir('Versão do treino preservada', 7, planoRestaurado.treino.versao);
   conferir('Peso do perfil preservado', 79.5, planoRestaurado.perfil.peso_kg);
   const evolucaoRestaurada = await repositorio.listarEvolucaoLocal();
   conferir('Pesagens restauradas', 3, evolucaoRestaurada.length);

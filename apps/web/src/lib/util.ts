@@ -6,7 +6,7 @@
  */
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import type { Modalidade, Objetivo, VariacaoDeTreino } from './tipos';
+import type { Modalidade, Objetivo, VariacaoDeDieta, VariacaoDeTreino } from './tipos';
 
 /** Combina classes Tailwind resolvendo conflitos (padrão shadcn/ui). */
 export function combinarClasses(...entradas: ClassValue[]): string {
@@ -29,6 +29,29 @@ export function variacoesDaCombinacao(
       (estilo) =>
         estilo.modalidade === modalidade && estilo.objetivo === objetivo && estilo.dias === dias,
     )
+    .sort((primeiro, segundo) => {
+      // O estilo padrão é sempre a primeira opção da lista.
+      if (primeiro.id === 'padrao') {
+        return -1;
+      }
+      if (segundo.id === 'padrao') {
+        return 1;
+      }
+      return primeiro.nome.localeCompare(segundo.nome, 'pt-BR');
+    });
+}
+
+/**
+ * TEAM_015: estilos (variações) de dieta que servem para um objetivo —
+ * "padrao" primeiro, demais em ordem alfabética. Fonte única usada pelos
+ * seletores da página de dieta e do perfil.
+ */
+export function variacoesDeDietaDoObjetivo(
+  variacoes: VariacaoDeDieta[],
+  objetivo: Objetivo,
+): VariacaoDeDieta[] {
+  return variacoes
+    .filter((estilo) => estilo.objetivo === objetivo)
     .sort((primeiro, segundo) => {
       // O estilo padrão é sempre a primeira opção da lista.
       if (primeiro.id === 'padrao') {

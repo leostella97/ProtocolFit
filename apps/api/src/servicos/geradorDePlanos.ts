@@ -17,7 +17,7 @@
  */
 import { buscarPlanoPorId, desativarPlanosDoUsuario, executarEmTransacao, inserirPlano, proximaVersaoDoPlano } from '../bd/banco.js';
 import { calcularPlanoNutricional } from '../motor/calculos.js';
-import { buscarModeloDieta, buscarModeloTreino } from '../motor/carregadorModelos.js';
+import { buscarModeloDieta, buscarModeloTreino, caminhoDoModeloDieta } from '../motor/carregadorModelos.js';
 import { montarPlanoDieta, montarPlanoTreino } from '../motor/montadorPlano.js';
 import type { Perfil, PlanoDieta, PlanoTreino } from '../tipos.js';
 
@@ -32,8 +32,10 @@ export function gerarPlanosParaPerfil(usuarioId: number, perfil: Perfil): { trei
     perfil.variacao_treino,
   );
 
-  // 2) Localiza o modelo mestre de dieta do objetivo (alinhado ao estilo do usuário se disponível).
-  const modeloDieta = buscarModeloDieta(perfil.objetivo, perfil.variacao_treino);
+  // 2) Localiza o modelo mestre de dieta: variacao_dieta explícita vence;
+  //    null = automático (pareamento pelo estilo de treino, como antes).
+  const estiloDaDieta = perfil.variacao_dieta ?? perfil.variacao_treino;
+  const modeloDieta = buscarModeloDieta(perfil.objetivo, estiloDaDieta);
 
   // 3) Calcula o plano nutricional determinístico (TMB → gasto → meta → macros).
   const planoNutricional = calcularPlanoNutricional(perfil);
@@ -54,11 +56,10 @@ export function gerarPlanosParaPerfil(usuarioId: number, perfil: Perfil): { trei
 
     // 7) Grava as novas cópias montadas no SQLite (isolamento por usuário).
     const modeloOrigemTreino = `treinos/${perfil.modalidade}/${perfil.objetivo}`;
-    const idVarDieta = (perfil.variacao_treino ?? '').trim();
-    const modeloOrigemDieta =
-      idVarDieta && idVarDieta !== 'padrao'
-        ? `dietas/${perfil.objetivo}-${idVarDieta}.json`
-        : `dietas/${perfil.objetivo}.json`;
+    // TEAM_015: modelo_origem usa o caminho REALMENTE resolvido (com o
+    // fallback da dieta pareada já aplicado).
+    const arquivoDaDieta = caminhoDoModeloDieta(perfil.objetivo, estiloDaDieta).split(/[\\/]/).pop() as string;
+    const modeloOrigemDieta = `dietas/${arquivoDaDieta}`;
     const idTreino = inserirPlano(
       usuarioId,
       'treino',

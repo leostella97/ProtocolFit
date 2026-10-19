@@ -41,7 +41,9 @@ Onboarding → POST /api/perfil (transação)
   ├─ salvarPerfil
   └─ gerarPlanosParaPerfil
        ├─ buscarModeloTreino (modalidade/objetivo/dias/estilo + fallback)
-       ├─ buscarModeloDieta  (objetivo[-estilo])
+       ├─ buscarModeloDieta  (objetivo[-estilo-de-dieta])
+       │      TEAM_015: estilo = variacao_dieta ?? variacao_treino —
+       │      null segue o pareamento do treino; "padrao" força a base
        ├─ calcularPlanoNutricional (TMB → TDEE → meta → macros → água)
        ├─ montarPlanoTreino  (cargas = % do peso corporal; prescricao_fixa
        │                      preserva volume do modelo; cardio usa tempo/km)
@@ -99,6 +101,9 @@ docs/                documentação (este arquivo, API.md, especificação)
 - Padrão: `{dias}dias.json` — matriz completa modalidade × objetivo × 2–7 dias.
 - Variação: `{dias}dias-{slug}.json` (estilo nomeado) + dieta pareada
   `dietas/{objetivo}-{slug}.json`.
+- Dieta (TEAM_015): `variacao_dieta` no perfil é independente do treino —
+  `null` segue o estilo do treino, `"padrao"` força a dieta base, slug usa a
+  dieta nomeada; troca via `PATCH /api/perfil/dieta` ou `atualizarEstiloDeDieta`.
 - Campos especiais do exercício: `prescricao_fixa` (volume do modelo preserva),
   `distancia_km` (só cardio), `percentual_carga_peso_corporal`.
 - Validados por `scripts/validar-modelos.mjs` (0 erros exigidos).

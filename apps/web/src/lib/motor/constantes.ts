@@ -7,7 +7,7 @@
  * estático (GitHub Pages), sem depender de servidor.
  * ---------------------------------------------------------------------------
  */
-import type { Modalidade, Nivel, Objetivo, VariacaoDeTreino } from '../tipos';
+import type { Modalidade, Nivel, Objetivo, VariacaoDeDieta, VariacaoDeTreino } from '../tipos';
 
 /** Faixa etária selecionável no onboarding (limites inclusivos). */
 export interface FaixaEtaria {
@@ -126,8 +126,9 @@ export function opcoesDoSistema() {
     modalidades: MODALIDADES,
     frequencias_semanais: FREQUENCIAS_SEMANAIS,
     dias_semana: DIAS_DA_SEMANA,
-    // Os estilos de treino são preenchidos pelo repositório local, que lê o
-    // indice.json gerado no build (os modelos são arquivos estáticos).
+    // Os estilos de treino e dieta são preenchidos pelo repositório local,
+    // que lê o indice.json gerado no build (os modelos são arquivos estáticos).
     variacoes_de_treino: [] as VariacaoDeTreino[],
+    variacoes_de_dieta: [] as VariacaoDeDieta[],
   };
 }

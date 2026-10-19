@@ -46,6 +46,12 @@ export interface Perfil {
    * Ex.: "forca-maxima" aponta para "{dias}dias-forca-maxima.json".
    */
   variacao_treino: string | null;
+  /**
+   * TEAM_015: estilo (variação) de dieta escolhido.
+   * null = automático (segue o pareamento do estilo de treino),
+   * "padrao" = dieta base do objetivo, slug = "{objetivo}-{slug}.json".
+   */
+  variacao_dieta: string | null;
 }
 
 /** Estilo (variação) de treino disponível para uma combinação. */
@@ -64,6 +70,18 @@ export interface VariacaoDeTreino {
   objetivo: Objetivo;
   /** Duração estimada de cada sessão, em minutos. */
   duracao_estimada_min: number;
+}
+
+/** TEAM_015: estilo (variação) de dieta disponível para um objetivo. */
+export interface VariacaoDeDieta {
+  /** Identificador do estilo: "padrao" ou o slug do arquivo. */
+  id: string;
+  /** Rótulo curto exibido na interface (ex.: "Dieta Ondulante"). */
+  nome: string;
+  /** Nome do arquivo do modelo dentro de /modelos/dietas. */
+  arquivo: string;
+  /** Objetivo ao qual a dieta pertence. */
+  objetivo: Objetivo;
 }
 
 /** Exercício montado dentro do plano de treino clonado. */
@@ -253,6 +271,8 @@ export interface OpcoesDoSistema {
   dias_semana: { valor: string; rotulo: string }[];
   /** Estilos de treino disponíveis (padrão + variações nomeadas). */
   variacoes_de_treino: VariacaoDeTreino[];
+  /** TEAM_015: estilos de dieta disponíveis (padrão + variações nomeadas). */
+  variacoes_de_dieta: VariacaoDeDieta[];
 }
 
 /** Resposta de login/cadastro. */

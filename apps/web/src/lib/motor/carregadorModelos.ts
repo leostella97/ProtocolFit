@@ -8,7 +8,7 @@
  * e ajusta (corta ou repete dias em ciclo).
  * ---------------------------------------------------------------------------
  */
-import type { ModeloDieta, ModeloExercicio, ModeloTreino, IndiceDeModelos, VariacaoDeTreino } from './tipos-modelos';
+import type { ModeloDieta, ModeloExercicio, ModeloTreino, IndiceDeModelos, VariacaoDeDieta, VariacaoDeTreino } from './tipos-modelos';
 import type { Modalidade, Objetivo } from '../tipos';
 import { musculoAlvoDoExercicio } from './musculoAlvo';
 
@@ -86,6 +86,12 @@ export function nomeDoArquivoDoTreino(dias: number, variacao?: string | null): s
 export async function listarVariacoesDeTreino(): Promise<VariacaoDeTreino[]> {
   const indice = await lerIndice();
   return indice?.variacoes ?? [];
+}
+
+/** TEAM_015: lista todos os estilos de dieta disponíveis (índice do build). */
+export async function listarVariacoesDeDieta(): Promise<VariacaoDeDieta[]> {
+  const indice = await lerIndice();
+  return indice?.variacoes_de_dieta ?? [];
 }
 
 /**

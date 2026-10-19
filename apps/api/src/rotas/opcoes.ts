@@ -8,7 +8,7 @@
  */
 import type { FastifyInstance } from 'fastify';
 import type { OpcoesDoSistema } from '../tipos.js';
-import { listarVariacoesDeTreino } from '../motor/carregadorModelos.js';
+import { listarVariacoesDeDieta, listarVariacoesDeTreino } from '../motor/carregadorModelos.js';
 import {
   DIAS_DA_SEMANA,
   FAIXAS_ETARIAS,
@@ -29,6 +29,8 @@ export async function rotasOpcoes(app: FastifyInstance): Promise<void> {
       dias_semana: DIAS_DA_SEMANA,
       // Estilos de treino lidos direto da pasta de modelos mestres (em cache).
       variacoes_de_treino: listarVariacoesDeTreino(),
+      // TEAM_015: estilos de dieta também lidos dos modelos mestres (em cache).
+      variacoes_de_dieta: listarVariacoesDeDieta(),
     };
     return opcoes;
   });

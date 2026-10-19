@@ -86,6 +86,8 @@ export interface CorpoPerfil {
   nivel?: Perfil['nivel'];
   /** Estilo de treino escolhido (null/ausente = estilo padrão). */
   variacao_treino?: string | null;
+  /** TEAM_015: estilo de dieta ("auto"/ausente = segue o treino). */
+  variacao_dieta?: string | null;
 }
 
 /**
@@ -170,6 +172,23 @@ export async function atualizarEstiloDeTreino(
   return chamarApi('/perfil/treino', {
     method: 'PATCH',
     body: JSON.stringify({ variacao_treino: variacao }),
+  });
+}
+
+/**
+ * TEAM_015: troca o ESTILO (variação) de dieta e regenera os planos na hora.
+ * `null`/"auto" volta ao automático (a dieta segue o estilo de treino);
+ * "padrao" força a dieta base do objetivo; um slug usa a dieta nomeada.
+ */
+export async function atualizarEstiloDeDieta(
+  variacao: string | null,
+): Promise<{ perfil: Perfil; treino: PlanoTreino; dieta: PlanoDieta }> {
+  if (MODO_LOCAL) {
+    return local.atualizarEstiloDeDietaLocal(variacao);
+  }
+  return chamarApi('/perfil/dieta', {
+    method: 'PATCH',
+    body: JSON.stringify({ variacao_dieta: variacao }),
   });
 }
 

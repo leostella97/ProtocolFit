@@ -131,6 +131,18 @@ export interface VariacaoDeTreino {
   duracao_estimada_min: number;
 }
 
+/** TEAM_015: estilo (variação) de dieta disponível para um objetivo. */
+export interface VariacaoDeDieta {
+  /** Identificador do estilo: "padrao" ou o slug do arquivo. */
+  id: string;
+  /** Rótulo curto exibido na interface. */
+  nome: string;
+  /** Nome do arquivo do modelo dentro de /modelos/dietas. */
+  arquivo: string;
+  /** Objetivo ao qual a dieta pertence. */
+  objetivo: Objetivo;
+}
+
 /** Índice dos modelos disponíveis (gerado no build para navegação estática). */
 export interface IndiceDeModelos {
   /** Dias de treino disponíveis por modalidade e objetivo. */
@@ -139,4 +151,6 @@ export interface IndiceDeModelos {
   variacoes: VariacaoDeTreino[];
   /** Objetivos com modelo de dieta disponível. */
   dietas: string[];
+  /** TEAM_015: todos os estilos de dieta disponíveis (padrão + variações). */
+  variacoes_de_dieta: VariacaoDeDieta[];
 }

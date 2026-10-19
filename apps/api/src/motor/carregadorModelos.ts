@@ -10,7 +10,15 @@
  */
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import type { Modalidade, ModeloDieta, ModeloExercicio, ModeloTreino, Objetivo, VariacaoDeTreino } from '../tipos.js';
+import type {
+  Modalidade,
+  ModeloDieta,
+  ModeloExercicio,
+  ModeloTreino,
+  Objetivo,
+  VariacaoDeDieta,
+  VariacaoDeTreino,
+} from '../tipos.js';
 import { musculoAlvoDoExercicio } from './musculoAlvo.js';
 
 /** Caminho absoluto da pasta de modelos do servidor (apps/api/modelos). */
@@ -184,13 +192,66 @@ export function buscarModeloTreino(
   return ajustarDiasDoModelo(modelo, dias);
 }
 
-/** Localiza o modelo JSON mestre de dieta do objetivo informado. */
-export function buscarModeloDieta(objetivo: Objetivo, variacao?: string | null): ModeloDieta {
+/**
+ * TEAM_015: cache das variações de dieta — mesma motivação do cache de
+ * treinos (GET /opcoes é público e os mestres são somente leitura).
+ */
+let cacheDasVariacoesDeDieta: VariacaoDeDieta[] | null = null;
+
+/**
+ * Lista TODOS os estilos de dieta disponíveis em /modelos/dietas.
+ * Cada objetivo tem o estilo "padrao" ({objetivo}.json) mais as variações
+ * nomeadas ({objetivo}-{slug}.json).
+ */
+export function listarVariacoesDeDieta(): VariacaoDeDieta[] {
+  // Reaproveita o índice já montado (os mestres nunca mudam em runtime).
+  if (cacheDasVariacoesDeDieta) {
+    return cacheDasVariacoesDeDieta;
+  }
+  const raizDasDietas = `${CAMINHO_MODELOS}/dietas`;
+  if (!existsSync(raizDasDietas)) {
+    return [];
+  }
+  const variacoes: VariacaoDeDieta[] = [];
+  // Percorre os arquivos de dieta no padrão "{objetivo}[-{slug}].json".
+  for (const arquivo of readdirSync(raizDasDietas)) {
+    const reconhecido = /^([a-z]+)(?:-([a-z0-9-]+))?\.json$/.exec(arquivo);
+    if (!reconhecido) {
+      continue;
+    }
+    const [, objetivoDoNome, slug] = reconhecido;
+    // Lê o modelo para conferir a coerência com o nome e pegar o rótulo.
+    const modelo = lerJson<ModeloDieta>(`${raizDasDietas}/${arquivo}`);
+    if (modelo.objetivo !== objetivoDoNome) {
+      // Arquivo fora do padrão não entra no índice (o validador acusa antes).
+      continue;
+    }
+    const id = slug ?? 'padrao';
+    variacoes.push({
+      id,
+      nome: rotuloDaVariacao(modelo.nome, id),
+      arquivo,
+      objetivo: modelo.objetivo,
+    });
+  }
+  // Grava no cache para as próximas chamadas não varrerem o disco de novo.
+  cacheDasVariacoesDeDieta = variacoes;
+  return variacoes;
+}
+
+/**
+ * TEAM_015: resolve o caminho do modelo de dieta com a regra de fallback —
+ * "{objetivo}-{estilo}.json" quando existe, senão "{objetivo}.json".
+ * Devolvendo o caminho resolvido, o modelo_origem gravado no plano fica
+ * correto mesmo quando o arquivo pareado não existe (antes era só calculado
+ * pelo slug pedido, sem conferir o fallback).
+ */
+export function caminhoDoModeloDieta(objetivo: Objetivo, variacao?: string | null): string {
   const identificador = (variacao ?? '').trim();
   if (identificador && identificador !== 'padrao') {
     const caminhoVariacao = `${CAMINHO_MODELOS}/dietas/${objetivo}-${identificador}.json`;
     if (existsSync(caminhoVariacao)) {
-      return lerJson<ModeloDieta>(caminhoVariacao);
+      return caminhoVariacao;
     }
   }
   // Caminho do arquivo: /modelos/dietas/emagrecimento.json
@@ -198,7 +259,12 @@ export function buscarModeloDieta(objetivo: Objetivo, variacao?: string | null):
   if (!existsSync(caminhoArquivo)) {
     throw new Error(`Nenhum modelo de dieta encontrado para o objetivo ${objetivo}`);
   }
-  return lerJson<ModeloDieta>(caminhoArquivo);
+  return caminhoArquivo;
+}
+
+/** Localiza o modelo JSON mestre de dieta do objetivo informado. */
+export function buscarModeloDieta(objetivo: Objetivo, variacao?: string | null): ModeloDieta {
+  return lerJson<ModeloDieta>(caminhoDoModeloDieta(objetivo, variacao));
 }
 
 /** TEAM_003: cache do catálogo completo de exercícios por modalidade. */

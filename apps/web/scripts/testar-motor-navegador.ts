@@ -51,6 +51,7 @@ const perfilDeTeste: Perfil = {
   modalidade: 'academia',
   nivel: 'iniciante',
   variacao_treino: null,
+  variacao_dieta: null,
 };
 
 /** Lista de verificações executadas. */

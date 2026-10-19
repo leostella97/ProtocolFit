@@ -55,6 +55,7 @@ import {
 import { encerrarSessao } from '@/lib/armazenamento';
 import { lerConcluidos, gravarConcluidos } from '@/lib/progresso-treino';
 import { musculoAlvoDoExercicio } from '@/lib/motor/musculoAlvo';
+import { DIAS_DA_SEMANA } from '@/lib/motor/constantes';
 import {
   combinarClasses,
   formatarAlvoDoExercicio,
@@ -605,6 +606,14 @@ export default function PaginaDoTreino() {
             variacao.objetivo === novoObjetivo &&
             variacao.dias === perfil.dias_disponiveis.length,
         ) ?? false;
+      // TEAM_015: o estilo de dieta nomeado também só vale para o objetivo
+      // certo — se não existe no objetivo novo, volta ao automático.
+      const dietaValidaNoNovoObjetivo =
+        perfil.variacao_dieta === null ||
+        perfil.variacao_dieta === 'padrao' ||
+        (opcoes?.variacoes_de_dieta.some(
+          (variacao) => variacao.id === perfil.variacao_dieta && variacao.objetivo === novoObjetivo,
+        ) ?? false);
       const corpo: CorpoPerfil = {
         sexo: perfil.sexo,
         faixa_etaria: perfil.faixa_etaria,
@@ -618,12 +627,75 @@ export default function PaginaDoTreino() {
         modalidade: perfil.modalidade,
         nivel: perfil.nivel,
         variacao_treino: estiloValidoNaNovaCombinacao ? perfil.variacao_treino : null,
+        variacao_dieta: dietaValidaNoNovoObjetivo ? perfil.variacao_dieta : null,
       };
       const resultado = await salvarPerfilEGerarPlanos(corpo);
       aplicarPlanoRegenerado(resultado);
     } catch (erroCapturado: unknown) {
       definirErroEstilo(
         erroCapturado instanceof Error ? erroCapturado.message : 'Não foi possível trocar o objetivo.',
+      );
+    } finally {
+      definirTrocandoEstilo(false);
+    }
+  }
+
+  /**
+   * TEAM_015: troca "quantas vezes treinar" (nº de dias/semana) e regenera o
+   * plano — o modelo novo é montado para a quantidade pedida. Os dias já
+   * escolhidos são preservados na ordem da semana: ao aumentar, completa com
+   * os próximos dias livres; ao diminuir, mantém os primeiros.
+   */
+  async function trocarQuantidadeDeDias(novaQuantidade: number) {
+    if (!plano || trocandoEstilo || novaQuantidade === perfil.dias_disponiveis.length) {
+      return;
+    }
+    definirTrocandoEstilo(true);
+    definirErroEstilo(null);
+    try {
+      const { perfil } = plano;
+      // Ordena os dias atuais na ordem canônica (segunda → domingo) e corta
+      // ou completa a lista até a quantidade pedida.
+      const ordemDosDias = new Map(DIAS_DA_SEMANA.map((dia, indice) => [dia.valor, indice]));
+      const novosDias = [...perfil.dias_disponiveis]
+        .sort((a, b) => (ordemDosDias.get(a) ?? 99) - (ordemDosDias.get(b) ?? 99))
+        .slice(0, novaQuantidade);
+      for (const dia of DIAS_DA_SEMANA) {
+        if (novosDias.length >= novaQuantidade) {
+          break;
+        }
+        if (!novosDias.includes(dia.valor)) {
+          novosDias.push(dia.valor);
+        }
+      }
+      // O estilo atual só vale se existe para a nova quantidade de dias.
+      const estiloValidoNaNovaCombinacao =
+        opcoes?.variacoes_de_treino.some(
+          (variacao) =>
+            variacao.id === perfil.variacao_treino &&
+            variacao.modalidade === perfil.modalidade &&
+            variacao.objetivo === perfil.objetivo &&
+            variacao.dias === novaQuantidade,
+        ) ?? false;
+      const corpo: CorpoPerfil = {
+        sexo: perfil.sexo,
+        faixa_etaria: perfil.faixa_etaria,
+        peso_kg: perfil.peso_kg,
+        altura_cm: perfil.altura_cm,
+        objetivo: perfil.objetivo,
+        frequencia_semanal: novaQuantidade,
+        dias_disponiveis: novosDias,
+        modalidade: perfil.modalidade,
+        nivel: perfil.nivel,
+        variacao_treino: estiloValidoNaNovaCombinacao ? perfil.variacao_treino : null,
+        // O objetivo não mudou: o estilo de dieta continua válido.
+        variacao_dieta: perfil.variacao_dieta,
+      };
+      const resultado = await salvarPerfilEGerarPlanos(corpo);
+      aplicarPlanoRegenerado(resultado);
+    } catch (erroCapturado: unknown) {
+      definirErroEstilo(
+        erroCapturado instanceof Error ? erroCapturado.message : 'Não foi possível trocar os dias.',
       );
     } finally {
       definirTrocandoEstilo(false);
@@ -740,6 +812,14 @@ export default function PaginaDoTreino() {
       )
     : [];
 
+  // TEAM_015: quantidades ofertadas no seletor — garante a quantidade atual
+  // mesmo fora da lista canônica (ex.: 1 dia, permitido pela validação).
+  const quantidadesDeDias = opcoes
+    ? [...new Set([perfil.dias_disponiveis.length, ...opcoes.frequencias_semanais])].sort(
+        (a, b) => a - b,
+      )
+    : [];
+
   return (
     <div className="space-y-6">
       {/* Cabeçalho: nome do plano, objetivo, versão e duração estimada. */}
@@ -753,9 +833,9 @@ export default function PaginaDoTreino() {
           <Clock className="size-4 shrink-0 text-primary" /> Duração estimada: {treino.duracao_estimada_min} min
         </p>
 
-        {/* TEAM_013+TEAM_014: troca de objetivo e de estilo direto desta
-            página — ambos regeneram o plano na hora. O estilo só aparece
-            quando a combinação tem mais de uma variação. */}
+        {/* TEAM_013+TEAM_014+TEAM_015: troca de objetivo, de frequência e de
+            estilo direto desta página — todos regeneram o plano na hora. O
+            estilo só aparece quando a combinação tem mais de uma variação. */}
         {opcoes ? (
           <div className="flex flex-wrap items-end gap-4">
             <div className="max-w-xs flex-1 space-y-1.5">
@@ -771,6 +851,24 @@ export default function PaginaDoTreino() {
                 {opcoes.objetivos.map((objetivo) => (
                   <option key={objetivo.valor} value={objetivo.valor}>
                     {objetivo.rotulo}
+                  </option>
+                ))}
+              </MenuDeSelecao>
+            </div>
+            {/* TEAM_015: quantas vezes treinar por semana (nº de dias do plano). */}
+            <div className="max-w-xs flex-1 space-y-1.5">
+              <Rotulo htmlFor="dias-do-treino">
+                <ArrowLeftRight className="size-3.5 text-primary" /> Quantas vezes treinar
+              </Rotulo>
+              <MenuDeSelecao
+                id="dias-do-treino"
+                value={perfil.dias_disponiveis.length}
+                disabled={trocandoEstilo}
+                onChange={(evento) => void trocarQuantidadeDeDias(Number(evento.target.value))}
+              >
+                {quantidadesDeDias.map((quantidade) => (
+                  <option key={quantidade} value={quantidade}>
+                    {quantidade}× por semana
                   </option>
                 ))}
               </MenuDeSelecao>

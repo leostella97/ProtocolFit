@@ -10,7 +10,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Check, CheckCircle2, Clock, Droplets, Flame, Lightbulb, Wheat } from 'lucide-react';
+import { ArrowLeftRight, Check, CheckCircle2, Clock, Droplets, Flame, Lightbulb, Wheat } from 'lucide-react';
 import { Botao } from '@/components/ui/button';
 import { Selo } from '@/components/ui/badge';
 import { CartaoTempoDoPlano } from '@/components/painel/cartao-tempo-do-plano';
@@ -22,13 +22,14 @@ import {
   CartaoTitulo,
 } from '@/components/ui/card';
 import { BarraDeProgresso } from '@/components/ui/progress';
+import { Rotulo } from '@/components/ui/label';
 import { MenuDeSelecao } from '@/components/ui/select';
 import { Esqueleto } from '@/components/ui/skeleton';
-import { buscarCheckins, buscarPlanoAtual, recalcularPlanos, salvarCheckin, substituirAlimento, ErroDaApi, type CorpoSubstituicao } from '@/lib/api';
+import { atualizarEstiloDeDieta, buscarCheckins, buscarOpcoes, buscarPlanoAtual, recalcularPlanos, salvarCheckin, substituirAlimento, ErroDaApi, type CorpoSubstituicao } from '@/lib/api';
 import { encerrarSessao } from '@/lib/armazenamento';
 import { hojeLocal } from '@/lib/checkin-util';
-import { combinarClasses } from '@/lib/util';
-import type { ItemDaDieta, PlanoCompleto, PlanoDieta } from '@/lib/tipos';
+import { combinarClasses, variacoesDeDietaDoObjetivo } from '@/lib/util';
+import type { ItemDaDieta, OpcoesDoSistema, PlanoCompleto, PlanoDieta } from '@/lib/tipos';
 
 /* ===========================================================================
  * Progresso da sessão de hoje (checklist de refeições da dieta).
@@ -198,16 +199,24 @@ export default function PaginaDaDieta() {
   const [dietaSeguidaHoje, definirDietaSeguidaHoje] = useState(false);
   const [salvandoCheckin, definirSalvandoCheckin] = useState(false);
   const [erroCheckin, definirErroCheckin] = useState<string | null>(null);
+  // TEAM_015: opções do sistema (lista de estilos de dieta) e troca em curso.
+  const [opcoes, definirOpcoes] = useState<OpcoesDoSistema | null>(null);
+  const [trocandoEstiloDieta, definirTrocandoEstiloDieta] = useState(false);
+  const [erroEstiloDieta, definirErroEstiloDieta] = useState<string | null>(null);
 
   /** Carrega o plano atual (404 → onboarding; 401 → login). */
   const carregarDados = useCallback(async () => {
     definirCarregando(true);
     definirErro(null);
     try {
-      const [planoAtual, resumo] = await Promise.all([
+      const [planoAtual, resumo, opcoesRecebidas] = await Promise.all([
         buscarPlanoAtual(),
         buscarCheckins().catch(() => null),
+        // As opções não bloqueiam a página: sem elas o seletor some e a dieta
+        // continua visível normalmente.
+        buscarOpcoes().catch(() => null),
       ]);
+      definirOpcoes(opcoesRecebidas);
       definirPlano(planoAtual);
       definirDietaSeguidaHoje(resumo?.hoje?.dieta_seguida ?? false);
     } catch (erroCapturado: unknown) {
@@ -302,6 +311,30 @@ export default function PaginaDaDieta() {
     definirPlano({ perfil: resposta.perfil, treino: resposta.treino, dieta: resposta.dieta });
   }
 
+  /**
+   * TEAM_015: troca o estilo de dieta e regenera os planos na hora.
+   * "auto" volta ao automático (dieta pareada com o estilo de treino);
+   * "padrao" força a dieta base do objetivo. O novo id de dieta zera a
+   * checklist de refeições sozinho (a chave é por plano+dia).
+   */
+  async function trocarEstiloDeDieta(novoEstilo: string) {
+    if (!plano || trocandoEstiloDieta) {
+      return;
+    }
+    definirTrocandoEstiloDieta(true);
+    definirErroEstiloDieta(null);
+    try {
+      const resultado = await atualizarEstiloDeDieta(novoEstilo === 'auto' ? null : novoEstilo);
+      definirPlano({ perfil: resultado.perfil, treino: resultado.treino, dieta: resultado.dieta });
+    } catch (erroCapturado: unknown) {
+      definirErroEstiloDieta(
+        erroCapturado instanceof Error ? erroCapturado.message : 'Não foi possível trocar a dieta.',
+      );
+    } finally {
+      definirTrocandoEstiloDieta(false);
+    }
+  }
+
   // Esqueleto de carregamento enquanto o plano chega.
   if (carregando) {
     return (
@@ -335,7 +368,13 @@ export default function PaginaDaDieta() {
   }
 
   // Plano de dieta vigente.
-  const { dieta } = plano;
+  const { dieta, perfil } = plano;
+
+  // TEAM_015: estilos de dieta do objetivo atual — o seletor aparece quando
+  // existe mais de uma opção (além do automático).
+  const estilosDeDietaDisponiveis = opcoes
+    ? variacoesDeDietaDoObjetivo(opcoes.variacoes_de_dieta, perfil.objetivo)
+    : [];
 
   // Linhas de macro do resumo do topo (consumo do plano vs meta).
   const linhasDosMacros: LinhaDeMacro[] = [
@@ -356,6 +395,31 @@ export default function PaginaDaDieta() {
           <CartaoDescricao>Plano de dieta — versão {dieta.versao}</CartaoDescricao>
         </CartaoCabecalho>
         <CartaoConteudo className="space-y-5">
+          {/* TEAM_015: troca o estilo de dieta direto desta página — regenera
+              os planos na hora. "Automática" segue o pareamento do treino. */}
+          {estilosDeDietaDisponiveis.length > 0 ? (
+            <div className="max-w-xs space-y-1.5">
+              <Rotulo htmlFor="estilo-de-dieta">
+                <ArrowLeftRight className="size-3.5 text-primary" /> Estilo de dieta
+              </Rotulo>
+              <MenuDeSelecao
+                id="estilo-de-dieta"
+                value={perfil.variacao_dieta ?? 'auto'}
+                disabled={trocandoEstiloDieta}
+                onChange={(evento) => void trocarEstiloDeDieta(evento.target.value)}
+              >
+                <option value="auto">Automática (segue o treino)</option>
+                {estilosDeDietaDisponiveis.map((estilo) => (
+                  <option key={estilo.id} value={estilo.id}>
+                    {estilo.nome}
+                  </option>
+                ))}
+              </MenuDeSelecao>
+              {erroEstiloDieta ? (
+                <p className="text-xs font-medium text-destructive">{erroEstiloDieta}</p>
+              ) : null}
+            </div>
+          ) : null}
           {/* Metas rápidas: calorias, água e fibras. */}
           <div className="grid gap-3 sm:grid-cols-3">
             {/* Meta calórica diária. */}

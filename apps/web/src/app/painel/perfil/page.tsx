@@ -27,6 +27,7 @@ import { MenuDeSelecao } from '@/components/ui/select';
 import { Separador } from '@/components/ui/separator';
 import { Esqueleto } from '@/components/ui/skeleton';
 import {
+  atualizarEstiloDeDieta,
   atualizarEstiloDeTreino,
   buscarContaAtual,
   buscarOpcoes,
@@ -49,6 +50,7 @@ import {
   rotuloDoDia,
   rotuloDoObjetivo,
   variacoesDaCombinacao,
+  variacoesDeDietaDoObjetivo,
 } from '@/lib/util';
 import { hojeLocal } from '@/lib/checkin-util';
 import type {
@@ -109,6 +111,11 @@ export default function PaginaDoPerfil() {
   // Mensagens de sucesso/erro da troca de estilo.
   const [mensagemDoEstilo, definirMensagemDoEstilo] = useState<string | null>(null);
   const [erroDoEstilo, definirErroDoEstilo] = useState<string | null>(null);
+  // TEAM_015: estilo de dieta escolhido ("auto" = segue o treino) e feedback.
+  const [estiloDietaEscolhido, definirEstiloDietaEscolhido] = useState<string>('auto');
+  const [aplicandoEstiloDieta, definirAplicandoEstiloDieta] = useState(false);
+  const [mensagemDoEstiloDieta, definirMensagemDoEstiloDieta] = useState<string | null>(null);
+  const [erroDoEstiloDieta, definirErroDoEstiloDieta] = useState<string | null>(null);
   // TEAM_004: modo de edição de "Meus dados", envio e feedback.
   const [editandoDados, definirEditandoDados] = useState(false);
   const [salvandoDados, definirSalvandoDados] = useState(false);
@@ -136,8 +143,10 @@ export default function PaginaDoPerfil() {
       definirPlano(planoAtual);
       definirEvolucao(registros);
       definirOpcoes(opcoesRecebidas);
-      // Sincroniza o seletor com o estilo gravado no perfil.
+      // Sincroniza os seletores com os estilos gravados no perfil.
       definirEstiloEscolhido(planoAtual.perfil.variacao_treino ?? 'padrao');
+      // TEAM_015: null no perfil = dieta automática (segue o treino).
+      definirEstiloDietaEscolhido(planoAtual.perfil.variacao_dieta ?? 'auto');
     } catch (erroCapturado: unknown) {
       // Erro da API com status conhecido.
       if (erroCapturado instanceof ErroDaApi) {
@@ -266,6 +275,37 @@ export default function PaginaDoPerfil() {
     }
   }
 
+  /**
+   * TEAM_015: troca o estilo de dieta e regenera os planos na hora.
+   * "auto" é enviado como null (a dieta volta a seguir o estilo de treino);
+   * "padrao" força a dieta base do objetivo.
+   */
+  async function trocarEstiloDeDieta(novoEstilo: string) {
+    definirAplicandoEstiloDieta(true);
+    definirMensagemDoEstiloDieta(null);
+    definirErroDoEstiloDieta(null);
+    try {
+      // Gera os planos já com o novo estilo de dieta escolhido.
+      const resultado = await atualizarEstiloDeDieta(novoEstilo === 'auto' ? null : novoEstilo);
+      // Atualiza a tela com os planos recém-gerados.
+      definirPlano({ perfil: resultado.perfil, treino: resultado.treino, dieta: resultado.dieta });
+      definirEstiloDietaEscolhido(resultado.perfil.variacao_dieta ?? 'auto');
+      definirMensagemDoEstiloDieta(`Estilo aplicado! Sua dieta agora é "${resultado.dieta.nome}".`);
+    } catch (erroCapturado: unknown) {
+      // Sessão inválida: limpa e volta ao login.
+      if (erroCapturado instanceof ErroDaApi && erroCapturado.status === 401) {
+        encerrarSessao();
+        roteador.replace('/login');
+        return;
+      }
+      definirErroDoEstiloDieta(
+        erroCapturado instanceof Error ? erroCapturado.message : 'Não foi possível trocar a dieta.',
+      );
+    } finally {
+      definirAplicandoEstiloDieta(false);
+    }
+  }
+
   /** TEAM_004: abre a edição de "Meus dados" com os valores atuais do perfil. */
   function iniciarEdicaoDosDados() {
     if (!plano) {
@@ -320,6 +360,15 @@ export default function PaginaDoPerfil() {
           variacao.objetivo === objetivoEdicao &&
           variacao.dias === diasEdicao.length,
       );
+      // TEAM_015: o estilo de dieta nomeado também só vale para o objetivo
+      // certo — se não existe no objetivo novo, volta ao automático.
+      const dietaValidaNoNovoObjetivo =
+        plano.perfil.variacao_dieta === null ||
+        plano.perfil.variacao_dieta === 'padrao' ||
+        (opcoes?.variacoes_de_dieta.some(
+          (variacao) =>
+            variacao.id === plano.perfil.variacao_dieta && variacao.objetivo === objetivoEdicao,
+        ) ?? false);
       const corpo: CorpoPerfil = {
         sexo: sexoEdicao,
         faixa_etaria: faixaEdicao,
@@ -334,11 +383,13 @@ export default function PaginaDoPerfil() {
         modalidade: modalidadeEdicao,
         nivel: plano.perfil.nivel,
         variacao_treino: estiloValidoNaNovaCombinacao ? plano.perfil.variacao_treino : null,
+        variacao_dieta: dietaValidaNoNovoObjetivo ? plano.perfil.variacao_dieta : null,
       };
       const resultado = await salvarPerfilEGerarPlanos(corpo);
       definirPlano({ perfil: resultado.perfil, treino: resultado.treino, dieta: resultado.dieta });
-      // Sincroniza o seletor de estilo com o que restou na nova combinação.
+      // Sincroniza os seletores com o que restou na nova combinação.
       definirEstiloEscolhido(resultado.perfil.variacao_treino ?? 'padrao');
+      definirEstiloDietaEscolhido(resultado.perfil.variacao_dieta ?? 'auto');
       definirEditandoDados(false);
       definirMensagemDosDados(`Dados atualizados! Novo plano gerado (versão ${resultado.treino.versao}).`);
     } catch (erroCapturado: unknown) {
@@ -419,6 +470,16 @@ export default function PaginaDoPerfil() {
   // Só habilita o botão quando o estilo escolhido muda de fato.
   const estiloMudou = estiloEscolhido !== estiloAtual;
 
+  // TEAM_015: estilos de dieta do objetivo atual e o rótulo do estilo vigente
+  // (null no perfil = "Automática", que segue o pareamento do treino).
+  const estilosDeDietaDisponiveis =
+    opcoes && plano ? variacoesDeDietaDoObjetivo(opcoes.variacoes_de_dieta, perfil.objetivo) : [];
+  const estiloDietaAtual = perfil.variacao_dieta ?? 'auto';
+  const rotuloDoEstiloDeDietaAtual =
+    estiloDietaAtual === 'auto'
+      ? 'Automática (segue o treino)'
+      : (estilosDeDietaDisponiveis.find((estilo) => estilo.id === estiloDietaAtual)?.nome ?? 'Automática');
+
   return (
     <div className="space-y-6">
       {/* Título da página. */}
@@ -461,6 +522,7 @@ export default function PaginaDoPerfil() {
                 <LinhaDeDado rotulo="Modalidade" valor={rotuloDaModalidade(perfil.modalidade)} />
                 <LinhaDeDado rotulo="Dias" valor={perfil.dias_disponiveis.map(rotuloDoDia).join(', ')} />
                 <LinhaDeDado rotulo="Estilo do treino" valor={rotuloDoEstiloAtual} />
+                <LinhaDeDado rotulo="Estilo da dieta" valor={rotuloDoEstiloDeDietaAtual} />
                 {/* TEAM_004: confirmação exibida após salvar a edição. */}
                 {mensagemDosDados ? (
                   <p className="pt-3 text-sm font-medium text-primary">{mensagemDosDados}</p>
@@ -744,6 +806,57 @@ export default function PaginaDoPerfil() {
                 ) : null}
                 {erroDoEstilo ? (
                   <span className="text-sm font-medium text-destructive">{erroDoEstilo}</span>
+                ) : null}
+              </div>
+            </>
+          )}
+        </CartaoConteudo>
+      </Cartao>
+
+      {/* TEAM_015: trocar o estilo (variação) da dieta e regenerar os planos.
+          "Automática" mantém a dieta pareada com o estilo de treino. */}
+      <Cartao>
+        <CartaoCabecalho>
+          <CartaoTitulo>Estilo de dieta</CartaoTitulo>
+          <CartaoDescricao>
+            Escolha o formato das suas refeições — no modo automático a dieta segue o estilo do seu
+            treino.
+          </CartaoDescricao>
+        </CartaoCabecalho>
+        <CartaoConteudo className="space-y-4">
+          {estilosDeDietaDisponiveis.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              Para o seu objetivo existe apenas a dieta{' '}
+              <span className="font-semibold text-foreground">{rotuloDoEstiloDeDietaAtual}</span>.
+            </p>
+          ) : (
+            <>
+              <div className="max-w-sm space-y-1.5">
+                <Rotulo htmlFor="estilo-de-dieta-perfil">Variação da dieta</Rotulo>
+                <MenuDeSelecao
+                  id="estilo-de-dieta-perfil"
+                  value={estiloDietaEscolhido}
+                  disabled={aplicandoEstiloDieta}
+                  onChange={(evento) => {
+                    definirEstiloDietaEscolhido(evento.target.value);
+                    void trocarEstiloDeDieta(evento.target.value);
+                  }}
+                >
+                  <option value="auto">Automática (segue o treino)</option>
+                  {estilosDeDietaDisponiveis.map((estilo) => (
+                    <option key={estilo.id} value={estilo.id}>
+                      {estilo.nome}
+                    </option>
+                  ))}
+                </MenuDeSelecao>
+              </div>
+              <div className="flex flex-wrap items-center gap-3">
+                {aplicandoEstiloDieta ? <Loader2 className="animate-spin text-primary" /> : null}
+                {mensagemDoEstiloDieta ? (
+                  <span className="text-sm font-medium text-primary">{mensagemDoEstiloDieta}</span>
+                ) : null}
+                {erroDoEstiloDieta ? (
+                  <span className="text-sm font-medium text-destructive">{erroDoEstiloDieta}</span>
                 ) : null}
               </div>
             </>

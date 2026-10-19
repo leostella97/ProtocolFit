@@ -29,6 +29,7 @@ const PERFIL: Perfil = {
   modalidade: 'academia',
   nivel: 'intermediario',
   variacao_treino: null,
+  variacao_dieta: null,
 };
 
 function modeloCom(exercicios: Partial<ModeloTreino['dias_da_semana'][0]['exercicios'][0]>[]): ModeloTreino {

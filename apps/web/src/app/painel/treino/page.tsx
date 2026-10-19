@@ -46,9 +46,11 @@ import {
   listarAlternativasDoDia,
   recalcularPlanos,
   salvarCheckin,
+  salvarPerfilEGerarPlanos,
   trocarExercicio,
   ErroDaApi,
   type CorpoEdicaoExercicio,
+  type CorpoPerfil,
 } from '@/lib/api';
 import { encerrarSessao } from '@/lib/armazenamento';
 import { lerConcluidos, gravarConcluidos } from '@/lib/progresso-treino';
@@ -60,7 +62,7 @@ import {
   rotuloDoObjetivo,
   variacoesDaCombinacao,
 } from '@/lib/util';
-import type { AlternativaDeExercicio, ExercicioDoPlano, OpcoesDoSistema, PlanoCompleto, PlanoTreino } from '@/lib/tipos';
+import type { AlternativaDeExercicio, ExercicioDoPlano, Objetivo, OpcoesDoSistema, PlanoCompleto, PlanoTreino } from '@/lib/tipos';
 
 /* ===========================================================================
  * TEAM_004/TEAM_008 — checklist de exercícios concluídos, persistida por
@@ -540,10 +542,26 @@ export default function PaginaDoTreino() {
   }, [treinoId, diasDaSemana]);
 
   /**
+   * TEAM_013: aplica o plano regenerado na página — zera o checklist (as
+   * marcas são por índice do slot e apontariam para exercícios do modelo
+   * anterior), limpa e rebusca as alternativas de todos os dias.
+   */
+  function aplicarPlanoRegenerado(resultado: { perfil: PlanoCompleto['perfil']; treino: PlanoTreino; dieta: PlanoCompleto['dieta'] }) {
+    resultado.treino.dias_da_semana.forEach((_, indice) =>
+      gravarConcluidos(resultado.treino.id, indice, []),
+    );
+    definirAlternativasPorDia({});
+    definirPlano({ perfil: resultado.perfil, treino: resultado.treino, dieta: resultado.dieta });
+    void Promise.all(
+      resultado.treino.dias_da_semana.map((_, indice) =>
+        carregarAlternativasDoDia(resultado.treino.id, indice),
+      ),
+    );
+  }
+
+  /**
    * TEAM_013: troca o estilo (variação) de treino e regenera os planos na
-   * hora — o mesmo fluxo do seletor da página de perfil. Estilo novo =
-   * sessão nova: as marcas do checklist são zeradas (apontariam para
-   * exercícios do estilo anterior) e as alternativas são rebuscadas.
+   * hora — o mesmo fluxo do seletor da página de perfil.
    */
   async function trocarEstiloDeTreino(novoEstilo: string) {
     if (!plano || trocandoEstilo) {
@@ -554,21 +572,58 @@ export default function PaginaDoTreino() {
     try {
       // "padrao" é enviado como null — modelo clássico da combinação.
       const resultado = await atualizarEstiloDeTreino(novoEstilo === 'padrao' ? null : novoEstilo);
-      // Zera as marcas do checklist dos dias do plano novo.
-      resultado.treino.dias_da_semana.forEach((_, indice) =>
-        gravarConcluidos(resultado.treino.id, indice, []),
-      );
-      // Alternativas do estilo anterior não valem mais — rebusca por dia.
-      definirAlternativasPorDia({});
-      definirPlano({ perfil: resultado.perfil, treino: resultado.treino, dieta: resultado.dieta });
-      void Promise.all(
-        resultado.treino.dias_da_semana.map((_, indice) =>
-          carregarAlternativasDoDia(resultado.treino.id, indice),
-        ),
-      );
+      aplicarPlanoRegenerado(resultado);
     } catch (erroCapturado: unknown) {
       definirErroEstilo(
         erroCapturado instanceof Error ? erroCapturado.message : 'Não foi possível trocar o estilo.',
+      );
+    } finally {
+      definirTrocandoEstilo(false);
+    }
+  }
+
+  /**
+   * TEAM_014: troca o OBJETIVO (hipertrofia/emagrecimento/corrida/luta) e
+   * regenera treino + dieta — o mesmo fluxo da edição de dados do perfil.
+   * Se o estilo atual não existe na nova combinação, volta ao clássico.
+   */
+  async function trocarObjetivo(novoObjetivo: Objetivo) {
+    if (!plano || trocandoEstilo) {
+      return;
+    }
+    definirTrocandoEstilo(true);
+    definirErroEstilo(null);
+    try {
+      const { perfil } = plano;
+      // Cada variação só vale para modalidade+objetivo+dias certos — se o
+      // estilo atual não existe na combinação nova, volta ao clássico.
+      const estiloValidoNaNovaCombinacao =
+        opcoes?.variacoes_de_treino.some(
+          (variacao) =>
+            variacao.id === perfil.variacao_treino &&
+            variacao.modalidade === perfil.modalidade &&
+            variacao.objetivo === novoObjetivo &&
+            variacao.dias === perfil.dias_disponiveis.length,
+        ) ?? false;
+      const corpo: CorpoPerfil = {
+        sexo: perfil.sexo,
+        faixa_etaria: perfil.faixa_etaria,
+        // O peso segue o histórico de pesagem (regra do perfil).
+        peso_kg: perfil.peso_kg,
+        altura_cm: perfil.altura_cm,
+        objetivo: novoObjetivo,
+        // A frequência enviada é a quantidade real de dias (regra do onboarding).
+        frequencia_semanal: perfil.dias_disponiveis.length,
+        dias_disponiveis: perfil.dias_disponiveis,
+        modalidade: perfil.modalidade,
+        nivel: perfil.nivel,
+        variacao_treino: estiloValidoNaNovaCombinacao ? perfil.variacao_treino : null,
+      };
+      const resultado = await salvarPerfilEGerarPlanos(corpo);
+      aplicarPlanoRegenerado(resultado);
+    } catch (erroCapturado: unknown) {
+      definirErroEstilo(
+        erroCapturado instanceof Error ? erroCapturado.message : 'Não foi possível trocar o objetivo.',
       );
     } finally {
       definirTrocandoEstilo(false);
@@ -698,29 +753,50 @@ export default function PaginaDoTreino() {
           <Clock className="size-4 shrink-0 text-primary" /> Duração estimada: {treino.duracao_estimada_min} min
         </p>
 
-        {/* TEAM_013: troca o estilo de treino direto desta página — regenera
-            o plano na hora (algumas combinações só têm o padrão, aí o
-            seletor não aparece). */}
-        {estilosDisponiveis.length > 1 ? (
-          <div className="max-w-xs space-y-1.5">
-            <Rotulo htmlFor="estilo-de-treino">
-              <ArrowLeftRight className="size-3.5 text-primary" /> Estilo de treino
-            </Rotulo>
-            <MenuDeSelecao
-              id="estilo-de-treino"
-              value={perfil.variacao_treino ?? 'padrao'}
-              disabled={trocandoEstilo}
-              onChange={(evento) => void trocarEstiloDeTreino(evento.target.value)}
-            >
-              {estilosDisponiveis.map((estilo) => (
-                <option key={estilo.id} value={estilo.id}>
-                  {estilo.nome}
-                </option>
-              ))}
-            </MenuDeSelecao>
-            {erroEstilo ? <p className="text-sm font-medium text-destructive">{erroEstilo}</p> : null}
+        {/* TEAM_013+TEAM_014: troca de objetivo e de estilo direto desta
+            página — ambos regeneram o plano na hora. O estilo só aparece
+            quando a combinação tem mais de uma variação. */}
+        {opcoes ? (
+          <div className="flex flex-wrap items-end gap-4">
+            <div className="max-w-xs flex-1 space-y-1.5">
+              <Rotulo htmlFor="objetivo-do-treino">
+                <ArrowLeftRight className="size-3.5 text-primary" /> Objetivo
+              </Rotulo>
+              <MenuDeSelecao
+                id="objetivo-do-treino"
+                value={perfil.objetivo}
+                disabled={trocandoEstilo}
+                onChange={(evento) => void trocarObjetivo(evento.target.value as Objetivo)}
+              >
+                {opcoes.objetivos.map((objetivo) => (
+                  <option key={objetivo.valor} value={objetivo.valor}>
+                    {objetivo.rotulo}
+                  </option>
+                ))}
+              </MenuDeSelecao>
+            </div>
+            {estilosDisponiveis.length > 1 ? (
+              <div className="max-w-xs flex-1 space-y-1.5">
+                <Rotulo htmlFor="estilo-de-treino">
+                  <ArrowLeftRight className="size-3.5 text-primary" /> Estilo de treino
+                </Rotulo>
+                <MenuDeSelecao
+                  id="estilo-de-treino"
+                  value={perfil.variacao_treino ?? 'padrao'}
+                  disabled={trocandoEstilo}
+                  onChange={(evento) => void trocarEstiloDeTreino(evento.target.value)}
+                >
+                  {estilosDisponiveis.map((estilo) => (
+                    <option key={estilo.id} value={estilo.id}>
+                      {estilo.nome}
+                    </option>
+                  ))}
+                </MenuDeSelecao>
+              </div>
+            ) : null}
           </div>
         ) : null}
+        {erroEstilo ? <p className="text-sm font-medium text-destructive">{erroEstilo}</p> : null}
       </section>
 
       {/* Há quanto tempo com o treino + quando renovar + botão atualizar. */}

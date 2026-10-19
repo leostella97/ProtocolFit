@@ -38,7 +38,9 @@ import { Separador } from '@/components/ui/separator';
 import { Esqueleto } from '@/components/ui/skeleton';
 import { Abas, ConteudoDeAba, GatilhoDeAba, ListaDeAbas } from '@/components/ui/tabs';
 import {
+  atualizarEstiloDeTreino,
   buscarCheckins,
+  buscarOpcoes,
   buscarPlanoAtual,
   editarExercicio,
   listarAlternativasDoDia,
@@ -51,8 +53,14 @@ import {
 import { encerrarSessao } from '@/lib/armazenamento';
 import { lerConcluidos, gravarConcluidos } from '@/lib/progresso-treino';
 import { musculoAlvoDoExercicio } from '@/lib/motor/musculoAlvo';
-import { combinarClasses, formatarAlvoDoExercicio, rotuloDoMusculo, rotuloDoObjetivo } from '@/lib/util';
-import type { AlternativaDeExercicio, ExercicioDoPlano, PlanoCompleto, PlanoTreino } from '@/lib/tipos';
+import {
+  combinarClasses,
+  formatarAlvoDoExercicio,
+  rotuloDoMusculo,
+  rotuloDoObjetivo,
+  variacoesDaCombinacao,
+} from '@/lib/util';
+import type { AlternativaDeExercicio, ExercicioDoPlano, OpcoesDoSistema, PlanoCompleto, PlanoTreino } from '@/lib/tipos';
 
 /* ===========================================================================
  * TEAM_004/TEAM_008 — checklist de exercícios concluídos, persistida por
@@ -445,6 +453,11 @@ export default function PaginaDoTreino() {
   // TEAM_007: alternativas de troca por dia e por exercício (buscadas em
   // UMA chamada por dia — antes era uma requisição por exercício, N+1).
   const [alternativasPorDia, definirAlternativasPorDia] = useState<Record<number, AlternativaDeExercicio[][]>>({});
+  // TEAM_013: opções do sistema (lista de estilos de treino) + estado da
+  // troca de estilo feita direto nesta página.
+  const [opcoes, definirOpcoes] = useState<OpcoesDoSistema | null>(null);
+  const [trocandoEstilo, definirTrocandoEstilo] = useState(false);
+  const [erroEstilo, definirErroEstilo] = useState<string | null>(null);
 
   /** TEAM_007: busca (ou rebusca) as alternativas de um dia inteiro de uma vez. */
   const carregarAlternativasDoDia = useCallback(async (treinoId: number, diaIndice: number) => {
@@ -461,13 +474,17 @@ export default function PaginaDoTreino() {
     definirCarregando(true);
     definirErro(null);
     try {
-      const [planoAtual, resumo] = await Promise.all([
+      const [planoAtual, resumo, opcoesDoSistema] = await Promise.all([
         buscarPlanoAtual(),
         // TEAM_004: o check-in complementa a página — falha dele não derruba
         // o carregamento do plano (o botão simplesmente tenta de novo).
         buscarCheckins().catch(() => null),
+        // TEAM_013: a lista de estilos alimenta o seletor — sem ela a página
+        // funciona normalmente, só sem a troca de estilo.
+        buscarOpcoes().catch(() => null),
       ]);
       definirPlano(planoAtual);
+      definirOpcoes(opcoesDoSistema);
       definirTreinoFeitoHoje(resumo?.hoje?.treino_feito ?? false);
       // TEAM_007: pré-busca as alternativas de TODOS os dias em paralelo —
       // uma requisição por dia em vez de uma por exercício.
@@ -521,6 +538,42 @@ export default function PaginaDoTreino() {
     });
     definirConcluidosPorDia(inicial);
   }, [treinoId, diasDaSemana]);
+
+  /**
+   * TEAM_013: troca o estilo (variação) de treino e regenera os planos na
+   * hora — o mesmo fluxo do seletor da página de perfil. Estilo novo =
+   * sessão nova: as marcas do checklist são zeradas (apontariam para
+   * exercícios do estilo anterior) e as alternativas são rebuscadas.
+   */
+  async function trocarEstiloDeTreino(novoEstilo: string) {
+    if (!plano || trocandoEstilo) {
+      return;
+    }
+    definirTrocandoEstilo(true);
+    definirErroEstilo(null);
+    try {
+      // "padrao" é enviado como null — modelo clássico da combinação.
+      const resultado = await atualizarEstiloDeTreino(novoEstilo === 'padrao' ? null : novoEstilo);
+      // Zera as marcas do checklist dos dias do plano novo.
+      resultado.treino.dias_da_semana.forEach((_, indice) =>
+        gravarConcluidos(resultado.treino.id, indice, []),
+      );
+      // Alternativas do estilo anterior não valem mais — rebusca por dia.
+      definirAlternativasPorDia({});
+      definirPlano({ perfil: resultado.perfil, treino: resultado.treino, dieta: resultado.dieta });
+      void Promise.all(
+        resultado.treino.dias_da_semana.map((_, indice) =>
+          carregarAlternativasDoDia(resultado.treino.id, indice),
+        ),
+      );
+    } catch (erroCapturado: unknown) {
+      definirErroEstilo(
+        erroCapturado instanceof Error ? erroCapturado.message : 'Não foi possível trocar o estilo.',
+      );
+    } finally {
+      definirTrocandoEstilo(false);
+    }
+  }
 
   /** TEAM_004: marca o treino de hoje como feito no check-in diário. */
   async function concluirTreinoDoDia() {
@@ -619,7 +672,18 @@ export default function PaginaDoTreino() {
   }
 
   // Plano de treino vigente.
-  const { treino } = plano;
+  const { treino, perfil } = plano;
+
+  // TEAM_013: estilos disponíveis para a combinação atual (mesma regra do
+  // seletor da página de perfil).
+  const estilosDisponiveis = opcoes
+    ? variacoesDaCombinacao(
+        opcoes.variacoes_de_treino,
+        perfil.modalidade,
+        perfil.objetivo,
+        perfil.dias_disponiveis.length,
+      )
+    : [];
 
   return (
     <div className="space-y-6">
@@ -633,6 +697,30 @@ export default function PaginaDoTreino() {
         <p className="flex items-center gap-2 text-sm text-muted-foreground">
           <Clock className="size-4 shrink-0 text-primary" /> Duração estimada: {treino.duracao_estimada_min} min
         </p>
+
+        {/* TEAM_013: troca o estilo de treino direto desta página — regenera
+            o plano na hora (algumas combinações só têm o padrão, aí o
+            seletor não aparece). */}
+        {estilosDisponiveis.length > 1 ? (
+          <div className="max-w-xs space-y-1.5">
+            <Rotulo htmlFor="estilo-de-treino">
+              <ArrowLeftRight className="size-3.5 text-primary" /> Estilo de treino
+            </Rotulo>
+            <MenuDeSelecao
+              id="estilo-de-treino"
+              value={perfil.variacao_treino ?? 'padrao'}
+              disabled={trocandoEstilo}
+              onChange={(evento) => void trocarEstiloDeTreino(evento.target.value)}
+            >
+              {estilosDisponiveis.map((estilo) => (
+                <option key={estilo.id} value={estilo.id}>
+                  {estilo.nome}
+                </option>
+              ))}
+            </MenuDeSelecao>
+            {erroEstilo ? <p className="text-sm font-medium text-destructive">{erroEstilo}</p> : null}
+          </div>
+        ) : null}
       </section>
 
       {/* Há quanto tempo com o treino + quando renovar + botão atualizar. */}

@@ -33,6 +33,7 @@ import { encerrarSessao, obterUsuario } from '@/lib/armazenamento';
 import { formatarDecimal } from '@/lib/util';
 import type { PlanoCompleto, RegistroEvolucao, ResumoDeCheckins } from '@/lib/tipos';
 import { CartaoCheckin } from '@/components/painel/cartao-checkin';
+import { CartaoConquista } from '@/components/painel/cartao-conquista';
 import { CartaoCorpo } from '@/components/painel/cartao-corpo';
 
 /** Frases motivacionais exibidas conforme o objetivo do plano. */
@@ -270,6 +271,18 @@ export default function PaginaDoPainel() {
           }}
         />
       </section>
+
+      {/* TEAM_016: card de conquista — PNG compartilhável com o progresso. */}
+      {checkins ? (
+        <section>
+          <CartaoConquista
+            perfil={perfil}
+            checkins={checkins}
+            deltaDePeso={deltaDePeso}
+            nome={primeiroNome}
+          />
+        </section>
+      ) : null}
 
       {/* Gráficos lado a lado: evolução de peso e distribuição de macros. */}
       <section className="grid gap-6 lg:grid-cols-2">

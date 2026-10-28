@@ -137,11 +137,21 @@ export default function PaginaDeCadastro() {
     <div className="relative flex min-h-dvh items-center justify-center overflow-hidden bg-background px-4 py-10">
       {/* TEAM_004: sem seta de voltar aqui também — mesma regra do login:
           seta só existe para voltar entre telas dentro do app. */}
-      {/* Brilho decorativo atrás do cartão. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -top-24 left-1/2 size-[420px] -translate-x-1/2 rounded-full bg-accent/10 blur-3xl"
-      />
+
+      {/* Fundo decorativo completo — mesmo padrão de manchas do login,
+          mantendo a consistência visual entre as telas de autenticação. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0">
+        {/* Mancha grande superior — verde esmeralda, bem difusa. */}
+        <div className="absolute -top-32 left-1/2 h-[28rem] w-[28rem] max-w-[90vw] -translate-x-1/2 rounded-full bg-primary/8 blur-3xl" />
+        {/* Mancha inferior direita — teal, contrabalança a superior. */}
+        <div className="absolute -bottom-24 -right-20 h-[22rem] w-[22rem] max-w-[70vw] rounded-full bg-accent/12 blur-3xl" />
+        {/* Mancha inferior esquerda — verde mais saturada, menor. */}
+        <div className="absolute -bottom-16 -left-16 h-[16rem] w-[16rem] max-w-[50vw] rounded-full bg-primary/10 blur-2xl" />
+        {/* Mancha superior direita — teal discreto para preencher o canto. */}
+        <div className="absolute -top-16 -right-16 h-[14rem] w-[14rem] max-w-[45vw] rounded-full bg-accent/8 blur-2xl" />
+        {/* Mancha central esquerda — toque sutil de verde-limão. */}
+        <div className="absolute left-[10%] top-[55%] h-[10rem] w-[10rem] max-w-[35vw] rounded-full bg-chart-3/6 blur-2xl" />
+      </div>
       {/* Cartão centralizado com animação de entrada padrão. */}
       <motion.div
         initial={ANIMACAO_DE_ENTRADA.escondido}

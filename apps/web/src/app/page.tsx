@@ -182,9 +182,10 @@ export default function PaginaInicial() {
 
       {/* HERO — chamada principal com entrada escalonada. */}
       <section className="relative overflow-hidden pb-20 pt-36">
-        {/* Brilhos decorativos de fundo (não interferem na leitura). */}
-        <div aria-hidden className="pointer-events-none absolute -top-32 right-0 size-[500px] rounded-full bg-accent/15 blur-3xl" />
-        <div aria-hidden className="pointer-events-none absolute -bottom-40 -left-20 size-[400px] rounded-full bg-primary/10 blur-3xl" />
+        {/* Brilhos decorativos de fundo (não interferem na leitura).
+            Tamanhos responsivos: no mobile ficam menores para não vazar. */}
+        <div aria-hidden className="pointer-events-none absolute -top-20 right-0 h-[280px] w-[280px] rounded-full bg-accent/15 blur-3xl sm:-top-32 sm:h-[500px] sm:w-[500px]" />
+        <div aria-hidden className="pointer-events-none absolute -bottom-32 -left-16 h-[240px] w-[240px] rounded-full bg-primary/10 blur-3xl sm:-bottom-40 sm:-left-20 sm:h-[400px] sm:w-[400px]" />
         <div className="relative mx-auto max-w-6xl px-4 text-center sm:px-6">
           {/* Selo de posicionamento (primeiro elemento a aparecer). */}
           <motion.div initial={ANIMACAO_DE_ENTRADA.escondido} animate={ANIMACAO_DE_ENTRADA.visivel} transition={TRANSICAO_SUAVE}>

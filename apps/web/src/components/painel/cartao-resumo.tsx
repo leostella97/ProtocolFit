@@ -42,7 +42,7 @@ export function CartaoResumo({
         {/* Lado esquerdo: título discreto + valor na fonte de exibição. */}
         <div className="min-w-0">
           <p className="text-sm font-medium text-muted-foreground">{titulo}</p>
-          <p className="font-display text-3xl font-bold text-foreground">
+          <p className="font-display text-2xl font-bold text-foreground sm:text-3xl">
             {valor}
             {/* Unidade menor e mais clara logo após o número. */}
             {unidade ? (

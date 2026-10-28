@@ -48,8 +48,11 @@ export function AvisoModoLocal() {
   if (!MODO_LOCAL || dispensado) {
     return null;
   }
+  // A faixa fica no FLUXO normal (sem fixed/sticky): ocupa o topo da página e
+  // empurra tudo para baixo. Os cabeçalhos do app são sticky e começam abaixo
+  // dela — nenhum menu (fixo ou sticky) passa por cima do texto do aviso.
   return (
-    <div className="relative z-50 border-b bg-secondary/60">
+    <div className="border-b bg-secondary/60">
       <div className="mx-auto flex max-w-6xl items-start gap-2 px-4 py-2 text-xs text-secondary-foreground sm:px-6">
         <Info className="mt-0.5 size-3.5 shrink-0" />
         <p className="flex-1">

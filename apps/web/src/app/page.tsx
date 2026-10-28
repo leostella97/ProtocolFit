@@ -146,8 +146,10 @@ const OBJETIVOS_DA_LANDING: { icone: LucideIcon; titulo: string; descricao: stri
 export default function PaginaInicial() {
   return (
     <div className="min-h-dvh bg-background">
-      {/* Cabeçalho fixo com navegação por âncoras e botões de sessão. */}
-      <header className="fixed inset-x-0 top-0 z-50 border-b bg-background/80 backdrop-blur">
+      {/* Cabeçalho sticky: fica no fluxo logo ABAIXO da faixa de aviso do
+          modo local (que ocupa o topo da página) e só gruda no topo quando
+          essa faixa sai da tela na rolagem — nunca a cobre. */}
+      <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           {/* Logotipo à esquerda. */}
           <Logotipo />
@@ -180,8 +182,10 @@ export default function PaginaInicial() {
         </div>
       </header>
 
-      {/* HERO — chamada principal com entrada escalonada. */}
-      <section className="relative overflow-hidden pb-20 pt-36">
+      {/* HERO — chamada principal com entrada escalonada.
+          pt-20 compensa o header sticky (h-16 = 64px) que agora ocupa espaço
+          no fluxo: 64 + 80 = 144px até o conteúdo, igual ao layout anterior. */}
+      <section className="relative overflow-hidden pb-20 pt-20">
         {/* Brilhos decorativos de fundo (não interferem na leitura).
             Tamanhos responsivos: no mobile ficam menores para não vazar. */}
         <div aria-hidden className="pointer-events-none absolute -top-20 right-0 h-[280px] w-[280px] rounded-full bg-accent/15 blur-3xl sm:-top-32 sm:h-[500px] sm:w-[500px]" />

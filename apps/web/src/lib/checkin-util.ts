@@ -167,3 +167,40 @@ export function montarCalendarioDoMes(
   }
   return semanas;
 }
+
+/* ===========================================================================
+ * LÍQUIDO DO DIA (agua_ml do check-in)
+ * ---------------------------------------------------------------------------
+ * TEAM_017: o check-in guarda o total de líquido do dia e dois lugares o
+ * alimentam — o campo editável do cartão de check-in (valor absoluto) e o
+ * formulário do treino (INCREMENTO sobre o total atual). As regras de soma
+ * e do teto diário ficam aqui, única fonte usada pelas duas telas.
+ * ======================================================================== */
+
+/** Limite máximo de líquido aceito por dia (ml) — trava anti-digitação. */
+export const AGUA_MAXIMA_ML = 10000;
+
+/** Resultado da soma de líquido do dia: total novo ou mensagem de erro. */
+export type ResultadoDaSomaDeAgua =
+  | { ok: true; totalMl: number }
+  | { ok: false; erro: string };
+
+/**
+ * TEAM_017: soma um incremento de líquido sobre o total atual do dia.
+ * Função pura — recebe os dois valores e devolve o novo total ou o motivo
+ * da recusa (incremento inválido ou estouro do teto diário, sem truncar
+ * em silêncio).
+ */
+export function somarAguaDoDia(totalAtualMl: number, adicionalMl: number): ResultadoDaSomaDeAgua {
+  // O incremento precisa ser um número finito e positivo.
+  if (!Number.isFinite(adicionalMl) || adicionalMl <= 0) {
+    return { ok: false, erro: 'Informe uma quantidade de líquido maior que zero.' };
+  }
+  // Ambos são arredondados: o campo do check-in guarda mililitros inteiros.
+  const totalMl = Math.round(totalAtualMl) + Math.round(adicionalMl);
+  // Estourar o teto é erro explícito — o usuário decide, não o sistema.
+  if (totalMl > AGUA_MAXIMA_ML) {
+    return { ok: false, erro: `O total do dia ficaria acima de ${AGUA_MAXIMA_ML} ml.` };
+  }
+  return { ok: true, totalMl };
+}

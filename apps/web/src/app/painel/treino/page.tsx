@@ -12,6 +12,9 @@
  * ou tempo personalizado (CronometroDeDescanso).
  * TEAM_008: a checklist persiste entre visitas (progresso-treino.ts) e os
  * exercícios de cardio exibem distância/tempo em vez de séries/repetições.
+ * TEAM_017: o cartão "Líquido no treino" registra quanto o usuário bebeu —
+ * o valor INCREMENTA o agua_ml do check-in do dia (mesma fonte editável do
+ * painel).
  * ---------------------------------------------------------------------------
  */
 'use client';
@@ -21,6 +24,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeftRight, Check, CheckCircle2, Clock, Lightbulb, Pencil, Save, Youtube } from 'lucide-react';
 import { Botao } from '@/components/ui/button';
 import { Selo } from '@/components/ui/badge';
+import { CartaoLiquidoTreino } from '@/components/painel/cartao-liquido-treino';
 import { CartaoTempoDoPlano } from '@/components/painel/cartao-tempo-do-plano';
 import { CronometroDeDescanso } from '@/components/painel/cronometro-descanso';
 import {
@@ -59,6 +63,7 @@ import { DIAS_DA_SEMANA } from '@/lib/motor/constantes';
 import {
   combinarClasses,
   formatarAlvoDoExercicio,
+  montarCorpoParaNovoObjetivo,
   rotuloDoMusculo,
   rotuloDoObjetivo,
   variacoesDaCombinacao,
@@ -453,6 +458,9 @@ export default function PaginaDoTreino() {
   const [treinoFeitoHoje, definirTreinoFeitoHoje] = useState(false);
   const [salvandoCheckin, definirSalvandoCheckin] = useState(false);
   const [erroCheckin, definirErroCheckin] = useState<string | null>(null);
+  // TEAM_017: total de líquido já registrado hoje no check-in (ml) —
+  // exibido e incrementado pelo cartão "Líquido no treino".
+  const [aguaHojeMl, definirAguaHojeMl] = useState(0);
   // TEAM_007: alternativas de troca por dia e por exercício (buscadas em
   // UMA chamada por dia — antes era uma requisição por exercício, N+1).
   const [alternativasPorDia, definirAlternativasPorDia] = useState<Record<number, AlternativaDeExercicio[][]>>({});
@@ -489,6 +497,8 @@ export default function PaginaDoTreino() {
       definirPlano(planoAtual);
       definirOpcoes(opcoesDoSistema);
       definirTreinoFeitoHoje(resumo?.hoje?.treino_feito ?? false);
+      // TEAM_017: o total de líquido do dia alimenta o cartão do treino.
+      definirAguaHojeMl(resumo?.hoje?.agua_ml ?? 0);
       // TEAM_007: pré-busca as alternativas de TODOS os dias em paralelo —
       // uma requisição por dia em vez de uma por exercício.
       void Promise.all(
@@ -586,7 +596,8 @@ export default function PaginaDoTreino() {
   /**
    * TEAM_014: troca o OBJETIVO (hipertrofia/emagrecimento/corrida/luta) e
    * regenera treino + dieta — o mesmo fluxo da edição de dados do perfil.
-   * Se o estilo atual não existe na nova combinação, volta ao clássico.
+   * TEAM_017: a montagem do corpo (fallbacks de estilo treino/dieta) ficou
+   * na função única montarCorpoParaNovoObjetivo — mesma regra da dieta.
    */
   async function trocarObjetivo(novoObjetivo: Objetivo) {
     if (!plano || trocandoEstilo) {
@@ -595,41 +606,9 @@ export default function PaginaDoTreino() {
     definirTrocandoEstilo(true);
     definirErroEstilo(null);
     try {
-      const { perfil } = plano;
-      // Cada variação só vale para modalidade+objetivo+dias certos — se o
-      // estilo atual não existe na combinação nova, volta ao clássico.
-      const estiloValidoNaNovaCombinacao =
-        opcoes?.variacoes_de_treino.some(
-          (variacao) =>
-            variacao.id === perfil.variacao_treino &&
-            variacao.modalidade === perfil.modalidade &&
-            variacao.objetivo === novoObjetivo &&
-            variacao.dias === perfil.dias_disponiveis.length,
-        ) ?? false;
-      // TEAM_015: o estilo de dieta nomeado também só vale para o objetivo
-      // certo — se não existe no objetivo novo, volta ao automático.
-      const dietaValidaNoNovoObjetivo =
-        perfil.variacao_dieta === null ||
-        perfil.variacao_dieta === 'padrao' ||
-        (opcoes?.variacoes_de_dieta.some(
-          (variacao) => variacao.id === perfil.variacao_dieta && variacao.objetivo === novoObjetivo,
-        ) ?? false);
-      const corpo: CorpoPerfil = {
-        sexo: perfil.sexo,
-        faixa_etaria: perfil.faixa_etaria,
-        // O peso segue o histórico de pesagem (regra do perfil).
-        peso_kg: perfil.peso_kg,
-        altura_cm: perfil.altura_cm,
-        objetivo: novoObjetivo,
-        // A frequência enviada é a quantidade real de dias (regra do onboarding).
-        frequencia_semanal: perfil.dias_disponiveis.length,
-        dias_disponiveis: perfil.dias_disponiveis,
-        modalidade: perfil.modalidade,
-        nivel: perfil.nivel,
-        variacao_treino: estiloValidoNaNovaCombinacao ? perfil.variacao_treino : null,
-        variacao_dieta: dietaValidaNoNovoObjetivo ? perfil.variacao_dieta : null,
-      };
-      const resultado = await salvarPerfilEGerarPlanos(corpo);
+      const resultado = await salvarPerfilEGerarPlanos(
+        montarCorpoParaNovoObjetivo(plano.perfil, novoObjetivo, opcoes),
+      );
       aplicarPlanoRegenerado(resultado);
     } catch (erroCapturado: unknown) {
       definirErroEstilo(
@@ -799,7 +778,7 @@ export default function PaginaDoTreino() {
   }
 
   // Plano de treino vigente.
-  const { treino, perfil } = plano;
+  const { treino, perfil, dieta } = plano;
 
   // TEAM_013: estilos disponíveis para a combinação atual (mesma regra do
   // seletor da página de perfil).
@@ -905,6 +884,15 @@ export default function PaginaDoTreino() {
         aoAtualizar={async () => {
           await atualizarPlano();
         }}
+      />
+
+      {/* TEAM_017: registro de líquido durante o treino — incrementa o
+          agua_ml do check-in de hoje (o total segue editável no painel).
+          Fora das abas: o líquido é do DIA civil, não de um dia do plano. */}
+      <CartaoLiquidoTreino
+        aguaHojeMl={aguaHojeMl}
+        metaAguaMl={dieta.meta.agua_ml}
+        aoMudarTotal={definirAguaHojeMl}
       />
 
       {/* Abas: um gatilho "Dia N" por dia de treino. */}

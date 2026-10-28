@@ -4,6 +4,9 @@
  * Exibe o plano de dieta: resumo do topo (meta kcal, água, fibras e barras
  * de progresso por macro), refeições com itens detalhados e substituição de
  * alimentos via substituirAlimento(), além das dicas do objetivo no rodapé.
+ * TEAM_017: o seletor de Objetivo no topo troca o objetivo do perfil e
+ * regenera treino + dieta na hora — mesma regra do seletor da página de
+ * treino (corpo montado por montarCorpoParaNovoObjetivo).
  * ---------------------------------------------------------------------------
  */
 'use client';
@@ -25,11 +28,11 @@ import { BarraDeProgresso } from '@/components/ui/progress';
 import { Rotulo } from '@/components/ui/label';
 import { MenuDeSelecao } from '@/components/ui/select';
 import { Esqueleto } from '@/components/ui/skeleton';
-import { atualizarEstiloDeDieta, buscarCheckins, buscarOpcoes, buscarPlanoAtual, recalcularPlanos, salvarCheckin, substituirAlimento, ErroDaApi, type CorpoSubstituicao } from '@/lib/api';
+import { atualizarEstiloDeDieta, buscarCheckins, buscarOpcoes, buscarPlanoAtual, recalcularPlanos, salvarCheckin, salvarPerfilEGerarPlanos, substituirAlimento, ErroDaApi, type CorpoSubstituicao } from '@/lib/api';
 import { encerrarSessao } from '@/lib/armazenamento';
 import { hojeLocal } from '@/lib/checkin-util';
-import { combinarClasses, variacoesDeDietaDoObjetivo } from '@/lib/util';
-import type { ItemDaDieta, OpcoesDoSistema, PlanoCompleto, PlanoDieta } from '@/lib/tipos';
+import { combinarClasses, montarCorpoParaNovoObjetivo, variacoesDeDietaDoObjetivo } from '@/lib/util';
+import type { ItemDaDieta, Objetivo, OpcoesDoSistema, PlanoCompleto, PlanoDieta } from '@/lib/tipos';
 
 /* ===========================================================================
  * Progresso da sessão de hoje (checklist de refeições da dieta).
@@ -203,6 +206,9 @@ export default function PaginaDaDieta() {
   const [opcoes, definirOpcoes] = useState<OpcoesDoSistema | null>(null);
   const [trocandoEstiloDieta, definirTrocandoEstiloDieta] = useState(false);
   const [erroEstiloDieta, definirErroEstiloDieta] = useState<string | null>(null);
+  // TEAM_017: troca de objetivo em curso (regenera treino + dieta).
+  const [trocandoObjetivo, definirTrocandoObjetivo] = useState(false);
+  const [erroObjetivo, definirErroObjetivo] = useState<string | null>(null);
 
   /** Carrega o plano atual (404 → onboarding; 401 → login). */
   const carregarDados = useCallback(async () => {
@@ -335,6 +341,32 @@ export default function PaginaDaDieta() {
     }
   }
 
+  /**
+   * TEAM_017: troca o OBJETIVO (hipertrofia/emagrecimento/corrida/luta) e
+   * regenera treino + dieta — o mesmo fluxo do seletor da página de treino.
+   * O corpo vem de montarCorpoParaNovoObjetivo (fallbacks de estilo na nova
+   * combinação). O novo id de dieta zera a checklist de refeições sozinho.
+   */
+  async function trocarObjetivo(novoObjetivo: Objetivo) {
+    if (!plano || trocandoObjetivo || trocandoEstiloDieta) {
+      return;
+    }
+    definirTrocandoObjetivo(true);
+    definirErroObjetivo(null);
+    try {
+      const resultado = await salvarPerfilEGerarPlanos(
+        montarCorpoParaNovoObjetivo(plano.perfil, novoObjetivo, opcoes),
+      );
+      definirPlano({ perfil: resultado.perfil, treino: resultado.treino, dieta: resultado.dieta });
+    } catch (erroCapturado: unknown) {
+      definirErroObjetivo(
+        erroCapturado instanceof Error ? erroCapturado.message : 'Não foi possível trocar o objetivo.',
+      );
+    } finally {
+      definirTrocandoObjetivo(false);
+    }
+  }
+
   // Esqueleto de carregamento enquanto o plano chega.
   if (carregando) {
     return (
@@ -395,28 +427,54 @@ export default function PaginaDaDieta() {
           <CartaoDescricao>Plano de dieta — versão {dieta.versao}</CartaoDescricao>
         </CartaoCabecalho>
         <CartaoConteudo className="space-y-5">
-          {/* TEAM_015: troca o estilo de dieta direto desta página — regenera
-              os planos na hora. "Automática" segue o pareamento do treino. */}
-          {estilosDeDietaDisponiveis.length > 0 ? (
-            <div className="max-w-xs space-y-1.5">
-              <Rotulo htmlFor="estilo-de-dieta">
-                <ArrowLeftRight className="size-3.5 text-primary" /> Estilo de dieta
-              </Rotulo>
-              <MenuDeSelecao
-                id="estilo-de-dieta"
-                value={perfil.variacao_dieta ?? 'auto'}
-                disabled={trocandoEstiloDieta}
-                onChange={(evento) => void trocarEstiloDeDieta(evento.target.value)}
-              >
-                <option value="auto">Automática (segue o treino)</option>
-                {estilosDeDietaDisponiveis.map((estilo) => (
-                  <option key={estilo.id} value={estilo.id}>
-                    {estilo.nome}
-                  </option>
-                ))}
-              </MenuDeSelecao>
-              {erroEstiloDieta ? (
-                <p className="text-xs font-medium text-destructive">{erroEstiloDieta}</p>
+          {/* TEAM_017+TEAM_015: troca de objetivo e de estilo de dieta direto
+              desta página — os dois regeneram os planos na hora (o objetivo
+              refaz treino + dieta; o estilo refaz só a dieta). "Automática"
+              segue o pareamento do treino. */}
+          {opcoes ? (
+            <div className="flex flex-wrap items-end gap-4">
+              <div className="max-w-xs flex-1 space-y-1.5">
+                <Rotulo htmlFor="objetivo-da-dieta">
+                  <ArrowLeftRight className="size-3.5 text-primary" /> Objetivo
+                </Rotulo>
+                <MenuDeSelecao
+                  id="objetivo-da-dieta"
+                  value={perfil.objetivo}
+                  disabled={trocandoObjetivo || trocandoEstiloDieta}
+                  onChange={(evento) => void trocarObjetivo(evento.target.value as Objetivo)}
+                >
+                  {opcoes.objetivos.map((objetivo) => (
+                    <option key={objetivo.valor} value={objetivo.valor}>
+                      {objetivo.rotulo}
+                    </option>
+                  ))}
+                </MenuDeSelecao>
+                {erroObjetivo ? (
+                  <p className="text-xs font-medium text-destructive">{erroObjetivo}</p>
+                ) : null}
+              </div>
+              {estilosDeDietaDisponiveis.length > 0 ? (
+                <div className="max-w-xs flex-1 space-y-1.5">
+                  <Rotulo htmlFor="estilo-de-dieta">
+                    <ArrowLeftRight className="size-3.5 text-primary" /> Estilo de dieta
+                  </Rotulo>
+                  <MenuDeSelecao
+                    id="estilo-de-dieta"
+                    value={perfil.variacao_dieta ?? 'auto'}
+                    disabled={trocandoEstiloDieta || trocandoObjetivo}
+                    onChange={(evento) => void trocarEstiloDeDieta(evento.target.value)}
+                  >
+                    <option value="auto">Automática (segue o treino)</option>
+                    {estilosDeDietaDisponiveis.map((estilo) => (
+                      <option key={estilo.id} value={estilo.id}>
+                        {estilo.nome}
+                      </option>
+                    ))}
+                  </MenuDeSelecao>
+                  {erroEstiloDieta ? (
+                    <p className="text-xs font-medium text-destructive">{erroEstiloDieta}</p>
+                  ) : null}
+                </div>
               ) : null}
             </div>
           ) : null}

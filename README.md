@@ -155,6 +155,10 @@ duplica) e a sequência só quebra quando um dia inteiro passa sem marcação.
 No modo navegador o check-in fica no `localStorage`; no modo servidor vai
 para a tabela `checkins` do SQLite.
 
+A página do **Treino** tem ainda o cartão **"Líquido no treino"**: você
+registra quanto bebeu durante a sessão e o valor **soma** no `agua_ml` do
+check-in de hoje — o total do dia é único e continua editável no painel.
+
 ### 🧳 Portabilidade do progresso
 
 No modo navegador os dados moram só no `localStorage` — não existe nuvem.

@@ -35,7 +35,8 @@ import type {
 } from './tipos';
 import { guardarToken, guardarUsuario, obterToken } from './armazenamento';
 // TEAM_007: dataValida/dataNoFuturo espelham util/datas.ts do servidor.
-import { dataNoFuturo, dataValida, hojeLocal } from './checkin-util';
+// TEAM_017: AGUA_MAXIMA_ML é a fonte única do teto diário de líquido.
+import { AGUA_MAXIMA_ML, dataNoFuturo, dataValida, hojeLocal } from './checkin-util';
 import { CHAVE_DO_ACEITE, termoFoiAceito, VERSAO_DO_TERMO } from './termo-de-uso';
 import { ErroDaApi } from './erro-api';
 import { calcularPlanoNutricional } from './motor/calculos';
@@ -1215,8 +1216,8 @@ export async function salvarCheckinLocal(corpo: {
     throw new ErroDaApi(400, 'Informe a quantidade de água em mililitros.');
   }
   const aguaMl = typeof corpo.agua_ml === 'number' ? Math.round(corpo.agua_ml) : 0;
-  if (aguaMl < 0 || aguaMl > 10000) {
-    throw new ErroDaApi(400, 'Informe a água entre 0 e 10000 ml.');
+  if (aguaMl < 0 || aguaMl > AGUA_MAXIMA_ML) {
+    throw new ErroDaApi(400, `Informe a água entre 0 e ${AGUA_MAXIMA_ML} ml.`);
   }
   // A observação é texto livre com tamanho limitado (mesma regra da API).
   if (corpo.observacao !== undefined && corpo.observacao !== null && typeof corpo.observacao !== 'string') {

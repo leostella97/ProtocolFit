@@ -23,7 +23,7 @@ import { Rotulo } from '@/components/ui/label';
 import { AreaDeTexto } from '@/components/ui/textarea';
 import { Selo } from '@/components/ui/badge';
 import { CalendarioDeCheckins } from '@/components/painel/calendario-checkins';
-import { separadorDeDatas } from '@/lib/checkin-util';
+import { AGUA_MAXIMA_ML, separadorDeDatas } from '@/lib/checkin-util';
 import { salvarCheckin } from '@/lib/api';
 import { AGUA_ML_POR_KG } from '@/lib/motor/calculos';
 import { LIMITES_CORPO } from '@/lib/motor/constantes';
@@ -78,8 +78,10 @@ export function CartaoCheckin({ resumo, perfil, aoSalvar }: PropriedadesDoCartao
     const aguaNumerica = Number(String(agua).replace(',', '.')) || 0;
     const pesoNumerico = pesoDoDia.trim() === '' ? null : Number(String(pesoDoDia).replace(',', '.'));
 
-    if (aguaNumerica < 0 || aguaNumerica > 10000) {
-      definirErro('Informe a água entre 0 e 10000 ml.');
+    // TEAM_017: o teto diário vem da constante única (mesma do repositório
+    // local e do formulário de líquido do treino).
+    if (aguaNumerica < 0 || aguaNumerica > AGUA_MAXIMA_ML) {
+      definirErro(`Informe a água entre 0 e ${AGUA_MAXIMA_ML} ml.`);
       return;
     }
     if (
@@ -184,7 +186,7 @@ export function CartaoCheckin({ resumo, perfil, aoSalvar }: PropriedadesDoCartao
               type="number"
               step="50"
               min={0}
-              max={10000}
+              max={AGUA_MAXIMA_ML}
               value={agua}
               onChange={(evento) => definirAgua(evento.target.value)}
             />

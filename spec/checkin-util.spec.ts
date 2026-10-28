@@ -7,9 +7,11 @@
  * ---------------------------------------------------------------------------
  */
 import {
+  AGUA_MAXIMA_ML,
   hojeLocal,
   montarCalendarioDoMes,
   separadorDeDatas,
+  somarAguaDoDia,
   type CelulaDoCalendario,
   type CheckinParaCalendario,
 } from '../apps/web/src/lib/checkin-util';
@@ -108,5 +110,44 @@ describe('montarCalendarioDoMes', () => {
     const fevereiro = montarCalendarioDoMes(2024, 1, [], '2024-02-15');
     expect(celulaDaData(fevereiro, '2024-02-29').dia).toBe(29);
     expect(fevereiro.flat().some((celula) => celula.data === '2024-02-30')).toBe(false);
+  });
+});
+
+// TEAM_017: o formulário de líquido do treino incrementa o agua_ml do
+// check-in — a soma e o teto diário são a função pura somarAguaDoDia.
+describe('somarAguaDoDia (incremento do líquido do treino)', () => {
+  it('soma o incremento sobre o total atual do dia', () => {
+    const resultado = somarAguaDoDia(1250, 500);
+    expect(resultado).toEqual({ ok: true, totalMl: 1750 });
+  });
+
+  it('parte do zero quando o dia ainda não tem líquido', () => {
+    const resultado = somarAguaDoDia(0, 250);
+    expect(resultado).toEqual({ ok: true, totalMl: 250 });
+  });
+
+  it('arredonda incrementos com decimal para ml inteiros', () => {
+    const resultado = somarAguaDoDia(100, 249.6);
+    expect(resultado).toEqual({ ok: true, totalMl: 350 });
+  });
+
+  it('aceita o total exatamente no teto diário', () => {
+    const resultado = somarAguaDoDia(AGUA_MAXIMA_ML - 500, 500);
+    expect(resultado).toEqual({ ok: true, totalMl: AGUA_MAXIMA_ML });
+  });
+
+  it('rejeita incremento que estoura o teto diário (sem truncar)', () => {
+    const resultado = somarAguaDoDia(AGUA_MAXIMA_ML - 100, 500);
+    expect(resultado.ok).toBe(false);
+    if (!resultado.ok) {
+      expect(resultado.erro).toContain(String(AGUA_MAXIMA_ML));
+    }
+  });
+
+  it('rejeita incremento zero, negativo ou não numérico', () => {
+    for (const invalido of [0, -250, Number.NaN, Number.POSITIVE_INFINITY]) {
+      const resultado = somarAguaDoDia(1000, invalido);
+      expect(resultado.ok).toBe(false);
+    }
   });
 });

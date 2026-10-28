@@ -6,7 +6,10 @@
  */
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import type { Modalidade, Objetivo, VariacaoDeDieta, VariacaoDeTreino } from './tipos';
+// TEAM_017: CorpoPerfil é o contrato de POST /perfil — import type não gera
+// dependência em runtime (o tipo é apagado na compilação).
+import type { CorpoPerfil } from './api';
+import type { Modalidade, Objetivo, OpcoesDoSistema, Perfil, VariacaoDeDieta, VariacaoDeTreino } from './tipos';
 
 /** Combina classes Tailwind resolvendo conflitos (padrão shadcn/ui). */
 export function combinarClasses(...entradas: ClassValue[]): string {
@@ -62,6 +65,55 @@ export function variacoesDeDietaDoObjetivo(
       }
       return primeiro.nome.localeCompare(segundo.nome, 'pt-BR');
     });
+}
+
+/**
+ * TEAM_017: monta o corpo de POST /perfil para TROCAR O OBJETIVO mantendo o
+ * restante do perfil — fonte única usada pelos seletores de objetivo das
+ * páginas de treino (TEAM_014) e de dieta.
+ *
+ * Regras de fallback ao mudar de objetivo:
+ *  - o estilo de treino só sobrevive se existe para a NOVA combinação
+ *    (modalidade + objetivo + nº de dias) — senão volta ao clássico (null);
+ *  - o estilo de dieta nomeado só vale para o objetivo certo — null/"padrao"
+ *    sempre sobrevivem; um slug inválido volta ao automático (null).
+ */
+export function montarCorpoParaNovoObjetivo(
+  perfil: Perfil,
+  novoObjetivo: Objetivo,
+  opcoes: OpcoesDoSistema | null,
+): CorpoPerfil {
+  // O estilo de treino precisa existir para a combinação nova.
+  const estiloDeTreinoValido =
+    opcoes?.variacoes_de_treino.some(
+      (variacao) =>
+        variacao.id === perfil.variacao_treino &&
+        variacao.modalidade === perfil.modalidade &&
+        variacao.objetivo === novoObjetivo &&
+        variacao.dias === perfil.dias_disponiveis.length,
+    ) ?? false;
+  // O estilo de dieta nomeado precisa pertencer ao objetivo novo.
+  const estiloDeDietaValido =
+    perfil.variacao_dieta === null ||
+    perfil.variacao_dieta === 'padrao' ||
+    (opcoes?.variacoes_de_dieta.some(
+      (variacao) => variacao.id === perfil.variacao_dieta && variacao.objetivo === novoObjetivo,
+    ) ?? false);
+  return {
+    sexo: perfil.sexo,
+    faixa_etaria: perfil.faixa_etaria,
+    // O peso segue o histórico de pesagem (regra do perfil).
+    peso_kg: perfil.peso_kg,
+    altura_cm: perfil.altura_cm,
+    objetivo: novoObjetivo,
+    // A frequência enviada é a quantidade real de dias (regra do onboarding).
+    frequencia_semanal: perfil.dias_disponiveis.length,
+    dias_disponiveis: perfil.dias_disponiveis,
+    modalidade: perfil.modalidade,
+    nivel: perfil.nivel,
+    variacao_treino: estiloDeTreinoValido ? perfil.variacao_treino : null,
+    variacao_dieta: estiloDeDietaValido ? perfil.variacao_dieta : null,
+  };
 }
 
 /** Formata uma data ISO (AAAA-MM-DD) para o padrão brasileiro (DD/MM/AAAA). */

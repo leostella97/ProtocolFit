@@ -12,12 +12,13 @@ import {
   formatarData,
   formatarDecimal,
   formatarMinutosSegundos,
+  montarCorpoParaNovoObjetivo,
   rotuloDaModalidade,
   rotuloDoDia,
   rotuloDoObjetivo,
   variacoesDaCombinacao,
 } from '../apps/web/src/lib/util';
-import type { VariacaoDeTreino } from '../apps/web/src/lib/tipos';
+import type { OpcoesDoSistema, Perfil, VariacaoDeDieta, VariacaoDeTreino } from '../apps/web/src/lib/tipos';
 
 describe('formatarData', () => {
   it('converte AAAA-MM-DD para DD/MM/AAAA', () => {
@@ -161,5 +162,115 @@ describe('variacoesDaCombinacao', () => {
 
   it('devolve lista vazia quando a combinação não existe', () => {
     expect(variacoesDaCombinacao(lista, 'pesocorporal', 'corrida', 5)).toEqual([]);
+  });
+});
+
+/* TEAM_017: troca de objetivo — os seletores das páginas de treino e de
+   dieta montam o corpo de POST /perfil pela MESMA função, então os
+   fallbacks de estilo (treino e dieta) são testados uma única vez aqui. */
+
+/** Perfil mínimo para os testes de troca de objetivo. */
+function perfil(parcial: Partial<Perfil>): Perfil {
+  return {
+    id: 1,
+    usuario_id: 1,
+    sexo: 'masculino',
+    faixa_etaria: '24-30',
+    peso_kg: 80,
+    altura_cm: 175,
+    objetivo: 'hipertrofia',
+    frequencia_semanal: 3,
+    dias_disponiveis: ['segunda', 'quarta', 'sexta'],
+    modalidade: 'academia',
+    nivel: 'intermediario',
+    variacao_treino: null,
+    variacao_dieta: null,
+    ...parcial,
+  };
+}
+
+/** Opções mínimas do sistema — só as variações importam para a regra. */
+function opcoesCom(
+  variacoes_de_treino: VariacaoDeTreino[],
+  variacoes_de_dieta: VariacaoDeDieta[],
+): OpcoesDoSistema {
+  return {
+    faixas_etarias: [],
+    objetivos: [],
+    modalidades: [],
+    frequencias_semanais: [],
+    dias_semana: [],
+    variacoes_de_treino,
+    variacoes_de_dieta,
+  };
+}
+
+describe('montarCorpoParaNovoObjetivo (TEAM_017)', () => {
+  const opcoes = opcoesCom(
+    [
+      variacao({ id: 'dup', nome: 'DUP', modalidade: 'academia', objetivo: 'hipertrofia', dias: 3 }),
+      variacao({ id: 'densidade', nome: 'Densidade', modalidade: 'academia', objetivo: 'emagrecimento', dias: 3 }),
+    ],
+    [
+      { id: 'ondulante', nome: 'Dieta Ondulante', arquivo: 'hipertrofia-ondulante.json', objetivo: 'hipertrofia' },
+    ],
+  );
+
+  it('copia o perfil trocando o objetivo e derivando a frequência dos dias', () => {
+    const corpo = montarCorpoParaNovoObjetivo(perfil({}), 'emagrecimento', opcoes);
+    expect(corpo.objetivo).toBe('emagrecimento');
+    expect(corpo.frequencia_semanal).toBe(3);
+    expect(corpo.dias_disponiveis).toEqual(['segunda', 'quarta', 'sexta']);
+    expect(corpo.modalidade).toBe('academia');
+    expect(corpo.peso_kg).toBe(80);
+  });
+
+  it('mantém o estilo de treino quando ele existe na nova combinação', () => {
+    const corpo = montarCorpoParaNovoObjetivo(
+      perfil({ variacao_treino: 'densidade' }),
+      'emagrecimento',
+      opcoes,
+    );
+    expect(corpo.variacao_treino).toBe('densidade');
+  });
+
+  it('derruba o estilo de treino que não serve para o novo objetivo', () => {
+    // "dup" só existe para hipertrofia — emagrecimento volta ao clássico.
+    const corpo = montarCorpoParaNovoObjetivo(perfil({ variacao_treino: 'dup' }), 'emagrecimento', opcoes);
+    expect(corpo.variacao_treino).toBeNull();
+    // E dentro do mesmo objetivo, dias diferentes também derrubam.
+    const corpoDias = montarCorpoParaNovoObjetivo(
+      perfil({ variacao_treino: 'dup', dias_disponiveis: ['segunda', 'quarta', 'sexta', 'sabado'] }),
+      'hipertrofia',
+      opcoes,
+    );
+    expect(corpoDias.variacao_treino).toBeNull();
+  });
+
+  it('preserva variacao_dieta null e "padrao" em qualquer objetivo', () => {
+    expect(montarCorpoParaNovoObjetivo(perfil({ variacao_dieta: null }), 'corrida', opcoes).variacao_dieta).toBeNull();
+    expect(
+      montarCorpoParaNovoObjetivo(perfil({ variacao_dieta: 'padrao' }), 'corrida', opcoes).variacao_dieta,
+    ).toBe('padrao');
+  });
+
+  it('mantém a dieta nomeada do objetivo e derruba a de outro objetivo', () => {
+    // "ondulante" é dieta de hipertrofia: fica no mesmo objetivo, sai no novo.
+    expect(
+      montarCorpoParaNovoObjetivo(perfil({ variacao_dieta: 'ondulante' }), 'hipertrofia', opcoes).variacao_dieta,
+    ).toBe('ondulante');
+    expect(
+      montarCorpoParaNovoObjetivo(perfil({ variacao_dieta: 'ondulante' }), 'emagrecimento', opcoes).variacao_dieta,
+    ).toBeNull();
+  });
+
+  it('sem opções carregadas, estilos nomeados caem nos fallbacks', () => {
+    const corpo = montarCorpoParaNovoObjetivo(
+      perfil({ variacao_treino: 'dup', variacao_dieta: 'ondulante' }),
+      'emagrecimento',
+      null,
+    );
+    expect(corpo.variacao_treino).toBeNull();
+    expect(corpo.variacao_dieta).toBeNull();
   });
 });

@@ -49,7 +49,7 @@ export function AvisoModoLocal() {
     return null;
   }
   return (
-    <div className="sticky top-0 z-40 border-b bg-secondary/60">
+    <div className="relative z-50 border-b bg-secondary/60">
       <div className="mx-auto flex max-w-6xl items-start gap-2 px-4 py-2 text-xs text-secondary-foreground sm:px-6">
         <Info className="mt-0.5 size-3.5 shrink-0" />
         <p className="flex-1">

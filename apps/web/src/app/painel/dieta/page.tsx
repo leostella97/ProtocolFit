@@ -31,7 +31,7 @@ import { Esqueleto } from '@/components/ui/skeleton';
 import { atualizarEstiloDeDieta, buscarCheckins, buscarOpcoes, buscarPlanoAtual, recalcularPlanos, salvarCheckin, salvarPerfilEGerarPlanos, substituirAlimento, ErroDaApi, type CorpoSubstituicao } from '@/lib/api';
 import { encerrarSessao } from '@/lib/armazenamento';
 import { hojeLocal } from '@/lib/checkin-util';
-import { combinarClasses, montarCorpoParaNovoObjetivo, variacoesDeDietaDoObjetivo } from '@/lib/util';
+import { combinarClasses, montarCorpoParaTrocaDePlano, variacoesDeDietaDoObjetivo } from '@/lib/util';
 import type { ItemDaDieta, Objetivo, OpcoesDoSistema, PlanoCompleto, PlanoDieta } from '@/lib/tipos';
 
 /* ===========================================================================
@@ -344,7 +344,7 @@ export default function PaginaDaDieta() {
   /**
    * TEAM_017: troca o OBJETIVO (hipertrofia/emagrecimento/corrida/luta) e
    * regenera treino + dieta — o mesmo fluxo do seletor da página de treino.
-   * O corpo vem de montarCorpoParaNovoObjetivo (fallbacks de estilo na nova
+   * O corpo vem de montarCorpoParaTrocaDePlano (fallbacks de estilo na nova
    * combinação). O novo id de dieta zera a checklist de refeições sozinho.
    */
   async function trocarObjetivo(novoObjetivo: Objetivo) {
@@ -355,7 +355,7 @@ export default function PaginaDaDieta() {
     definirErroObjetivo(null);
     try {
       const resultado = await salvarPerfilEGerarPlanos(
-        montarCorpoParaNovoObjetivo(plano.perfil, novoObjetivo, opcoes),
+        montarCorpoParaTrocaDePlano(plano.perfil, { objetivo: novoObjetivo }, opcoes),
       );
       definirPlano({ perfil: resultado.perfil, treino: resultado.treino, dieta: resultado.dieta });
     } catch (erroCapturado: unknown) {

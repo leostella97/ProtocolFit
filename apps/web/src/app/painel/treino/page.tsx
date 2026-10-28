@@ -63,12 +63,12 @@ import { DIAS_DA_SEMANA } from '@/lib/motor/constantes';
 import {
   combinarClasses,
   formatarAlvoDoExercicio,
-  montarCorpoParaNovoObjetivo,
+  montarCorpoParaTrocaDePlano,
   rotuloDoMusculo,
   rotuloDoObjetivo,
   variacoesDaCombinacao,
 } from '@/lib/util';
-import type { AlternativaDeExercicio, ExercicioDoPlano, Objetivo, OpcoesDoSistema, PlanoCompleto, PlanoTreino } from '@/lib/tipos';
+import type { AlternativaDeExercicio, ExercicioDoPlano, Modalidade, Objetivo, OpcoesDoSistema, PlanoCompleto, PlanoTreino } from '@/lib/tipos';
 
 /* ===========================================================================
  * TEAM_004/TEAM_008 — checklist de exercícios concluídos, persistida por
@@ -607,12 +607,37 @@ export default function PaginaDoTreino() {
     definirErroEstilo(null);
     try {
       const resultado = await salvarPerfilEGerarPlanos(
-        montarCorpoParaNovoObjetivo(plano.perfil, novoObjetivo, opcoes),
+        montarCorpoParaTrocaDePlano(plano.perfil, { objetivo: novoObjetivo }, opcoes),
       );
       aplicarPlanoRegenerado(resultado);
     } catch (erroCapturado: unknown) {
       definirErroEstilo(
         erroCapturado instanceof Error ? erroCapturado.message : 'Não foi possível trocar o objetivo.',
+      );
+    } finally {
+      definirTrocandoEstilo(false);
+    }
+  }
+
+  /**
+   * TEAM_017: troca a MODALIDADE (academia ↔ peso do corpo) e regenera
+   * treino + dieta — a dieta não depende da modalidade, mas é refeita junto
+   * pelo POST /perfil (mesma regra do onboarding e da edição do perfil).
+   */
+  async function trocarModalidade(novaModalidade: Modalidade) {
+    if (!plano || trocandoEstilo) {
+      return;
+    }
+    definirTrocandoEstilo(true);
+    definirErroEstilo(null);
+    try {
+      const resultado = await salvarPerfilEGerarPlanos(
+        montarCorpoParaTrocaDePlano(plano.perfil, { modalidade: novaModalidade }, opcoes),
+      );
+      aplicarPlanoRegenerado(resultado);
+    } catch (erroCapturado: unknown) {
+      definirErroEstilo(
+        erroCapturado instanceof Error ? erroCapturado.message : 'Não foi possível trocar a modalidade.',
       );
     } finally {
       definirTrocandoEstilo(false);
@@ -812,9 +837,10 @@ export default function PaginaDoTreino() {
           <Clock className="size-4 shrink-0 text-primary" /> Duração estimada: {treino.duracao_estimada_min} min
         </p>
 
-        {/* TEAM_013+TEAM_014+TEAM_015: troca de objetivo, de frequência e de
-            estilo direto desta página — todos regeneram o plano na hora. O
-            estilo só aparece quando a combinação tem mais de uma variação. */}
+        {/* TEAM_013+TEAM_014+TEAM_015+TEAM_017: troca de objetivo, de
+            modalidade (academia/peso do corpo), de frequência e de estilo
+            direto desta página — todos regeneram o plano na hora. O estilo
+            só aparece quando a combinação tem mais de uma variação. */}
         {opcoes ? (
           <div className="flex flex-wrap items-end gap-4">
             <div className="max-w-xs flex-1 space-y-1.5">
@@ -830,6 +856,24 @@ export default function PaginaDoTreino() {
                 {opcoes.objetivos.map((objetivo) => (
                   <option key={objetivo.valor} value={objetivo.valor}>
                     {objetivo.rotulo}
+                  </option>
+                ))}
+              </MenuDeSelecao>
+            </div>
+            {/* TEAM_017: onde a pessoa treina — academia ou peso do corpo. */}
+            <div className="max-w-xs flex-1 space-y-1.5">
+              <Rotulo htmlFor="modalidade-do-treino">
+                <ArrowLeftRight className="size-3.5 text-primary" /> Modalidade
+              </Rotulo>
+              <MenuDeSelecao
+                id="modalidade-do-treino"
+                value={perfil.modalidade}
+                disabled={trocandoEstilo}
+                onChange={(evento) => void trocarModalidade(evento.target.value as Modalidade)}
+              >
+                {opcoes.modalidades.map((modalidade) => (
+                  <option key={modalidade.valor} value={modalidade.valor}>
+                    {modalidade.rotulo}
                   </option>
                 ))}
               </MenuDeSelecao>

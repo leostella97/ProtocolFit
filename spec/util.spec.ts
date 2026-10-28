@@ -12,7 +12,7 @@ import {
   formatarData,
   formatarDecimal,
   formatarMinutosSegundos,
-  montarCorpoParaNovoObjetivo,
+  montarCorpoParaTrocaDePlano,
   rotuloDaModalidade,
   rotuloDoDia,
   rotuloDoObjetivo,
@@ -165,9 +165,10 @@ describe('variacoesDaCombinacao', () => {
   });
 });
 
-/* TEAM_017: troca de objetivo — os seletores das páginas de treino e de
-   dieta montam o corpo de POST /perfil pela MESMA função, então os
-   fallbacks de estilo (treino e dieta) são testados uma única vez aqui. */
+/* TEAM_017: troca de objetivo/modalidade — os seletores das páginas de
+   treino e de dieta montam o corpo de POST /perfil pela MESMA função,
+   então os fallbacks de estilo (treino e dieta) são testados uma única
+   vez aqui. */
 
 /** Perfil mínimo para os testes de troca de objetivo. */
 function perfil(parcial: Partial<Perfil>): Perfil {
@@ -205,11 +206,12 @@ function opcoesCom(
   };
 }
 
-describe('montarCorpoParaNovoObjetivo (TEAM_017)', () => {
+describe('montarCorpoParaTrocaDePlano (TEAM_017)', () => {
   const opcoes = opcoesCom(
     [
       variacao({ id: 'dup', nome: 'DUP', modalidade: 'academia', objetivo: 'hipertrofia', dias: 3 }),
       variacao({ id: 'densidade', nome: 'Densidade', modalidade: 'academia', objetivo: 'emagrecimento', dias: 3 }),
+      variacao({ id: 'calistenia', nome: 'Calistenia', modalidade: 'pesocorporal', objetivo: 'hipertrofia', dias: 3 }),
     ],
     [
       { id: 'ondulante', nome: 'Dieta Ondulante', arquivo: 'hipertrofia-ondulante.json', objetivo: 'hipertrofia' },
@@ -217,7 +219,7 @@ describe('montarCorpoParaNovoObjetivo (TEAM_017)', () => {
   );
 
   it('copia o perfil trocando o objetivo e derivando a frequência dos dias', () => {
-    const corpo = montarCorpoParaNovoObjetivo(perfil({}), 'emagrecimento', opcoes);
+    const corpo = montarCorpoParaTrocaDePlano(perfil({}), { objetivo: 'emagrecimento' }, opcoes);
     expect(corpo.objetivo).toBe('emagrecimento');
     expect(corpo.frequencia_semanal).toBe(3);
     expect(corpo.dias_disponiveis).toEqual(['segunda', 'quarta', 'sexta']);
@@ -225,49 +227,86 @@ describe('montarCorpoParaNovoObjetivo (TEAM_017)', () => {
     expect(corpo.peso_kg).toBe(80);
   });
 
+  it('troca a modalidade mantendo o objetivo e o restante do perfil', () => {
+    const corpo = montarCorpoParaTrocaDePlano(perfil({}), { modalidade: 'pesocorporal' }, opcoes);
+    expect(corpo.modalidade).toBe('pesocorporal');
+    expect(corpo.objetivo).toBe('hipertrofia');
+  });
+
   it('mantém o estilo de treino quando ele existe na nova combinação', () => {
-    const corpo = montarCorpoParaNovoObjetivo(
+    const corpo = montarCorpoParaTrocaDePlano(
       perfil({ variacao_treino: 'densidade' }),
-      'emagrecimento',
+      { objetivo: 'emagrecimento' },
       opcoes,
     );
     expect(corpo.variacao_treino).toBe('densidade');
+    // E na troca de modalidade: "calistenia" é de peso corporal + hipertrofia.
+    const corpoModalidade = montarCorpoParaTrocaDePlano(
+      perfil({ variacao_treino: 'calistenia' }),
+      { modalidade: 'pesocorporal' },
+      opcoes,
+    );
+    expect(corpoModalidade.variacao_treino).toBe('calistenia');
   });
 
-  it('derruba o estilo de treino que não serve para o novo objetivo', () => {
+  it('derruba o estilo de treino que não serve para a nova combinação', () => {
     // "dup" só existe para hipertrofia — emagrecimento volta ao clássico.
-    const corpo = montarCorpoParaNovoObjetivo(perfil({ variacao_treino: 'dup' }), 'emagrecimento', opcoes);
+    const corpo = montarCorpoParaTrocaDePlano(
+      perfil({ variacao_treino: 'dup' }),
+      { objetivo: 'emagrecimento' },
+      opcoes,
+    );
     expect(corpo.variacao_treino).toBeNull();
+    // E é da academia — peso do corpo também derruba.
+    const corpoModalidade = montarCorpoParaTrocaDePlano(
+      perfil({ variacao_treino: 'dup' }),
+      { modalidade: 'pesocorporal' },
+      opcoes,
+    );
+    expect(corpoModalidade.variacao_treino).toBeNull();
     // E dentro do mesmo objetivo, dias diferentes também derrubam.
-    const corpoDias = montarCorpoParaNovoObjetivo(
+    const corpoDias = montarCorpoParaTrocaDePlano(
       perfil({ variacao_treino: 'dup', dias_disponiveis: ['segunda', 'quarta', 'sexta', 'sabado'] }),
-      'hipertrofia',
+      {},
       opcoes,
     );
     expect(corpoDias.variacao_treino).toBeNull();
   });
 
-  it('preserva variacao_dieta null e "padrao" em qualquer objetivo', () => {
-    expect(montarCorpoParaNovoObjetivo(perfil({ variacao_dieta: null }), 'corrida', opcoes).variacao_dieta).toBeNull();
+  it('preserva variacao_dieta null e "padrao" em qualquer troca', () => {
     expect(
-      montarCorpoParaNovoObjetivo(perfil({ variacao_dieta: 'padrao' }), 'corrida', opcoes).variacao_dieta,
+      montarCorpoParaTrocaDePlano(perfil({ variacao_dieta: null }), { objetivo: 'corrida' }, opcoes).variacao_dieta,
+    ).toBeNull();
+    expect(
+      montarCorpoParaTrocaDePlano(perfil({ variacao_dieta: 'padrao' }), { objetivo: 'corrida' }, opcoes)
+        .variacao_dieta,
     ).toBe('padrao');
+    // A modalidade não interfere na dieta.
+    expect(
+      montarCorpoParaTrocaDePlano(
+        perfil({ variacao_dieta: 'ondulante' }),
+        { modalidade: 'pesocorporal' },
+        opcoes,
+      ).variacao_dieta,
+    ).toBe('ondulante');
   });
 
   it('mantém a dieta nomeada do objetivo e derruba a de outro objetivo', () => {
     // "ondulante" é dieta de hipertrofia: fica no mesmo objetivo, sai no novo.
     expect(
-      montarCorpoParaNovoObjetivo(perfil({ variacao_dieta: 'ondulante' }), 'hipertrofia', opcoes).variacao_dieta,
+      montarCorpoParaTrocaDePlano(perfil({ variacao_dieta: 'ondulante' }), { objetivo: 'hipertrofia' }, opcoes)
+        .variacao_dieta,
     ).toBe('ondulante');
     expect(
-      montarCorpoParaNovoObjetivo(perfil({ variacao_dieta: 'ondulante' }), 'emagrecimento', opcoes).variacao_dieta,
+      montarCorpoParaTrocaDePlano(perfil({ variacao_dieta: 'ondulante' }), { objetivo: 'emagrecimento' }, opcoes)
+        .variacao_dieta,
     ).toBeNull();
   });
 
   it('sem opções carregadas, estilos nomeados caem nos fallbacks', () => {
-    const corpo = montarCorpoParaNovoObjetivo(
+    const corpo = montarCorpoParaTrocaDePlano(
       perfil({ variacao_treino: 'dup', variacao_dieta: 'ondulante' }),
-      'emagrecimento',
+      { objetivo: 'emagrecimento' },
       null,
     );
     expect(corpo.variacao_treino).toBeNull();

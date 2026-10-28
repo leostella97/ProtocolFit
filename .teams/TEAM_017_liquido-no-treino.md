@@ -6,6 +6,9 @@
 > 2. "treino: junto com outros dropdown para mudar treino incluir dropdown
 >    objetivo" — o dropdown de Objetivo JÁ existia no treino (TEAM_014);
 >    confirmado com o usuário que o pedido era levá-lo à página da **Dieta**.
+> 3. "treino junto com os dropdown mudança inclua onde faz academia ou peso
+>    do corpo" — seletor de **Modalidade** (academia/peso corporal) no grupo
+>    de dropdowns do treino.
 
 ## Interpretação
 - **"Form quanto líquido bebeu"**: um formulário dentro da página do treino
@@ -35,25 +38,29 @@
   repositorio-local (o servidor mantém a constante própria, outro lado do
   contrato).
 
-## Design — dropdown de objetivo na Dieta
-- A montagem do corpo de POST /perfil para troca de objetivo (fallbacks de
+## Design — dropdowns de objetivo/modalidade
+- A montagem do corpo de POST /perfil para trocas de plano (fallbacks de
   `variacao_treino` e `variacao_dieta` na nova combinação) virou a função
-  pura **`montarCorpoParaNovoObjetivo()`** em `util.ts` — fonte única usada
-  pelas páginas de treino e de dieta (antes: regra só no treino).
+  pura **`montarCorpoParaTrocaDePlano(perfil, {objetivo?, modalidade?},
+  opcoes)`** em `util.ts` — fonte única usada pelos seletores de objetivo
+  (treino + dieta) e de modalidade (treino).
 - A Dieta ganhou o seletor "Objetivo" ao lado de "Estilo de dieta"; os dois
   se desabilitam mutuamente durante a regeneração. O novo id de dieta zera
   a checklist de refeições sozinho (a chave é por plano+dia civil).
+- O Treino ganhou o seletor "Modalidade" entre "Objetivo" e "Quantas vezes
+  treinar"; trocar regenera treino + dieta via POST /perfil (a dieta não
+  depende de modalidade, mas é refeita junto — regra do onboarding).
 
 ## Arquivos
 - `apps/web/src/components/painel/cartao-liquido-treino.tsx` (novo)
 - `apps/web/src/lib/checkin-util.ts` (constante + função pura)
-- `apps/web/src/lib/util.ts` (montarCorpoParaNovoObjetivo — função pura)
-- `apps/web/src/app/painel/treino/page.tsx` (estado + integração + refatoração)
+- `apps/web/src/lib/util.ts` (montarCorpoParaTrocaDePlano — função pura)
+- `apps/web/src/app/painel/treino/page.tsx` (estado + integração + dropdowns)
 - `apps/web/src/app/painel/dieta/page.tsx` (dropdown de objetivo)
 - `apps/web/src/components/painel/cartao-checkin.tsx` (usa a constante)
 - `apps/web/src/lib/repositorio-local.ts` (usa a constante)
 - `spec/checkin-util.spec.ts` (testes de somarAguaDoDia)
-- `spec/util.spec.ts` (testes de montarCorpoParaNovoObjetivo)
+- `spec/util.spec.ts` (testes de montarCorpoParaTrocaDePlano)
 - `README.md` (seção "Check-in diário" documenta o cartão do treino)
 
 ## Baseline (antes de alterar)
@@ -62,8 +69,8 @@
 - typecheck web: limpo
 
 ## Verificação (resultado)
-- [x] Jasmine — 86 specs, 0 falhas (6 de somarAguaDoDia + 6 de
-      montarCorpoParaNovoObjetivo)
+- [x] Jasmine — 87 specs, 0 falhas (6 de somarAguaDoDia + 7 de
+      montarCorpoParaTrocaDePlano)
 - [x] typecheck web — limpo
 - [x] build api (tsc) — limpo
 - [x] build:pages + verificação PWA — verde

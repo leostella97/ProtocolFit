@@ -68,27 +68,31 @@ export function variacoesDeDietaDoObjetivo(
 }
 
 /**
- * TEAM_017: monta o corpo de POST /perfil para TROCAR O OBJETIVO mantendo o
- * restante do perfil — fonte única usada pelos seletores de objetivo das
- * páginas de treino (TEAM_014) e de dieta.
+ * TEAM_017: monta o corpo de POST /perfil para TROCAR OBJETIVO e/ou
+ * MODALIDADE mantendo o restante do perfil — fonte única usada pelos
+ * seletores das páginas de treino (objetivo TEAM_014 + modalidade) e de
+ * dieta (objetivo).
  *
- * Regras de fallback ao mudar de objetivo:
+ * Regras de fallback na nova combinação:
  *  - o estilo de treino só sobrevive se existe para a NOVA combinação
  *    (modalidade + objetivo + nº de dias) — senão volta ao clássico (null);
  *  - o estilo de dieta nomeado só vale para o objetivo certo — null/"padrao"
  *    sempre sobrevivem; um slug inválido volta ao automático (null).
  */
-export function montarCorpoParaNovoObjetivo(
+export function montarCorpoParaTrocaDePlano(
   perfil: Perfil,
-  novoObjetivo: Objetivo,
+  mudancas: { objetivo?: Objetivo; modalidade?: Modalidade },
   opcoes: OpcoesDoSistema | null,
 ): CorpoPerfil {
+  // Campos não alterados seguem os valores atuais do perfil.
+  const novoObjetivo = mudancas.objetivo ?? perfil.objetivo;
+  const novaModalidade = mudancas.modalidade ?? perfil.modalidade;
   // O estilo de treino precisa existir para a combinação nova.
   const estiloDeTreinoValido =
     opcoes?.variacoes_de_treino.some(
       (variacao) =>
         variacao.id === perfil.variacao_treino &&
-        variacao.modalidade === perfil.modalidade &&
+        variacao.modalidade === novaModalidade &&
         variacao.objetivo === novoObjetivo &&
         variacao.dias === perfil.dias_disponiveis.length,
     ) ?? false;
@@ -109,7 +113,7 @@ export function montarCorpoParaNovoObjetivo(
     // A frequência enviada é a quantidade real de dias (regra do onboarding).
     frequencia_semanal: perfil.dias_disponiveis.length,
     dias_disponiveis: perfil.dias_disponiveis,
-    modalidade: perfil.modalidade,
+    modalidade: novaModalidade,
     nivel: perfil.nivel,
     variacao_treino: estiloDeTreinoValido ? perfil.variacao_treino : null,
     variacao_dieta: estiloDeDietaValido ? perfil.variacao_dieta : null,

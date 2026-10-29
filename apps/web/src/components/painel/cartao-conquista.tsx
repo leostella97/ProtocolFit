@@ -19,7 +19,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Download, Facebook, Instagram, Loader2, MessageCircle, Share2, Trophy } from 'lucide-react';
+import { Download, Facebook, Instagram, Loader2, MessageCircle, Share2, Target, Trophy } from 'lucide-react';
 import { Botao } from '@/components/ui/button';
 import { Cartao, CartaoCabecalho, CartaoConteudo, CartaoDescricao, CartaoTitulo } from '@/components/ui/card';
 import { formatarDecimal, rotuloDoObjetivo } from '@/lib/util';
@@ -194,6 +194,31 @@ export function CartaoConquista({ perfil, checkins, deltaDePeso, nome }: Proprie
     [deltaDePeso, perfil.objetivo],
   );
 
+  // Frase motivacional baseada no progresso do usuário.
+  const fraseMotivacional = useMemo(() => {
+    const seq = checkins.sequencia_atual;
+    const rec = checkins.sequencia_maxima;
+    if (seq > rec && rec > 0) return 'Novo recorde pessoal! ⚡';
+    if (seq === rec && rec > 0) return 'Você igualou seu recorde! 🎯';
+    if (seq >= 30) return 'Lenda da constância! 👑';
+    if (seq >= 14) return 'Duas semanas de foco total! 🔥';
+    if (seq >= 7) return 'Uma semana inteira! Incrível! 💪';
+    if (seq >= 3) return 'A constância é sua aliada! 🚀';
+    if (seq >= 1) return 'O primeiro passo é o mais importante! 🌱';
+    return 'Sua jornada começa hoje! ✨';
+  }, [checkins.sequencia_atual, checkins.sequencia_maxima]);
+
+  // Meta à vista: quantos dias faltam para bater o recorde.
+  const metaAVista = useMemo(() => {
+    const seq = checkins.sequencia_atual;
+    const rec = checkins.sequencia_maxima;
+    if (rec === 0) return null; // sem recorde ainda
+    if (seq > rec) return `Novo recorde: ${seq} dias!`;
+    if (seq === rec) return 'Você está no seu recorde!';
+    const faltam = rec - seq;
+    return `Falta${faltam > 1 ? 'm' : ''} ${faltam} dia${faltam > 1 ? 's' : ''} para bater seu recorde de ${rec}d`;
+  }, [checkins.sequencia_atual, checkins.sequencia_maxima]);
+
   // Redesenha a prévia sempre que os dados da conquista mudam.
   useEffect(() => {
     const contexto = canvasRef.current?.getContext('2d');
@@ -308,13 +333,29 @@ export function CartaoConquista({ perfil, checkins, deltaDePeso, nome }: Proprie
   return (
     <Cartao>
       <CartaoCabecalho>
-        <div className="flex items-center gap-2">
-          <Trophy className="size-5 text-primary" />
-          <CartaoTitulo>Card de conquista</CartaoTitulo>
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <Trophy className="size-5 text-primary shrink-0" />
+              <CartaoTitulo>Card de conquista</CartaoTitulo>
+            </div>
+            <CartaoDescricao>
+              Gere sua imagem de progresso e compartilhe nas redes
+            </CartaoDescricao>
+          </div>
+          {/* Frase motivacional + Meta à vista (lado direito do cabeçalho) */}
+          <div className="hidden sm:flex flex-col items-end gap-1 text-right shrink-0">
+            <p className="text-sm font-medium text-primary italic leading-snug">
+              &ldquo;{fraseMotivacional}&rdquo;
+            </p>
+            {metaAVista ? (
+              <p className="text-xs text-muted-foreground flex items-center gap-1">
+                <Target className="size-3" />
+                {metaAVista}
+              </p>
+            ) : null}
+          </div>
         </div>
-        <CartaoDescricao>
-          Gere sua imagem de progresso e compartilhe nas redes
-        </CartaoDescricao>
       </CartaoCabecalho>
       <CartaoConteudo className="space-y-4">
         {/* Prévia do PNG exportado — exibida 5x menor na tela (216px) que o arquivo (1080px). */}

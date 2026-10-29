@@ -323,7 +323,7 @@ export function CartaoConquista({ perfil, checkins, deltaDePeso, nome }: Proprie
           ref={canvasRef}
           width={TAMANHO_DO_CARD}
           height={TAMANHO_DO_CARD}
-          className="w-full rounded-xl border border-border"
+          className="w-[216px] h-[216px] rounded-xl border border-border"
           aria-label="Prévia do card de conquista"
         />
 

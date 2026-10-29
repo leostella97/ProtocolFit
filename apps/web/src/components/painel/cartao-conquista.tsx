@@ -38,8 +38,10 @@ interface PropriedadesDoCartaoConquista {
 }
 
 /** Dimensão do PNG gerado — 1080×1080 é o quadrado padrão das redes. */
-/** Tamanho reduzido 5x (de 1080 para 216) conforme solicitado. */
-const TAMANHO_DO_CARD = 216;
+const TAMANHO_DO_CARD = 1080;
+
+/** Tamanho de exibição da prévia no painel: 5x menor que o PNG. */
+const TAMANHO_DE_EXIBICAO = 216;
 
 /** URL pública exibida no card e nos textos de compartilhamento. */
 const URL_DO_SITE = 'leostella97.github.io/ProtocolFit';
@@ -318,12 +320,12 @@ export function CartaoConquista({ perfil, checkins, deltaDePeso, nome }: Proprie
         </CartaoDescricao>
       </CartaoCabecalho>
       <CartaoConteudo className="space-y-4">
-        {/* Prévia 1:1 do PNG que será exportado. */}
+        {/* Prévia do PNG exportado — exibida 5x menor na tela (216px) que o arquivo (1080px). */}
         <canvas
           ref={canvasRef}
           width={TAMANHO_DO_CARD}
           height={TAMANHO_DO_CARD}
-          className="w-[216px] h-[216px] rounded-xl border border-border"
+          className={`w-[${TAMANHO_DE_EXIBICAO}px] h-[${TAMANHO_DE_EXIBICAO}px] rounded-xl border border-border`}
           aria-label="Prévia do card de conquista"
         />
 

@@ -38,7 +38,8 @@ interface PropriedadesDoCartaoConquista {
 }
 
 /** Dimensão do PNG gerado — 1080×1080 é o quadrado padrão das redes. */
-const TAMANHO_DO_CARD = 1080;
+/** Tamanho reduzido 5x (de 1080 para 216) conforme solicitado. */
+const TAMANHO_DO_CARD = 216;
 
 /** URL pública exibida no card e nos textos de compartilhamento. */
 const URL_DO_SITE = 'leostella97.github.io/ProtocolFit';

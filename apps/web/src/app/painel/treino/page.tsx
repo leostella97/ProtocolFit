@@ -151,7 +151,7 @@ function CartaoDeExercicio({
       const salvo = localStorage.getItem(chave);
       if (!salvo) return 0;
       const valor = Number(JSON.parse(salvo));
-      return Number.isFinite(valor) ? Math.max(0, Math.min(valor, exercicio.series)) : 0;
+      return Number.isFinite(valor) ? Math.max(0, valor) : 0;
     } catch {
       return 0;
     }
@@ -170,11 +170,6 @@ function CartaoDeExercicio({
       aoAlternarConcluido();
     }
   }, [seriesConcluidas, exercicio.series, concluido, aoAlternarConcluido]);
-
-  // Ajusta o contador se o número de séries for reduzido na edição.
-  useEffect(() => {
-    definirSeriesConcluidas(c => Math.min(c, exercicio.series));
-  }, [exercicio.series]);
 
   /** TEAM_003: troca o exercício pela alternativa escolhida (mesmo grupo). */
   async function trocarExercicioAtual(nomeDaAlternativa: string) {
@@ -409,10 +404,11 @@ function CartaoDeExercicio({
         <div className="flex items-center gap-3 rounded-lg border border-border bg-secondary/20 p-3">
           <span className="text-sm font-medium text-foreground">
             {ehCardio ? 'Tiros' : 'Séries'} concluídos: {seriesConcluidas} / {exercicio.series}
+            {seriesConcluidas > exercicio.series ? <span className="ml-2 text-xs text-amber-600">(+{seriesConcluidas - exercicio.series} extra)</span> : null}
           </span>
           <div className="flex gap-1">
             <Botao variante="contorno" tamanho="pequeno" onClick={() => definirSeriesConcluidas(c => Math.max(0, c - 1))}>−</Botao>
-            <Botao variante="contorno" tamanho="pequeno" onClick={() => definirSeriesConcluidas(c => Math.min(exercicio.series, c + 1))}>+</Botao>
+            <Botao variante="contorno" tamanho="pequeno" onClick={() => definirSeriesConcluidas(c => c + 1)}>+</Botao>
           </div>
         </div>
 

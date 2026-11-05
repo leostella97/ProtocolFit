@@ -144,6 +144,37 @@ function CartaoDeExercicio({
   const [mensagemDeErro, definirMensagemDeErro] = useState<string | null>(null);
   // TEAM_003: estado da troca (as alternativas chegam prontas pela página).
   const [trocando, definirTrocando] = useState(false);
+  // Contador de séries concluídas para o usuário acompanhar dentro da sessão.
+  const [seriesConcluidas, definirSeriesConcluidas] = useState(() => {
+    try {
+      const chave = `protocolfit_series:${treino.id}:${diaIndice}:${exercicioIndice}`;
+      const salvo = localStorage.getItem(chave);
+      if (!salvo) return 0;
+      const valor = Number(JSON.parse(salvo));
+      return Number.isFinite(valor) ? Math.max(0, Math.min(valor, exercicio.series)) : 0;
+    } catch {
+      return 0;
+    }
+  });
+  // Persiste o contador de séries concluídas entre recargas.
+  useEffect(() => {
+    try {
+      const chave = `protocolfit_series:${treino.id}:${diaIndice}:${exercicioIndice}`;
+      localStorage.setItem(chave, JSON.stringify(seriesConcluidas));
+    } catch {}
+  }, [seriesConcluidas, treino.id, diaIndice, exercicioIndice]);
+
+  // Marca o exercício como concluído automaticamente quando todas as séries forem feitas.
+  useEffect(() => {
+    if (seriesConcluidas >= exercicio.series && exercicio.series > 0 && !concluido) {
+      aoAlternarConcluido();
+    }
+  }, [seriesConcluidas, exercicio.series, concluido, aoAlternarConcluido]);
+
+  // Ajusta o contador se o número de séries for reduzido na edição.
+  useEffect(() => {
+    definirSeriesConcluidas(c => Math.min(c, exercicio.series));
+  }, [exercicio.series]);
 
   /** TEAM_003: troca o exercício pela alternativa escolhida (mesmo grupo). */
   async function trocarExercicioAtual(nomeDaAlternativa: string) {
@@ -372,6 +403,17 @@ function CartaoDeExercicio({
             ) : null}
           </div>
           )}
+        </div>
+
+        {/* Contador de séries concluídas */}
+        <div className="flex items-center gap-3 rounded-lg border border-border bg-secondary/20 p-3">
+          <span className="text-sm font-medium text-foreground">
+            {ehCardio ? 'Tiros' : 'Séries'} concluídos: {seriesConcluidas} / {exercicio.series}
+          </span>
+          <div className="flex gap-1">
+            <Botao variante="contorno" tamanho="pequeno" onClick={() => definirSeriesConcluidas(c => Math.max(0, c - 1))}>−</Botao>
+            <Botao variante="contorno" tamanho="pequeno" onClick={() => definirSeriesConcluidas(c => Math.min(exercicio.series, c + 1))}>+</Botao>
+          </div>
         </div>
 
         {/* Linha de ação: salvar + feedback de sucesso ou erro. */}
@@ -953,11 +995,15 @@ export default function PaginaDoTreino() {
           // TEAM_004/008: exercícios já concluídos nesta sessão — a checklist
           // persiste entre visitas até o dia inteiro ser concluído.
           const concluidosNoDia = (concluidosPorDia[indice] ?? []).length;
+          const totalSeriesDia = dia.exercicios.reduce((soma, ex) => soma + ex.series, 0);
           return (
             <ConteudoDeAba key={indice} valor={String(indice)}>
               <div className="space-y-4">
                 {/* Título do dia selecionado. */}
-                <h2 className="font-display text-lg font-bold text-foreground">{dia.titulo}</h2>
+                <div className="flex items-baseline gap-3">
+                  <h2 className="font-display text-lg font-bold text-foreground">{dia.titulo}</h2>
+                  <span className="text-xs text-muted-foreground">Total de séries: {totalSeriesDia}</span>
+                </div>
 
                 {/* TEAM_004/008: progresso da sessão (persiste entre visitas)
                     + atalho que marca o treino como feito no check-in diário. */}

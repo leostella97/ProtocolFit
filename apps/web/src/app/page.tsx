@@ -433,6 +433,9 @@ export default function PaginaInicial() {
           <Logotipo />
           <p className="text-sm text-muted-foreground">Treino e dieta com ciência determinística — sem achismo.</p>
           <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} ProtocolFit</p>
+          <p className="text-sm text-muted-foreground">
+            Desenvolvido por <a href="https://leostella97.github.io" target="_blank" rel="noopener noreferrer" className="hover:underline">Leonardo Stella</a>
+          </p>
         </div>
       </footer>
     </div>

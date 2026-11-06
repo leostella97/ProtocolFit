@@ -302,7 +302,7 @@ export async function rotasPerfil(app: FastifyInstance): Promise<void> {
   app.patch('/treino', { onRequest: [exigirAutenticacao] }, async (requisicao, resposta) => {
     // Recupera o id do usuário autenticado.
     const usuarioId = usuarioIdDaRequisicao(requisicao);
-    const corpo = (requisicao.body ?? {}) as { variacao_treino?: string | null };
+    const corpo = (requisicao.body ?? {}) as { variacao_treino?: string | null; musculo_focado?: string | null };
 
     // O campo é obrigatório (null limpa o estilo e volta ao clássico).
     if (!('variacao_treino' in corpo)) {
@@ -331,6 +331,7 @@ export async function rotasPerfil(app: FastifyInstance): Promise<void> {
       const perfilComEstilo = salvarPerfil(usuarioId, {
         ...perfilAtual,
         variacao_treino: estiloNormalizado,
+        musculo_focado: 'musculo_focado' in corpo ? corpo.musculo_focado ?? null : perfilAtual.musculo_focado,
       });
 
       // Regenera os planos já com o novo estilo (nova versão, antigas inativas).

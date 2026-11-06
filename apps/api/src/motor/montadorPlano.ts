@@ -144,33 +144,76 @@ function somarTotaisDasRefeicoes(refeicoes: RefeicaoDaDieta[]): TotaisNutriciona
 /** Monta um dia do modelo aplicando as regras do objetivo do usuário. */
 function montarDia(dia: ModeloDiaTreino, perfil: Perfil): DiaDeTreino {
   const regra = REGRAS_POR_OBJETIVO[perfil.objetivo];
+  const foco = perfil.musculo_focado?.trim().toLowerCase() || null;
+  
+  const exerciciosProcessados = dia.exercicios.map((exercicio) => {
+    // TEAM_008: no grupo "cardio" os campos do modelo já são TEMPO/DISTÂNCIA
+    // (1 série = minutos contínuos; várias = tiros de X–Y segundos) — a regra
+    // do objetivo, feita para reps de musculação, destruía essa semântica.
+    // TEAM_009: "prescricao_fixa" vale o mesmo para estilos periodizados —
+    // um modelo ondulante/DUP existe justamente porque cada dia tem um
+    // esquema de reps diferente; achatar na regra apagaria o método.
+    const mantemPrescricao = exercicio.grupo === 'cardio' || exercicio.prescricao_fixa === true;
+    
+    const musculoAlvo = musculoAlvoDoExercicio(exercicio.nome, exercicio.grupo).toLowerCase();
+    const isFoco = foco && (
+      musculoAlvo === foco ||
+      musculoAlvo.includes(foco) ||
+      foco.includes(musculoAlvo) ||
+      exercicio.grupo.toLowerCase() === foco
+    );
+    
+    // Regras base
+    let series = mantemPrescricao ? exercicio.series : regra.series;
+    let repeticoes_min = mantemPrescricao ? exercicio.repeticoes_min : regra.repeticoes_min;
+    let repeticoes_max = mantemPrescricao ? exercicio.repeticoes_max : regra.repeticoes_max;
+    let descanso_segundos = mantemPrescricao ? exercicio.descanso_segundos : regra.descanso_segundos;
+    
+    // Adaptação para músculo focado: aumenta volume e prioriza hipertrofia
+    if (isFoco && exercicio.tipo !== 'cardio') {
+      series = series + 1; // +1 série para foco
+      // Ajuste de faixa de reps para hipertrofia quando foco ativo
+      if (perfil.objetivo === 'hipertrofia' || perfil.objetivo === 'luta') {
+        repeticoes_min = Math.max(6, repeticoes_min - 1);
+        repeticoes_max = Math.min(15, repeticoes_max + 1);
+        descanso_segundos = Math.min(120, descanso_segundos + 15);
+      }
+    }
+    
+    return {
+      nome: exercicio.nome,
+      grupo: exercicio.grupo,
+      tipo: exercicio.tipo,
+      series,
+      repeticoes_min,
+      repeticoes_max,
+      descanso_segundos,
+      // Carga inicial sugerida = fração do peso corporal do exercício (kg).
+      carga_sugerida_kg:
+        exercicio.percentual_carga_peso_corporal === null
+          ? null
+          : arredondarCarga(perfil.peso_kg * exercicio.percentual_carga_peso_corporal),
+      distancia_km: exercicio.distancia_km ?? null,
+      dicas: isFoco 
+        ? [`FOCADO: ${exercicio.nome} priorizado para ${perfil.musculo_focado}. Mantenha técnica e progressão.`, ...(exercicio.dicas ? [exercicio.dicas] : [])].join(' ')
+        : exercicio.dicas,
+      _musculoAlvo: musculoAlvo // meta campo para debug/ordenação
+    };
+  });
+  
+  // Se há foco, tenta priorizar exercícios focais no início do dia
+  let exerciciosOrdenados = exerciciosProcessados;
+  if (foco) {
+    exerciciosOrdenados = [...exerciciosProcessados].sort((a, b) => {
+      const aIsFoco = (a as any)._musculoAlvo?.includes(foco) || (a as any).grupo.toLowerCase() === foco ? 0 : 1;
+      const bIsFoco = (b as any)._musculoAlvo?.includes(foco) || (b as any).grupo.toLowerCase() === foco ? 0 : 1;
+      return aIsFoco - bIsFoco;
+    });
+  }
+  
   return {
     titulo: dia.titulo,
-    exercicios: dia.exercicios.map((exercicio) => {
-      // TEAM_008: no grupo "cardio" os campos do modelo já são TEMPO/DISTÂNCIA
-      // (1 série = minutos contínuos; várias = tiros de X–Y segundos) — a regra
-      // do objetivo, feita para reps de musculação, destruía essa semântica.
-      // TEAM_009: "prescricao_fixa" vale o mesmo para estilos periodizados —
-      // um modelo ondulante/DUP existe justamente porque cada dia tem um
-      // esquema de reps diferente; achatar na regra apagaria o método.
-      const mantemPrescricao = exercicio.grupo === 'cardio' || exercicio.prescricao_fixa === true;
-      return {
-        nome: exercicio.nome,
-        grupo: exercicio.grupo,
-        tipo: exercicio.tipo,
-        series: mantemPrescricao ? exercicio.series : regra.series,
-        repeticoes_min: mantemPrescricao ? exercicio.repeticoes_min : regra.repeticoes_min,
-        repeticoes_max: mantemPrescricao ? exercicio.repeticoes_max : regra.repeticoes_max,
-        descanso_segundos: mantemPrescricao ? exercicio.descanso_segundos : regra.descanso_segundos,
-        // Carga inicial sugerida = fração do peso corporal do exercício (kg).
-        carga_sugerida_kg:
-          exercicio.percentual_carga_peso_corporal === null
-            ? null
-            : arredondarCarga(perfil.peso_kg * exercicio.percentual_carga_peso_corporal),
-        distancia_km: exercicio.distancia_km ?? null,
-        dicas: exercicio.dicas,
-      };
-    }),
+    exercicios: exerciciosOrdenados.map(({ _musculoAlvo, ...rest }) => rest as any),
   };
 }
 

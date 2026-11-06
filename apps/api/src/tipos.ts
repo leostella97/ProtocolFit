@@ -99,6 +99,12 @@ export interface Perfil {
    * "padrao" = dieta base do objetivo, slug = "{objetivo}-{slug}.json".
    */
   variacao_dieta: string | null;
+  /**
+   * Músculo foco para adaptação do plano de treino.
+   * Pode ser um grupo amplo como "ombro" ou específico como "deltoide posterior".
+   * Usado para aumentar volume e priorizar exercícios que ativam o músculo.
+   */
+  musculo_focado: string | null;
 }
 
 /** Estrutura de um exercício DENTRO do modelo JSON mestre (antes da montagem). */

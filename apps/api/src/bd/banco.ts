@@ -88,6 +88,8 @@ interface LinhaPerfil {
   variacao_treino: string | null;
   /** TEAM_015: estilo de dieta (null = automático, segue o treino). */
   variacao_dieta: string | null;
+  /** Músculo foco para adaptação do plano. */
+  musculo_focado: string | null;
   /** Data da última atualização. */
   atualizado_em: string;
 }
@@ -222,6 +224,10 @@ function migrarTabelas(): void {
   if (!colunas.some((coluna) => coluna.name === 'variacao_dieta')) {
     banco.exec('ALTER TABLE perfis ADD COLUMN variacao_dieta TEXT');
   }
+  // Músculo foco para personalização de treino.
+  if (!colunas.some((coluna) => coluna.name === 'musculo_focado')) {
+    banco.exec('ALTER TABLE perfis ADD COLUMN musculo_focado TEXT');
+  }
 }
 
 /** Executa a criação do esquema assim que o módulo é importado. */
@@ -292,8 +298,8 @@ export function salvarPerfil(
 ): Perfil {
   banco
     .prepare(
-      `INSERT INTO perfis (usuario_id, sexo, faixa_etaria, peso_kg, altura_cm, objetivo, frequencia_semanal, dias_disponiveis, modalidade, nivel, variacao_treino, variacao_dieta)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `INSERT INTO perfis (usuario_id, sexo, faixa_etaria, peso_kg, altura_cm, objetivo, frequencia_semanal, dias_disponiveis, modalidade, nivel, variacao_treino, variacao_dieta, musculo_focado)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
        ON CONFLICT (usuario_id) DO UPDATE SET
          sexo = excluded.sexo,
          faixa_etaria = excluded.faixa_etaria,
@@ -306,6 +312,7 @@ export function salvarPerfil(
          nivel = excluded.nivel,
          variacao_treino = excluded.variacao_treino,
          variacao_dieta = excluded.variacao_dieta,
+         musculo_focado = excluded.musculo_focado,
          atualizado_em = strftime('%Y-%m-%dT%H:%M:%fZ','now')`,
     )
     .run(
@@ -321,6 +328,7 @@ export function salvarPerfil(
       dados.nivel,
       dados.variacao_treino ?? null,
       dados.variacao_dieta ?? null,
+      dados.musculo_focado ?? null,
     );
   return buscarPerfilPorUsuario(usuarioId) as Perfil;
 }

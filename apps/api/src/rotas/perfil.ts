@@ -50,6 +50,8 @@ interface CorpoPerfil {
   variacao_treino?: string | null;
   /** TEAM_015: estilo de dieta ("auto"/ausente = segue o treino). */
   variacao_dieta?: string | null;
+  /** Músculo foco para adaptação do plano de treino. */
+  musculo_focado?: string | null;
 }
 
 /** Formato aceito para o identificador de estilo de treino (slug). */
@@ -205,6 +207,7 @@ export async function rotasPerfil(app: FastifyInstance): Promise<void> {
           corpo.variacao_dieta === 'auto' || corpo.variacao_dieta === undefined
             ? null
             : corpo.variacao_dieta,
+        musculo_focado: corpo.musculo_focado ?? null,
       });
 
       // Gera e clona os planos (treino + dieta) para a tabela do usuário.

@@ -52,6 +52,11 @@ export interface Perfil {
    * "padrao" = dieta base do objetivo, slug = "{objetivo}-{slug}.json".
    */
   variacao_dieta: string | null;
+  /**
+   * Músculo foco para adaptação do plano de treino.
+   * Ex.: "ombro", "deltoide posterior". Null desativa o foco.
+   */
+  musculo_focado: string | null;
 }
 
 /** Estilo (variação) de treino disponível para uma combinação. */

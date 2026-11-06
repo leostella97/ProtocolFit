@@ -165,13 +165,18 @@ export async function recalcularPlanos(): Promise<{ perfil: Perfil; treino: Plan
  */
 export async function atualizarEstiloDeTreino(
   variacao: string | null,
+  musculoFocado?: string | null,
 ): Promise<{ perfil: Perfil; treino: PlanoTreino; dieta: PlanoDieta }> {
   if (MODO_LOCAL) {
-    return local.atualizarEstiloDeTreinoLocal(variacao);
+    return local.atualizarEstiloDeTreinoLocal(variacao, musculoFocado);
+  }
+  const body: Record<string, unknown> = { variacao_treino: variacao };
+  if (musculoFocado !== undefined) {
+    body.musculo_focado = musculoFocado;
   }
   return chamarApi('/perfil/treino', {
     method: 'PATCH',
-    body: JSON.stringify({ variacao_treino: variacao }),
+    body: JSON.stringify(body),
   });
 }
 

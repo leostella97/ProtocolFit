@@ -106,6 +106,8 @@ export default function PaginaDoPerfil() {
   const [opcoes, definirOpcoes] = useState<OpcoesDoSistema | null>(null);
   // Estilo de treino escolhido no seletor ("padrao" = modelo clássico).
   const [estiloEscolhido, definirEstiloEscolhido] = useState<string>('padrao');
+  // Músculo focado escolhido para adaptação do treino.
+  const [musculoFocado, definirMusculoFocado] = useState<string>('');
   // Troca de estilo em andamento.
   const [aplicandoEstilo, definirAplicandoEstilo] = useState(false);
   // Mensagens de sucesso/erro da troca de estilo.
@@ -147,6 +149,8 @@ export default function PaginaDoPerfil() {
       definirEstiloEscolhido(planoAtual.perfil.variacao_treino ?? 'padrao');
       // TEAM_015: null no perfil = dieta automática (segue o treino).
       definirEstiloDietaEscolhido(planoAtual.perfil.variacao_dieta ?? 'auto');
+      // Sincroniza músculo focado
+      definirMusculoFocado(planoAtual.perfil.musculo_focado ?? '');
     } catch (erroCapturado: unknown) {
       // Erro da API com status conhecido.
       if (erroCapturado instanceof ErroDaApi) {
@@ -251,12 +255,14 @@ export default function PaginaDoPerfil() {
     definirMensagemDoEstilo(null);
     definirErroDoEstilo(null);
     try {
-      // Gera os planos já com o novo estilo escolhido.
+      // Gera os planos já com o novo estilo escolhido e músculo focado.
       const resultado = await atualizarEstiloDeTreino(
         estiloEscolhido === 'padrao' ? null : estiloEscolhido,
+        musculoFocado.trim() ? musculoFocado.trim() : null,
       );
       // Atualiza a tela com os planos recém-gerados.
       definirPlano({ perfil: resultado.perfil, treino: resultado.treino, dieta: resultado.dieta });
+      definirMusculoFocado(resultado.perfil.musculo_focado ?? '');
       definirMensagemDoEstilo(
         `Estilo aplicado! Seu treino agora é "${resultado.treino.nome}" (versão ${resultado.treino.versao}).`,
       );
@@ -467,8 +473,8 @@ export default function PaginaDoPerfil() {
   const estiloAtual = perfil.variacao_treino ?? 'padrao';
   const rotuloDoEstiloAtual =
     estilosDisponiveis.find((estilo) => estilo.id === estiloAtual)?.nome ?? 'Padrão';
-  // Só habilita o botão quando o estilo escolhido muda de fato.
-  const estiloMudou = estiloEscolhido !== estiloAtual;
+  // Só habilita o botão quando o estilo ou músculo focado escolhido muda de fato.
+  const estiloMudou = estiloEscolhido !== estiloAtual || (musculoFocado ?? '') !== (perfil.musculo_focado ?? '');
 
   // TEAM_015: estilos de dieta do objetivo atual e o rótulo do estilo vigente
   // (null no perfil = "Automática", que segue o pareamento do treino).
@@ -795,12 +801,26 @@ export default function PaginaDoPerfil() {
                   );
                 })}
               </div>
-              {/* Botão de aplicação + feedback da troca de estilo. */}
-              <div className="flex flex-wrap items-center gap-3">
-                <Botao onClick={() => void aplicarEstilo()} disabled={aplicandoEstilo || !estiloMudou}>
-                  {aplicandoEstilo ? <Loader2 className="animate-spin" /> : <Sparkles />} Aplicar
-                  estilo
-                </Botao>
+              {/* Músculo foco para adaptação do treino */}
+              <div className="grid gap-2 sm:grid-cols-[1fr_auto] items-end">
+                <div className="space-y-1.5">
+                  <Rotulo htmlFor="musculo-focado-perfil">Músculo focado</Rotulo>
+                  <CampoDeEntrada
+                    id="musculo-focado-perfil"
+                    placeholder="ex.: ombro, deltoide posterior"
+                    value={musculoFocado}
+                    onChange={(evento) => definirMusculoFocado(evento.target.value)}
+                    disabled={aplicandoEstilo}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    O treino será adaptado para priorizar esse músculo: +1 série e priorização no início do dia.
+                  </p>
+                </div>
+                <div className="flex flex-wrap items-center gap-3">
+                  <Botao onClick={() => void aplicarEstilo()} disabled={aplicandoEstilo || !estiloMudou}>
+                    {aplicandoEstilo ? <Loader2 className="animate-spin" /> : <Sparkles />} Aplicar
+                    estilo
+                  </Botao>
                 {mensagemDoEstilo ? (
                   <span className="text-sm font-medium text-primary">{mensagemDoEstilo}</span>
                 ) : null}

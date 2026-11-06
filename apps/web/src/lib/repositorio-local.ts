@@ -699,6 +699,7 @@ export async function recalcularPlanosLocal(): Promise<{ perfil: Perfil; treino:
  */
 export async function atualizarEstiloDeTreinoLocal(
   variacao: string | null,
+  musculoFocado?: string | null,
 ): Promise<{ perfil: Perfil; treino: PlanoTreino; dieta: PlanoDieta }> {
   const banco = lerBanco();
   const conta = exigirSessao(banco);
@@ -717,8 +718,11 @@ export async function atualizarEstiloDeTreinoLocal(
       throw new ErroDaApi(400, 'Estilo de treino indisponível.');
     }
   }
-  // Grava o estilo e regenera os planos (nova versão, antigas inativas).
+  // Grava o estilo e músculo focado e regenera os planos (nova versão, antigas inativas).
   perfil.variacao_treino = estiloNormalizado;
+  if (musculoFocado !== undefined) {
+    perfil.musculo_focado = musculoFocado || null;
+  }
   const planos = await gerarPlanos(banco, conta.id, perfil);
   salvarBanco(banco);
   return { perfil, ...planos };

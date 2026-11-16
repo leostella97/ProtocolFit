@@ -6,11 +6,14 @@
  * ficam apenas no navegador dele — sem servidor e sem envio de informações.
  * TEAM_005: o aviso ganhou um botão "X" que fecha a faixa; a escolha fica
  * gravada no navegador e o aviso não volta a aparecer nas próximas visitas.
+ * TEAM_018: a faixa só é renderizada DEPOIS da verificação no navegador —
+ * antes ela saía no HTML estático e sumia num flash ("aparece e some")
+ * para quem já tinha dispensado o aviso.
  * ---------------------------------------------------------------------------
  */
 'use client';
 
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Info, X } from 'lucide-react';
 import { Botao } from '@/components/ui/button';
 import { MODO_LOCAL } from '@/lib/api';
@@ -18,23 +21,18 @@ import { MODO_LOCAL } from '@/lib/api';
 /** Chave que lembra que o visitante já fechou o aviso do modo navegador. */
 const CHAVE_AVISO_DISPENSADO = 'protocolfit_aviso_local_dispensado';
 
-/**
- * Efeito que roda ANTES da pintura no navegador (useLayoutEffect) e cai para
- * useEffect no servidor (onde useLayoutEffect não existe). Assim, quem já
- * fechou o aviso não vê nem um flash da faixa ao carregar a página.
- */
-const useEfeitoAntesDaPintura = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
-
 /** Aviso do modo navegador (não renderiza nada no modo servidor). */
 export function AvisoModoLocal() {
+  // TEAM_018: só decide depois de montar no navegador — o HTML estático não
+  // conhece o localStorage, então começar "visível" causava o flash da faixa.
+  const [verificado, definirVerificado] = useState(false);
   // true quando o visitante fecha o aviso (nesta sessão ou em visita anterior).
   const [dispensado, definirDispensado] = useState(false);
 
   // Ao montar no navegador, recupera a preferência gravada pelo visitante.
-  useEfeitoAntesDaPintura(() => {
-    if (window.localStorage.getItem(CHAVE_AVISO_DISPENSADO) === '1') {
-      definirDispensado(true);
-    }
+  useEffect(() => {
+    definirDispensado(window.localStorage.getItem(CHAVE_AVISO_DISPENSADO) === '1');
+    definirVerificado(true);
   }, []);
 
   /** Fecha o aviso e grava a escolha para não exibi-lo de novo. */
@@ -43,9 +41,10 @@ export function AvisoModoLocal() {
     definirDispensado(true);
   }
 
-  // No modo servidor (API + SQLite) não há nada a avisar; e depois que o
-  // visitante fecha a faixa, ela não deve voltar a ocupar espaço na tela.
-  if (!MODO_LOCAL || dispensado) {
+  // No modo servidor (API + SQLite) não há nada a avisar; antes da checagem
+  // no navegador também não renderiza nada (evita o flash no HTML estático);
+  // e depois que o visitante fecha a faixa, ela não volta a ocupar a tela.
+  if (!MODO_LOCAL || !verificado || dispensado) {
     return null;
   }
   // A faixa fica no FLUXO normal (sem fixed/sticky): ocupa o topo da página e

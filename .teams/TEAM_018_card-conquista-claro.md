@@ -85,5 +85,15 @@ Rebase aplicado sem conflitos textuais, mas o merge trouxe problemas:
   seja estável entre renders.
 - Sem dependências novas; somente Canvas 2D nativo.
 
+## Correções pós-merge (mesma equipe)
+- **Confetes removidos** do card a pedido do usuário.
+- **Flash do AvisoModoLocal** ("aviso aparece e some ao abrir a página"):
+  a faixa saía no HTML estático (`dispensado=false` inicial) e só sumia
+  após a hidratação ler o localStorage — quem já tinha fechado via um
+  flash + deslocamento de layout. Agora o componente começa oculto
+  (`verificado=false`, igual ao padrão do ProvedorDoTermo) e só renderiza
+  no cliente, quando a preferência é conhecida. `useLayoutEffect` virou
+  código morto e foi removido.
+
 ## Bloqueios / TODO
 - Revisão visual final do PNG é manual (não há screenshot no CI).

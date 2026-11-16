@@ -1,10 +1,10 @@
 /**
- * cartao-conquista.tsx — TEAM_016
+ * cartao-conquista.tsx — TEAM_016 · TEAM_018
  * ---------------------------------------------------------------------------
  * Cartão de conquista do painel: desenha um PNG 1080×1080 (quadrado, formato
  * Instagram) com o progresso do usuário — sequência de check-ins, total,
- * recorde e evolução de peso — e oferece três formas de levar a imagem em
- * diante:
+ * recorde, dias de check-in no mês e evolução de peso — e oferece três
+ * formas de levar a imagem em diante:
  *
  *  1. COMPARTILHAR — navigator.share() com o arquivo PNG anexado. É o único
  *     caminho que manda a IMAGEM de verdade para WhatsApp/Instagram (mobile).
@@ -14,6 +14,10 @@
  *
  * A prévia do card é o próprio <canvas> escalado por CSS: o que o usuário vê
  * é exatamente o que sai no arquivo (WYSIWYG).
+ *
+ * TEAM_018: tema CLARO e festivo (gradiente pastel + confetes + ticket
+ * branco) com foco em alegria e motivação — frase motivacional dinâmica e
+ * a nova estatística "dias no mês" na grade 2×2.
  * ---------------------------------------------------------------------------
  */
 'use client';
@@ -23,6 +27,7 @@ import { Download, Facebook, Instagram, Loader2, MessageCircle, Share2, Target, 
 import { Botao } from '@/components/ui/button';
 import { Cartao, CartaoCabecalho, CartaoConteudo, CartaoDescricao, CartaoTitulo } from '@/components/ui/card';
 import { formatarDecimal, rotuloDoObjetivo } from '@/lib/util';
+import { hojeLocal } from '@/lib/checkin-util';
 import type { Perfil, ResumoDeCheckins } from '@/lib/tipos';
 
 /** Propriedades do cartão de conquista. */
@@ -64,16 +69,55 @@ function retanguloArredondado(
   ctx.closePath();
 }
 
+/** Paleta festiva dos confetes (verde, dourado, coral, céu e lilás). */
+const CORES_DOS_CONFETES = ['#34d399', '#fbbf24', '#fb7185', '#38bdf8', '#a78bfa'];
+
+/**
+ * Espalha confetes por uma região do canvas em posições DETERMINÍSTICAS
+ * (múltiplos primos módulo o tamanho — sem Math.random): a prévia é
+ * redesenhada a cada mudança de dado e a festa não pode "dançar".
+ */
+function espalharConfetes(
+  ctx: CanvasRenderingContext2D,
+  quantidade: number,
+  alfa: number,
+  regiao: { x: number; y: number; largura: number; altura: number },
+) {
+  ctx.globalAlpha = alfa;
+  for (let i = 0; i < quantidade; i += 1) {
+    // Posição pseudo-aleatória estável dentro da região informada.
+    const x = regiao.x + ((i * 173 + 97) % Math.round(regiao.largura));
+    const y = regiao.y + ((i * 269 + 41) % Math.round(regiao.altura));
+    ctx.fillStyle = CORES_DOS_CONFETES[i % CORES_DOS_CONFETES.length];
+    if (i % 3 === 0) {
+      // Fitinha retangular rotacionada.
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(i * 0.7);
+      ctx.fillRect(-9, -3, 18, 6);
+      ctx.restore();
+    } else {
+      // Confete circular.
+      ctx.beginPath();
+      ctx.arc(x, y, 4 + (i % 3), 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+  ctx.globalAlpha = 1;
+}
+
 /**
  * Desenha o card completo no contexto 2D informado.
  * Recebe os dados já formatados para manter a função pura de desenho.
+ * TEAM_018: tema claro — gradiente pastel, confetes e ticket branco.
  */
 function desenharCardDeConquista(
   ctx: CanvasRenderingContext2D,
   dados: {
     destaque: string;
     rotuloDoDestaque: string;
-    estatisticas: { rotulo: string; valor: string }[];
+    fraseMotivacional: string;
+    estatisticas: { rotulo: string; valor: string; emoji: string; cor: string }[];
     nome: string;
     dataFormatada: string;
     rotuloDoObjetivo: string;
@@ -81,88 +125,136 @@ function desenharCardDeConquista(
 ) {
   const S = TAMANHO_DO_CARD;
 
-  // Fundo: gradiente diagonal verde-escuro (identidade do produto).
+  // Fundo: gradiente diagonal pastel (pêssego → menta → céu) — leve e alegre.
   const gradienteFundo = ctx.createLinearGradient(0, 0, S, S);
-  gradienteFundo.addColorStop(0, '#0d241a');
-  gradienteFundo.addColorStop(0.55, '#123a28');
-  gradienteFundo.addColorStop(1, '#0b1d15');
+  gradienteFundo.addColorStop(0, '#fff7ed');
+  gradienteFundo.addColorStop(0.5, '#ecfdf5');
+  gradienteFundo.addColorStop(1, '#f0f9ff');
   ctx.fillStyle = gradienteFundo;
   ctx.fillRect(0, 0, S, S);
 
-  // Brilho radial sutil atrás do número de destaque.
-  const brilho = ctx.createRadialGradient(S / 2, S * 0.44, 60, S / 2, S * 0.44, 560);
-  brilho.addColorStop(0, 'rgba(74, 222, 128, 0.22)');
-  brilho.addColorStop(1, 'rgba(74, 222, 128, 0)');
-  ctx.fillStyle = brilho;
-  ctx.fillRect(0, 0, S, S);
+  // Confetes em todo o canvas — os do centro ficam escondidos sob o ticket.
+  espalharConfetes(ctx, 70, 0.55, { x: 0, y: 0, largura: S, altura: S });
 
-  // Moldura fina interna.
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.14)';
+  // ── Ticket branco interno com sombra suave ─────────────────────────────
+  ctx.save();
+  ctx.shadowColor = 'rgba(15, 23, 42, 0.12)';
+  ctx.shadowBlur = 40;
+  ctx.shadowOffsetY = 14;
+  ctx.fillStyle = '#ffffff';
+  retanguloArredondado(ctx, 56, 56, S - 112, S - 112, 48);
+  ctx.fill();
+  ctx.restore();
+  ctx.strokeStyle = 'rgba(5, 150, 105, 0.18)';
   ctx.lineWidth = 3;
-  retanguloArredondado(ctx, 36, 36, S - 72, S - 72, 40);
+  retanguloArredondado(ctx, 56, 56, S - 112, S - 112, 48);
   ctx.stroke();
+
+  // Confetes suaves nos cantos internos do ticket (fora do eixo do conteúdo).
+  espalharConfetes(ctx, 12, 0.3, { x: 80, y: 80, largura: 270, altura: 300 });
+  espalharConfetes(ctx, 12, 0.3, { x: S - 350, y: 80, largura: 270, altura: 300 });
+  espalharConfetes(ctx, 8, 0.3, { x: 80, y: 860, largura: 240, altura: 140 });
+  espalharConfetes(ctx, 8, 0.3, { x: S - 320, y: 860, largura: 240, altura: 140 });
 
   // ── Cabeçalho: troféu + wordmark centrados ─────────────────────────────
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.font = '54px "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
-  ctx.fillText('🏆', S / 2 - 190, 150);
-  ctx.fillStyle = '#ffffff';
-  ctx.font = '700 52px "Segoe UI", system-ui, sans-serif';
+  ctx.fillText('🏆', S / 2 - 200, 130);
+  ctx.fillStyle = '#065f46';
+  ctx.font = '800 56px "Segoe UI", system-ui, sans-serif';
   ctx.textAlign = 'left';
-  ctx.fillText('ProtocolFit', S / 2 - 140, 152);
+  ctx.fillText('ProtocolFit', S / 2 - 140, 132);
 
-  // Divisor fino sob o cabeçalho.
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.16)';
+  // Tagline festiva em caixa alta (espaçamento manual entre letras).
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#d97706';
+  ctx.font = '700 27px "Segoe UI", system-ui, sans-serif';
+  ctx.fillText('S U A   J O R N A D A   E M   N Ú M E R O S', S / 2, 186);
+
+  // Divisor fino sob o cabeçalho (verde bem suave).
+  ctx.strokeStyle = 'rgba(5, 150, 105, 0.16)';
   ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.moveTo(160, 220);
-  ctx.lineTo(S - 160, 220);
+  ctx.moveTo(160, 222);
+  ctx.lineTo(S - 160, 222);
   ctx.stroke();
 
-  // ── Destaque central: número gigante + rótulo ──────────────────────────
-  ctx.textAlign = 'center';
-  ctx.fillStyle = '#4ade80';
-  ctx.font = '800 260px "Segoe UI", system-ui, sans-serif';
-  ctx.fillText(dados.destaque, S / 2, S * 0.46);
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
-  ctx.font = '600 54px "Segoe UI", system-ui, sans-serif';
-  ctx.fillText(dados.rotuloDoDestaque.toUpperCase(), S / 2, S * 0.46 + 190);
+  // ── Destaque central: brilho dourado + número gigante em gradiente ─────
+  const brilho = ctx.createRadialGradient(S / 2, 400, 40, S / 2, 400, 330);
+  brilho.addColorStop(0, 'rgba(251, 191, 36, 0.32)');
+  brilho.addColorStop(1, 'rgba(251, 191, 36, 0)');
+  ctx.fillStyle = brilho;
+  ctx.fillRect(0, 0, S, S);
 
-  // ── Grade de 3 estatísticas ────────────────────────────────────────────
-  const larguraDaCaixa = 264;
-  const alturaDaCaixa = 190;
-  const espacoEntre = 32;
-  const xInicial = (S - (larguraDaCaixa * 3 + espacoEntre * 2)) / 2;
-  const yCaixas = S * 0.66;
+  // Faíscas decorativas flanqueando o número de destaque.
+  ctx.font = '46px "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
+  ctx.fillText('✨', S / 2 - 300, 330);
+  ctx.fillText('✨', S / 2 + 300, 330);
+
+  // Número de destaque com gradiente verde (identidade) e sombra suave.
+  const gradienteNumero = ctx.createLinearGradient(0, 290, 0, 520);
+  gradienteNumero.addColorStop(0, '#34d399');
+  gradienteNumero.addColorStop(1, '#059669');
+  ctx.save();
+  ctx.shadowColor = 'rgba(5, 150, 105, 0.30)';
+  ctx.shadowBlur = 26;
+  ctx.fillStyle = gradienteNumero;
+  ctx.font = '800 230px "Segoe UI", system-ui, sans-serif';
+  ctx.fillText(dados.destaque, S / 2, 410);
+  ctx.restore();
+
+  // Rótulo do destaque + frase motivacional da jornada.
+  ctx.fillStyle = '#334155';
+  ctx.font = '700 48px "Segoe UI", system-ui, sans-serif';
+  ctx.fillText(dados.rotuloDoDestaque.toUpperCase(), S / 2, 532);
+  ctx.fillStyle = '#64748b';
+  ctx.font = 'italic 600 33px "Segoe UI", system-ui, sans-serif';
+  ctx.fillText(dados.fraseMotivacional, S / 2, 584);
+
+  // ── Grade 2×2 de estatísticas (cada uma com emoji e cor própria) ────────
+  const larguraDaCaixa = 400;
+  const alturaDaCaixa = 130;
+  const espacoX = 56;
+  const espacoY = 22;
+  const xInicial = (S - (larguraDaCaixa * 2 + espacoX)) / 2;
+  const yInicial = 614;
 
   dados.estatisticas.forEach((estatistica, indice) => {
-    const x = xInicial + indice * (larguraDaCaixa + espacoEntre);
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.07)';
-    retanguloArredondado(ctx, x, yCaixas, larguraDaCaixa, alturaDaCaixa, 24);
+    const coluna = indice % 2;
+    const linha = Math.floor(indice / 2);
+    const x = xInicial + coluna * (larguraDaCaixa + espacoX);
+    const y = yInicial + linha * (alturaDaCaixa + espacoY);
+
+    // Caixa tingida com a cor da estatística (fundo ~9%, borda ~33%).
+    ctx.fillStyle = `${estatistica.cor}17`;
+    retanguloArredondado(ctx, x, y, larguraDaCaixa, alturaDaCaixa, 26);
     ctx.fill();
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.14)';
+    ctx.strokeStyle = `${estatistica.cor}55`;
     ctx.lineWidth = 2;
-    retanguloArredondado(ctx, x, yCaixas, larguraDaCaixa, alturaDaCaixa, 24);
+    retanguloArredondado(ctx, x, y, larguraDaCaixa, alturaDaCaixa, 26);
     ctx.stroke();
 
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '800 64px "Segoe UI", system-ui, sans-serif';
-    ctx.fillText(estatistica.valor, x + larguraDaCaixa / 2, yCaixas + 82);
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-    ctx.font = '500 30px "Segoe UI", system-ui, sans-serif';
-    ctx.fillText(estatistica.rotulo.toUpperCase(), x + larguraDaCaixa / 2, yCaixas + 142);
+    // Emoji + valor colorido + rótulo em caixa alta.
+    ctx.font = '30px "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
+    ctx.fillText(estatistica.emoji, x + larguraDaCaixa / 2, y + 30);
+    ctx.fillStyle = estatistica.cor;
+    ctx.font = '800 46px "Segoe UI", system-ui, sans-serif';
+    ctx.fillText(estatistica.valor, x + larguraDaCaixa / 2, y + 78);
+    ctx.fillStyle = '#64748b';
+    ctx.font = '600 23px "Segoe UI", system-ui, sans-serif';
+    ctx.fillText(estatistica.rotulo.toUpperCase(), x + larguraDaCaixa / 2, y + 112);
   });
 
-  // ── Rodapé: nome · data · objetivo · site ──────────────────────────────
+  // ── Rodapé: nome · objetivo · data · site ──────────────────────────────
   const assinatura = dados.nome ? `${dados.nome} · ` : '';
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+  ctx.fillStyle = '#334155';
   ctx.font = '600 36px "Segoe UI", system-ui, sans-serif';
-  ctx.fillText(`${assinatura}${dados.rotuloDoObjetivo} · ${dados.dataFormatada}`, S / 2, S - 170);
+  ctx.fillText(`${assinatura}${dados.rotuloDoObjetivo} · ${dados.dataFormatada}`, S / 2, 950);
 
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+  ctx.fillStyle = '#94a3b8';
   ctx.font = '500 30px "Segoe UI", system-ui, sans-serif';
-  ctx.fillText(URL_DO_SITE, S / 2, S - 110);
+  ctx.fillText(URL_DO_SITE, S / 2, 998);
 }
 
 /** Cartão que gera e compartilha a imagem de conquista do usuário. */
@@ -184,13 +276,31 @@ export function CartaoConquista({ perfil, checkins, deltaDePeso, nome }: Proprie
     ? (checkins.sequencia_atual === 1 ? 'dia seguido de treino' : 'dias seguidos de treino')
     : checkins.total > 0 ? 'check-ins concluídos' : 'da jornada';
 
-  // Terceira estatística: kg evoluído quando há delta, senão o objetivo.
+  // TEAM_018: dias com check-in no mês corrente — a nova estatística do card.
+  const diasNoMes = useMemo(() => {
+    // Prefixo AAAA-MM do dia civil local (mesmo recorte de data do sistema).
+    const mesAtual = hojeLocal().slice(0, 7);
+    // Conta os registros do mês — mesma semântica da estatística "check-ins".
+    return checkins.registros.filter((registro) => registro.data.startsWith(mesAtual)).length;
+  }, [checkins.registros]);
+
+  // TEAM_018: frase motivacional muda conforme o momento da jornada.
+  const fraseMotivacional =
+    checkins.sequencia_atual >= 7
+      ? 'Uma semana de foco — você está imparável! 🚀'
+      : checkins.sequencia_atual > 0
+        ? 'Sua sequência está em chamas — continue! 🔥'
+        : checkins.total > 0
+          ? 'Cada check-in é uma vitória — celebre! 🎉'
+          : 'O primeiro passo é o mais corajoso — bora! 💪';
+
+  // Quarta estatística: kg evoluído quando há delta, senão o objetivo.
   // Memoizada — a identidade do objeto entra nas deps do efeito de desenho.
-  const terceiraEstatistica = useMemo(
+  const estatisticaDePeso = useMemo(
     () =>
       deltaDePeso !== null && deltaDePeso !== 0
-        ? { rotulo: 'kg evoluídos', valor: `${deltaDePeso > 0 ? '+' : '−'}${formatarDecimal(Math.abs(deltaDePeso))}` }
-        : { rotulo: 'objetivo', valor: rotuloDoObjetivo(perfil.objetivo) },
+        ? { rotulo: 'kg evoluídos', valor: `${deltaDePeso > 0 ? '+' : '−'}${formatarDecimal(Math.abs(deltaDePeso))}`, emoji: '⚖️', cor: '#e11d48' }
+        : { rotulo: 'objetivo', valor: rotuloDoObjetivo(perfil.objetivo), emoji: '🎯', cor: '#e11d48' },
     [deltaDePeso, perfil.objetivo],
   );
 
@@ -226,17 +336,20 @@ export function CartaoConquista({ perfil, checkins, deltaDePeso, nome }: Proprie
       desenharCardDeConquista(contexto, {
         destaque,
         rotuloDoDestaque,
+        fraseMotivacional,
         estatisticas: [
-          { rotulo: 'check-ins', valor: String(checkins.total) },
-          { rotulo: 'recorde', valor: `${checkins.sequencia_maxima}d` },
-          terceiraEstatistica,
+          { rotulo: 'check-ins', valor: String(checkins.total), emoji: '✅', cor: '#059669' },
+          { rotulo: 'recorde', valor: `${checkins.sequencia_maxima}d`, emoji: '🏅', cor: '#d97706' },
+          // TEAM_018: dias de check-in no mês corrente.
+          { rotulo: 'dias no mês', valor: String(diasNoMes), emoji: '📅', cor: '#0284c7' },
+          estatisticaDePeso,
         ],
         nome,
         dataFormatada: new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' }),
         rotuloDoObjetivo: rotuloDoObjetivo(perfil.objetivo),
       });
     }
-  }, [destaque, rotuloDoDestaque, terceiraEstatistica, checkins.total, checkins.sequencia_maxima, nome, perfil.objetivo]);
+  }, [destaque, rotuloDoDestaque, fraseMotivacional, estatisticaDePeso, diasNoMes, checkins.total, checkins.sequencia_maxima, nome, perfil.objetivo]);
 
   // Detecta suporte a compartilhamento de arquivo (guard: navigator existe só no cliente).
   useEffect(() => {

@@ -8,18 +8,23 @@
  * gravada no navegador e o aviso não volta a aparecer nas próximas visitas.
  * TEAM_018: a faixa só é renderizada DEPOIS da verificação no navegador —
  * antes ela saía no HTML estático e sumia num flash ("aparece e some")
- * para quem já tinha dispensado o aviso.
+ * para quem já tinha dispensado o aviso; e agora só aparece nas páginas
+ * PÚBLICAS (index e cadastro) — dentro do app ela virava ruído.
  * ---------------------------------------------------------------------------
  */
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { Info, X } from 'lucide-react';
 import { Botao } from '@/components/ui/button';
 import { MODO_LOCAL } from '@/lib/api';
 
 /** Chave que lembra que o visitante já fechou o aviso do modo navegador. */
 const CHAVE_AVISO_DISPENSADO = 'protocolfit_aviso_local_dispensado';
+
+/** Páginas públicas onde o aviso faz sentido (visitante novo decide aqui). */
+const PAGINAS_COM_AVISO = ['/', '/cadastro'];
 
 /** Aviso do modo navegador (não renderiza nada no modo servidor). */
 export function AvisoModoLocal() {
@@ -28,6 +33,8 @@ export function AvisoModoLocal() {
   const [verificado, definirVerificado] = useState(false);
   // true quando o visitante fecha o aviso (nesta sessão ou em visita anterior).
   const [dispensado, definirDispensado] = useState(false);
+  // TEAM_018: rota atual — o aviso só aparece nas páginas públicas.
+  const caminhoAtual = (usePathname() ?? '/').replace(/\/+$/, '') || '/';
 
   // Ao montar no navegador, recupera a preferência gravada pelo visitante.
   useEffect(() => {
@@ -43,8 +50,9 @@ export function AvisoModoLocal() {
 
   // No modo servidor (API + SQLite) não há nada a avisar; antes da checagem
   // no navegador também não renderiza nada (evita o flash no HTML estático);
-  // e depois que o visitante fecha a faixa, ela não volta a ocupar a tela.
-  if (!MODO_LOCAL || !verificado || dispensado) {
+  // fora das páginas públicas o aviso não aparece; e depois que o visitante
+  // fecha a faixa, ela não volta a ocupar a tela.
+  if (!MODO_LOCAL || !verificado || dispensado || !PAGINAS_COM_AVISO.includes(caminhoAtual)) {
     return null;
   }
   // A faixa fica no FLUXO normal (sem fixed/sticky): ocupa o topo da página e

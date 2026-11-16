@@ -94,6 +94,9 @@ Rebase aplicado sem conflitos textuais, mas o merge trouxe problemas:
   (`verificado=false`, igual ao padrão do ProvedorDoTermo) e só renderiza
   no cliente, quando a preferência é conhecida. `useLayoutEffect` virou
   código morto e foi removido.
+- **Aviso restrito às páginas públicas** (a pedido): `usePathname` filtra
+  a exibição para `/` (index) e `/cadastro` — dentro do app a faixa virava
+  ruído. O botão X de dispensa já existia (TEAM_005) e foi mantido.
 
 ## Bloqueios / TODO
 - Revisão visual final do PNG é manual (não há screenshot no CI).

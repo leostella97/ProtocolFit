@@ -23,8 +23,10 @@
 ## Design do novo card (canvas 1080×1080)
 - Fundo: gradiente diagonal claro `#fff7ed → #ecfdf5 → #f0f9ff`.
 - ~~Confetes~~ **REMOVIDOS a pedido do usuário** ("remova esse confete") —
-  fundo limpo mantém o foco no número de destaque. As faíscas ✨ ao lado
-  do número foram mantidas (não são confete).
+  fundo limpo mantém o foco no número de destaque.
+- ~~Faíscas ✨~~ **REMOVIDAS a pedido** ("remova as estrelas") — restam só
+  os emojis da frase motivacional (código de outra equipe, ex.: "Sua
+  jornada começa hoje! ✨"), mantidos até confirmação do usuário.
 - Cartão interno: ticket branco (raio 48) com borda e sombra suave.
 - Cabeçalho: 🏆 + "ProtocolFit" em verde-escuro; tagline em caixa alta.
 - Destaque: número gigante com gradiente verde + brilho radial dourado;

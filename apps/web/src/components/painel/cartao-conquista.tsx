@@ -142,11 +142,6 @@ function desenharCardDeConquista(
   ctx.fillStyle = brilho;
   ctx.fillRect(0, 0, S, S);
 
-  // Faíscas decorativas flanqueando o número de destaque.
-  ctx.font = '46px "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
-  ctx.fillText('✨', S / 2 - 300, 330);
-  ctx.fillText('✨', S / 2 + 300, 330);
-
   // Número de destaque com gradiente verde (identidade) e sombra suave.
   const gradienteNumero = ctx.createLinearGradient(0, 290, 0, 520);
   gradienteNumero.addColorStop(0, '#34d399');

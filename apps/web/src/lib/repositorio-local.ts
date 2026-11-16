@@ -660,6 +660,9 @@ export async function salvarPerfilEGerarPlanosLocal(
       nivel: corpo.nivel ?? 'iniciante',
       variacao_treino: estiloGravado,
       variacao_dieta: estiloDietaGravado,
+      // TEAM_018: músculo foco nasce desligado — só é definido pelo PATCH
+      // de estilo de treino (atualizarEstiloDeTreinoLocal).
+      musculo_focado: null,
     };
     banco.perfis.push(perfil);
   }

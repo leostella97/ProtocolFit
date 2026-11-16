@@ -821,12 +821,14 @@ export default function PaginaDoPerfil() {
                     {aplicandoEstilo ? <Loader2 className="animate-spin" /> : <Sparkles />} Aplicar
                     estilo
                   </Botao>
-                {mensagemDoEstilo ? (
-                  <span className="text-sm font-medium text-primary">{mensagemDoEstilo}</span>
-                ) : null}
-                {erroDoEstilo ? (
-                  <span className="text-sm font-medium text-destructive">{erroDoEstilo}</span>
-                ) : null}
+                  {mensagemDoEstilo ? (
+                    <span className="text-sm font-medium text-primary">{mensagemDoEstilo}</span>
+                  ) : null}
+                  {erroDoEstilo ? (
+                    <span className="text-sm font-medium text-destructive">{erroDoEstilo}</span>
+                  ) : null}
+                </div>
+                {/* TEAM_018: </div> que faltava — a grade do músculo focado ficava aberta e quebrava o build. */}
               </div>
             </>
           )}

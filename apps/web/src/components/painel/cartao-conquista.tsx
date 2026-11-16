@@ -284,16 +284,6 @@ export function CartaoConquista({ perfil, checkins, deltaDePeso, nome }: Proprie
     return checkins.registros.filter((registro) => registro.data.startsWith(mesAtual)).length;
   }, [checkins.registros]);
 
-  // TEAM_018: frase motivacional muda conforme o momento da jornada.
-  const fraseMotivacional =
-    checkins.sequencia_atual >= 7
-      ? 'Uma semana de foco — você está imparável! 🚀'
-      : checkins.sequencia_atual > 0
-        ? 'Sua sequência está em chamas — continue! 🔥'
-        : checkins.total > 0
-          ? 'Cada check-in é uma vitória — celebre! 🎉'
-          : 'O primeiro passo é o mais corajoso — bora! 💪';
-
   // Quarta estatística: kg evoluído quando há delta, senão o objetivo.
   // Memoizada — a identidade do objeto entra nas deps do efeito de desenho.
   const estatisticaDePeso = useMemo(

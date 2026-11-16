@@ -288,6 +288,9 @@ export function buscarPerfilPorUsuario(usuarioId: number): Perfil | undefined {
     nivel: linha.nivel as Nivel,
     variacao_treino: linha.variacao_treino ?? null,
     variacao_dieta: linha.variacao_dieta ?? null,
+    // TEAM_018: o mapeamento esquecia o campo novo — sem ele o Perfil
+    // retornado perdia o músculo foco gravado (e o build quebrava).
+    musculo_focado: linha.musculo_focado ?? null,
   };
 }
 

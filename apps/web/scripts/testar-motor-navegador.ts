@@ -52,6 +52,7 @@ const perfilDeTeste: Perfil = {
   nivel: 'iniciante',
   variacao_treino: null,
   variacao_dieta: null,
+  musculo_focado: null,
 };
 
 /** Lista de verificações executadas. */

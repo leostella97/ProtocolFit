@@ -44,11 +44,39 @@
 
 ## Verificação
 - [x] testes base (jasmine) — 87/87 antes das mudanças
-- [x] typecheck web — limpo
+- [x] typecheck web + api — limpo
 - [x] testes após mudanças — 87/87
 - [x] build:pages + validação PWA — verde
+- [x] build:api — verde
 - [x] smoke test do desenho contra stub de canvas — 3 cenários,
       66 textos, coordenadas finitas (script temporário descartado)
+
+## Rebase + falhas encontradas no remoto (corrigidas nesta equipe)
+O `git push` inicial foi rejeitado: 19 commits novos no origin/main.
+Rebase aplicado sem conflitos textuais, mas o merge trouxe problemas:
+
+1. **Duplicata de `fraseMotivacional`** — o remoto (a6674af) adicionou uma
+   frase motivacional própria (consciente de recorde) no cabeçalho do
+   cartão. Mantida como FONTE ÚNICA: a mesma frase alimenta cabeçalho e
+   PNG. Minha versão mais simples foi removida.
+2. **BOM UTF-8 em 3 JSONs** (`dietas/luta-{bulk,cut,vegetariana}.json`,
+   commit b0a8e2b) — quebrava `JSON.parse` do copiar-modelos.mjs.
+   BOM removido dos arquivos.
+3. **`</div>` faltante** em `painel/perfil/page.tsx` (commit 68b6730) —
+   a grade do "músculo focado" ficava aberta; build Turbopack quebrado.
+4. **`musculo_focado` obrigatório sem valor em 3 pontos** (commit e53ea83):
+   - `web/src/lib/repositorio-local.ts` — perfil novo nascia sem o campo
+     (agora `null`: só o PATCH de estilo define o foco);
+   - `web/scripts/testar-motor-navegador.ts` — fixture de teste;
+   - `api/src/bd/banco.ts` — `buscarPerfilPorUsuario` não mapeava a
+     coluna nova, perdendo o valor gravado no retorno.
+
+## Nota de transferência
+- O remoto reduziu a prévia do canvas para `w-[216px]` fixo (série de
+  commits de ajuste). Mantido — decisão deles; o PNG segue 1080×1080.
+- `fraseMotivacional`/`metaAVista` (cabecalho) são de outra equipe —
+  avaliar no futuro se a lógica `seq > rec` (inalcançável, pois
+  sequencia_maxima >= sequencia_atual por definição) merece revisão.
 
 ## Decisões
 - "Dias no mês" conta **registros** de check-in (paridade com a estatística

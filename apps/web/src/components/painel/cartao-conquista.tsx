@@ -15,9 +15,9 @@
  * A prévia do card é o próprio <canvas> escalado por CSS: o que o usuário vê
  * é exatamente o que sai no arquivo (WYSIWYG).
  *
- * TEAM_018: tema CLARO e festivo (gradiente pastel + confetes + ticket
- * branco) com foco em alegria e motivação — frase motivacional dinâmica e
- * a nova estatística "dias no mês" na grade 2×2.
+ * TEAM_018: tema CLARO (gradiente pastel + ticket branco + brilho
+ * dourado) com foco em alegria e motivação — frase motivacional dinâmica
+ * e a nova estatística "dias no mês" na grade 2×2.
  * ---------------------------------------------------------------------------
  */
 'use client';
@@ -69,47 +69,11 @@ function retanguloArredondado(
   ctx.closePath();
 }
 
-/** Paleta festiva dos confetes (verde, dourado, coral, céu e lilás). */
-const CORES_DOS_CONFETES = ['#34d399', '#fbbf24', '#fb7185', '#38bdf8', '#a78bfa'];
-
-/**
- * Espalha confetes por uma região do canvas em posições DETERMINÍSTICAS
- * (múltiplos primos módulo o tamanho — sem Math.random): a prévia é
- * redesenhada a cada mudança de dado e a festa não pode "dançar".
- */
-function espalharConfetes(
-  ctx: CanvasRenderingContext2D,
-  quantidade: number,
-  alfa: number,
-  regiao: { x: number; y: number; largura: number; altura: number },
-) {
-  ctx.globalAlpha = alfa;
-  for (let i = 0; i < quantidade; i += 1) {
-    // Posição pseudo-aleatória estável dentro da região informada.
-    const x = regiao.x + ((i * 173 + 97) % Math.round(regiao.largura));
-    const y = regiao.y + ((i * 269 + 41) % Math.round(regiao.altura));
-    ctx.fillStyle = CORES_DOS_CONFETES[i % CORES_DOS_CONFETES.length];
-    if (i % 3 === 0) {
-      // Fitinha retangular rotacionada.
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.rotate(i * 0.7);
-      ctx.fillRect(-9, -3, 18, 6);
-      ctx.restore();
-    } else {
-      // Confete circular.
-      ctx.beginPath();
-      ctx.arc(x, y, 4 + (i % 3), 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-  ctx.globalAlpha = 1;
-}
-
 /**
  * Desenha o card completo no contexto 2D informado.
  * Recebe os dados já formatados para manter a função pura de desenho.
- * TEAM_018: tema claro — gradiente pastel, confetes e ticket branco.
+ * TEAM_018: tema claro — gradiente pastel e ticket branco (confetes
+ * removidos a pedido: fundo limpo mantém o foco no número de destaque).
  */
 function desenharCardDeConquista(
   ctx: CanvasRenderingContext2D,
@@ -133,9 +97,6 @@ function desenharCardDeConquista(
   ctx.fillStyle = gradienteFundo;
   ctx.fillRect(0, 0, S, S);
 
-  // Confetes em todo o canvas — os do centro ficam escondidos sob o ticket.
-  espalharConfetes(ctx, 70, 0.55, { x: 0, y: 0, largura: S, altura: S });
-
   // ── Ticket branco interno com sombra suave ─────────────────────────────
   ctx.save();
   ctx.shadowColor = 'rgba(15, 23, 42, 0.12)';
@@ -149,12 +110,6 @@ function desenharCardDeConquista(
   ctx.lineWidth = 3;
   retanguloArredondado(ctx, 56, 56, S - 112, S - 112, 48);
   ctx.stroke();
-
-  // Confetes suaves nos cantos internos do ticket (fora do eixo do conteúdo).
-  espalharConfetes(ctx, 12, 0.3, { x: 80, y: 80, largura: 270, altura: 300 });
-  espalharConfetes(ctx, 12, 0.3, { x: S - 350, y: 80, largura: 270, altura: 300 });
-  espalharConfetes(ctx, 8, 0.3, { x: 80, y: 860, largura: 240, altura: 140 });
-  espalharConfetes(ctx, 8, 0.3, { x: S - 320, y: 860, largura: 240, altura: 140 });
 
   // ── Cabeçalho: troféu + wordmark centrados ─────────────────────────────
   ctx.textAlign = 'center';

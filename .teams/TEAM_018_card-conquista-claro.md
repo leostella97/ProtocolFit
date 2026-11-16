@@ -22,9 +22,9 @@
 
 ## Design do novo card (canvas 1080×1080)
 - Fundo: gradiente diagonal claro `#fff7ed → #ecfdf5 → #f0f9ff`.
-- Confetes: 64 peças determinísticas (posição por multiplicação modular —
-  sem `Math.random`, re-render estável) em 5 cores festivas, círculos e
-  retângulos rotacionados; faixa externa + toques nos cantos do cartão.
+- ~~Confetes~~ **REMOVIDOS a pedido do usuário** ("remova esse confete") —
+  fundo limpo mantém o foco no número de destaque. As faíscas ✨ ao lado
+  do número foram mantidas (não são confete).
 - Cartão interno: ticket branco (raio 48) com borda e sombra suave.
 - Cabeçalho: 🏆 + "ProtocolFit" em verde-escuro; tagline em caixa alta.
 - Destaque: número gigante com gradiente verde + brilho radial dourado;

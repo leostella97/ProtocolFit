@@ -265,12 +265,12 @@ export function CartaoCheckin({ resumo, perfil, aoSalvar }: PropriedadesDoCartao
 
           <div className="space-y-1.5">
             <Rotulo htmlFor="checkin-peso">Peso de hoje (kg) — opcional</Rotulo>
+            {/* TEAM_019: mesmo motivo dos campos de cardio — vírgula decimal
+                pt-BR não chega ao estado num input type="number" no Chrome. */}
             <CampoDeEntrada
               id="checkin-peso"
-              type="number"
-              step="0.1"
-              min={30}
-              max={300}
+              type="text"
+              inputMode="decimal"
               placeholder="Deixe em branco para não pesar"
               value={pesoDoDia}
               onChange={(evento) => definirPesoDoDia(evento.target.value)}
@@ -300,25 +300,25 @@ export function CartaoCheckin({ resumo, perfil, aoSalvar }: PropriedadesDoCartao
                   </option>
                 ))}
               </MenuDeSelecao>
-              {/* Tempo de cardio em minutos. */}
+              {/* Tempo de cardio em minutos. TEAM_019: type="text" + inputMode
+                  em vez de type="number" — no Chrome/Safari o input numérico
+                  devolve "" quando o usuário digita vírgula decimal (padrão
+                  pt-BR), então o valor nunca chegava ao estado e era salvo
+                  como null mesmo parecendo preenchido. */}
               <CampoDeEntrada
                 id="checkin-cardio-tempo"
-                type="number"
-                step="1"
-                min={1}
-                max={LIMITES_CARDIO_CHECKIN.tempo_max_min}
+                type="text"
+                inputMode="decimal"
                 placeholder="Tempo (min)"
                 aria-label="Tempo de cardio em minutos"
                 value={cardioTempo}
                 onChange={(evento) => definirCardioTempo(evento.target.value)}
               />
-              {/* Distância percorrida em km. */}
+              {/* Distância percorrida em km (mesmo motivo do tempo: vírgula). */}
               <CampoDeEntrada
                 id="checkin-cardio-km"
-                type="number"
-                step="0.1"
-                min={0}
-                max={LIMITES_CARDIO_CHECKIN.km_max}
+                type="text"
+                inputMode="decimal"
                 placeholder="Distância (km)"
                 aria-label="Distância de cardio em quilômetros"
                 value={cardioKm}

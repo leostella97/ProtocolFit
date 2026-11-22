@@ -105,3 +105,43 @@ Além do planejado, também:
   `frequencia_semanal` do perfil.
 - TODO p/ equipe futura: instalar `@types/node` (devDependency) ou declarar
   `process` para zerar o `tsc -p spec/tsconfig.json`.
+
+## Pós-deploy — bug reportado e correção (continuação da TEAM_019)
+
+**Sintoma (usuário, GitHub Pages / modo local):** cardio marcado persistia,
+mas modalidade/tempo/km "sumiam" após o submit.
+
+**Investigação (exaustiva):** verificada a cadeia inteira na fonte E no
+bundle publicado — payload do `salvar()`, bindings dos inputs, delegação
+`MODO_LOCAL`, merge de `salvarCheckinLocal`, projeção de `montarResumo`,
+normalização de `lerBanco`, import/export, callers parciais
+(treino/dieta/líquido), `painel/page.tsx` e `layout.tsx` (sem remount),
+`sw.js` (navegação network-first + chunks com hash), datas civis. Quatro
+reproduções em Node (round-trip, submits parciais, registro antigo,
+sequência completa) — todas persistem os detalhes. O código de
+gravar/ler estava correto; o único caminho que gera `feito:true` +
+detalhes `null` é o submit sair com os estados vazios.
+
+**Causa raiz encontrada:** `input type="number"` no Chrome/Safari **não
+aceita vírgula decimal** — usuário pt-BR digita `5,2`, o campo exibe o
+texto mas `e.target.value` devolve `""` (comportamento documentado,
+React #13752 / crbug 178437). O estado ficava `''` enquanto o campo
+parecia preenchido → submit gravava `null` → no reload o campo voltava
+vazio: "detalhes somem". O `salvar()` já tratava vírgula
+(`.replace(',','.')`), mas o valor nunca chegava ao estado.
+
+**Correção:** `checkin-cardio-tempo`, `checkin-cardio-km` e
+`checkin-peso` agora usam `type="text" inputMode="decimal"` — o texto
+bruto chega ao `onChange` e o parse existente aceita `5,2` e `5.2`.
+(Validação de faixa continua no `salvar()`; `checkin-agua` permanece
+`type="number"` — campo inteiro de ml com atalhos, sem uso de vírgula.)
+
+**Regressão adicionada:** `spec/checkin-cardio-local.spec.ts` — 4 specs
+cobrindo persistência dos detalhes, preservação em submits parciais,
+atualização de registro antigo e limpeza ao desmarcar.
+(97 specs, 0 falhas.)
+
+**Latente p/ equipe futura:** o mesmo defeito de `type="number"` +
+vírgula existe nos demais inputs numéricos do app (edição de exercício:
+repetições/carga/distância; `cartao-liquido-treino`;
+`formulario-nova-pesagem`) — vale migrar todos para `inputMode`.

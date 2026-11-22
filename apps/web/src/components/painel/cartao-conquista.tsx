@@ -23,7 +23,8 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Download, Facebook, Instagram, Loader2, MessageCircle, Share2, Target, Trophy } from 'lucide-react';
+import { Download, Loader2, MessageCircle, Share2, Target, Trophy } from 'lucide-react';
+import { IconeFacebook, IconeInstagram } from '@/components/ui/icone-de-marca';
 import { Botao } from '@/components/ui/button';
 import { Cartao, CartaoCabecalho, CartaoConteudo, CartaoDescricao, CartaoTitulo } from '@/components/ui/card';
 import { formatarDecimal, rotuloDoObjetivo } from '@/lib/util';
@@ -450,11 +451,11 @@ export function CartaoConquista({ perfil, checkins, deltaDePeso, nome }: Proprie
               WhatsApp
             </Botao>
             <Botao tamanho="pequeno" variante="contorno" onClick={compartilharNoFacebook}>
-              <Facebook />
+              <IconeFacebook />
               Facebook
             </Botao>
             <Botao tamanho="pequeno" variante="contorno" onClick={() => void compartilharNoInstagram()}>
-              <Instagram />
+              <IconeInstagram />
               Instagram
             </Botao>
           </div>

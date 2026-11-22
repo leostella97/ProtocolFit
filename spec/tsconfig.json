@@ -10,7 +10,7 @@
     "strict": true,
     "noEmit": true,
     "skipLibCheck": true,
-    "types": ["jasmine"],
+    "types": ["jasmine", "node"],
     "forceConsistentCasingInFileNames": true
   },
   "include": ["**/*.spec.ts"]

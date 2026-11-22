@@ -317,6 +317,8 @@ texto diz que é incerta.
 
 ## 🚀 Como rodar
 
+**Pré-requisito:** Node.js **22 ou superior** (o `better-sqlite3@13` exige).
+
 ```bash
 # 1. Instalar dependências (raiz do monorepo)
 npm install

@@ -21,7 +21,8 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeftRight, Check, CheckCircle2, Clock, Lightbulb, Pencil, Save, Youtube } from 'lucide-react';
+import { ArrowLeftRight, Check, CheckCircle2, Clock, Lightbulb, Pencil, Save } from 'lucide-react';
+import { IconeYoutube } from '@/components/ui/icone-de-marca';
 import { Botao } from '@/components/ui/button';
 import { Selo } from '@/components/ui/badge';
 import { CartaoLiquidoTreino } from '@/components/painel/cartao-liquido-treino';
@@ -475,7 +476,7 @@ function CartaoDeExercicio({
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 font-medium text-primary hover:underline"
           >
-            <Youtube className="size-4 shrink-0" /> Exemplo: ver a execução no YouTube
+            <IconeYoutube className="size-4 shrink-0" /> Exemplo: ver a execução no YouTube
           </a>
         </div>
       </CartaoConteudo>

@@ -8,7 +8,7 @@
     "apps/web"
   ],
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "scripts": {
     "dev:api": "npm run dev --workspace @protocolfit/api",
@@ -21,8 +21,11 @@
     "test": "node --import=tsx node_modules/jasmine/bin/jasmine.js"
   },
   "allowScripts": {
-    "better-sqlite3@12.11.1": true,
+    "better-sqlite3@13.2.0": true,
     "esbuild@0.28.2": true
+  },
+  "overrides": {
+    "glob": "^14.0.6"
   },
   "devDependencies": {
     "@types/jasmine": "^7.0.0",

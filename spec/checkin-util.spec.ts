@@ -9,11 +9,14 @@
 import {
   AGUA_MAXIMA_ML,
   hojeLocal,
+  META_CARDIO_SEMANAL_MIN,
   montarCalendarioDoMes,
+  resumirSemanaDeCheckins,
   separadorDeDatas,
   somarAguaDoDia,
   type CelulaDoCalendario,
   type CheckinParaCalendario,
+  type CheckinParaResumoSemanal,
 } from '../apps/web/src/lib/checkin-util';
 
 /** Localiza a célula de uma data na grade de semanas retornada. */
@@ -67,6 +70,8 @@ describe('montarCalendarioDoMes', () => {
     { data: '2025-01-10', treino_feito: true, dieta_seguida: false },
     { data: '2025-01-11', treino_feito: false, dieta_seguida: false },
     { data: '2025-01-12', treino_feito: false, dieta_seguida: true },
+    // TEAM_019: dia só com cardio também é dia cumprido no calendário.
+    { data: '2025-01-13', treino_feito: false, dieta_seguida: false, cardio_feito: true },
   ];
   const semanas = montarCalendarioDoMes(2025, 0, checkins, hoje);
 
@@ -86,6 +91,8 @@ describe('montarCalendarioDoMes', () => {
     expect(celulaDaData(semanas, '2025-01-12').estado).toBe('cumprido');
     // Check-in sem treino nem dieta → registrado (não conta na sequência).
     expect(celulaDaData(semanas, '2025-01-11').estado).toBe('registrado');
+    // TEAM_019: cardio feito → dia cumprido.
+    expect(celulaDaData(semanas, '2025-01-13').estado).toBe('cumprido');
     // Dia passado sem check-in.
     expect(celulaDaData(semanas, '2025-01-05').estado).toBe('sem_checkin');
     // O próprio hoje sem check-in é "sem_checkin", não "futuro".
@@ -149,5 +156,95 @@ describe('somarAguaDoDia (incremento do líquido do treino)', () => {
       const resultado = somarAguaDoDia(1000, invalido);
       expect(resultado.ok).toBe(false);
     }
+  });
+});
+
+/* TEAM_019: resumo semanal de consistência — base das pizzas do perfil
+   (força vs frequência, hidratação vs meta de água, cardio vs 150 min). */
+describe('resumirSemanaDeCheckins', () => {
+  const hoje = '2025-06-14'; // sábado — janela de 2025-06-08 a 2025-06-14.
+
+  /** Monta um check-in mínimo para o resumo semanal. */
+  function checkin(data: string, parcial: Partial<CheckinParaResumoSemanal> = {}): CheckinParaResumoSemanal {
+    return {
+      data,
+      treino_feito: false,
+      agua_ml: 0,
+      cardio_feito: false,
+      cardio_tempo_min: null,
+      cardio_km: null,
+      ...parcial,
+    };
+  }
+
+  it('conta sessões de força só dentro da janela de 7 dias', () => {
+    const resumo = resumirSemanaDeCheckins(
+      [
+        checkin('2025-06-14', { treino_feito: true }),
+        checkin('2025-06-10', { treino_feito: true }),
+        checkin('2025-06-08', { treino_feito: true }),
+        // Fora da janela (8 dias atrás) — não deve contar.
+        checkin('2025-06-07', { treino_feito: true }),
+        // No futuro da referência — também não conta.
+        checkin('2025-06-15', { treino_feito: true }),
+      ],
+      5,
+      2500,
+      hoje,
+    );
+    expect(resumo.forca.feito).toBe(3);
+    expect(resumo.forca.meta).toBe(5);
+  });
+
+  it('limita a meta de força entre 1 e 7 sessões', () => {
+    const resumoBaixo = resumirSemanaDeCheckins([], 0, 2500, hoje);
+    expect(resumoBaixo.forca.meta).toBe(1);
+    const resumoAlto = resumirSemanaDeCheckins([], 10, 2500, hoje);
+    expect(resumoAlto.forca.meta).toBe(7);
+  });
+
+  it('conta só os dias com água na meta diária', () => {
+    const resumo = resumirSemanaDeCheckins(
+      [
+        checkin('2025-06-14', { agua_ml: 2500 }),
+        checkin('2025-06-13', { agua_ml: 2600 }),
+        checkin('2025-06-12', { agua_ml: 2400 }), // abaixo da meta
+        checkin('2025-06-11', { agua_ml: 0 }), // check-in sem água
+        // Dia 10 sem check-in nenhum → conta como fora da meta.
+      ],
+      5,
+      2500,
+      hoje,
+    );
+    expect(resumo.hidratacao.diasNaMeta).toBe(2);
+    expect(resumo.hidratacao.dias).toBe(7);
+    expect(resumo.hidratacao.metaMl).toBe(2500);
+  });
+
+  it('soma minutos e km de cardio só dos dias marcados', () => {
+    const resumo = resumirSemanaDeCheckins(
+      [
+        checkin('2025-06-14', { cardio_feito: true, cardio_tempo_min: 40, cardio_km: 5 }),
+        checkin('2025-06-12', { cardio_feito: true, cardio_tempo_min: 30, cardio_km: 4.5 }),
+        // Cardio desmarcado com detalhe preenchido por engano não soma.
+        checkin('2025-06-11', { cardio_feito: false, cardio_tempo_min: 60, cardio_km: 10 }),
+        // Cardio marcado sem detalhe soma zero (sem inventar valor).
+        checkin('2025-06-10', { cardio_feito: true }),
+      ],
+      5,
+      2500,
+      hoje,
+    );
+    expect(resumo.cardio.minutos).toBe(70);
+    expect(resumo.cardio.km).toBe(9.5);
+    expect(resumo.cardio.metaMinutos).toBe(META_CARDIO_SEMANAL_MIN);
+  });
+
+  it('devolve zeros com a semana vazia', () => {
+    const resumo = resumirSemanaDeCheckins([], 3, 2000, hoje);
+    expect(resumo.forca.feito).toBe(0);
+    expect(resumo.hidratacao.diasNaMeta).toBe(0);
+    expect(resumo.cardio.minutos).toBe(0);
+    expect(resumo.cardio.km).toBe(0);
   });
 });

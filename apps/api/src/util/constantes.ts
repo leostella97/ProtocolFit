@@ -108,3 +108,26 @@ export const DIAS_DA_SEMANA: { valor: string; rotulo: string }[] = [
 
 /** Níveis de experiência aceitos no perfil. */
 export const NIVEIS = ['iniciante', 'intermediario', 'avancado'] as const;
+
+/**
+ * TEAM_019: modalidades de cardio aceitas no check-in diário (lista fechada).
+ * Espelho de apps/web/src/lib/checkin-util.ts — manter em paridade.
+ */
+export const MODALIDADES_CARDIO = [
+  'caminhada',
+  'corrida',
+  'bicicleta',
+  'natacao',
+  'eliptico',
+  'remo',
+  'hiit',
+  'outro',
+] as const;
+
+/** TEAM_019: limites dos detalhes de cardio do check-in (espelho do frontend). */
+export const LIMITES_CARDIO_CHECKIN = {
+  /** Tempo máximo de cardio por dia, em minutos (mesmo teto da edição de treino). */
+  tempo_max_min: 600,
+  /** Distância máxima aceita por dia, em km (mesma regra de distancia_km). */
+  km_max: 500,
+} as const;

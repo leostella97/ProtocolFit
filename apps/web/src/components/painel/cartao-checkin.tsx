@@ -3,8 +3,9 @@
  * ---------------------------------------------------------------------------
  * Cartão do CHECK-IN DIÁRIO do painel. O usuário marca, todo dia:
  *
- *   - treino feito  ✅   |   dieta seguida  ✅
+ *   - treino feito  ✅   |   dieta seguida  ✅   |   cardio feito  ✅
  *   - água bebida (ml, com atalhos de +250 / +500)
+ *   - detalhes do cardio (modalidade, tempo em min, distância em km)
  *   - peso do dia (opcional — entra no gráfico de evolução)
  *   - observação livre
  *
@@ -15,15 +16,16 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { CalendarDays, Check, Droplets, Flame, Loader2, NotebookPen, Trophy, Dumbbell, Salad } from 'lucide-react';
+import { CalendarDays, Check, Droplets, Flame, HeartPulse, Loader2, NotebookPen, Trophy, Dumbbell, Salad } from 'lucide-react';
 import { Botao } from '@/components/ui/button';
 import { Cartao, CartaoCabecalho, CartaoConteudo, CartaoDescricao, CartaoTitulo } from '@/components/ui/card';
 import { CampoDeEntrada } from '@/components/ui/input';
 import { Rotulo } from '@/components/ui/label';
+import { MenuDeSelecao } from '@/components/ui/select';
 import { AreaDeTexto } from '@/components/ui/textarea';
 import { Selo } from '@/components/ui/badge';
 import { CalendarioDeCheckins } from '@/components/painel/calendario-checkins';
-import { AGUA_MAXIMA_ML, separadorDeDatas } from '@/lib/checkin-util';
+import { AGUA_MAXIMA_ML, LIMITES_CARDIO_CHECKIN, MODALIDADES_CARDIO, separadorDeDatas } from '@/lib/checkin-util';
 import { salvarCheckin } from '@/lib/api';
 import { AGUA_ML_POR_KG } from '@/lib/motor/calculos';
 import { LIMITES_CORPO } from '@/lib/motor/constantes';
@@ -46,6 +48,11 @@ export function CartaoCheckin({ resumo, perfil, aoSalvar }: PropriedadesDoCartao
   const [treinoFeito, definirTreinoFeito] = useState(resumo.hoje?.treino_feito ?? false);
   const [dietaSeguida, definirDietaSeguida] = useState(resumo.hoje?.dieta_seguida ?? false);
   const [agua, definirAgua] = useState(String(resumo.hoje?.agua_ml ?? 0));
+  // TEAM_019: cardio do dia — marcador + detalhes (modalidade, tempo e km).
+  const [cardioFeito, definirCardioFeito] = useState(resumo.hoje?.cardio_feito ?? false);
+  const [cardioModalidade, definirCardioModalidade] = useState(resumo.hoje?.cardio_modalidade ?? '');
+  const [cardioTempo, definirCardioTempo] = useState(resumo.hoje?.cardio_tempo_min?.toString() ?? '');
+  const [cardioKm, definirCardioKm] = useState(resumo.hoje?.cardio_km?.toString() ?? '');
   // Peso do dia: usa o do check-in de hoje ou o peso atual do perfil.
   const [pesoDoDia, definirPesoDoDia] = useState(String(resumo.hoje?.peso_kg ?? perfil.peso_kg));
   // Observação livre do dia.
@@ -77,6 +84,9 @@ export function CartaoCheckin({ resumo, perfil, aoSalvar }: PropriedadesDoCartao
     // Converte os campos numéricos (aceita vírgula decimal).
     const aguaNumerica = Number(String(agua).replace(',', '.')) || 0;
     const pesoNumerico = pesoDoDia.trim() === '' ? null : Number(String(pesoDoDia).replace(',', '.'));
+    // TEAM_019: detalhes do cardio — vazio vira null (não informado).
+    const tempoNumerico = cardioTempo.trim() === '' ? null : Number(String(cardioTempo).replace(',', '.'));
+    const kmNumerico = cardioKm.trim() === '' ? null : Number(String(cardioKm).replace(',', '.'));
 
     // TEAM_017: o teto diário vem da constante única (mesma do repositório
     // local e do formulário de líquido do treino).
@@ -95,6 +105,21 @@ export function CartaoCheckin({ resumo, perfil, aoSalvar }: PropriedadesDoCartao
       );
       return;
     }
+    // TEAM_019: validação dos detalhes do cardio (mesmos limites da API).
+    if (
+      tempoNumerico !== null &&
+      (!Number.isFinite(tempoNumerico) || tempoNumerico <= 0 || tempoNumerico > LIMITES_CARDIO_CHECKIN.tempo_max_min)
+    ) {
+      definirErro(`Informe o tempo de cardio entre 1 e ${LIMITES_CARDIO_CHECKIN.tempo_max_min} minutos (ou deixe em branco).`);
+      return;
+    }
+    if (
+      kmNumerico !== null &&
+      (!Number.isFinite(kmNumerico) || kmNumerico <= 0 || kmNumerico > LIMITES_CARDIO_CHECKIN.km_max)
+    ) {
+      definirErro(`Informe a distância entre 0 e ${LIMITES_CARDIO_CHECKIN.km_max} km (ou deixe em branco).`);
+      return;
+    }
 
     definirSalvando(true);
     try {
@@ -105,6 +130,11 @@ export function CartaoCheckin({ resumo, perfil, aoSalvar }: PropriedadesDoCartao
         agua_ml: aguaNumerica,
         peso_kg: pesoNumerico,
         observacao: observacao.trim() === '' ? null : observacao.trim(),
+        // TEAM_019: cardio desmarcado envia os detalhes nulos (o dia fica limpo).
+        cardio_feito: cardioFeito,
+        cardio_modalidade: cardioFeito && cardioModalidade !== '' ? cardioModalidade : null,
+        cardio_tempo_min: cardioFeito ? tempoNumerico : null,
+        cardio_km: cardioFeito ? kmNumerico : null,
       });
       definirSucesso(true);
       if (temporizadorSucesso.current !== null) {
@@ -136,8 +166,8 @@ export function CartaoCheckin({ resumo, perfil, aoSalvar }: PropriedadesDoCartao
       </CartaoCabecalho>
 
       <CartaoConteudo className="space-y-4">
-        {/* Botões de marcação: treino e dieta. */}
-        <div className="grid gap-3 sm:grid-cols-2">
+        {/* Botões de marcação: treino, dieta e cardio. */}
+        <div className="grid gap-3 sm:grid-cols-3">
           <button
             type="button"
             onClick={() => definirTreinoFeito((valorAtual) => !valorAtual)}
@@ -171,6 +201,26 @@ export function CartaoCheckin({ resumo, perfil, aoSalvar }: PropriedadesDoCartao
             <span>
               <span className="block text-sm font-semibold text-foreground">Dieta seguida</span>
               <span className="block text-xs text-muted-foreground">{dietaSeguida ? 'Concluída hoje ✓' : 'Toque para marcar'}</span>
+            </span>
+          </button>
+
+          {/* TEAM_019: terceiro marcador do dia — cardio feito. Marcar revela
+              os detalhes (modalidade, tempo e km) logo abaixo da água. */}
+          <button
+            type="button"
+            onClick={() => definirCardioFeito((valorAtual) => !valorAtual)}
+            aria-pressed={cardioFeito}
+            className={combinarClasses(
+              'flex items-center gap-3 rounded-lg border p-3 text-left transition-colors',
+              cardioFeito ? 'border-primary bg-primary/10' : 'border-border bg-card hover:bg-secondary/50',
+            )}
+          >
+            <span className={combinarClasses('flex size-9 items-center justify-center rounded-md', cardioFeito ? 'bg-primary text-primary-foreground' : 'bg-secondary text-primary')}>
+              {cardioFeito ? <Check className="size-4" /> : <HeartPulse className="size-4" />}
+            </span>
+            <span>
+              <span className="block text-sm font-semibold text-foreground">Cardio feito</span>
+              <span className="block text-xs text-muted-foreground">{cardioFeito ? 'Concluído hoje ✓' : 'Toque para marcar'}</span>
             </span>
           </button>
         </div>
@@ -228,6 +278,55 @@ export function CartaoCheckin({ resumo, perfil, aoSalvar }: PropriedadesDoCartao
             <p className="text-xs text-muted-foreground">Ao informar, o peso entra no gráfico de evolução do dia.</p>
           </div>
         </div>
+
+        {/* TEAM_019: detalhes do cardio, logo abaixo dos ml de água — só
+            aparecem quando o cardio do dia está marcado. */}
+        {cardioFeito ? (
+          <div className="space-y-1.5 rounded-lg border border-primary/30 bg-primary/5 p-3">
+            <Rotulo htmlFor="checkin-cardio-modalidade">
+              <HeartPulse className="size-3.5 text-primary" /> Cardio do dia
+            </Rotulo>
+            <div className="grid gap-4 sm:grid-cols-3">
+              {/* Modalidade do cardio (lista fechada, espelho da API). */}
+              <MenuDeSelecao
+                id="checkin-cardio-modalidade"
+                value={cardioModalidade}
+                onChange={(evento) => definirCardioModalidade(evento.target.value)}
+              >
+                <option value="">Modalidade (opcional)</option>
+                {MODALIDADES_CARDIO.map((modalidade) => (
+                  <option key={modalidade.valor} value={modalidade.valor}>
+                    {modalidade.rotulo}
+                  </option>
+                ))}
+              </MenuDeSelecao>
+              {/* Tempo de cardio em minutos. */}
+              <CampoDeEntrada
+                id="checkin-cardio-tempo"
+                type="number"
+                step="1"
+                min={1}
+                max={LIMITES_CARDIO_CHECKIN.tempo_max_min}
+                placeholder="Tempo (min)"
+                aria-label="Tempo de cardio em minutos"
+                value={cardioTempo}
+                onChange={(evento) => definirCardioTempo(evento.target.value)}
+              />
+              {/* Distância percorrida em km. */}
+              <CampoDeEntrada
+                id="checkin-cardio-km"
+                type="number"
+                step="0.1"
+                min={0}
+                max={LIMITES_CARDIO_CHECKIN.km_max}
+                placeholder="Distância (km)"
+                aria-label="Distância de cardio em quilômetros"
+                value={cardioKm}
+                onChange={(evento) => definirCardioKm(evento.target.value)}
+              />
+            </div>
+          </div>
+        ) : null}
 
         {/* Observação livre do dia. */}
         <div className="space-y-1.5">

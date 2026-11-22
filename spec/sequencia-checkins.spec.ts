@@ -25,6 +25,11 @@ function checkin(data: string, parcial: Partial<CheckinDiario> = {}): CheckinDia
     agua_ml: 0,
     peso_kg: null,
     observacao: null,
+    // TEAM_019: padrão sem cardio — os casos que testam cardio sobrescrevem.
+    cardio_feito: false,
+    cardio_modalidade: null,
+    cardio_tempo_min: null,
+    cardio_km: null,
     ...parcial,
   };
 }
@@ -51,6 +56,19 @@ describe('montarResumoDeCheckins', () => {
     expect(resumo.dias_cumpridos).toEqual(['2025-01-01', '2025-01-02']);
     // Hoje (03) está pendente → a contagem parte de ontem e vale 2.
     expect(resumo.sequencia_atual).toBe(2);
+  });
+
+  it('TEAM_019: conta como cumprido o dia só com cardio marcado', () => {
+    const resumo = montarResumoDeCheckins(
+      [
+        checkin('2025-01-01', { treino_feito: false, dieta_seguida: false, cardio_feito: true, cardio_tempo_min: 30 }),
+        checkin('2025-01-02', { treino_feito: false, dieta_seguida: false, cardio_feito: false }),
+      ],
+      '2025-01-02',
+    );
+    // O dia 1 cumpriu pelo cardio; o dia 2 não tem nenhum marcador.
+    expect(resumo.dias_cumpridos).toEqual(['2025-01-01']);
+    expect(resumo.sequencia_atual).toBe(1);
   });
 
   it('sequência atual termina na referência — incluindo hoje cumprido', () => {

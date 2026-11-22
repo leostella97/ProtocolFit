@@ -29,6 +29,7 @@ import { Esqueleto } from '@/components/ui/skeleton';
 import {
   atualizarEstiloDeDieta,
   atualizarEstiloDeTreino,
+  buscarCheckins,
   buscarContaAtual,
   buscarOpcoes,
   buscarPlanoAtual,
@@ -42,6 +43,8 @@ import {
 import { encerrarSessao } from '@/lib/armazenamento';
 // TEAM_001: cartão "Leve seu progresso com você" (exportar/importar backup).
 import { CartaoPortabilidade } from '@/components/portabilidade/cartao-portabilidade';
+// TEAM_019: pizzas de consistência dos últimos 7 dias (força/água/cardio).
+import { GraficosConsistencia } from '@/components/painel/graficos-consistencia';
 import {
   combinarClasses,
   formatarData,
@@ -59,6 +62,7 @@ import type {
   OpcoesDoSistema,
   PlanoCompleto,
   RegistroEvolucao,
+  ResumoDeCheckins,
   Sexo,
 } from '@/lib/tipos';
 
@@ -88,6 +92,8 @@ export default function PaginaDoPerfil() {
   const [plano, definirPlano] = useState<PlanoCompleto | null>(null);
   // Histórico de pesagens (recarregado após cada registro).
   const [evolucao, definirEvolucao] = useState<RegistroEvolucao[]>([]);
+  // TEAM_019: resumo dos check-ins (base das pizzas de consistência).
+  const [checkins, definirCheckins] = useState<ResumoDeCheckins | null>(null);
   // Formulário da pesagem: peso digitado e data (padrão hoje).
   const [pesoDigitado, definirPesoDigitado] = useState('');
   const [dataDaPesagem, definirDataDaPesagem] = useState(hojeLocal);
@@ -136,15 +142,17 @@ export default function PaginaDoPerfil() {
     definirCarregando(true);
     definirErro(null);
     try {
-      // Busca os três recursos ao mesmo tempo (Promise.all).
-      const [planoAtual, registros, opcoesRecebidas] = await Promise.all([
+      // Busca os recursos ao mesmo tempo (Promise.all).
+      const [planoAtual, registros, opcoesRecebidas, resumoDeCheckins] = await Promise.all([
         buscarPlanoAtual(),
         listarEvolucao(),
         buscarOpcoes(),
+        buscarCheckins(),
       ]);
       definirPlano(planoAtual);
       definirEvolucao(registros);
       definirOpcoes(opcoesRecebidas);
+      definirCheckins(resumoDeCheckins);
       // Sincroniza os seletores com os estilos gravados no perfil.
       definirEstiloEscolhido(planoAtual.perfil.variacao_treino ?? 'padrao');
       // TEAM_015: null no perfil = dieta automática (segue o treino).
@@ -753,6 +761,27 @@ export default function PaginaDoPerfil() {
           </CartaoConteudo>
         </Cartao>
       </div>
+
+      {/* TEAM_019: pizzas de consistência dos últimos 7 dias — força,
+          hidratação e cardio calculados dos check-ins contra as metas do
+          perfil (frequência semanal, meta de água do plano e 150 min/semana). */}
+      {checkins ? (
+        <Cartao>
+          <CartaoCabecalho>
+            <CartaoTitulo>Consistência da semana</CartaoTitulo>
+            <CartaoDescricao>
+              Quanto dos seus últimos 7 dias de check-ins bateu cada meta
+            </CartaoDescricao>
+          </CartaoCabecalho>
+          <CartaoConteudo>
+            <GraficosConsistencia
+              checkins={checkins.registros}
+              frequenciaSemanal={perfil.frequencia_semanal}
+              metaAguaMl={dieta.meta.agua_ml}
+            />
+          </CartaoConteudo>
+        </Cartao>
+      ) : null}
 
       {/* Seção: trocar o estilo (variação) do treino e regenerar os planos. */}
       <Cartao>

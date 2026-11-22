@@ -30,6 +30,8 @@ const PERFIL: Perfil = {
   nivel: 'intermediario',
   variacao_treino: null,
   variacao_dieta: null,
+  // TEAM_019: campo exigido pelo Perfil desde a TEAM_018 — faltava no helper.
+  musculo_focado: null,
 };
 
 function modeloCom(exercicios: Partial<ModeloTreino['dias_da_semana'][0]['exercicios'][0]>[]): ModeloTreino {

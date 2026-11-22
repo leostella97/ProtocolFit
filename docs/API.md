@@ -184,12 +184,22 @@ do perfil. Rejeita data futura. → `201 { id, data, peso_kg }`.
   "dieta_seguida": true,
   "agua_ml": 2500,
   "peso_kg": 79.5,
-  "observacao": "texto até 1000 chars"
+  "observacao": "texto até 1000 chars",
+  "cardio_feito": true,
+  "cardio_modalidade": "corrida",
+  "cardio_tempo_min": 30,
+  "cardio_km": 5.2
 }
 ```
 
 Upsert por dia; campos omitidos preservam o já gravado; `peso_kg` também entra
 na evolução (transação). Rejeita data futura. → `201 { checkin, ...resumo }`.
+
+TEAM_019 — cardio do check-in: `cardio_modalidade` usa lista fechada
+(caminhada, corrida, bicicleta, natacao, eliptico, remo, hiit, outro),
+`cardio_tempo_min` vai de 1 a 600 e `cardio_km` de 0 a 500 — os três
+detalhes são zerados quando `cardio_feito` vem falso. `cardio_feito` conta
+como "dia cumprido" na sequência, ao lado de treino e dieta.
 
 ## Convenções
 

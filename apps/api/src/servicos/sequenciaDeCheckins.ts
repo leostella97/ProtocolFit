@@ -4,7 +4,8 @@
  * Cálculo da SEQUÊNCIA (streak) de check-ins diários do ProtocolFit.
  *
  * Regras (determinísticas e fáceis de explicar ao usuário):
- *  - "Dia cumprido" = o usuário marcou o treino OU seguiu a dieta naquele dia.
+ *  - "Dia cumprido" = o usuário marcou o treino, seguiu a dieta OU fez cardio
+ *    naquele dia (TEAM_019: cardio entrou como terceiro marcador do dia).
  *  - A sequência atual conta os dias consecutivos terminando HOJE; se hoje
  *    ainda não teve check-in, ela continua válida até o fim do dia (contando
  *    a partir de ontem), para não "punir" quem ainda não registrou.
@@ -28,7 +29,9 @@ function paraNumeroDeDias(data: string): number {
 
 /** Verifica se um check-in conta como "dia cumprido". */
 function diaCumprido(checkin: CheckinDiario): boolean {
-  return checkin.treino_feito || checkin.dieta_seguida;
+  // TEAM_019: o cardio é o terceiro marcador do dia — um dia só de cardio
+  // também mantém a sequência viva (atividade física cumprida).
+  return checkin.treino_feito || checkin.dieta_seguida || checkin.cardio_feito;
 }
 
 /**

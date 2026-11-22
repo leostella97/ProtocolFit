@@ -143,12 +143,20 @@ edição, os campos viram Tiros / Tempo / Distância, sem carga.
 ### ✅ Check-in diário
 
 O painel tem o cartão **"Check-in de hoje"**: treino feito, dieta seguida,
-água do dia (atalhos de +250/+500 ml), peso do dia (opcional, entra no
-gráfico) e observação. O sistema calcula:
+cardio feito, água do dia (atalhos de +250/+500 ml), detalhes do cardio
+(modalidade, tempo em min e distância em km — aparecem quando o cardio é
+marcado), peso do dia (opcional, entra no gráfico) e observação. O sistema
+calcula:
 
-- **Sequência atual** (dias consecutivos cumpridos — treino **ou** dieta);
+- **Sequência atual** (dias consecutivos cumpridos — treino, dieta **ou** cardio);
 - **Recorde** de sequência e **total** de check-ins;
 - **Mini histórico** dos últimos 7 dias.
+
+E a página do **Perfil** mostra três pizzas de **consistência da semana**
+calculadas dos últimos 7 dias de check-ins: **Força** (sessões vs a
+frequência semanal do seu perfil), **Hidratação** (dias na meta de água do
+plano — peso × ml/kg do objetivo) e **Cardio** (minutos vs a diretriz de
+150 min/semana de aeróbico da OMS/ACSM).
 
 Regras: um check-in por dia por usuário (atualizar o mesmo dia não
 duplica) e a sequência só quebra quando um dia inteiro passa sem marcação.

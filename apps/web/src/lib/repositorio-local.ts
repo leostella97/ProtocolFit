@@ -36,7 +36,14 @@ import type {
 import { guardarToken, guardarUsuario, obterToken } from './armazenamento';
 // TEAM_007: dataValida/dataNoFuturo espelham util/datas.ts do servidor.
 // TEAM_017: AGUA_MAXIMA_ML é a fonte única do teto diário de líquido.
-import { AGUA_MAXIMA_ML, dataNoFuturo, dataValida, hojeLocal } from './checkin-util';
+import {
+  AGUA_MAXIMA_ML,
+  dataNoFuturo,
+  dataValida,
+  hojeLocal,
+  LIMITES_CARDIO_CHECKIN,
+  MODALIDADES_CARDIO,
+} from './checkin-util';
 import { CHAVE_DO_ACEITE, termoFoiAceito, VERSAO_DO_TERMO } from './termo-de-uso';
 import { ErroDaApi } from './erro-api';
 import { calcularPlanoNutricional } from './motor/calculos';
@@ -140,6 +147,14 @@ interface CheckinDiarioInterno {
   peso_kg: number | null;
   /** Anotação livre. */
   observacao: string | null;
+  /** TEAM_019: cardio feito no dia. */
+  cardio_feito: boolean;
+  /** TEAM_019: modalidade do cardio (opcional). */
+  cardio_modalidade: string | null;
+  /** TEAM_019: minutos de cardio (opcional). */
+  cardio_tempo_min: number | null;
+  /** TEAM_019: distância em km (opcional). */
+  cardio_km: number | null;
 }
 
 /** Banco vazio (primeira visita). */
@@ -164,6 +179,14 @@ function lerBanco(): BancoLocal {
     for (const perfil of banco.perfis ?? []) {
       perfil.variacao_treino = perfil.variacao_treino ?? null;
       perfil.variacao_dieta = perfil.variacao_dieta ?? null;
+    }
+    // TEAM_019: check-ins gravados antes do cardio não têm os 4 campos —
+    // normaliza para os padrões ("não feito", detalhes nulos).
+    for (const checkin of banco.checkins ?? []) {
+      checkin.cardio_feito = checkin.cardio_feito ?? false;
+      checkin.cardio_modalidade = checkin.cardio_modalidade ?? null;
+      checkin.cardio_tempo_min = checkin.cardio_tempo_min ?? null;
+      checkin.cardio_km = checkin.cardio_km ?? null;
     }
     return banco;
   } catch {
@@ -1110,7 +1133,8 @@ function sincronizarPesoAtual(banco: BancoLocal, usuarioId: number): void {
 
 /** Verifica se o check-in conta como "dia cumprido". */
 function diaCumprido(checkin: CheckinDiarioInterno): boolean {
-  return checkin.treino_feito || checkin.dieta_seguida;
+  // TEAM_019: cardio é o terceiro marcador que "cumpre" o dia (paridade com a API).
+  return checkin.treino_feito || checkin.dieta_seguida || checkin.cardio_feito === true;
 }
 
 /** Converte AAAA-MM-DD no número de dias desde 1970. */
@@ -1162,6 +1186,11 @@ function montarResumo(registrosDoUsuario: CheckinDiarioInterno[], referenciaDeHo
       agua_ml: registro.agua_ml,
       peso_kg: registro.peso_kg,
       observacao: registro.observacao,
+      // TEAM_019: campos de cardio viajam no resumo (pizzas do perfil).
+      cardio_feito: registro.cardio_feito,
+      cardio_modalidade: registro.cardio_modalidade,
+      cardio_tempo_min: registro.cardio_tempo_min,
+      cardio_km: registro.cardio_km,
     })),
     sequencia_atual: sequenciaAtual,
     sequencia_maxima: sequenciaMaxima,
@@ -1189,6 +1218,11 @@ export async function salvarCheckinLocal(corpo: {
   agua_ml?: number;
   peso_kg?: number | null;
   observacao?: string | null;
+  // TEAM_019: dados do cardio do dia (espelho do corpo aceito pela API).
+  cardio_feito?: boolean;
+  cardio_modalidade?: string | null;
+  cardio_tempo_min?: number | null;
+  cardio_km?: number | null;
 }): Promise<ResumoDeCheckins & { checkin: CheckinDiario }> {
   const banco = lerBanco();
   const conta = exigirSessao(banco);
@@ -1237,6 +1271,40 @@ export async function salvarCheckinLocal(corpo: {
     }
   }
 
+  // TEAM_019: cardio — booleano estrito e detalhes com os mesmos limites da
+  // API (modalidade da lista fechada, tempo ≤ 600 min, km ≤ 500).
+  if (corpo.cardio_feito !== undefined && typeof corpo.cardio_feito !== 'boolean') {
+    throw new ErroDaApi(400, 'O campo cardio_feito precisa ser verdadeiro ou falso.');
+  }
+  if (corpo.cardio_modalidade !== undefined && corpo.cardio_modalidade !== null) {
+    const modalidadeValida =
+      typeof corpo.cardio_modalidade === 'string' &&
+      MODALIDADES_CARDIO.some((modalidade) => modalidade.valor === corpo.cardio_modalidade);
+    if (!modalidadeValida) {
+      throw new ErroDaApi(400, 'Informe uma modalidade de cardio válida.');
+    }
+  }
+  if (corpo.cardio_tempo_min !== undefined && corpo.cardio_tempo_min !== null) {
+    if (
+      typeof corpo.cardio_tempo_min !== 'number' ||
+      !Number.isFinite(corpo.cardio_tempo_min) ||
+      corpo.cardio_tempo_min <= 0 ||
+      corpo.cardio_tempo_min > LIMITES_CARDIO_CHECKIN.tempo_max_min
+    ) {
+      throw new ErroDaApi(400, `Informe o tempo de cardio entre 1 e ${LIMITES_CARDIO_CHECKIN.tempo_max_min} minutos.`);
+    }
+  }
+  if (corpo.cardio_km !== undefined && corpo.cardio_km !== null) {
+    if (
+      typeof corpo.cardio_km !== 'number' ||
+      !Number.isFinite(corpo.cardio_km) ||
+      corpo.cardio_km <= 0 ||
+      corpo.cardio_km > LIMITES_CARDIO_CHECKIN.km_max
+    ) {
+      throw new ErroDaApi(400, `Informe a distância entre 0 e ${LIMITES_CARDIO_CHECKIN.km_max} km.`);
+    }
+  }
+
   // Mantém o que já foi registrado no dia quando o campo não é enviado.
   const existente = banco.checkins.find((registro) => registro.usuario_id === conta.id && registro.data === data);
   const checkin: CheckinDiarioInterno = existente ?? {
@@ -1248,6 +1316,11 @@ export async function salvarCheckinLocal(corpo: {
     agua_ml: 0,
     peso_kg: null,
     observacao: null,
+    // TEAM_019: padrões do cardio em check-ins novos.
+    cardio_feito: false,
+    cardio_modalidade: null,
+    cardio_tempo_min: null,
+    cardio_km: null,
   };
   checkin.treino_feito = corpo.treino_feito ?? checkin.treino_feito;
   checkin.dieta_seguida = corpo.dieta_seguida ?? checkin.dieta_seguida;
@@ -1257,6 +1330,24 @@ export async function salvarCheckinLocal(corpo: {
     corpo.observacao !== undefined
       ? corpo.observacao?.trim().slice(0, 1000) || null
       : checkin.observacao;
+  // TEAM_019: cardio desmarcado zera os detalhes — dia sem cardio não deve
+  // carregar modalidade/tempo/km órfãos (mesma regra da API).
+  checkin.cardio_feito = corpo.cardio_feito ?? checkin.cardio_feito;
+  checkin.cardio_modalidade = checkin.cardio_feito
+    ? corpo.cardio_modalidade !== undefined
+      ? corpo.cardio_modalidade
+      : checkin.cardio_modalidade
+    : null;
+  checkin.cardio_tempo_min = checkin.cardio_feito
+    ? corpo.cardio_tempo_min !== undefined
+      ? corpo.cardio_tempo_min
+      : checkin.cardio_tempo_min
+    : null;
+  checkin.cardio_km = checkin.cardio_feito
+    ? corpo.cardio_km !== undefined
+      ? corpo.cardio_km
+      : checkin.cardio_km
+    : null;
   if (!existente) {
     banco.checkins.push(checkin);
   }
@@ -1277,6 +1368,11 @@ export async function salvarCheckinLocal(corpo: {
       agua_ml: checkin.agua_ml,
       peso_kg: checkin.peso_kg,
       observacao: checkin.observacao,
+      // TEAM_019: cardio gravado no dia volta na resposta (paridade com a API).
+      cardio_feito: checkin.cardio_feito,
+      cardio_modalidade: checkin.cardio_modalidade,
+      cardio_tempo_min: checkin.cardio_tempo_min,
+      cardio_km: checkin.cardio_km,
     },
     // TEAM_007: o resumo usa o dia civil do usuário (paridade com a API que
     // recebe `hoje` no corpo) — NÃO a data do check-in: um registro retroativo
@@ -1412,6 +1508,11 @@ export async function exportarProgressoLocal(): Promise<{ nomeDoArquivo: string;
         agua_ml: registro.agua_ml,
         peso_kg: registro.peso_kg,
         observacao: registro.observacao,
+        // TEAM_019: cardio viaja no backup entre dispositivos.
+        cardio_feito: registro.cardio_feito,
+        cardio_modalidade: registro.cardio_modalidade,
+        cardio_tempo_min: registro.cardio_tempo_min,
+        cardio_km: registro.cardio_km,
       })),
   };
 
@@ -1525,6 +1626,11 @@ function interpretarBackup(texto: string): BackupDeProgresso {
       agua_ml: typeof registro.agua_ml === 'number' ? registro.agua_ml : 0,
       peso_kg: typeof registro.peso_kg === 'number' ? registro.peso_kg : null,
       observacao: typeof registro.observacao === 'string' ? registro.observacao : null,
+      // TEAM_019: backups antigos não têm cardio — normaliza para os padrões.
+      cardio_feito: registro.cardio_feito === true,
+      cardio_modalidade: typeof registro.cardio_modalidade === 'string' ? registro.cardio_modalidade : null,
+      cardio_tempo_min: typeof registro.cardio_tempo_min === 'number' ? registro.cardio_tempo_min : null,
+      cardio_km: typeof registro.cardio_km === 'number' ? registro.cardio_km : null,
     }));
 
   // 8) Aceite do termo: só viaja se tiver o formato esperado.

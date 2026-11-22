@@ -27,9 +27,9 @@ export type EstadoDoDiaNoCalendario =
   | 'futuro'
   // Dia passado/hoje sem nenhum check-in registrado.
   | 'sem_checkin'
-  // Check-in existe, mas sem treino nem dieta marcados (não conta na sequência).
+  // Check-in existe, mas sem treino, dieta nem cardio marcados (não conta na sequência).
   | 'registrado'
-  // Dia cumprido: treino feito OU dieta seguida (conta na sequência).
+  // Dia cumprido: treino feito, dieta seguida OU cardio feito (conta na sequência).
   | 'cumprido';
 
 /** Uma célula da grade mensal do calendário de check-ins. */
@@ -50,6 +50,11 @@ export interface CheckinParaCalendario {
   treino_feito: boolean;
   /** Dieta seguida. */
   dieta_seguida: boolean;
+  /**
+   * TEAM_019: cardio feito (opcional — registros antigos e testes sem o
+   * campo continuam valendo; ausente lê como "não feito").
+   */
+  cardio_feito?: boolean;
 }
 
 /** Iniciais dos dias da semana na ordem do JavaScript (0 = domingo). */
@@ -151,7 +156,8 @@ export function montarCalendarioDoMes(
     } else if (!checkin) {
       estado = 'sem_checkin';
     } else {
-      estado = checkin.treino_feito || checkin.dieta_seguida ? 'cumprido' : 'registrado';
+      // TEAM_019: o cardio é o terceiro marcador que "cumpre" o dia.
+      estado = checkin.treino_feito || checkin.dieta_seguida || checkin.cardio_feito === true ? 'cumprido' : 'registrado';
     }
     celulas.push({ data, dia, estado });
   }
@@ -203,4 +209,121 @@ export function somarAguaDoDia(totalAtualMl: number, adicionalMl: number): Resul
     return { ok: false, erro: `O total do dia ficaria acima de ${AGUA_MAXIMA_ML} ml.` };
   }
   return { ok: true, totalMl };
+}
+
+/* ===========================================================================
+ * TEAM_019 — CARDIO DO CHECK-IN + RESUMO SEMANAL DAS PIZZAS DO PERFIL
+ * ---------------------------------------------------------------------------
+ * Constantes do cardio validadas igual no servidor
+ * (apps/api/src/util/constantes.ts — espelho, manter em paridade) e a função
+ * pura que transforma os check-ins em três números de aderência da semana:
+ * força (sessões vs frequência semanal do perfil), hidratação (dias na meta
+ * de água do plano) e cardio (minutos vs a diretriz semanal).
+ * ======================================================================== */
+
+/** Modalidades de cardio aceitas no check-in (espelho da API). */
+export const MODALIDADES_CARDIO: { valor: string; rotulo: string }[] = [
+  { valor: 'caminhada', rotulo: 'Caminhada' },
+  { valor: 'corrida', rotulo: 'Corrida' },
+  { valor: 'bicicleta', rotulo: 'Bicicleta' },
+  { valor: 'natacao', rotulo: 'Natação' },
+  { valor: 'eliptico', rotulo: 'Elíptico' },
+  { valor: 'remo', rotulo: 'Remo' },
+  { valor: 'hiit', rotulo: 'HIIT' },
+  { valor: 'outro', rotulo: 'Outro' },
+];
+
+/** Limites dos detalhes de cardio do check-in (mesma regra do servidor). */
+export const LIMITES_CARDIO_CHECKIN = {
+  /** Tempo máximo de cardio por dia, em minutos (teto da edição de treino). */
+  tempo_max_min: 600,
+  /** Distância máxima aceita por dia, em km (regra de distancia_km). */
+  km_max: 500,
+} as const;
+
+/**
+ * TEAM_019: meta semanal de cardio em minutos — diretriz OMS/ACSM de
+ * 150 min/semana de atividade aeróbica moderada (piso de saúde pública
+ * adotado como referência do gráfico de consistência).
+ */
+export const META_CARDIO_SEMANAL_MIN = 150;
+
+/** Check-in mínimo para o resumo semanal de consistência. */
+export interface CheckinParaResumoSemanal {
+  /** Dia do check-in (AAAA-MM-DD). */
+  data: string;
+  /** Treino de força concluído. */
+  treino_feito: boolean;
+  /** Água bebida no dia (ml). */
+  agua_ml: number;
+  /** Cardio feito no dia. */
+  cardio_feito: boolean;
+  /** Minutos de cardio (null quando não informado). */
+  cardio_tempo_min: number | null;
+  /** Distância de cardio em km (null quando não informada). */
+  cardio_km: number | null;
+}
+
+/** Dados da semana prontos para as pizzas de consistência do perfil. */
+export interface ResumoSemanalDeCheckins {
+  /** Força: sessões feitas vs meta semanal do perfil. */
+  forca: { feito: number; meta: number };
+  /** Hidratação: dias na meta de água vs dias contados na janela. */
+  hidratacao: { diasNaMeta: number; dias: number; metaMl: number };
+  /** Cardio: minutos somados vs meta semanal; km percorridos (legenda). */
+  cardio: { minutos: number; metaMinutos: number; km: number };
+}
+
+/**
+ * TEAM_019: resume os últimos 7 dias civis (hoje − 6 … hoje) dos check-ins
+ * em três aderências — os números das pizzas de força, hidratação e cardio
+ * exibidas no perfil.
+ *
+ * Base dos estudos já usada no motor:
+ *  - força: a meta é a `frequencia_semanal` do perfil (dias de treino por
+ *    semana escolhidos no onboarding — ACSM/posições de periodização);
+ *  - hidratação: a meta diária é a do plano (`peso_kg × ml/kg do objetivo`,
+ *    regra do motor — ver AGUA_ML_POR_KG em calculos.ts);
+ *  - cardio: a meta é a diretriz OMS/ACSM de 150 min/semana de aeróbico
+ *    moderado (META_CARDIO_SEMANAL_MIN).
+ *
+ * Função pura: recebe os check-ins, a meta semanal de força e a meta diária
+ * de água — fácil de testar sem relógio nem rede.
+ */
+export function resumirSemanaDeCheckins(
+  checkins: CheckinParaResumoSemanal[],
+  frequenciaSemanal: number,
+  metaAguaMl: number,
+  hoje: string = hojeLocal(),
+): ResumoSemanalDeCheckins {
+  // Janela dos últimos 7 dias civis, inclusive hoje.
+  const numeroDeHoje = Math.floor(new Date(`${hoje}T00:00:00Z`).getTime() / (24 * 60 * 60 * 1000));
+  const numeroDoCorte = numeroDeHoje - 6;
+  const daJanela = checkins.filter((checkin) => {
+    const numeroDoDia = Math.floor(new Date(`${checkin.data}T00:00:00Z`).getTime() / (24 * 60 * 60 * 1000));
+    return numeroDoDia >= numeroDoCorte && numeroDoDia <= numeroDeHoje;
+  });
+
+  // Força: sessões de musculação marcadas na janela vs meta semanal do perfil.
+  const sessoesDeForca = daJanela.filter((checkin) => checkin.treino_feito).length;
+  const metaDeForca = Math.min(7, Math.max(1, Math.round(frequenciaSemanal)));
+
+  // Hidratação: quantos dias a água registrada bateu a meta diária do plano.
+  const diasNaMeta = daJanela.filter((checkin) => checkin.agua_ml >= metaAguaMl).length;
+
+  // Cardio: minutos e km somados na janela (detalhe nulo soma zero).
+  const minutosDeCardio = daJanela.reduce(
+    (soma, checkin) => soma + (checkin.cardio_feito && checkin.cardio_tempo_min !== null ? checkin.cardio_tempo_min : 0),
+    0,
+  );
+  const kmDeCardio = daJanela.reduce(
+    (soma, checkin) => soma + (checkin.cardio_feito && checkin.cardio_km !== null ? checkin.cardio_km : 0),
+    0,
+  );
+
+  return {
+    forca: { feito: sessoesDeForca, meta: metaDeForca },
+    hidratacao: { diasNaMeta, dias: 7, metaMl: metaAguaMl },
+    cardio: { minutos: minutosDeCardio, metaMinutos: META_CARDIO_SEMANAL_MIN, km: kmDeCardio },
+  };
 }

@@ -405,6 +405,14 @@ export interface CheckinDiario {
   peso_kg: number | null;
   /** Anotação livre do usuário. */
   observacao: string | null;
+  /** TEAM_019: indica se houve cardio no dia (conta como dia cumprido). */
+  cardio_feito: boolean;
+  /** TEAM_019: modalidade do cardio (lista fechada; null quando não informada). */
+  cardio_modalidade: string | null;
+  /** TEAM_019: tempo de cardio em minutos (null quando não informado). */
+  cardio_tempo_min: number | null;
+  /** TEAM_019: distância percorrida em km (null quando não informada). */
+  cardio_km: number | null;
 }
 
 /** Resumo dos check-ins: usado pelo painel para mostrar a sequência. */

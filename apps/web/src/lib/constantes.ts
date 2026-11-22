@@ -13,6 +13,11 @@ export const CORES_DO_GRAFICO = {
   carboidrato: 'oklch(0.68 0.12 180)', // carboidrato (teal)
   gordura: 'oklch(0.8 0.16 95)', // gordura (limão)
   calorias: 'oklch(0.62 0.14 240)', // calorias (azul)
+  // TEAM_019: pizzas de consistência do perfil — cada aderência com sua cor.
+  forca: 'oklch(0.6 0.15 160)', // força (verde esmeralda)
+  hidratacao: 'oklch(0.62 0.14 240)', // hidratação (azul-serena)
+  cardio: 'oklch(0.7 0.15 45)', // cardio (âmbar quente)
+  restante: 'oklch(0.905 0.018 160)', // fatia "o que falta" (neutra da paleta)
 } as const;
 
 /** Paleta dos setores do gráfico de pizza de macronutrientes. */

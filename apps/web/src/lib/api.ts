@@ -325,6 +325,14 @@ export interface CorpoCheckin {
   peso_kg?: number | null;
   /** Anotação livre (opcional). */
   observacao?: string | null;
+  /** TEAM_019: cardio feito no dia. */
+  cardio_feito?: boolean;
+  /** TEAM_019: modalidade do cardio (opcional, lista fechada). */
+  cardio_modalidade?: string | null;
+  /** TEAM_019: tempo de cardio em minutos (opcional). */
+  cardio_tempo_min?: number | null;
+  /** TEAM_019: distância em km (opcional). */
+  cardio_km?: number | null;
 }
 
 /** Busca o resumo dos check-ins (sequência atual, recorde e histórico). */

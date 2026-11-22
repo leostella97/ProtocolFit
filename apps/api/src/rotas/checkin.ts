@@ -16,7 +16,7 @@
 import type { FastifyInstance } from 'fastify';
 import { buscarCheckinDoDia, listarCheckins, salvarCheckin } from '../bd/banco.js';
 import { montarResumoDeCheckins } from '../servicos/sequenciaDeCheckins.js';
-import { LIMITES_CORPO } from '../util/constantes.js';
+import { LIMITES_CARDIO_CHECKIN, LIMITES_CORPO, MODALIDADES_CARDIO } from '../util/constantes.js';
 // TEAM_007: validação de datas civis centralizada (formato + regra de futuro).
 import { dataNoFuturo, dataValida, hojeEmTexto } from '../util/datas.js';
 import { enviarErro, exigirAutenticacao, usuarioIdDaRequisicao } from '../util/respostas.js';
@@ -42,6 +42,14 @@ interface CorpoCheckin {
   peso_kg?: number | null;
   /** Anotação livre (opcional). */
   observacao?: string | null;
+  /** TEAM_019: cardio feito no dia. */
+  cardio_feito?: boolean;
+  /** TEAM_019: modalidade do cardio (opcional, lista fechada). */
+  cardio_modalidade?: string | null;
+  /** TEAM_019: tempo de cardio em minutos (opcional). */
+  cardio_tempo_min?: number | null;
+  /** TEAM_019: distância em km (opcional). */
+  cardio_km?: number | null;
 }
 
 /** Limite máximo aceito de água por dia (ml) — evita digitação absurda. */
@@ -125,9 +133,46 @@ export async function rotasCheckin(app: FastifyInstance): Promise<void> {
       }
     }
 
+    // TEAM_019: cardio — booleano estrito e detalhes opcionais com os mesmos
+    // limites da edição de cardio do treino (tempo ≤ 600 min, km ≤ 500).
+    if (corpo.cardio_feito !== undefined && typeof corpo.cardio_feito !== 'boolean') {
+      return enviarErro(resposta, 400, 'O campo cardio_feito precisa ser verdadeiro ou falso.');
+    }
+    if (corpo.cardio_modalidade !== undefined && corpo.cardio_modalidade !== null) {
+      if (
+        typeof corpo.cardio_modalidade !== 'string' ||
+        !(MODALIDADES_CARDIO as readonly string[]).includes(corpo.cardio_modalidade)
+      ) {
+        return enviarErro(resposta, 400, 'Informe uma modalidade de cardio válida.');
+      }
+    }
+    if (corpo.cardio_tempo_min !== undefined && corpo.cardio_tempo_min !== null) {
+      if (
+        typeof corpo.cardio_tempo_min !== 'number' ||
+        !Number.isFinite(corpo.cardio_tempo_min) ||
+        corpo.cardio_tempo_min <= 0 ||
+        corpo.cardio_tempo_min > LIMITES_CARDIO_CHECKIN.tempo_max_min
+      ) {
+        return enviarErro(resposta, 400, `Informe o tempo de cardio entre 1 e ${LIMITES_CARDIO_CHECKIN.tempo_max_min} minutos.`);
+      }
+    }
+    if (corpo.cardio_km !== undefined && corpo.cardio_km !== null) {
+      if (
+        typeof corpo.cardio_km !== 'number' ||
+        !Number.isFinite(corpo.cardio_km) ||
+        corpo.cardio_km <= 0 ||
+        corpo.cardio_km > LIMITES_CARDIO_CHECKIN.km_max
+      ) {
+        return enviarErro(resposta, 400, `Informe a distância entre 0 e ${LIMITES_CARDIO_CHECKIN.km_max} km.`);
+      }
+    }
+
     // Mantém os valores já registrados no dia quando o campo não for enviado
     // (assim o usuário pode atualizar só a água, por exemplo).
     const checkinDoDia = buscarCheckinDoDia(usuarioId, data);
+    // TEAM_019: quando o cardio é desmarcado, os detalhes são zerados — um
+    // dia sem cardio não deve carregar modalidade/tempo/km órfãos.
+    const cardioFeito = corpo.cardio_feito ?? checkinDoDia?.cardio_feito ?? false;
     const registrado = salvarCheckin(usuarioId, {
       data,
       treino_feito: corpo.treino_feito ?? checkinDoDia?.treino_feito ?? false,
@@ -138,6 +183,22 @@ export async function rotasCheckin(app: FastifyInstance): Promise<void> {
         corpo.observacao !== undefined
           ? corpo.observacao?.trim().slice(0, OBSERVACAO_MAXIMA) || null
           : (checkinDoDia?.observacao ?? null),
+      cardio_feito: cardioFeito,
+      cardio_modalidade: cardioFeito
+        ? corpo.cardio_modalidade !== undefined
+          ? corpo.cardio_modalidade
+          : (checkinDoDia?.cardio_modalidade ?? null)
+        : null,
+      cardio_tempo_min: cardioFeito
+        ? corpo.cardio_tempo_min !== undefined
+          ? corpo.cardio_tempo_min
+          : (checkinDoDia?.cardio_tempo_min ?? null)
+        : null,
+      cardio_km: cardioFeito
+        ? corpo.cardio_km !== undefined
+          ? corpo.cardio_km
+          : (checkinDoDia?.cardio_km ?? null)
+        : null,
     });
 
     // TEAM_007: o resumo usa o dia civil DO CLIENTE (`hoje`) como referência —

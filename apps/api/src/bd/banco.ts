@@ -192,15 +192,19 @@ function criarTabelas(): void {
     -- Um registro por usuário POR DIA (a chave única permite atualizar o
     -- mesmo dia em vez de duplicar).
     CREATE TABLE IF NOT EXISTS checkins (
-      id             INTEGER PRIMARY KEY AUTOINCREMENT, -- chave primária
-      usuario_id     INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE, -- dono do check-in
-      data           TEXT    NOT NULL,                  -- dia do check-in (AAAA-MM-DD)
-      treino_feito   INTEGER NOT NULL DEFAULT 0,        -- 1 = treinou no dia
-      dieta_seguida  INTEGER NOT NULL DEFAULT 0,        -- 1 = seguiu a dieta
-      agua_ml        INTEGER NOT NULL DEFAULT 0,        -- água bebida no dia (ml)
-      peso_kg        REAL,                              -- peso do dia (opcional)
-      observacao     TEXT,                              -- anotação livre do usuário
-      criado_em      TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')), -- criação
+      id               INTEGER PRIMARY KEY AUTOINCREMENT, -- chave primária
+      usuario_id       INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE, -- dono do check-in
+      data             TEXT    NOT NULL,                  -- dia do check-in (AAAA-MM-DD)
+      treino_feito     INTEGER NOT NULL DEFAULT 0,        -- 1 = treinou no dia
+      dieta_seguida    INTEGER NOT NULL DEFAULT 0,        -- 1 = seguiu a dieta
+      agua_ml          INTEGER NOT NULL DEFAULT 0,        -- água bebida no dia (ml)
+      peso_kg          REAL,                              -- peso do dia (opcional)
+      observacao       TEXT,                              -- anotação livre do usuário
+      cardio_feito     INTEGER NOT NULL DEFAULT 0,        -- TEAM_019: 1 = fez cardio no dia
+      cardio_modalidade TEXT,                             -- TEAM_019: modalidade do cardio (opcional)
+      cardio_tempo_min REAL,                              -- TEAM_019: minutos de cardio (opcional)
+      cardio_km        REAL,                              -- TEAM_019: distância em km (opcional)
+      criado_em        TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')), -- criação
       UNIQUE (usuario_id, data)                         -- um check-in por dia
       -- TEAM_007: a restrição UNIQUE (usuario_id, data) já cria o índice que
       -- as consultas usam — o antigo idx_checkins_usuario era redundante.
@@ -227,6 +231,22 @@ function migrarTabelas(): void {
   // Músculo foco para personalização de treino.
   if (!colunas.some((coluna) => coluna.name === 'musculo_focado')) {
     banco.exec('ALTER TABLE perfis ADD COLUMN musculo_focado TEXT');
+  }
+
+  // TEAM_019: bancos antigos não têm as colunas de cardio do check-in —
+  // mesma técnica de migração leve (PRAGMA table_info antes do ALTER).
+  const colunasCheckin = banco.prepare('PRAGMA table_info(checkins)').all() as { name: string }[];
+  if (!colunasCheckin.some((coluna) => coluna.name === 'cardio_feito')) {
+    banco.exec('ALTER TABLE checkins ADD COLUMN cardio_feito INTEGER NOT NULL DEFAULT 0');
+  }
+  if (!colunasCheckin.some((coluna) => coluna.name === 'cardio_modalidade')) {
+    banco.exec('ALTER TABLE checkins ADD COLUMN cardio_modalidade TEXT');
+  }
+  if (!colunasCheckin.some((coluna) => coluna.name === 'cardio_tempo_min')) {
+    banco.exec('ALTER TABLE checkins ADD COLUMN cardio_tempo_min REAL');
+  }
+  if (!colunasCheckin.some((coluna) => coluna.name === 'cardio_km')) {
+    banco.exec('ALTER TABLE checkins ADD COLUMN cardio_km REAL');
   }
 }
 
@@ -488,6 +508,14 @@ interface LinhaCheckin {
   peso_kg: number | null;
   /** Anotação livre. */
   observacao: string | null;
+  /** TEAM_019: 1 = fez cardio no dia. */
+  cardio_feito: number;
+  /** TEAM_019: modalidade do cardio (opcional). */
+  cardio_modalidade: string | null;
+  /** TEAM_019: minutos de cardio (opcional). */
+  cardio_tempo_min: number | null;
+  /** TEAM_019: distância em km (opcional). */
+  cardio_km: number | null;
 }
 
 /** Converte a linha do banco no formato público de check-in. */
@@ -500,6 +528,10 @@ function converterCheckin(linha: LinhaCheckin): CheckinDiario {
     agua_ml: linha.agua_ml,
     peso_kg: linha.peso_kg,
     observacao: linha.observacao,
+    cardio_feito: linha.cardio_feito === 1,
+    cardio_modalidade: linha.cardio_modalidade,
+    cardio_tempo_min: linha.cardio_tempo_min,
+    cardio_km: linha.cardio_km,
   };
 }
 
@@ -518,20 +550,29 @@ export function salvarCheckin(
     agua_ml: number;
     peso_kg: number | null;
     observacao: string | null;
+    // TEAM_019: dados do cardio do dia.
+    cardio_feito: boolean;
+    cardio_modalidade: string | null;
+    cardio_tempo_min: number | null;
+    cardio_km: number | null;
   },
 ): CheckinDiario {
   return executarEmTransacao(() => {
     // UPSERT garantido pela chave única (usuario_id, data).
     banco
       .prepare(
-        `INSERT INTO checkins (usuario_id, data, treino_feito, dieta_seguida, agua_ml, peso_kg, observacao)
-         VALUES (?, ?, ?, ?, ?, ?, ?)
+        `INSERT INTO checkins (usuario_id, data, treino_feito, dieta_seguida, agua_ml, peso_kg, observacao, cardio_feito, cardio_modalidade, cardio_tempo_min, cardio_km)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
          ON CONFLICT (usuario_id, data) DO UPDATE SET
            treino_feito = excluded.treino_feito,
            dieta_seguida = excluded.dieta_seguida,
            agua_ml = excluded.agua_ml,
            peso_kg = excluded.peso_kg,
-           observacao = excluded.observacao`,
+           observacao = excluded.observacao,
+           cardio_feito = excluded.cardio_feito,
+           cardio_modalidade = excluded.cardio_modalidade,
+           cardio_tempo_min = excluded.cardio_tempo_min,
+           cardio_km = excluded.cardio_km`,
       )
       .run(
         usuarioId,
@@ -541,6 +582,12 @@ export function salvarCheckin(
         dados.agua_ml,
         dados.peso_kg,
         dados.observacao,
+        // TEAM_019: cardio — o detalhe só faz sentido quando o cardio foi feito,
+        // mas a gravação é fiel ao que a rota validou (null limpa o detalhe).
+        dados.cardio_feito ? 1 : 0,
+        dados.cardio_modalidade,
+        dados.cardio_tempo_min,
+        dados.cardio_km,
       );
     // Se o usuário informou o peso, ele também entra na evolução corporal.
     if (dados.peso_kg !== null) {

@@ -186,6 +186,8 @@ function perfil(parcial: Partial<Perfil>): Perfil {
     nivel: 'intermediario',
     variacao_treino: null,
     variacao_dieta: null,
+    // TEAM_019: campo exigido pelo Perfil desde a TEAM_018 — faltava no helper.
+    musculo_focado: null,
     ...parcial,
   };
 }

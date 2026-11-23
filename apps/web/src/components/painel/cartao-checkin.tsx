@@ -16,7 +16,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { CalendarDays, Check, Droplets, Flame, HeartPulse, Loader2, NotebookPen, Trophy, Dumbbell, Salad } from 'lucide-react';
+import { CalendarDays, Check, Droplets, Flame, Heart, Loader2, NotebookPen, Trophy, Dumbbell, Salad } from 'lucide-react';
 import { Botao } from '@/components/ui/button';
 import { Cartao, CartaoCabecalho, CartaoConteudo, CartaoDescricao, CartaoTitulo } from '@/components/ui/card';
 import { CampoDeEntrada } from '@/components/ui/input';
@@ -216,7 +216,7 @@ export function CartaoCheckin({ resumo, perfil, aoSalvar }: PropriedadesDoCartao
             )}
           >
             <span className={combinarClasses('flex size-9 items-center justify-center rounded-md', cardioFeito ? 'bg-primary text-primary-foreground' : 'bg-secondary text-primary')}>
-              {cardioFeito ? <Check className="size-4" /> : <HeartPulse className="size-4" />}
+              {cardioFeito ? <Check className="size-4" /> : <Heart className="size-4" />}
             </span>
             <span>
               <span className="block text-sm font-semibold text-foreground">Cardio feito</span>
@@ -284,7 +284,7 @@ export function CartaoCheckin({ resumo, perfil, aoSalvar }: PropriedadesDoCartao
         {cardioFeito ? (
           <div className="space-y-1.5 rounded-lg border border-primary/30 bg-primary/5 p-3">
             <Rotulo htmlFor="checkin-cardio-modalidade">
-              <HeartPulse className="size-3.5 text-primary" /> Cardio do dia
+              <Heart className="size-3.5 text-primary" /> Cardio do dia
             </Rotulo>
             <div className="grid gap-4 sm:grid-cols-3">
               {/* Modalidade do cardio (lista fechada, espelho da API). */}

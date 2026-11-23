@@ -22,7 +22,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { ChevronLeft, ChevronRight, Droplets, Dumbbell, HeartPulse, NotebookPen, Salad, Weight, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Droplets, Dumbbell, Heart, NotebookPen, Salad, Weight, X } from 'lucide-react';
 import { Botao } from '@/components/ui/button';
 import { hojeLocal, MODALIDADES_CARDIO, montarCalendarioDoMes } from '@/lib/checkin-util';
 import type { CheckinDiario } from '@/lib/tipos';
@@ -253,7 +253,7 @@ export function CalendarioDeCheckins({ registros }: PropriedadesDoCalendario) {
             </li>
             {/* TEAM_020: cardio do dia com os detalhes registrados no check-in. */}
             <li className="flex items-center gap-2">
-              <HeartPulse className="size-4 shrink-0 text-primary" />
+              <Heart className="size-4 shrink-0 text-primary" />
               Cardio: {checkinSelecionado.cardio_feito ? rotuloDoCardio(checkinSelecionado) : 'não marcado'}
             </li>
             <li className="flex items-center gap-2">

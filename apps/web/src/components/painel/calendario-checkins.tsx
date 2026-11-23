@@ -5,14 +5,14 @@
  * check-in (e se o dia "contou" na sequência) e quais ficaram sem.
  *
  * Situação de cada dia:
- *   ● verde cheio   → dia cumprido (treino OU dieta marcados)
- *   ◐ verde vazado  → check-in registrado, mas sem treino nem dieta
+ *   ● verde cheio   → dia cumprido (treino, dieta OU cardio marcados)
+ *   ◐ verde vazado  → check-in registrado, mas sem treino, dieta nem cardio
  *   · cinza         → sem check-in
  *   · apagado       → dia futuro (ainda não dá para marcar)
  *
  * TEAM_002: os dias COM check-in (cumprido ou registrado) são clicáveis —
- * tocar neles abre um painel com os detalhes do dia (treino, dieta, água,
- * peso e observação).
+ * tocar neles abre um painel com os detalhes do dia (treino, dieta, cardio,
+ * água, peso e observação).
  *
  * A grade vem de montarCalendarioDoMes (lib/checkin-util.ts), função pura —
  * a navegação entre meses fica limitada ao período coberto pelos registros
@@ -22,9 +22,9 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { ChevronLeft, ChevronRight, Droplets, Dumbbell, NotebookPen, Salad, Weight, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Droplets, Dumbbell, HeartPulse, NotebookPen, Salad, Weight, X } from 'lucide-react';
 import { Botao } from '@/components/ui/button';
-import { hojeLocal, montarCalendarioDoMes } from '@/lib/checkin-util';
+import { hojeLocal, MODALIDADES_CARDIO, montarCalendarioDoMes } from '@/lib/checkin-util';
 import type { CheckinDiario } from '@/lib/tipos';
 import { combinarClasses } from '@/lib/util';
 
@@ -52,6 +52,26 @@ function nomeDoMes(ano: number, mes: number): string {
 function formatarDataDoCheckin(data: string): string {
   // Meio-dia evita que o fuso horário jogue a data para o dia anterior.
   return new Date(`${data}T12:00:00`).toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
+}
+
+/**
+ * TEAM_020: rótulo do cardio no painel de detalhes do dia — mostra o que foi
+ * informado (modalidade, tempo e km), no padrão "feito — Corrida · 30 min ·
+ * 5,2 km"; sem detalhes fica só "feito".
+ */
+function rotuloDoCardio(checkin: CheckinDiario): string {
+  const partes: string[] = [];
+  const modalidade = MODALIDADES_CARDIO.find((item) => item.valor === checkin.cardio_modalidade);
+  if (modalidade) {
+    partes.push(modalidade.rotulo);
+  }
+  if (checkin.cardio_tempo_min !== null) {
+    partes.push(`${checkin.cardio_tempo_min} min`);
+  }
+  if (checkin.cardio_km !== null) {
+    partes.push(`${checkin.cardio_km.toLocaleString('pt-BR')} km`);
+  }
+  return partes.length > 0 ? `feito — ${partes.join(' · ')}` : 'feito';
 }
 
 /** Calendário mensal com os check-ins marcados por dia. */
@@ -143,7 +163,7 @@ export function CalendarioDeCheckins({ registros }: PropriedadesDoCalendario) {
                 celula.estado === 'cumprido'
                   ? `${celula.data} — dia cumprido (toque para ver detalhes)`
                   : celula.estado === 'registrado'
-                    ? `${celula.data} — check-in sem treino nem dieta (toque para ver detalhes)`
+                    ? `${celula.data} — check-in sem treino, dieta nem cardio (toque para ver detalhes)`
                     : celula.estado === 'futuro'
                       ? `${celula.data} — ainda não chegou`
                       : `${celula.data} — sem check-in`;
@@ -198,7 +218,7 @@ export function CalendarioDeCheckins({ registros }: PropriedadesDoCalendario) {
           <span className="size-2.5 rounded-full bg-primary" /> Dia cumprido
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="size-2.5 rounded-full border border-primary/60 bg-primary/10" /> Check-in sem treino/dieta
+          <span className="size-2.5 rounded-full border border-primary/60 bg-primary/10" /> Check-in sem treino/dieta/cardio
         </span>
         <span className="flex items-center gap-1.5">
           <span className="size-2.5 rounded-full bg-secondary" /> Sem check-in
@@ -221,7 +241,7 @@ export function CalendarioDeCheckins({ registros }: PropriedadesDoCalendario) {
             </Botao>
           </div>
 
-          {/* Resumo do check-in daquele dia (treino, dieta, água, peso, obs). */}
+          {/* Resumo do check-in daquele dia (treino, dieta, cardio, água, peso, obs). */}
           <ul className="space-y-1.5 text-sm text-foreground">
             <li className="flex items-center gap-2">
               <Dumbbell className="size-4 shrink-0 text-primary" />
@@ -230,6 +250,11 @@ export function CalendarioDeCheckins({ registros }: PropriedadesDoCalendario) {
             <li className="flex items-center gap-2">
               <Salad className="size-4 shrink-0 text-primary" />
               Dieta: {checkinSelecionado.dieta_seguida ? 'seguida' : 'não marcada'}
+            </li>
+            {/* TEAM_020: cardio do dia com os detalhes registrados no check-in. */}
+            <li className="flex items-center gap-2">
+              <HeartPulse className="size-4 shrink-0 text-primary" />
+              Cardio: {checkinSelecionado.cardio_feito ? rotuloDoCardio(checkinSelecionado) : 'não marcado'}
             </li>
             <li className="flex items-center gap-2">
               <Droplets className="size-4 shrink-0 text-primary" />
@@ -254,7 +279,7 @@ export function CalendarioDeCheckins({ registros }: PropriedadesDoCalendario) {
       ) : (
         // Dica de uso exibida enquanto nenhum dia está selecionado.
         <p className="text-[11px] text-muted-foreground">
-          Toque em um dia com check-in para ver treino, dieta, água e observações.
+          Toque em um dia com check-in para ver treino, dieta, cardio, água e observações.
         </p>
       )}
     </div>

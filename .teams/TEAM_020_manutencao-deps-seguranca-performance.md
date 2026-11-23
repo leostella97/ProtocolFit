@@ -101,6 +101,20 @@ Todos os pacotes foram para `latest` (semver-majors incluídos):
 - Smoke real: API na 3340 responde `/api/saude` 200, `/api/opcoes` 200,
   login inválido → credenciais genéricas, `/api/eu` sem token → 401.
 
+## Correção pós-deploy: calendário não exibia cardio
+
+Reportado pelo usuário: "dias no calendário não mostra cardio no dia chechado".
+O `montarCalendarioDoMes` já contava cardio para o estado "cumprido" (TEAM_019),
+mas o **painel de detalhes do dia** (TEAM_002) e os textos de tooltip/legenda
+ficaram da era pré-cardio.
+
+- `calendario-checkins.tsx`: nova linha **Cardio** nos detalhes do dia
+  (`HeartPulse` + helper `rotuloDoCardio` → "feito — Corrida · 30 min · 5,2 km"
+  conforme o que foi informado; "não marcado" quando ausente).
+- Textos desatualizados corrigidos: header do arquivo, tooltip do estado
+  `registrado`, legenda e dica de uso passaram a mencionar cardio.
+- Verificação: typecheck limpo · 97 specs, 0 falhas.
+
 ## Notas de transferência
 
 - `icone-de-marca.tsx`: se o lucide reintroduzir marcas, migrar de volta.
